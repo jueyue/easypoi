@@ -5,7 +5,7 @@ package org.jeecgframework.poi.excel.entity.vo;
  * @Author JueYue on 14-3-8.
  * 静态常量
  */
-public interface NormalPOIConstants extends BasePOIConstants {
+public interface NormalExcelConstants extends BasePOIConstants {
     /**
      * 单Sheet导出
      */

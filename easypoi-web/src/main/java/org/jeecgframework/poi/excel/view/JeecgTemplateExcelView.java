@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
-import org.jeecgframework.poi.excel.entity.vo.NormalPOIConstants;
-import org.jeecgframework.poi.excel.entity.vo.TemplatePOIConstants;
+import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.vo.TemplateExcelConstants;
 import org.springframework.web.servlet.view.AbstractView;
 
 /**
@@ -34,17 +34,17 @@ public class JeecgTemplateExcelView extends AbstractView {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String codedFileName = "临时文件.xls";
-		if (model.containsKey(NormalPOIConstants.FILE_NAME)) {
-			codedFileName = (String) model.get(NormalPOIConstants.FILE_NAME)
+		if (model.containsKey(NormalExcelConstants.FILE_NAME)) {
+			codedFileName = (String) model.get(NormalExcelConstants.FILE_NAME)
 					+ ".xls";
 		}
 		response.setHeader("content-disposition", "attachment;filename="
 				+ new String(codedFileName.getBytes(), "iso8859-1"));
 		Workbook workbook = ExcelExportUtil.exportExcel(
-				(TemplateExportParams)model.get(TemplatePOIConstants.PARAMS),
-				(Class<?>) model.get(TemplatePOIConstants.CLASS),
-				(List<?>)model.get(TemplatePOIConstants.LIST_DATA),
-				(Map<String, Object>)model.get(TemplatePOIConstants.MAP_DATA));
+				(TemplateExportParams)model.get(TemplateExcelConstants.PARAMS),
+				(Class<?>) model.get(TemplateExcelConstants.CLASS),
+				(List<?>)model.get(TemplateExcelConstants.LIST_DATA),
+				(Map<String, Object>)model.get(TemplateExcelConstants.MAP_DATA));
 		ServletOutputStream out = response.getOutputStream();
 		workbook.write(out);
 		out.flush();

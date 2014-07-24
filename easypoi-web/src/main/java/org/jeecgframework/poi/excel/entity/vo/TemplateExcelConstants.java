@@ -4,7 +4,7 @@ package org.jeecgframework.poi.excel.entity.vo;
  * @author JueYue
  * @date 2014年6月30日 下午9:26:52
  */
-public interface TemplatePOIConstants extends BasePOIConstants {
+public interface TemplateExcelConstants extends BasePOIConstants {
 	/**
      * 模板导出
      */
