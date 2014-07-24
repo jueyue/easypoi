@@ -24,7 +24,7 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
-import org.jeecgframework.poi.util.ExcelPublicUtil;
+import org.jeecgframework.poi.util.POIPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ public class ExcelExportServer extends ExcelExportBase {
 			Drawing patriarch = sheet.createDrawingPatriarch();
 			List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
 			// 得到所有字段
-			Field fileds[] = ExcelPublicUtil.getClassFields(pojoClass);
+			Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
 			ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
 			String targetId = etarget == null ? null : etarget.value();
 			getAllExcelField(entity.getExclusions(), targetId, fileds,

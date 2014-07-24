@@ -40,7 +40,7 @@ import org.jeecgframework.poi.excel.entity.params.ComparatorExcelField;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.params.MergeEntity;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
-import org.jeecgframework.poi.util.ExcelPublicUtil;
+import org.jeecgframework.poi.util.POIPublicUtil;
 
 /**
  * 导出基础服务
@@ -73,11 +73,11 @@ public abstract class ExcelExportBase {
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
 			// 先判断是不是collection,在判断是不是java自带对象,之后就是我们自己的对象了
-			if (ExcelPublicUtil.isNotUserExcelUserThis(exclusionsList, field,
+			if (POIPublicUtil.isNotUserExcelUserThis(exclusionsList, field,
 					targetId)) {
 				continue;
 			}
-			if (ExcelPublicUtil.isCollection(field.getType())) {
+			if (POIPublicUtil.isCollection(field.getType())) {
 				ExcelCollection excel = field
 						.getAnnotation(ExcelCollection.class);
 				ParameterizedType pt = (ParameterizedType) field
@@ -87,16 +87,16 @@ public abstract class ExcelExportBase {
 				getAllExcelField(exclusions,
 						StringUtils.isNotEmpty(excel.id()) ? excel.id()
 								: targetId,
-						ExcelPublicUtil.getClassFields(clz), list, clz, null);
+						POIPublicUtil.getClassFields(clz), list, clz, null);
 				excelEntity = new ExcelExportEntity();
 				excelEntity.setName(getExcelName(excel.name(), targetId));
 				excelEntity
 						.setOrderNum(getCellOrder(excel.orderNum(), targetId));
-				excelEntity.setMethod(ExcelPublicUtil.getMethod(
+				excelEntity.setMethod(POIPublicUtil.getMethod(
 						field.getName(), pojoClass));
 				excelEntity.setList(list);
 				excelParams.add(excelEntity);
-			} else if (ExcelPublicUtil.isJavaClass(field)) {
+			} else if (POIPublicUtil.isJavaClass(field)) {
 				excelParams.add(createExcelExportEntity(field, targetId,
 						pojoClass, getMethods));
 			} else {
@@ -104,13 +104,13 @@ public abstract class ExcelExportBase {
 				if (getMethods != null) {
 					newMethods.addAll(getMethods);
 				}
-				newMethods.add(ExcelPublicUtil.getMethod(field.getName(),
+				newMethods.add(POIPublicUtil.getMethod(field.getName(),
 						pojoClass));
 				ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
 				getAllExcelField(exclusions,
 						StringUtils.isNotEmpty(excel.id()) ? excel.id()
 								: targetId,
-						ExcelPublicUtil.getClassFields(field.getType()),
+						POIPublicUtil.getClassFields(field.getType()),
 						excelParams, field.getType(), newMethods);
 			}
 		}
@@ -224,7 +224,7 @@ public abstract class ExcelExportBase {
 				.setFormat(StringUtils.isNotEmpty(excel.exportFormat()) ? excel
 						.exportFormat() : excel.format());
 		String fieldname = field.getName();
-		excelEntity.setMethod(ExcelPublicUtil.getMethod(fieldname, pojoClass));
+		excelEntity.setMethod(POIPublicUtil.getMethod(fieldname, pojoClass));
 	}
 
 	/**
@@ -650,7 +650,7 @@ public abstract class ExcelExportBase {
 			ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
 			BufferedImage bufferImg;
 			try {
-				String path = ExcelPublicUtil.getWebRootPath(string);
+				String path = POIPublicUtil.getWebRootPath(string);
 				path = path.replace("WEB-INF/classes/", "");
 				path = path.replace("file:/", "");
 				bufferImg = ImageIO.read(new File(path));
@@ -685,7 +685,7 @@ public abstract class ExcelExportBase {
 	 * @date 2013年11月25日
 	 */
 	public int getImageType(byte[] value) {
-		String type = ExcelPublicUtil.getFileExtendName(value);
+		String type = POIPublicUtil.getFileExtendName(value);
 		if (type.equalsIgnoreCase("JPG")) {
 			return HSSFWorkbook.PICTURE_TYPE_JPEG;
 		} else if (type.equalsIgnoreCase("PNG")) {

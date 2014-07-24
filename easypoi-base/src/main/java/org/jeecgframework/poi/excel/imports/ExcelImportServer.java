@@ -40,7 +40,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelVerifyEntity;
 import org.jeecgframework.poi.excel.entity.result.ExcelImportResult;
 import org.jeecgframework.poi.excel.entity.result.ExcelVerifyHanlderResult;
 import org.jeecgframework.poi.excel.imports.verifys.VerifyHandlerServer;
-import org.jeecgframework.poi.util.ExcelPublicUtil;
+import org.jeecgframework.poi.util.POIPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,10 +95,10 @@ public class ExcelImportServer {
 		Map<String, PictureData> pictures;
 		for (int i = 0; i < params.getSheetNum(); i++) {
 			if (isXSSFWorkbook) {
-				pictures = ExcelPublicUtil.getSheetPictrues07(
+				pictures = POIPublicUtil.getSheetPictrues07(
 						(XSSFSheet) book.getSheetAt(i), (XSSFWorkbook) book);
 			} else {
-				pictures = ExcelPublicUtil.getSheetPictrues03(
+				pictures = POIPublicUtil.getSheetPictrues03(
 						(HSSFSheet) book.getSheetAt(i), (HSSFWorkbook) book);
 			}
 			result.addAll(importExcel(result, book.getSheetAt(i), pojoClass,
@@ -112,7 +112,7 @@ public class ExcelImportServer {
 
 	private void saveThisExcel(ImportParams params, Class<?> pojoClass,
 			boolean isXSSFWorkbook, Workbook book) throws Exception {
-		String path = ExcelPublicUtil.getWebRootPath(getSaveExcelUrl(params,
+		String path = POIPublicUtil.getWebRootPath(getSaveExcelUrl(params,
 				pojoClass));
 		File savefile = new File(path);
 		if (!savefile.exists()) {
@@ -153,7 +153,7 @@ public class ExcelImportServer {
 		List collection = new ArrayList();
 		Map<String, ExcelImportEntity> excelParams = new HashMap<String, ExcelImportEntity>();
 		List<ExcelCollectionParams> excelCollection = new ArrayList<ExcelCollectionParams>();
-		Field fileds[] = ExcelPublicUtil.getClassFields(pojoClass);
+		Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
 		ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
 		String targetId = null;
 		if (etarget != null) {
@@ -194,7 +194,7 @@ public class ExcelImportServer {
 							pictures, params);
 				}
 			} else {
-				object = ExcelPublicUtil.createObject(pojoClass, targetId);
+				object = POIPublicUtil.createObject(pojoClass, targetId);
 				for (int i = row.getFirstCellNum(), le = row.getLastCellNum(); i < le; i++) {
 					Cell cell = row.getCell(i);
 					String titleString = (String) titlemap.get(i);
@@ -293,9 +293,9 @@ public class ExcelImportServer {
 		PictureData image = pictures.get(picId);
 		byte[] data = image.getData();
 		String fileName = "pic" + Math.round(Math.random() * 100000000000L);
-		fileName += "." + ExcelPublicUtil.getFileExtendName(data);
+		fileName += "." + POIPublicUtil.getFileExtendName(data);
 		if (excelParams.get(titleString).getSaveType() == 1) {
-			String path = ExcelPublicUtil.getWebRootPath(getSaveUrl(
+			String path = POIPublicUtil.getWebRootPath(getSaveUrl(
 					excelParams.get(titleString), object));
 			File savefile = new File(path);
 			if (!savefile.exists()) {
@@ -354,10 +354,10 @@ public class ExcelImportServer {
 			Row row, Map<Integer, String> titlemap, String targetId,
 			Map<String, PictureData> pictures, ImportParams params)
 			throws Exception {
-		Collection collection = (Collection) ExcelPublicUtil.getMethod(
+		Collection collection = (Collection) POIPublicUtil.getMethod(
 				param.getName(), object.getClass()).invoke(object,
 				new Object[] {});
-		Object entity = ExcelPublicUtil.createObject(param.getType(), targetId);
+		Object entity = POIPublicUtil.createObject(param.getType(), targetId);
 		String picId;
 		boolean isUsed = false;// 是否需要加上这个对象
 		for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
@@ -436,10 +436,10 @@ public class ExcelImportServer {
 		ExcelImportEntity excelEntity = null;
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
-			if (ExcelPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
+			if (POIPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
 				continue;
 			}
-			if (ExcelPublicUtil.isCollection(field.getType())) {
+			if (POIPublicUtil.isCollection(field.getType())) {
 				// 集合对象设置属性
 				ExcelCollectionParams collection = new ExcelCollectionParams();
 				collection.setName(field.getName());
@@ -449,10 +449,10 @@ public class ExcelImportServer {
 				Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
 				collection.setType(clz);
 				getExcelFieldList(targetId,
-						ExcelPublicUtil.getClassFields(clz), clz, temp, null);
+						POIPublicUtil.getClassFields(clz), clz, temp, null);
 				collection.setExcelParams(temp);
 				excelCollection.add(collection);
-			} else if (ExcelPublicUtil.isJavaClass(field)) {
+			} else if (POIPublicUtil.isJavaClass(field)) {
 				addEntityToMap(targetId, field, excelEntity, pojoClass,
 						getMethods, excelParams);
 			} else {
@@ -460,10 +460,10 @@ public class ExcelImportServer {
 				if (getMethods != null) {
 					newMethods.addAll(getMethods);
 				}
-				newMethods.add(ExcelPublicUtil.getMethod(field.getName(),
+				newMethods.add(POIPublicUtil.getMethod(field.getName(),
 						pojoClass));
 				getAllExcelField(targetId,
-						ExcelPublicUtil.getClassFields(field.getType()),
+						POIPublicUtil.getClassFields(field.getType()),
 						excelParams, excelCollection, field.getType(),
 						newMethods);
 			}
@@ -476,10 +476,10 @@ public class ExcelImportServer {
 		ExcelImportEntity excelEntity = null;
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
-			if (ExcelPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
+			if (POIPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
 				continue;
 			}
-			if (ExcelPublicUtil.isJavaClass(field)) {
+			if (POIPublicUtil.isJavaClass(field)) {
 				addEntityToMap(targetId, field, excelEntity, pojoClass,
 						getMethods, temp);
 			} else {
@@ -487,10 +487,10 @@ public class ExcelImportServer {
 				if (getMethods != null) {
 					newMethods.addAll(getMethods);
 				}
-				newMethods.add(ExcelPublicUtil.getMethod(field.getName(),
+				newMethods.add(POIPublicUtil.getMethod(field.getName(),
 						pojoClass, field.getType()));
 				getExcelFieldList(targetId,
-						ExcelPublicUtil.getClassFields(field.getType()),
+						POIPublicUtil.getClassFields(field.getType()),
 						field.getType(), temp, newMethods);
 			}
 		}
@@ -559,7 +559,7 @@ public class ExcelImportServer {
 			throws Exception {
 		excelEntity.setName(getExcelName(excel.name(), targetId));
 		String fieldname = field.getName();
-		excelEntity.setMethod(ExcelPublicUtil.getMethod(fieldname, pojoClass,
+		excelEntity.setMethod(POIPublicUtil.getMethod(fieldname, pojoClass,
 				field.getType()));
 		if (StringUtils.isEmpty(excel.importFormat())) {
 			excelEntity.setFormat(excel.format());
