@@ -15,11 +15,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class ExcelPublicUtil {
+public class POIPublicUtil {
 
 	public static String getWebRootPath(String filePath) {
 		// 这个path还是要测试的
-		String path = ExcelPublicUtil.class.getClassLoader().getResource("")
+		String path = POIPublicUtil.class.getClassLoader().getResource("")
 				.getPath()
 				+ filePath;
 		path = path.replace("WEB-INF/classes/", "");

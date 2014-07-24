@@ -22,7 +22,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.export.ExcelExportBase;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
-import org.jeecgframework.poi.util.ExcelPublicUtil;
+import org.jeecgframework.poi.util.POIPublicUtil;
 
 /**
  * Excel 导出根据模板导出
@@ -101,7 +101,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 		Map<String, Integer> titlemap = getTitleMap(params, sheet);
 		Drawing patriarch = sheet.createDrawingPatriarch();
 		// 得到所有字段
-		Field fileds[] = ExcelPublicUtil.getClassFields(pojoClass);
+		Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
 		ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
 		String targetId = null;
 		if (etarget != null) {
@@ -258,7 +258,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 		if (object instanceof Map) {
 			object = ((Map) object).get(paramsArr[index]);
 		} else {
-			object = ExcelPublicUtil.getMethod(paramsArr[index],
+			object = POIPublicUtil.getMethod(paramsArr[index],
 					object.getClass()).invoke(object, new Object[] {});
 		}
 		return (index == paramsArr.length - 1) ? (object == null ? "" : object

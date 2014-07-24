@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.jeecgframework.poi.util.ExcelPublicUtil;
+import org.jeecgframework.poi.util.POIPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ class FileLoade {
 		FileInputStream fileis = null;
 		ByteArrayOutputStream baos = null;
 		try {
-			String path = ExcelPublicUtil.getWebRootPath(url);
+			String path = POIPublicUtil.getWebRootPath(url);
 			fileis = new FileInputStream(path);
 			baos = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
