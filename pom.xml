@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jeecgframework</groupId>
+	<artifactId>easypoi</artifactId>
+	<version>2.0.1</version>
+	<packaging>pom</packaging>
+	<name>easypoi</name>
+	<modules>
+		<module>easypoi-base</module>
+		<module>easypoi-web</module>
+		<module>easypoi-test</module>
+	</modules>
+	
+	<url>www.jeecg.org</url>
+	<description> office 工具类 基于 poi</description>
+	
+	<developers>
+		<developer>
+			<name>JueYue</name>
+			<email>qrb.jueyue@gmail.com</email>
+		</developer>
+	</developers>
+	
+	<properties>
+		<poi-ooxml-schemas.version>3.9</poi-ooxml-schemas.version>
+		<poi-ooxml.version>3.9</poi-ooxml.version>
+		<poi-scratchpad.version>3.9</poi-scratchpad.version>
+		<poi.version>3.9</poi.version>
+		<guava.version>16.0.1</guava.version>
+		<reflectasm.version>1.09</reflectasm.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<slf4j.version>1.6.1</slf4j.version>
+		<spring.version>3.1.1.RELEASE</spring.version>
+		<junit.version>4.7</junit.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- poi -->
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${poi-ooxml.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml-schemas</artifactId>
+				<version>${poi-ooxml-schemas.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-scratchpad</artifactId>
+				<version>${poi-scratchpad.version}</version>
+			</dependency>
+
+			<!-- google 工具类 -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons-lang.version}</version>
+			</dependency>
+
+			<!--日志 -->
+			<!-- slf4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+
+			<!--spring -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.5</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<!-- test -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			
+			<!-- 模块版本 -->
+			<dependency>
+				<groupId>org.jeecgframework</groupId>
+				<artifactId>easypoi-base</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>postaop-pay-platform-release</id>
+			<url>http://192.168.0.99:8081/nexus/content/repositories/postaop-common-release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>postaop-pay-platform-snapshot</id>
+			<url>http://192.168.0.99:8081/nexus/content/repositoriespostaop-common-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<showWarnings>true</showWarnings>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
