@@ -40,6 +40,16 @@ public class ParseWord07 {
 		parseWordSetValue(doc, map);
 		return doc;
 	}
+	/**
+	 * 按用户模板导出
+	 * @param document
+	 * @param map
+	 * @throws Exception
+	 */
+	public void parseWord(XWPFDocument document, Map<String, Object> map) throws Exception {
+		parseWordSetValue((JeecgXWPFDocument)document, map);
+	}
+
 
 	private  void parseWordSetValue(JeecgXWPFDocument doc,
 			Map<String, Object> map) throws Exception {
@@ -275,8 +285,5 @@ public class ParseWord07 {
 		} 
 		
 	}
-
-	
-	
 
 }

@@ -2,7 +2,7 @@ package org.jeecgframework.poi.excel.view;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.vo.NormalPOIConstants;
+import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
@@ -24,27 +24,27 @@ public class JeecgSingleExcelView extends AbstractExcelView {
 			HSSFWorkbook hssfWorkbook, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) throws Exception {
 		String codedFileName = "临时文件.xls";
-		if (model.containsKey(NormalPOIConstants.FILE_NAME)) {
-			codedFileName = (String) model.get(NormalPOIConstants.FILE_NAME)
+		if (model.containsKey(NormalExcelConstants.FILE_NAME)) {
+			codedFileName = (String) model.get(NormalExcelConstants.FILE_NAME)
 					+ ".xls";
 		}
 		httpServletResponse.setHeader("content-disposition",
 				"attachment;filename="
 						+ new String(codedFileName.getBytes(), "iso8859-1"));
-		if (model.containsKey(NormalPOIConstants.MAP_LIST)) {
+		if (model.containsKey(NormalExcelConstants.MAP_LIST)) {
 			List<Map<String, Object>> list = (List<Map<String, Object>>) model
-					.get(NormalPOIConstants.MAP_LIST);
+					.get(NormalExcelConstants.MAP_LIST);
 			for (Map<String, Object> map : list) {
 				new ExcelExportServer().createSheet(hssfWorkbook,
-						(ExportParams) map.get(NormalPOIConstants.PARAMS),
-						(Class<?>) map.get(NormalPOIConstants.CLASS),
-						(Collection<?>) map.get(NormalPOIConstants.DATA_LIST));
+						(ExportParams) map.get(NormalExcelConstants.PARAMS),
+						(Class<?>) map.get(NormalExcelConstants.CLASS),
+						(Collection<?>) map.get(NormalExcelConstants.DATA_LIST));
 			}
 		} else {
 			new ExcelExportServer().createSheet(hssfWorkbook,
-					(ExportParams) model.get(NormalPOIConstants.PARAMS),
-					(Class<?>) model.get(NormalPOIConstants.CLASS),
-					(Collection<?>) model.get(NormalPOIConstants.DATA_LIST));
+					(ExportParams) model.get(NormalExcelConstants.PARAMS),
+					(Class<?>) model.get(NormalExcelConstants.CLASS),
+					(Collection<?>) model.get(NormalExcelConstants.DATA_LIST));
 		}
 	}
 }
