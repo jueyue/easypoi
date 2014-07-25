@@ -8,11 +8,11 @@ EASYPOI poi简易工具类
 ---------------------------
 EasyPoi的主要特点
 --------------------------
-1.设计精巧,使用简单
-2.接口丰富,扩展简单
-3.默认值多,write less do more
-4.AbstractView 支持,web导出可以简单明了
-5.Jeecg社区的支持
+	1.设计精巧,使用简单
+	2.接口丰富,扩展简单
+	3.默认值多,write less do more
+	4.AbstractView 支持,web导出可以简单明了
+	5.Jeecg社区的支持
 
 
 **Jeecg社区地址:http://www.jeecg.org **
@@ -21,8 +21,8 @@ EasyPoi的主要特点
 EasyPoi的几个入口工具类
 ---------------------------
 
-1.ExcelExportUtil Excel导出(普通导出,模板导出)
-2.ExcelImportUtil Excel导入
-3.WordExportUtil Word导出(只支持docx ,doc版本poi存在图片的bug,暂不支持)
+	1.ExcelExportUtil Excel导出(普通导出,模板导出)
+	2.ExcelImportUtil Excel导入
+	3.WordExportUtil Word导出(只支持docx ,doc版本poi存在图片的bug,暂不支持)
 
 
