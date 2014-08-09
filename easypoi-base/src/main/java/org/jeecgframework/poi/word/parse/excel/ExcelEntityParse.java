@@ -39,7 +39,8 @@ public class ExcelEntityParse extends ExportBase {
 			ExcelListEntity entity) {
 		checkExcelParams(entity);
 		// 获取表头数据
-		Map<String, Integer> titlemap = getTitleMap(table, index);
+		Map<String, Integer> titlemap = getTitleMap(table, index,
+				entity.getHeadRows());
 		try {
 			// 得到所有字段
 			Field fileds[] = POIPublicUtil.getClassFields(entity.getClazz());
@@ -180,20 +181,24 @@ public class ExcelEntityParse extends ExportBase {
 	 * @param index
 	 * @return
 	 */
-	private Map<String, Integer> getTitleMap(XWPFTable table, int index) {
-		if (index == 0) {
+	private Map<String, Integer> getTitleMap(XWPFTable table, int index,
+			int headRows) {
+		if (index < headRows) {
 			throw new WordExportException(WordExportEnum.EXCEL_NO_HEAD);
 		}
-		List<XWPFTableCell> cells = table.getRow(index - 1).getTableCells();
-		Map<String, Integer> map = new HashMap<String, Integer>(cells.size());
+		Map<String, Integer> map = new HashMap<String, Integer>();
 		String text;
-		for (int i = 0; i < cells.size(); i++) {
-			text = cells.get(i).getText();
-			if (StringUtils.isEmpty(text)) {
-				throw new WordExportException(
-						WordExportEnum.EXCEL_HEAD_HAVA_NULL);
+		for (int j = 0; j < headRows; j++) {
+			List<XWPFTableCell> cells = table.getRow(index - j - 1)
+					.getTableCells();
+			for (int i = 0; i < cells.size(); i++) {
+				text = cells.get(i).getText();
+				if (StringUtils.isEmpty(text)) {
+					throw new WordExportException(
+							WordExportEnum.EXCEL_HEAD_HAVA_NULL);
+				}
+				map.put(text, i);
 			}
-			map.put(text, i);
 		}
 		return map;
 	}
