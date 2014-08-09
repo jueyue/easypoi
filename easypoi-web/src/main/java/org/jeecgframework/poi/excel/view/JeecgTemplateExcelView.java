@@ -15,7 +15,7 @@ import org.jeecgframework.poi.excel.entity.vo.TemplateExcelConstants;
 import org.springframework.web.servlet.view.AbstractView;
 
 /**
- * 模板视图
+ * Excel模板视图
  * 
  * @author JueYue
  * @date 2014年6月30日 下午9:15:49
