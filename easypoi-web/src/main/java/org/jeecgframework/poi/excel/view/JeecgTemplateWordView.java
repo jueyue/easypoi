@@ -12,7 +12,7 @@ import org.jeecgframework.poi.word.WordExportUtil;
 import org.springframework.web.servlet.view.AbstractView;
 
 /**
- * 模板视图
+ * Word模板视图
  * 
  * @author JueYue
  * @date 2014年6月30日 下午9:15:49
