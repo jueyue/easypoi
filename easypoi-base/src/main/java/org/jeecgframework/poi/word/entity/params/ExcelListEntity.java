@@ -22,10 +22,24 @@ public class ExcelListEntity extends ExcelBaseParams {
 		this.clazz = clazz;
 	}
 
+	public ExcelListEntity(List<?> list, Class<?> clazz, int headRows) {
+		this.list = list;
+		this.clazz = clazz;
+		this.headRows = headRows;
+	}
+
 	public ExcelListEntity(List<?> list, Class<?> clazz,
 			IExcelDataHandler dataHanlder) {
 		this.list = list;
 		this.clazz = clazz;
+		setDataHanlder(dataHanlder);
+	}
+
+	public ExcelListEntity(List<?> list, Class<?> clazz,
+			IExcelDataHandler dataHanlder, int headRows) {
+		this.list = list;
+		this.clazz = clazz;
+		this.headRows = headRows;
 		setDataHanlder(dataHanlder);
 	}
 
@@ -38,9 +52,9 @@ public class ExcelListEntity extends ExcelBaseParams {
 	 */
 	private Class<?> clazz;
 	/**
-	 * 过滤的属性
+	 * 表头行数
 	 */
-	private String[] exclusions;
+	private int headRows = 1;
 
 	public List<?> getList() {
 		return list;
@@ -58,12 +72,12 @@ public class ExcelListEntity extends ExcelBaseParams {
 		this.clazz = clazz;
 	}
 
-	public String[] getExclusions() {
-		return exclusions;
+	public int getHeadRows() {
+		return headRows;
 	}
 
-	public void setExclusions(String[] exclusions) {
-		this.exclusions = exclusions;
+	public void setHeadRows(int headRows) {
+		this.headRows = headRows;
 	}
 
 }
