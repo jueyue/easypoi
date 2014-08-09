@@ -9,12 +9,13 @@ package org.jeecgframework.poi.handler.inter;
 public interface IExcelDataHandler {
 
 	/**
-	 * 获取需要处理的字段,导入和导出统一处理了,
-	 * 减少书写的字段
+	 * 获取需要处理的字段,导入和导出统一处理了, 减少书写的字段
 	 * 
 	 * @return
 	 */
 	public String[] getNeedHandlerFields();
+
+	public void setNeedHandlerFields(String[] fields);
 
 	/**
 	 * 导出处理方法

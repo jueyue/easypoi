@@ -1,12 +1,14 @@
 package org.jeecgframework.poi.word.entity;
+
 /**
  * word导出,图片设置和图片信息
+ * 
  * @author JueYue
  * @date 2013-11-17
  * @version 1.0
  */
 public class WordImageEntity {
-	
+
 	public static String URL = "url";
 	public static String Data = "data";
 	/**
@@ -17,13 +19,30 @@ public class WordImageEntity {
 	 * 图片宽度
 	 */
 	private int width;
-	//图片高度
+	// 图片高度
 	private int height;
-	//图片地址
+	// 图片地址
 	private String url;
-	//图片信息
+	// 图片信息
 	private byte[] data;
-	
+
+	public WordImageEntity() {
+
+	}
+
+	public WordImageEntity(String url, int width, int height) {
+		this.url = url;
+		this.width = width;
+		this.height = height;
+	}
+
+	public WordImageEntity(byte[] data, int width, int height) {
+		this.data = data;
+		this.width = width;
+		this.height = height;
+		this.type = Data;
+	}
+
 	public String getType() {
 		return type;
 	}

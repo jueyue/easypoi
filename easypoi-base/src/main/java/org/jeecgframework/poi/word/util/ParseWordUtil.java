@@ -12,10 +12,12 @@ import javax.imageio.ImageIO;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jeecgframework.poi.util.POIPublicUtil;
 import org.jeecgframework.poi.word.entity.WordImageEntity;
+import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
 
 
 /**
  * 解析公告类
+ * Excel 实体注解,暂时不支持图片
  * @author JueYue
  * @date 2014-7-24
  * @version 1.1
@@ -37,7 +39,7 @@ public class ParseWordUtil {
 					currentText.indexOf("}}"));
 			Object obj = getParamsValue(params.trim(),map);
 			//判断图片或者是集合
-			if(obj instanceof WordImageEntity||obj instanceof List){
+			if(obj instanceof WordImageEntity||obj instanceof List ||obj instanceof ExcelListEntity){
 				return obj;
 			}else{
 				currentText = currentText.replace("{{" + params + "}}",
