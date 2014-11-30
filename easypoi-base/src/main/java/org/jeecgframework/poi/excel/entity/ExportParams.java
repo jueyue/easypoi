@@ -50,6 +50,10 @@ public class ExportParams extends ExcelBaseParams {
 	 */
 	private String[] exclusions;
 	/**
+	 * 是否添加需要需要
+	 */
+	private boolean addIndex;
+	/**
 	 * 表头颜色
 	 */
 	private short color = HSSFColor.WHITE.index;
@@ -121,5 +125,13 @@ public class ExportParams extends ExcelBaseParams {
 
 	public void setSecondTitleHeight(short secondTitleHeight) {
 		this.secondTitleHeight = secondTitleHeight;
+	}
+
+	public boolean isAddIndex() {
+		return addIndex;
+	}
+
+	public void setAddIndex(boolean addIndex) {
+		this.addIndex = addIndex;
 	}
 }

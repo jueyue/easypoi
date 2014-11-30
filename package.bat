@@ -1,1 +1,1 @@
-cmd /k mvn package
+cmd /k mvn package -DskipTest

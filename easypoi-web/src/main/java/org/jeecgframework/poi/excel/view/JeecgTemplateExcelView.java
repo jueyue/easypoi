@@ -38,8 +38,14 @@ public class JeecgTemplateExcelView extends AbstractView {
 			codedFileName = (String) model.get(NormalExcelConstants.FILE_NAME)
 					+ ".xls";
 		}
-		response.setHeader("content-disposition", "attachment;filename="
-				+ new String(codedFileName.getBytes(), "iso8859-1"));
+		if (isIE(request)) {
+			codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
+		} else {
+			codedFileName = new String(codedFileName.getBytes("UTF-8"),
+					"ISO-8859-1");
+		}
+		response.setHeader("content-disposition",
+				"attachment;filename="+codedFileName);
 		Workbook workbook = ExcelExportUtil.exportExcel(
 				(TemplateExportParams)model.get(TemplateExcelConstants.PARAMS),
 				(Class<?>) model.get(TemplateExcelConstants.CLASS),
@@ -48,5 +54,11 @@ public class JeecgTemplateExcelView extends AbstractView {
 		ServletOutputStream out = response.getOutputStream();
 		workbook.write(out);
 		out.flush();
+	}
+	
+	public boolean isIE(HttpServletRequest request) {
+		return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request
+				.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true
+				: false;
 	}
 }

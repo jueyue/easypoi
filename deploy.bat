@@ -1,1 +1,1 @@
-cmd /k mvn clean deploy -DskipTest
+cmd /k mvn clean deploy -D skipTest

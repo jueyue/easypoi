@@ -141,6 +141,9 @@ public class CellValueServer {
 	 */
 	private Object getCellValue(String xclass, Cell cell,
 			ExcelImportEntity entity) {
+		if(cell == null){
+			return "";
+		}
 		Object result = null;
 		// 日期格式比较特殊,和cell格式不一致
 		if (xclass.equals("class java.util.Date")) {

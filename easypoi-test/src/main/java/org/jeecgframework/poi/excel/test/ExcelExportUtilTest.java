@@ -62,7 +62,7 @@ public class ExcelExportUtilTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	//@Test
 	public void testExportExcel() throws Exception {
 		Date start = new Date();
 		HSSFWorkbook workbook = ExcelExportUtil.exportExcel(new ExportParams(
@@ -123,9 +123,10 @@ public class ExcelExportUtilTest {
 	 * 
 	 * @throws Exception
 	 */
-	//@Test
+	@Test
 	public void oneHundredThousandRowTest() throws Exception {
-		for (int i = 0; i < 250000; i++) {
+		
+		for (int i = 0; i < 250; i++) {
 			list.add(courseEntity);
 		}
 		Date start = new Date();
@@ -137,6 +138,14 @@ public class ExcelExportUtilTest {
 			savefile.mkdirs();
 		}
 		FileOutputStream fos = new FileOutputStream("d:/tt.xls");
+		workbook.write(fos);
+		fos.close();
+		savefile = new File("d:/1");
+		if (!savefile.exists()) {
+			savefile.setWritable(true, false);
+			savefile.mkdirs();
+		}
+		fos = new FileOutputStream("d:/1/tt3.xls");
 		workbook.write(fos);
 		fos.close();
 	}

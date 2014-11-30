@@ -11,11 +11,11 @@ public class ExcelBaseEntity {
 	/**
 	 * 对应name
 	 */
-	private String name;
+	protected String name;
 	/**
 	 * 对应type
 	 */
-	private int type;
+	private int type = 1;
 	/**
 	 * 数据库格式
 	 */

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.poi.excel.annotation.Excel;
@@ -26,7 +27,7 @@ import org.jeecgframework.poi.util.POIPublicUtil;
  * @date 2014年8月9日 下午11:01:32
  */
 public class ExportBase {
-	
+
 	protected IExcelDataHandler dataHanlder;
 
 	protected List<String> needHanlderList;
@@ -54,7 +55,11 @@ public class ExportBase {
 					targetId)) {
 				continue;
 			}
-			if (POIPublicUtil.isCollection(field.getType())) {
+			// 首先判断Excel 可能一下特殊数据用户回自定义处理
+			if (field.getAnnotation(Excel.class) != null) {
+				excelParams.add(createExcelExportEntity(field, targetId,
+						pojoClass, getMethods));
+			} else if (POIPublicUtil.isCollection(field.getType())) {
 				ExcelCollection excel = field
 						.getAnnotation(ExcelCollection.class);
 				ParameterizedType pt = (ParameterizedType) field
@@ -73,9 +78,6 @@ public class ExportBase {
 						pojoClass));
 				excelEntity.setList(list);
 				excelParams.add(excelEntity);
-			} else if (POIPublicUtil.isJavaClass(field)) {
-				excelParams.add(createExcelExportEntity(field, targetId,
-						pojoClass, getMethods));
 			} else {
 				List<Method> newMethods = new ArrayList<Method>();
 				if (getMethods != null) {
@@ -108,7 +110,12 @@ public class ExportBase {
 			throws Exception {
 		Excel excel = field.getAnnotation(Excel.class);
 		ExcelExportEntity excelEntity = new ExcelExportEntity();
-		excelEntity.setType(excel.type());
+		try {
+			excelEntity.setType(excel.type());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		getExcelField(targetId, field, excelEntity, excel, pojoClass);
 		if (getMethods != null) {
 			List<Method> newMethods = new ArrayList<Method>();
@@ -203,8 +210,10 @@ public class ExportBase {
 		String fieldname = field.getName();
 		excelEntity.setMethod(POIPublicUtil.getMethod(fieldname, pojoClass));
 	}
+
 	/**
 	 * 根据注解获取行高
+	 * 
 	 * @param excelParams
 	 * @return
 	 */
@@ -223,7 +232,6 @@ public class ExportBase {
 		}
 		return (short) (maxHeight * 50);
 	}
-	
 
 	/**
 	 * 对字段根据用户设置排序
@@ -236,7 +244,7 @@ public class ExportBase {
 			}
 		}
 	}
-	
+
 	/**
 	 * 获取填如这个cell的值,提供一些附加功能
 	 * 
@@ -247,9 +255,14 @@ public class ExportBase {
 	 */
 	public Object getCellValue(ExcelExportEntity entity, Object obj)
 			throws Exception {
-		Object value = entity.getMethods() != null ? getFieldBySomeMethod(
-				entity.getMethods(), obj) : entity.getMethod().invoke(obj,
-				new Object[] {});
+		Object value;
+		if (obj instanceof Map) {
+			return ((Map<?, ?>) obj).get(entity.getKey());
+		} else {
+			value = entity.getMethods() != null ? getFieldBySomeMethod(
+					entity.getMethods(), obj) : entity.getMethod().invoke(obj,
+					new Object[] {});
+		}
 		if (needHanlderList != null
 				&& needHanlderList.contains(entity.getName())) {
 			value = dataHanlder.exportHandler(obj, entity.getName(), value);
@@ -290,7 +303,7 @@ public class ExportBase {
 		}
 		return value;
 	}
-	
+
 	/**
 	 * 多个反射获取值
 	 * 

@@ -28,6 +28,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.params.MergeEntity;
+import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.util.POIPublicUtil;
 
 /**
@@ -37,6 +38,8 @@ import org.jeecgframework.poi.util.POIPublicUtil;
  * @date 2014年6月17日 下午6:15:13
  */
 public abstract class ExcelExportBase extends ExportBase {
+
+	private int currentIndex = 0;
 
 	/**
 	 * 合并单元格
@@ -213,7 +216,9 @@ public abstract class ExcelExportBase extends ExportBase {
 		Row row = sheet.createRow(index);
 		row.setHeight(rowHeight);
 		int maxHeight = 1, cellNum = 0;
-		for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
+		int indexKey = createIndexCell(row, styles, index, excelParams.get(0));
+		cellNum += indexKey;
+		for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
 			entity = excelParams.get(k);
 			if (entity.getList() != null) {
 				Collection<?> list = (Collection<?>) entity.getMethod().invoke(
@@ -246,7 +251,7 @@ public abstract class ExcelExportBase extends ExportBase {
 		}
 		// 合并需要合并的单元格
 		cellNum = 0;
-		for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
+		for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
 			entity = excelParams.get(k);
 			if (entity.getList() != null) {
 				cellNum += entity.getList().size();
@@ -258,6 +263,20 @@ public abstract class ExcelExportBase extends ExportBase {
 		}
 		return maxHeight;
 
+	}
+
+	private int createIndexCell(Row row, Map<String, HSSFCellStyle> styles,
+			int index, ExcelExportEntity excelExportEntity) {
+		if (excelExportEntity.getName().equals("序号")
+				&& excelExportEntity.getFormat().equals(
+						PoiBaseConstants.IS_ADD_INDEX)) {
+			createStringCell(row, 0, currentIndex + "",
+					index % 2 == 0 ? getStyles(styles, false, false)
+							: getStyles(styles, true, false), null);
+			currentIndex = currentIndex + 1;
+			return 1;
+		}
+		return 0;
 	}
 
 	public CellStyle getStyles(Map<String, HSSFCellStyle> styles, boolean b,
@@ -415,6 +434,10 @@ public abstract class ExcelExportBase extends ExportBase {
 			length += entity.getList() != null ? entity.getList().size() : 1;
 		}
 		return length;
+	}
+
+	public void setCurrentIndex(int currentIndex) {
+		this.currentIndex = currentIndex;
 	}
 
 }

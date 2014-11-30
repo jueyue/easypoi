@@ -22,6 +22,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
@@ -36,8 +37,9 @@ import org.slf4j.LoggerFactory;
  * @date 2014年6月17日 下午5:30:54
  */
 public class ExcelExportServer extends ExcelExportBase {
-	
-	private final static Logger logger = LoggerFactory.getLogger(ExcelExportServer.class);
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(ExcelExportServer.class);
 
 	private static final short cellFormat = HSSFDataFormat
 			.getBuiltinFormat("TEXT");
@@ -47,8 +49,8 @@ public class ExcelExportServer extends ExcelExportBase {
 
 	public void createSheet(HSSFWorkbook workbook, ExportParams entity,
 			Class<?> pojoClass, Collection<?> dataSet) {
-		if(logger.isDebugEnabled()){
-			logger.debug("Excel export start ,class is {}",pojoClass);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Excel export start ,class is {}", pojoClass);
 		}
 		if (workbook == null || entity == null || pojoClass == null
 				|| dataSet == null) {
@@ -71,6 +73,9 @@ public class ExcelExportServer extends ExcelExportBase {
 			Map<String, HSSFCellStyle> styles = createStyles(workbook);
 			Drawing patriarch = sheet.createDrawingPatriarch();
 			List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
+			if (entity.isAddIndex()) {
+				excelParams.add(indexExcelEntity());
+			}
 			// 得到所有字段
 			Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
 			ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
@@ -83,7 +88,7 @@ public class ExcelExportServer extends ExcelExportBase {
 			int titleHeight = index;
 			setCellWith(excelParams, sheet);
 			short rowHeight = getRowHeight(excelParams);
-
+			setCurrentIndex(1);
 			Iterator<?> its = dataSet.iterator();
 			List<Object> tempList = new ArrayList<Object>();
 			while (its.hasNext()) {
@@ -107,10 +112,19 @@ public class ExcelExportServer extends ExcelExportBase {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e.fillInStackTrace());
 			throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR,
 					e.getCause());
 		}
+	}
+
+	private ExcelExportEntity indexExcelEntity() {
+		ExcelExportEntity entity = new ExcelExportEntity();
+		entity.setOrderNum(0);
+		entity.setName("序号");
+		entity.setWidth(10);
+		entity.setFormat(PoiBaseConstants.IS_ADD_INDEX);
+		return entity;
 	}
 
 	private int createHeaderAndTitle(ExportParams entity, Sheet sheet,
@@ -296,6 +310,71 @@ public class ExcelExportServer extends ExcelExportBase {
 			return map.get("twoWrap");
 		}
 		return map.get("two");
+	}
+
+	public void createSheetForMap(HSSFWorkbook workbook, ExportParams entity,
+			List<ExcelExportEntity> entityList,
+			Collection<? extends Map<?, ?>> dataSet) {
+		if (workbook == null || entity == null || entityList == null
+				|| dataSet == null) {
+			throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
+		}
+		Sheet sheet = null;
+		try {
+			sheet = workbook.createSheet(entity.getSheetName());
+		} catch (Exception e) {
+			// 重复遍历,出现了重名现象,创建非指定的名称Sheet
+			sheet = workbook.createSheet();
+		}
+		try {
+			dataHanlder = entity.getDataHanlder();
+			if (dataHanlder != null) {
+				needHanlderList = Arrays.asList(dataHanlder
+						.getNeedHandlerFields());
+			}
+			// 创建表格属性
+			Map<String, HSSFCellStyle> styles = createStyles(workbook);
+			Drawing patriarch = sheet.createDrawingPatriarch();
+			List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
+			if (entity.isAddIndex()) {
+				excelParams.add(indexExcelEntity());
+			}
+			excelParams.addAll(entityList);
+			sortAllParams(excelParams);
+			int index = createHeaderAndTitle(entity, sheet, workbook,
+					excelParams);
+			int titleHeight = index;
+			setCellWith(excelParams, sheet);
+			short rowHeight = getRowHeight(excelParams);
+			setCurrentIndex(1);
+			Iterator<?> its = dataSet.iterator();
+			List<Object> tempList = new ArrayList<Object>();
+			while (its.hasNext()) {
+				Object t = its.next();
+				index += createCells(patriarch, index, t, excelParams, sheet,
+						workbook, styles, rowHeight);
+				tempList.add(t);
+				if (index >= MAX_NUM)
+					break;
+			}
+			mergeCells(sheet, excelParams, titleHeight);
+
+			its = dataSet.iterator();
+			for (int i = 0, le = tempList.size(); i < le; i++) {
+				its.next();
+				its.remove();
+			}
+			// 发现还有剩余list 继续循环创建Sheet
+			if (dataSet.size() > 0) {
+				createSheetForMap(workbook, entity, entityList, dataSet);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage(),e.fillInStackTrace());
+			throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR,
+					e.getCause());
+		}
 	}
 
 }

@@ -10,16 +10,41 @@ import java.util.List;
  */
 public class ExcelExportEntity extends ExcelBaseEntity {
 
-	private int width;
-	private int height;
+	public ExcelExportEntity() {
+
+	}
+
+	public ExcelExportEntity(String name) {
+		super.name = name;
+	}
+
+	public ExcelExportEntity(String name, Object key) {
+		super.name = name;
+		this.key = key;
+	}
+
+	public ExcelExportEntity(String name, Object key, int width) {
+		super.name = name;
+		this.width = width;
+		this.key = key;
+	}
+
+	/**
+	 * 如果是MAP导出,这个是map的key
+	 */
+	private Object key;
+
+	private int width = 10;
+
+	private int height = 10;
 	/**
 	 * 图片的类型,1是文件,2是数据库
 	 */
-	private int exportImageType;
+	private int exportImageType = 0;
 	/**
 	 * 排序顺序
 	 */
-	private int orderNum;
+	private int orderNum = 0;
 	/**
 	 * 是否支持换行
 	 */
@@ -121,6 +146,14 @@ public class ExcelExportEntity extends ExcelBaseEntity {
 
 	public void setMergeVertical(boolean mergeVertical) {
 		this.mergeVertical = mergeVertical;
+	}
+
+	public Object getKey() {
+		return key;
+	}
+
+	public void setKey(Object key) {
+		this.key = key;
 	}
 
 }
