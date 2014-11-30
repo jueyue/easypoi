@@ -13,10 +13,10 @@ public interface MapExcelConstants extends BasePOIConstants {
     /**
      * Entity List
      */
-    public final static String ENTITY_LIST = "data";
+    public final static String ENTITY_LIST          = "data";
     /**
      * 数据列表
      */
-    public final static String MAP_LIST = "mapList";
+    public final static String MAP_LIST             = "mapList";
 
 }

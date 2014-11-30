@@ -13,10 +13,10 @@ public interface NormalExcelConstants extends BasePOIConstants {
     /**
      * 数据列表
      */
-    public final static String DATA_LIST = "data";
+    public final static String DATA_LIST        = "data";
     /**
      * 多Sheet 对象
      */
-    public final static String MAP_LIST = "mapList";
+    public final static String MAP_LIST         = "mapList";
 
 }

@@ -6,12 +6,12 @@ package org.jeecgframework.poi.excel.entity.vo;
  */
 public interface PoiBaseConstants {
 
-    public static String  GET = "get";
+    public static String GET          = "get";
 
-    public static String  SET = "set";
-    
-    public static String  IS = "is";
-    
-    public static String  IS_ADD_INDEX = "isAddIndex";
+    public static String SET          = "set";
+
+    public static String IS           = "is";
+
+    public static String IS_ADD_INDEX = "isAddIndex";
 
 }

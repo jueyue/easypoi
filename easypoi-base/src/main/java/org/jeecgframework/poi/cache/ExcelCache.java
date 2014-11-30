@@ -17,30 +17,30 @@ import org.jeecgframework.poi.cache.manager.POICacheManager;
  */
 public final class ExcelCache {
 
-	public static Workbook getWorkbook(String url, int index) {
-		InputStream is = null;
-		try {
-			is = POICacheManager.getFile(url);
-			Workbook wb = WorkbookFactory.create(is);
-			// 删除其他的sheet
-			for (int i = wb.getNumberOfSheets() - 1; i >= 0; i--) {
-				if (i != index) {
-					wb.removeSheetAt(i);
-				}
-			}
-			return wb;
-		} catch (InvalidFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
+    public static Workbook getWorkbook(String url, int index) {
+        InputStream is = null;
+        try {
+            is = POICacheManager.getFile(url);
+            Workbook wb = WorkbookFactory.create(is);
+            // 删除其他的sheet
+            for (int i = wb.getNumberOfSheets() - 1; i >= 0; i--) {
+                if (i != index) {
+                    wb.removeSheetAt(i);
+                }
+            }
+            return wb;
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
 }

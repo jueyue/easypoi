@@ -10,38 +10,38 @@ import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
  */
 public class ExcelExportException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private ExcelExportEnum type;
+    private ExcelExportEnum   type;
 
-	public ExcelExportException() {
-		super();
-	}
+    public ExcelExportException() {
+        super();
+    }
 
-	public ExcelExportException(String message) {
-		super(message);
-	}
+    public ExcelExportException(ExcelExportEnum type) {
+        super(type.getMsg());
+        this.type = type;
+    }
 
-	public ExcelExportException(ExcelExportEnum type) {
-		super(type.getMsg());
-		this.type = type;
-	}
-
-	public ExcelExportException(String message, ExcelExportEnum type) {
-		super(message);
-		this.type = type;
-	}
-	
-	public ExcelExportException(ExcelExportEnum type, Throwable cause) {
+    public ExcelExportException(ExcelExportEnum type, Throwable cause) {
         super(type.getMsg(), cause);
     }
 
-	public ExcelExportEnum getType() {
-		return type;
-	}
+    public ExcelExportException(String message) {
+        super(message);
+    }
 
-	public void setType(ExcelExportEnum type) {
-		this.type = type;
-	}
+    public ExcelExportException(String message, ExcelExportEnum type) {
+        super(message);
+        this.type = type;
+    }
+
+    public ExcelExportEnum getType() {
+        return type;
+    }
+
+    public void setType(ExcelExportEnum type) {
+        this.type = type;
+    }
 
 }

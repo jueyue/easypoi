@@ -10,128 +10,128 @@ import org.apache.poi.hssf.util.HSSFColor;
  */
 public class ExportParams extends ExcelBaseParams {
 
-	public ExportParams() {
+    /**
+     * 表格名称
+     */
+    private String   title;
 
-	}
+    /**
+     * 表格名称
+     */
+    private short    titleHeight       = 20;
 
-	public ExportParams(String title, String sheetName) {
-		this.title = title;
-		this.sheetName = sheetName;
-	}
+    /**
+     * 第二行名称
+     */
+    private String   secondTitle;
 
-	public ExportParams(String title, String secondTitle, String sheetName) {
-		this.title = title;
-		this.secondTitle = secondTitle;
-		this.sheetName = sheetName;
-	}
+    /**
+     * 表格名称
+     */
+    private short    secondTitleHeight = 8;
+    /**
+     * sheetName
+     */
+    private String   sheetName;
+    /**
+     * 过滤的属性
+     */
+    private String[] exclusions;
+    /**
+     * 是否添加需要需要
+     */
+    private boolean  addIndex;
+    /**
+     * 表头颜色
+     */
+    private short    color             = HSSFColor.WHITE.index;
+    /**
+     * 属性说明行的颜色 例如:HSSFColor.SKY_BLUE.index 默认
+     */
+    private short    headerColor       = HSSFColor.SKY_BLUE.index;
+    public ExportParams() {
 
-	/**
-	 * 表格名称
-	 */
-	private String title;
-	/**
-	 * 表格名称
-	 */
-	private short titleHeight = 20;
-	/**
-	 * 第二行名称
-	 */
-	private String secondTitle;
-	/**
-	 * 表格名称
-	 */
-	private short secondTitleHeight = 8;
-	/**
-	 * sheetName
-	 */
-	private String sheetName;
-	/**
-	 * 过滤的属性
-	 */
-	private String[] exclusions;
-	/**
-	 * 是否添加需要需要
-	 */
-	private boolean addIndex;
-	/**
-	 * 表头颜色
-	 */
-	private short color = HSSFColor.WHITE.index;
+    }
+    public ExportParams(String title, String sheetName) {
+        this.title = title;
+        this.sheetName = sheetName;
+    }
 
-	/**
-	 * 属性说明行的颜色 例如:HSSFColor.SKY_BLUE.index 默认
-	 */
-	private short headerColor = HSSFColor.SKY_BLUE.index;
+    public ExportParams(String title, String secondTitle, String sheetName) {
+        this.title = title;
+        this.secondTitle = secondTitle;
+        this.sheetName = sheetName;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public short getColor() {
+        return color;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String[] getExclusions() {
+        return exclusions;
+    }
 
-	public String getSheetName() {
-		return sheetName;
-	}
+    public short getHeaderColor() {
+        return headerColor;
+    }
 
-	public void setSheetName(String sheetName) {
-		this.sheetName = sheetName;
-	}
+    public String getSecondTitle() {
+        return secondTitle;
+    }
 
-	public short getColor() {
-		return color;
-	}
+    public short getSecondTitleHeight() {
+        return (short) (secondTitleHeight * 50);
+    }
 
-	public void setColor(short color) {
-		this.color = color;
-	}
+    public String getSheetName() {
+        return sheetName;
+    }
 
-	public String[] getExclusions() {
-		return exclusions;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setExclusions(String[] exclusions) {
-		this.exclusions = exclusions;
-	}
+    public short getTitleHeight() {
+        return (short) (titleHeight * 50);
+    }
 
-	public String getSecondTitle() {
-		return secondTitle;
-	}
+    public boolean isAddIndex() {
+        return addIndex;
+    }
 
-	public void setSecondTitle(String secondTitle) {
-		this.secondTitle = secondTitle;
-	}
+    public void setAddIndex(boolean addIndex) {
+        this.addIndex = addIndex;
+    }
 
-	public short getHeaderColor() {
-		return headerColor;
-	}
+    public void setColor(short color) {
+        this.color = color;
+    }
 
-	public void setHeaderColor(short headerColor) {
-		this.headerColor = headerColor;
-	}
+    public void setExclusions(String[] exclusions) {
+        this.exclusions = exclusions;
+    }
 
-	public short getTitleHeight() {
-		return (short) (titleHeight * 50);
-	}
+    public void setHeaderColor(short headerColor) {
+        this.headerColor = headerColor;
+    }
 
-	public void setTitleHeight(short titleHeight) {
-		this.titleHeight = titleHeight;
-	}
+    public void setSecondTitle(String secondTitle) {
+        this.secondTitle = secondTitle;
+    }
 
-	public short getSecondTitleHeight() {
-		return (short) (secondTitleHeight * 50);
-	}
+    public void setSecondTitleHeight(short secondTitleHeight) {
+        this.secondTitleHeight = secondTitleHeight;
+    }
 
-	public void setSecondTitleHeight(short secondTitleHeight) {
-		this.secondTitleHeight = secondTitleHeight;
-	}
+    public void setSheetName(String sheetName) {
+        this.sheetName = sheetName;
+    }
 
-	public boolean isAddIndex() {
-		return addIndex;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setAddIndex(boolean addIndex) {
-		this.addIndex = addIndex;
-	}
+    public void setTitleHeight(short titleHeight) {
+        this.titleHeight = titleHeight;
+    }
 }

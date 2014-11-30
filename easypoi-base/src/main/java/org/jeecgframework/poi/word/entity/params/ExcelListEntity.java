@@ -13,71 +13,69 @@ import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
  */
 public class ExcelListEntity extends ExcelBaseParams {
 
-	public ExcelListEntity() {
+    /**
+     * 数据源
+     */
+    private List<?>  list;
 
-	}
+    /**
+     * 实体类对象
+     */
+    private Class<?> clazz;
 
-	public ExcelListEntity(List<?> list, Class<?> clazz) {
-		this.list = list;
-		this.clazz = clazz;
-	}
+    /**
+     * 表头行数
+     */
+    private int      headRows = 1;
 
-	public ExcelListEntity(List<?> list, Class<?> clazz, int headRows) {
-		this.list = list;
-		this.clazz = clazz;
-		this.headRows = headRows;
-	}
+    public ExcelListEntity() {
 
-	public ExcelListEntity(List<?> list, Class<?> clazz,
-			IExcelDataHandler dataHanlder) {
-		this.list = list;
-		this.clazz = clazz;
-		setDataHanlder(dataHanlder);
-	}
+    }
 
-	public ExcelListEntity(List<?> list, Class<?> clazz,
-			IExcelDataHandler dataHanlder, int headRows) {
-		this.list = list;
-		this.clazz = clazz;
-		this.headRows = headRows;
-		setDataHanlder(dataHanlder);
-	}
+    public ExcelListEntity(List<?> list, Class<?> clazz) {
+        this.list = list;
+        this.clazz = clazz;
+    }
 
-	/**
-	 * 数据源
-	 */
-	private List<?> list;
-	/**
-	 * 实体类对象
-	 */
-	private Class<?> clazz;
-	/**
-	 * 表头行数
-	 */
-	private int headRows = 1;
+    public ExcelListEntity(List<?> list, Class<?> clazz, IExcelDataHandler dataHanlder) {
+        this.list = list;
+        this.clazz = clazz;
+        setDataHanlder(dataHanlder);
+    }
+    public ExcelListEntity(List<?> list, Class<?> clazz, IExcelDataHandler dataHanlder, int headRows) {
+        this.list = list;
+        this.clazz = clazz;
+        this.headRows = headRows;
+        setDataHanlder(dataHanlder);
+    }
+    public ExcelListEntity(List<?> list, Class<?> clazz, int headRows) {
+        this.list = list;
+        this.clazz = clazz;
+        this.headRows = headRows;
+    }
 
-	public List<?> getList() {
-		return list;
-	}
+    public Class<?> getClazz() {
+        return clazz;
+    }
 
-	public void setList(List<?> list) {
-		this.list = list;
-	}
+    public int getHeadRows() {
+        return headRows;
+    }
 
-	public Class<?> getClazz() {
-		return clazz;
-	}
+    public List<?> getList() {
+        return list;
+    }
 
-	public void setClazz(Class<?> clazz) {
-		this.clazz = clazz;
-	}
+    public void setClazz(Class<?> clazz) {
+        this.clazz = clazz;
+    }
 
-	public int getHeadRows() {
-		return headRows;
-	}
+    public void setHeadRows(int headRows) {
+        this.headRows = headRows;
+    }
 
-	public void setHeadRows(int headRows) {
-		this.headRows = headRows;
-	}
+    public void setList(List<?> list) {
+        this.list = list;
+    }
 
 }

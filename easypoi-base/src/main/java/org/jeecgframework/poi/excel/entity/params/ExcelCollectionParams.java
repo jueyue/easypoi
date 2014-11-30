@@ -2,7 +2,6 @@ package org.jeecgframework.poi.excel.entity.params;
 
 import java.util.Map;
 
-
 /**
  * Excel 对于的 Collection
  * 
@@ -12,41 +11,40 @@ import java.util.Map;
  */
 public class ExcelCollectionParams {
 
-	/**
-	 * 集合对应的名称
-	 */
-	private String name;
-	/**
-	 * 实体对象
-	 */
-	private Class<?> type;
-	/**
-	 * 这个list下面的参数集合实体对象
-	 */
-	private Map<String, ExcelImportEntity> excelParams;
-	
+    /**
+     * 集合对应的名称
+     */
+    private String                         name;
+    /**
+     * 实体对象
+     */
+    private Class<?>                       type;
+    /**
+     * 这个list下面的参数集合实体对象
+     */
+    private Map<String, ExcelImportEntity> excelParams;
 
-	public String getName() {
-		return name;
-	}
+    public Map<String, ExcelImportEntity> getExcelParams() {
+        return excelParams;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Class<?> getType() {
-		return type;
-	}
+    public Class<?> getType() {
+        return type;
+    }
 
-	public void setType(Class<?> type) {
-		this.type = type;
-	}
+    public void setExcelParams(Map<String, ExcelImportEntity> excelParams) {
+        this.excelParams = excelParams;
+    }
 
-	public Map<String, ExcelImportEntity> getExcelParams() {
-		return excelParams;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setExcelParams(Map<String, ExcelImportEntity> excelParams) {
-		this.excelParams = excelParams;
-	}
+    public void setType(Class<?> type) {
+        this.type = type;
+    }
 }
