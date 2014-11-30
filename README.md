@@ -12,10 +12,6 @@ EasyPoi的主要特点
 	2.接口丰富,扩展简单
 	3.默认值多,write less do more
 	4.AbstractView 支持,web导出可以简单明了
-	5.Jeecg社区的支持
-
-
-**Jeecg社区地址:http://www.jeecg.org **
 
 ---------------------------
 EasyPoi的几个入口工具类
@@ -109,4 +105,35 @@ EasyPoi导出实例
 	long start = new Date().getTime();
 	List<CourseEntity> list = ExcelImportUtil.importExcel(new File(
 			"d:/tt.xls"), CourseEntity.class, params);
-```			
+```	
+
+7.和spring mvc的无缝融合
+	简单几句话,Excel导出搞定
+```Java
+	@RequestMapping(params = "exportXls")
+	public String exportXls(CourseEntity course,HttpServletRequest request,HttpServletResponse response
+			, DataGrid dataGrid,ModelMap map) {
+
+        CriteriaQuery cq = new CriteriaQuery(CourseEntity.class, dataGrid);
+        org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, course, request.getParameterMap());
+        List<CourseEntity> courses = this.courseService.getListByCriteriaQuery(cq,false);
+
+        map.put(NormalExcelConstants.FILE_NAME,"用户信息");
+        map.put(NormalExcelConstants.CLASS,CourseEntity.class);
+        map.put(NormalExcelConstants.PARAMS,new ExportParams("课程列表", "导出人:Jeecg",
+                "导出信息"));
+        map.put(NormalExcelConstants.DATA_LIST,courses);
+        return NormalExcelConstants.JEECG_EXCEL_VIEW;
+
+	}
+```	
+
+###版本修改
+
+ - 2.0.6-SNAPSHOT
+	 - 增加map的导出
+	 - 增加index 列
+	 
+	 
+	 
+	 
