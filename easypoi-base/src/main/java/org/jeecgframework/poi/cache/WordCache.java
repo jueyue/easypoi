@@ -14,22 +14,22 @@ import org.jeecgframework.poi.word.entity.JeecgXWPFDocument;
  */
 public class WordCache {
 
-	public static JeecgXWPFDocument getXWPFDocumen(String url) {
-		InputStream is = null;
-		try {
-			is = POICacheManager.getFile(url);
-			JeecgXWPFDocument doc = new JeecgXWPFDocument(is);
-			return doc;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
+    public static JeecgXWPFDocument getXWPFDocumen(String url) {
+        InputStream is = null;
+        try {
+            is = POICacheManager.getFile(url);
+            JeecgXWPFDocument doc = new JeecgXWPFDocument(is);
+            return doc;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
 }

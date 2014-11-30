@@ -20,41 +20,35 @@ import org.springframework.web.servlet.view.AbstractView;
 @SuppressWarnings("unchecked")
 public class JeecgTemplateWordView extends AbstractView {
 
-	private static final String CONTENT_TYPE = "application/msword";
+    private static final String CONTENT_TYPE = "application/msword";
 
-	public JeecgTemplateWordView() {
-		setContentType(CONTENT_TYPE);
-	}
+    public JeecgTemplateWordView() {
+        setContentType(CONTENT_TYPE);
+    }
 
-	@Override
-	protected void renderMergedOutputModel(Map<String, Object> model,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String codedFileName = "临时文件.docx";
-		if (model.containsKey(TemplateWordConstants.FILE_NAME)) {
-			codedFileName = (String) model.get(TemplateWordConstants.FILE_NAME)
-					+ ".docx";
-		}
-		if (isIE(request)) {
-			codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
-		} else {
-			codedFileName = new String(codedFileName.getBytes("UTF-8"),
-					"ISO-8859-1");
-		}
-		response.setHeader("content-disposition", "attachment;filename="
-				+ codedFileName);
-		XWPFDocument document = WordExportUtil
-				.exportWord07((String) model.get(TemplateWordConstants.URL),
-						(Map<String, Object>) model
-								.get(TemplateWordConstants.MAP_DATA));
-		ServletOutputStream out = response.getOutputStream();
-		document.write(out);
-		out.flush();
-	}
+    public boolean isIE(HttpServletRequest request) {
+        return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request
+            .getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true : false;
+    }
 
-	public boolean isIE(HttpServletRequest request) {
-		return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request
-				.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true
-				: false;
-	}
+    @Override
+    protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
+                                           HttpServletResponse response) throws Exception {
+        String codedFileName = "临时文件.docx";
+        if (model.containsKey(TemplateWordConstants.FILE_NAME)) {
+            codedFileName = (String) model.get(TemplateWordConstants.FILE_NAME) + ".docx";
+        }
+        if (isIE(request)) {
+            codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
+        } else {
+            codedFileName = new String(codedFileName.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        response.setHeader("content-disposition", "attachment;filename=" + codedFileName);
+        XWPFDocument document = WordExportUtil.exportWord07(
+            (String) model.get(TemplateWordConstants.URL),
+            (Map<String, Object>) model.get(TemplateWordConstants.MAP_DATA));
+        ServletOutputStream out = response.getOutputStream();
+        document.write(out);
+        out.flush();
+    }
 }

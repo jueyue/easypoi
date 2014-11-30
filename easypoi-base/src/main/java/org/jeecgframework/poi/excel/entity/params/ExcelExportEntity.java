@@ -10,150 +10,150 @@ import java.util.List;
  */
 public class ExcelExportEntity extends ExcelBaseEntity {
 
-	public ExcelExportEntity() {
+    /**
+     * 如果是MAP导出,这个是map的key
+     */
+    private Object                  key;
 
-	}
+    private int                     width           = 10;
 
-	public ExcelExportEntity(String name) {
-		super.name = name;
-	}
+    private int                     height          = 10;
 
-	public ExcelExportEntity(String name, Object key) {
-		super.name = name;
-		this.key = key;
-	}
+    /**
+     * 图片的类型,1是文件,2是数据库
+     */
+    private int                     exportImageType = 0;
 
-	public ExcelExportEntity(String name, Object key, int width) {
-		super.name = name;
-		this.width = width;
-		this.key = key;
-	}
+    /**
+     * 排序顺序
+     */
+    private int                     orderNum        = 0;
 
-	/**
-	 * 如果是MAP导出,这个是map的key
-	 */
-	private Object key;
+    /**
+     * 是否支持换行
+     */
+    private boolean                 isWrap;
 
-	private int width = 10;
+    /**
+     * 是否需要合并
+     */
+    private boolean                 needMerge;
+    /**
+     * 单元格纵向合并
+     */
+    private boolean                 mergeVertical;
+    /**
+     * 合并依赖
+     */
+    private int[]                   mergeRely;
+    /**
+     * cell 函数
+     */
+    private String                  cellFormula;
+    private List<ExcelExportEntity> list;
+    public ExcelExportEntity() {
 
-	private int height = 10;
-	/**
-	 * 图片的类型,1是文件,2是数据库
-	 */
-	private int exportImageType = 0;
-	/**
-	 * 排序顺序
-	 */
-	private int orderNum = 0;
-	/**
-	 * 是否支持换行
-	 */
-	private boolean isWrap;
-	/**
-	 * 是否需要合并
-	 */
-	private boolean needMerge;
-	/**
-	 * 单元格纵向合并
-	 */
-	private boolean mergeVertical;
-	/**
-	 * 合并依赖
-	 */
-	private int[] mergeRely;
-	/**
-	 * cell 函数
-	 */
-	private String cellFormula;
+    }
+    public ExcelExportEntity(String name) {
+        super.name = name;
+    }
+    public ExcelExportEntity(String name, Object key) {
+        super.name = name;
+        this.key = key;
+    }
 
-	private List<ExcelExportEntity> list;
+    public ExcelExportEntity(String name, Object key, int width) {
+        super.name = name;
+        this.width = width;
+        this.key = key;
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    public String getCellFormula() {
+        return cellFormula;
+    }
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+    public int getExportImageType() {
+        return exportImageType;
+    }
 
-	public List<ExcelExportEntity> getList() {
-		return list;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public void setList(List<ExcelExportEntity> list) {
-		this.list = list;
-	}
+    public Object getKey() {
+        return key;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public List<ExcelExportEntity> getList() {
+        return list;
+    }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+    public int[] getMergeRely() {
+        return mergeRely;
+    }
 
-	public int getOrderNum() {
-		return orderNum;
-	}
+    public int getOrderNum() {
+        return orderNum;
+    }
 
-	public void setOrderNum(int orderNum) {
-		this.orderNum = orderNum;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public boolean isWrap() {
-		return isWrap;
-	}
+    public boolean isMergeVertical() {
+        return mergeVertical;
+    }
 
-	public void setWrap(boolean isWrap) {
-		this.isWrap = isWrap;
-	}
+    public boolean isNeedMerge() {
+        return needMerge;
+    }
 
-	public boolean isNeedMerge() {
-		return needMerge;
-	}
+    public boolean isWrap() {
+        return isWrap;
+    }
 
-	public void setNeedMerge(boolean needMerge) {
-		this.needMerge = needMerge;
-	}
+    public void setCellFormula(String cellFormula) {
+        this.cellFormula = cellFormula;
+    }
 
-	public int[] getMergeRely() {
-		return mergeRely;
-	}
+    public void setExportImageType(int exportImageType) {
+        this.exportImageType = exportImageType;
+    }
 
-	public void setMergeRely(int[] mergeRely) {
-		this.mergeRely = mergeRely;
-	}
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
-	public int getExportImageType() {
-		return exportImageType;
-	}
+    public void setKey(Object key) {
+        this.key = key;
+    }
 
-	public void setExportImageType(int exportImageType) {
-		this.exportImageType = exportImageType;
-	}
+    public void setList(List<ExcelExportEntity> list) {
+        this.list = list;
+    }
 
-	public String getCellFormula() {
-		return cellFormula;
-	}
+    public void setMergeRely(int[] mergeRely) {
+        this.mergeRely = mergeRely;
+    }
 
-	public void setCellFormula(String cellFormula) {
-		this.cellFormula = cellFormula;
-	}
+    public void setMergeVertical(boolean mergeVertical) {
+        this.mergeVertical = mergeVertical;
+    }
 
-	public boolean isMergeVertical() {
-		return mergeVertical;
-	}
+    public void setNeedMerge(boolean needMerge) {
+        this.needMerge = needMerge;
+    }
 
-	public void setMergeVertical(boolean mergeVertical) {
-		this.mergeVertical = mergeVertical;
-	}
+    public void setOrderNum(int orderNum) {
+        this.orderNum = orderNum;
+    }
 
-	public Object getKey() {
-		return key;
-	}
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
-	public void setKey(Object key) {
-		this.key = key;
-	}
+    public void setWrap(boolean isWrap) {
+        this.isWrap = isWrap;
+    }
 
 }

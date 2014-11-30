@@ -9,78 +9,78 @@ package org.jeecgframework.poi.word.entity;
  */
 public class WordImageEntity {
 
-	public static String URL = "url";
-	public static String Data = "data";
-	/**
-	 * 图片输入方式
-	 */
-	private String type = URL;
-	/**
-	 * 图片宽度
-	 */
-	private int width;
-	// 图片高度
-	private int height;
-	// 图片地址
-	private String url;
-	// 图片信息
-	private byte[] data;
+    public static String URL  = "url";
+    public static String Data = "data";
+    /**
+     * 图片输入方式
+     */
+    private String       type = URL;
+    /**
+     * 图片宽度
+     */
+    private int          width;
+    // 图片高度
+    private int          height;
+    // 图片地址
+    private String       url;
+    // 图片信息
+    private byte[]       data;
 
-	public WordImageEntity() {
+    public WordImageEntity() {
 
-	}
+    }
 
-	public WordImageEntity(String url, int width, int height) {
-		this.url = url;
-		this.width = width;
-		this.height = height;
-	}
+    public WordImageEntity(byte[] data, int width, int height) {
+        this.data = data;
+        this.width = width;
+        this.height = height;
+        this.type = Data;
+    }
 
-	public WordImageEntity(byte[] data, int width, int height) {
-		this.data = data;
-		this.width = width;
-		this.height = height;
-		this.type = Data;
-	}
+    public WordImageEntity(String url, int width, int height) {
+        this.url = url;
+        this.width = width;
+        this.height = height;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public byte[] getData() {
+        return data;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+    public void setData(byte[] data) {
+        this.data = data;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setData(byte[] data) {
-		this.data = data;
-	}
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
 }

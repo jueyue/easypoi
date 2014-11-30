@@ -2,93 +2,94 @@ package org.jeecgframework.poi.excel.entity.params;
 
 import java.lang.reflect.Method;
 import java.util.List;
+
 /**
  * Excel 导入导出基础对象类
  * @author JueYue
  * @date 2014年6月20日 下午2:26:09
  */
 public class ExcelBaseEntity {
-	/**
-	 * 对应name
-	 */
-	protected String name;
-	/**
-	 * 对应type
-	 */
-	private int type = 1;
-	/**
-	 * 数据库格式
-	 */
-	private String databaseFormat;
-	/**
-	 * 导出日期格式
-	 */
-	private String format;
-	/**
-	 * 导出日期格式
-	 */
-	private String[] replace;
-	/**
-	 * set/get方法
-	 */
-	private Method method;
+    /**
+     * 对应name
+     */
+    protected String     name;
+    /**
+     * 对应type
+     */
+    private int          type = 1;
+    /**
+     * 数据库格式
+     */
+    private String       databaseFormat;
+    /**
+     * 导出日期格式
+     */
+    private String       format;
+    /**
+     * 导出日期格式
+     */
+    private String[]     replace;
+    /**
+     * set/get方法
+     */
+    private Method       method;
 
-	private List<Method> methods;
+    private List<Method> methods;
 
-	public String getName() {
-		return name;
-	}
+    public String getDatabaseFormat() {
+        return databaseFormat;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getFormat() {
+        return format;
+    }
 
-	public int getType() {
-		return type;
-	}
+    public Method getMethod() {
+        return method;
+    }
 
-	public void setType(int type) {
-		this.type = type;
-	}
+    public List<Method> getMethods() {
+        return methods;
+    }
 
-	public String getDatabaseFormat() {
-		return databaseFormat;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDatabaseFormat(String databaseFormat) {
-		this.databaseFormat = databaseFormat;
-	}
+    public String[] getReplace() {
+        return replace;
+    }
 
-	public String getFormat() {
-		return format;
-	}
+    public int getType() {
+        return type;
+    }
 
-	public void setFormat(String format) {
-		this.format = format;
-	}
+    public void setDatabaseFormat(String databaseFormat) {
+        this.databaseFormat = databaseFormat;
+    }
 
-	public String[] getReplace() {
-		return replace;
-	}
+    public void setFormat(String format) {
+        this.format = format;
+    }
 
-	public void setReplace(String[] replace) {
-		this.replace = replace;
-	}
+    public void setMethod(Method method) {
+        this.method = method;
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public void setMethods(List<Method> methods) {
+        this.methods = methods;
+    }
 
-	public void setMethod(Method method) {
-		this.method = method;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public List<Method> getMethods() {
-		return methods;
-	}
+    public void setReplace(String[] replace) {
+        this.replace = replace;
+    }
 
-	public void setMethods(List<Method> methods) {
-		this.methods = methods;
-	}
+    public void setType(int type) {
+        this.type = type;
+    }
 
 }

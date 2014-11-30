@@ -27,164 +27,159 @@ import org.slf4j.LoggerFactory;
  */
 public class CellValueServer {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CellValueServer.class);
+    private static final Logger logger      = LoggerFactory.getLogger(CellValueServer.class);
 
-	private List<String> hanlderList = null;
+    private List<String>        hanlderList = null;
 
-	/**
-	 * 获取cell的值
-	 * 
-	 * @param object
-	 * @param excelParams
-	 * @param cell
-	 * @param titleString
-	 */
-	public Object getValue(IExcelDataHandler dataHanlder, Object object,
-			Cell cell, Map<String, ExcelImportEntity> excelParams,
-			String titleString) throws Exception {
-		ExcelImportEntity entity = excelParams.get(titleString);
-		Method setMethod = entity.getMethods() != null
-				&& entity.getMethods().size() > 0 ? entity.getMethods().get(
-				entity.getMethods().size() - 1) : entity.getMethod();
-		Type[] ts = setMethod.getGenericParameterTypes();
-		String xclass = ts[0].toString();
-		Object result = getCellValue(xclass, cell, entity);
-		result = replaceValue(entity.getReplace(), result);
-		result = hanlderValue(dataHanlder, object, result, titleString);
-		return getValueByType(xclass, result);
-	}
+    /**
+     * 获取单元格内的值
+     * 
+     * @param xclass
+     * @param cell
+     * @param entity
+     * @return
+     */
+    private Object getCellValue(String xclass, Cell cell, ExcelImportEntity entity) {
+        if (cell == null) {
+            return "";
+        }
+        Object result = null;
+        // 日期格式比较特殊,和cell格式不一致
+        if (xclass.equals("class java.util.Date")) {
+            if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+                // 日期格式
+                result = cell.getDateCellValue();
+            } else {
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+                result = getDateData(entity, cell.getStringCellValue());
+            }
+        } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+            result = cell.getNumericCellValue();
+        } else if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
+            result = cell.getBooleanCellValue();
+        } else {
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            result = cell.getStringCellValue();
+        }
+        return result;
+    }
 
-	/**
-	 * 根据返回类型获取返回值
-	 * 
-	 * @param xclass
-	 * @param result
-	 * @return
-	 */
-	private Object getValueByType(String xclass, Object result) {
-		try {
-			if (xclass.equals("class java.util.Date")) {
-				return result;
-			}
-			if (xclass.equals("class java.lang.Boolean")
-					|| xclass.equals("boolean")) {
-				return Boolean.valueOf(String.valueOf(result));
-			}
-			if (xclass.equals("class java.lang.Double") || xclass.equals("double")) {
-				return Double.valueOf(String.valueOf(result));
-			}
-			if (xclass.equals("class java.lang.Long") || xclass.equals("long")) {
-				return Long.valueOf(String.valueOf(result));
-			}
-			if (xclass.equals("class java.lang.Integer") || xclass.equals("int")) {
-				return Integer.valueOf(String.valueOf(result));
-			}
-			return String.valueOf(result);
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
-		}
-	}
+    /**
+     * 获取日期类型数据
+     * 
+     * @Author JueYue
+     * @date 2013年11月26日
+     * @param entity
+     * @param value
+     * @return
+     */
+    private Date getDateData(ExcelImportEntity entity, String value) {
+        if (StringUtils.isNotEmpty(entity.getFormat()) && StringUtils.isNotEmpty(value)) {
+            SimpleDateFormat format = new SimpleDateFormat(entity.getFormat());
+            try {
+                return format.parse(value);
+            } catch (ParseException e) {
+                logger.error("时间格式化失败,格式化:{},值:{}", entity.getFormat(), value);
+                throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * 调用处理接口处理值
-	 * 
-	 * @param dataHanlder
-	 * @param object
-	 * @param result
-	 * @param titleString
-	 * @return
-	 */
-	private Object hanlderValue(IExcelDataHandler dataHanlder, Object object,
-			Object result, String titleString) {
-		if (dataHanlder == null) {
-			return result;
-		}
-		if (hanlderList == null) {
-			hanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
-		}
-		if (hanlderList.contains(titleString)) {
-			return dataHanlder.importHandler(object, titleString, result);
-		}
-		return result;
-	}
+    /**
+     * 获取cell的值
+     * 
+     * @param object
+     * @param excelParams
+     * @param cell
+     * @param titleString
+     */
+    public Object getValue(IExcelDataHandler dataHanlder, Object object, Cell cell,
+                           Map<String, ExcelImportEntity> excelParams, String titleString)
+                                                                                          throws Exception {
+        ExcelImportEntity entity = excelParams.get(titleString);
+        Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0 ? entity
+            .getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
+        Type[] ts = setMethod.getGenericParameterTypes();
+        String xclass = ts[0].toString();
+        Object result = getCellValue(xclass, cell, entity);
+        result = replaceValue(entity.getReplace(), result);
+        result = hanlderValue(dataHanlder, object, result, titleString);
+        return getValueByType(xclass, result);
+    }
 
-	/**
-	 * 替换值
-	 * 
-	 * @param replace
-	 * @param result
-	 * @return
-	 */
-	private Object replaceValue(String[] replace, Object result) {
-		if (replace != null && replace.length > 0) {
-			String temp = String.valueOf(result);
-			String[] tempArr;
-			for (int i = 0; i < replace.length; i++) {
-				tempArr = replace[i].split("_");
-				if (temp.equals(tempArr[0])) {
-					return tempArr[1];
-				}
-			}
-		}
-		return result;
-	}
+    /**
+     * 根据返回类型获取返回值
+     * 
+     * @param xclass
+     * @param result
+     * @return
+     */
+    private Object getValueByType(String xclass, Object result) {
+        try {
+            if (xclass.equals("class java.util.Date")) {
+                return result;
+            }
+            if (xclass.equals("class java.lang.Boolean") || xclass.equals("boolean")) {
+                return Boolean.valueOf(String.valueOf(result));
+            }
+            if (xclass.equals("class java.lang.Double") || xclass.equals("double")) {
+                return Double.valueOf(String.valueOf(result));
+            }
+            if (xclass.equals("class java.lang.Long") || xclass.equals("long")) {
+                return Long.valueOf(String.valueOf(result));
+            }
+            if (xclass.equals("class java.lang.Integer") || xclass.equals("int")) {
+                return Integer.valueOf(String.valueOf(result));
+            }
+            return String.valueOf(result);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
+        }
+    }
 
-	/**
-	 * 获取单元格内的值
-	 * 
-	 * @param xclass
-	 * @param cell
-	 * @param entity
-	 * @return
-	 */
-	private Object getCellValue(String xclass, Cell cell,
-			ExcelImportEntity entity) {
-		if(cell == null){
-			return "";
-		}
-		Object result = null;
-		// 日期格式比较特殊,和cell格式不一致
-		if (xclass.equals("class java.util.Date")) {
-			if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-				// 日期格式
-				result = cell.getDateCellValue();
-			} else {
-				cell.setCellType(Cell.CELL_TYPE_STRING);
-				result = getDateData(entity, cell.getStringCellValue());
-			}
-		} else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-			result = cell.getNumericCellValue();
-		}else if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
-			result = cell.getBooleanCellValue();
-		} else {
-			cell.setCellType(Cell.CELL_TYPE_STRING);
-			result = cell.getStringCellValue();
-		}
-		return result;
-	}
+    /**
+     * 调用处理接口处理值
+     * 
+     * @param dataHanlder
+     * @param object
+     * @param result
+     * @param titleString
+     * @return
+     */
+    private Object hanlderValue(IExcelDataHandler dataHanlder, Object object, Object result,
+                                String titleString) {
+        if (dataHanlder == null) {
+            return result;
+        }
+        if (hanlderList == null) {
+            hanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
+        }
+        if (hanlderList.contains(titleString)) {
+            return dataHanlder.importHandler(object, titleString, result);
+        }
+        return result;
+    }
 
-	/**
-	 * 获取日期类型数据
-	 * 
-	 * @Author JueYue
-	 * @date 2013年11月26日
-	 * @param entity
-	 * @param value
-	 * @return
-	 */
-	private Date getDateData(ExcelImportEntity entity, String value) {
-		if (StringUtils.isNotEmpty(entity.getFormat())
-				&& StringUtils.isNotEmpty(value)) {
-			SimpleDateFormat format = new SimpleDateFormat(entity.getFormat());
-			try {
-				return format.parse(value);
-			} catch (ParseException e) {
-				logger.error("时间格式化失败,格式化:{},值:{}", entity.getFormat(), value);
-				throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
-			}
-		}
-		return null;
-	}
+    /**
+     * 替换值
+     * 
+     * @param replace
+     * @param result
+     * @return
+     */
+    private Object replaceValue(String[] replace, Object result) {
+        if (replace != null && replace.length > 0) {
+            String temp = String.valueOf(result);
+            String[] tempArr;
+            for (int i = 0; i < replace.length; i++) {
+                tempArr = replace[i].split("_");
+                if (temp.equals(tempArr[0])) {
+                    return tempArr[1];
+                }
+            }
+        }
+        return result;
+    }
 }
