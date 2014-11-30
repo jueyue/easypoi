@@ -8,6 +8,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
+import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
 import org.jeecgframework.poi.excel.export.template.ExcelExportOfTemplateUtil;
 
@@ -52,6 +53,20 @@ public final class ExcelExportUtil {
 			Class<?> pojoClass, Collection<?> dataSet) {
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		new ExcelExportServer().createSheet(workbook, entity, pojoClass, dataSet);
+		return workbook;
+	}
+	/**
+	 * @param entity
+	 *            表格标题属性
+	 * @param pojoClass
+	 *            Excel对象Class
+	 * @param dataSet
+	 *            Excel对象数据List
+	 */
+	public static HSSFWorkbook exportExcel(ExportParams entity,
+			List<ExcelExportEntity> entityList, Collection<? extends Map<?,?>> dataSet) {
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		new ExcelExportServer().createSheetForMap(workbook, entity, entityList, dataSet);
 		return workbook;
 	}
 

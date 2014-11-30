@@ -32,6 +32,7 @@ import org.jeecgframework.poi.util.POIPublicUtil;
  * @version 1.0
  */
 public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
+	
 
 	public Workbook createExcleByTemplate(TemplateExportParams params,
 			Class<?> pojoClass, Collection<?> dataSet, Map<String, Object> map) {
@@ -44,19 +45,13 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 		// step 2. 判断模板的Excel类型,解析模板
 		try {
 			wb = getCloneWorkBook(params);
-			// step 3. 删除其他的sheet
-			for (int i = wb.getNumberOfSheets() - 1; i >= 0; i--) {
-				if (i != params.getSheetNum()) {
-					wb.removeSheetAt(i);
-				}
-			}
 			if (StringUtils.isNotEmpty(params.getSheetName())) {
 				wb.setSheetName(0, params.getSheetName());
 			}
-			// step 4. 解析模板
+			// step 3. 解析模板
 			parseTemplate(wb.getSheetAt(0), map);
 			if (dataSet != null) {
-				// step 5. 正常的数据填充
+				// step 4. 正常的数据填充
 				dataHanlder = params.getDataHanlder();
 				if (dataHanlder != null) {
 					needHanlderList = Arrays.asList(dataHanlder

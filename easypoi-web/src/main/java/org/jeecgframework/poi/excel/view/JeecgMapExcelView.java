@@ -2,7 +2,8 @@ package org.jeecgframework.poi.excel.view;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.vo.MapExcelConstants;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
@@ -14,18 +15,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author JueYue on 14-3-8. Excel 生成解析器,减少用户操作
+ * Map 对象接口
+ * 
+ * @author JueYue
+ * @date 2014年11月25日 下午3:26:32
  */
 @SuppressWarnings("unchecked")
-public class JeecgSingleExcelView extends AbstractExcelView {
+public class JeecgMapExcelView extends AbstractExcelView {
 
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model,
 			HSSFWorkbook hssfWorkbook, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) throws Exception {
 		String codedFileName = "临时文件.xls";
-		if (model.containsKey(NormalExcelConstants.FILE_NAME)) {
-			codedFileName = (String) model.get(NormalExcelConstants.FILE_NAME)
+		if (model.containsKey(MapExcelConstants.FILE_NAME)) {
+			codedFileName = (String) model.get(MapExcelConstants.FILE_NAME)
 					+ ".xls";
 		}
 		if (isIE(httpServletRequest)) {
@@ -35,24 +39,13 @@ public class JeecgSingleExcelView extends AbstractExcelView {
 					"ISO-8859-1");
 		}
 		httpServletResponse.setHeader("content-disposition",
-				"attachment;filename="+codedFileName);
-		if (model.containsKey(NormalExcelConstants.MAP_LIST)) {
-			List<Map<String, Object>> list = (List<Map<String, Object>>) model
-					.get(NormalExcelConstants.MAP_LIST);
-			for (Map<String, Object> map : list) {
-				new ExcelExportServer()
-						.createSheet(hssfWorkbook, (ExportParams) map
-								.get(NormalExcelConstants.PARAMS),
-								(Class<?>) map.get(NormalExcelConstants.CLASS),
-								(Collection<?>) map
-										.get(NormalExcelConstants.DATA_LIST));
-			}
-		} else {
-			new ExcelExportServer().createSheet(hssfWorkbook,
-					(ExportParams) model.get(NormalExcelConstants.PARAMS),
-					(Class<?>) model.get(NormalExcelConstants.CLASS),
-					(Collection<?>) model.get(NormalExcelConstants.DATA_LIST));
-		}
+				"attachment;filename=" + codedFileName);
+		new ExcelExportServer().createSheetForMap(hssfWorkbook,
+				(ExportParams) model.get(MapExcelConstants.PARAMS),
+				(List<ExcelExportEntity>) model
+						.get(MapExcelConstants.ENTITY_LIST),
+				(Collection<? extends Map<?, ?>>) model
+						.get(MapExcelConstants.MAP_LIST));
 	}
 
 	public boolean isIE(HttpServletRequest request) {

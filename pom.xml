@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jeecgframework</groupId>
 	<artifactId>easypoi</artifactId>
-	<version>2.0.2</version>
+	<version>2.0.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>easypoi</name>
 	<modules>
@@ -11,18 +11,19 @@
 		<module>easypoi-web</module>
 		<module>easypoi-test</module>
 	</modules>
-	
+
 	<url>www.jeecg.org</url>
 	<description> office 工具类 基于 poi</description>
-	
+
 	<developers>
 		<developer>
 			<name>JueYue</name>
 			<email>qrb.jueyue@gmail.com</email>
 		</developer>
 	</developers>
-	
+
 	<properties>
+		<sub.version>2.0.6-SNAPSHOT</sub.version>
 		<poi-ooxml-schemas.version>3.9</poi-ooxml-schemas.version>
 		<poi-ooxml.version>3.9</poi-ooxml.version>
 		<poi-scratchpad.version>3.9</poi-scratchpad.version>
@@ -109,7 +110,7 @@
 				<version>2.5</version>
 				<scope>provided</scope>
 			</dependency>
-			
+
 			<!-- test -->
 			<dependency>
 				<groupId>junit</groupId>
@@ -117,16 +118,17 @@
 				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
-			
+
 			<!-- 模块版本 -->
 			<dependency>
 				<groupId>org.jeecgframework</groupId>
 				<artifactId>easypoi-base</artifactId>
-				<version>2.0.2</version>
+				<version>${sub.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
+	<!-- 内部 maven 地址 -->
 	<distributionManagement>
 		<repository>
 			<id>postaop-pay-platform-release</id>
@@ -134,9 +136,14 @@
 		</repository>
 		<snapshotRepository>
 			<id>postaop-pay-platform-snapshot</id>
-			<url>http://192.168.0.99:8081/nexus/content/repositoriespostaop-common-snapshot/</url>
+			<url>http://192.168.0.99:8081/nexus/content/repositories/postaop-common-snapshot/</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+	<scm>
+		<connection>scm:svn:https://192.168.0.99:8443/svn/postaop-platform/qdcrm/trunk/</connection>
+		<developerConnection>scm:svn:https://192.168.0.99:8443/svn/postaop-platform/qdcrm/trunk/</developerConnection>
+	</scm>
 
 	<build>
 		<plugins>

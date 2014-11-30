@@ -35,12 +35,26 @@ public class JeecgTemplateWordView extends AbstractView {
 			codedFileName = (String) model.get(TemplateWordConstants.FILE_NAME)
 					+ ".docx";
 		}
+		if (isIE(request)) {
+			codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
+		} else {
+			codedFileName = new String(codedFileName.getBytes("UTF-8"),
+					"ISO-8859-1");
+		}
 		response.setHeader("content-disposition", "attachment;filename="
-				+ new String(codedFileName.getBytes(), "iso8859-1"));
-		XWPFDocument document = WordExportUtil.exportWord07((String)model.get(TemplateWordConstants.URL),
-				(Map<String, Object>)model.get(TemplateWordConstants.MAP_DATA));
+				+ codedFileName);
+		XWPFDocument document = WordExportUtil
+				.exportWord07((String) model.get(TemplateWordConstants.URL),
+						(Map<String, Object>) model
+								.get(TemplateWordConstants.MAP_DATA));
 		ServletOutputStream out = response.getOutputStream();
 		document.write(out);
 		out.flush();
+	}
+
+	public boolean isIE(HttpServletRequest request) {
+		return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request
+				.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true
+				: false;
 	}
 }

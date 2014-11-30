@@ -59,7 +59,6 @@ public class ExcelExportUtilIdTest {
 			telist.add(teacherEntity);
 		}
 	}
-	
 
 	/**
 	 * 单行表头导出测试
@@ -68,8 +67,10 @@ public class ExcelExportUtilIdTest {
 	 */
 	@Test
 	public void testExportExcel() throws Exception {
-		HSSFWorkbook workbook = ExcelExportUtil.exportExcel(new ExportParams(
-				"2412312", "测试", "测试"), TeacherEntity.class, telist);
+		ExportParams params = new ExportParams("2412312", "测试", "测试");
+		params.setAddIndex(true);
+		HSSFWorkbook workbook = ExcelExportUtil.exportExcel(params,
+				TeacherEntity.class, telist);
 		FileOutputStream fos = new FileOutputStream("d:/tt.xls");
 		workbook.write(fos);
 		fos.close();

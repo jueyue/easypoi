@@ -94,6 +94,9 @@ public class ExcelImportServer {
 		}
 		Map<String, PictureData> pictures;
 		for (int i = 0; i < params.getSheetNum(); i++) {
+			if(logger.isDebugEnabled()){
+				logger.debug(" start to read excel by is ,startTime is {}", new Date().getTime());
+			}
 			if (isXSSFWorkbook) {
 				pictures = POIPublicUtil.getSheetPictrues07(
 						(XSSFSheet) book.getSheetAt(i), (XSSFWorkbook) book);
@@ -101,8 +104,14 @@ public class ExcelImportServer {
 				pictures = POIPublicUtil.getSheetPictrues03(
 						(HSSFSheet) book.getSheetAt(i), (HSSFWorkbook) book);
 			}
+			if(logger.isDebugEnabled()){
+				logger.debug(" end to read excel by is ,endTime is {}", new Date().getTime());
+			}
 			result.addAll(importExcel(result, book.getSheetAt(i), pojoClass,
 					params, pictures));
+			if(logger.isDebugEnabled()){
+				logger.debug(" end to read excel list by pos ,endTime is {}", new Date().getTime());
+			}
 		}
 		if (params.isNeedSave()) {
 			saveThisExcel(params, pojoClass, isXSSFWorkbook, book);
@@ -141,8 +150,7 @@ public class ExcelImportServer {
 		if (params.getSaveUrl().equals("upload/excelUpload")) {
 			url = pojoClass.getName().split("\\.")[pojoClass.getName().split(
 					"\\.").length - 1];
-			return params.getSaveUrl() + "/"
-					+ url.substring(0, url.lastIndexOf("Entity"));
+			return params.getSaveUrl() + "/" + url;
 		}
 		return params.getSaveUrl();
 	}
