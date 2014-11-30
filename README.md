@@ -51,16 +51,21 @@ EasyPoi导出实例
 ```
 2.基础导出
 	传入导出参数,导出对象,以及对象列表即可完成导出
+```Java
 	HSSFWorkbook workbook = ExcelExportUtil.exportExcel(new ExportParams(
 				"2412312", "测试", "测试"), CourseEntity.class, list);
+```
 3.基础导出,带有索引
 	在到处参数设置一个值,就可以在导出列增加索引
+```Java
 	ExportParams params = new ExportParams("2412312", "测试", "测试");
 	params.setAddIndex(true);
 	HSSFWorkbook workbook = ExcelExportUtil.exportExcel(params,
 			TeacherEntity.class, telist);
+```			
 4.导出Map
 	创建类似注解的集合,即可完成Map的导出,略有麻烦
+```Java
 	List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
 	entity.add(new ExcelExportEntity("姓名", "name"));
 	entity.add(new ExcelExportEntity("性别", "sex"));
@@ -76,8 +81,10 @@ EasyPoi导出实例
 
 	HSSFWorkbook workbook = ExcelExportUtil.exportExcel(new ExportParams(
 			"测试", "测试"), entity, list);	
+```			
 5.模板导出
 	根据模板配置,完成对应导出
+```Java
 	TemplateExportParams params = new TemplateExportParams();
 	params.setHeadingRows(2);
 	params.setHeadingStartRow(2);
@@ -90,8 +97,10 @@ EasyPoi导出实例
 	params.setTemplateUrl("org/jeecgframework/poi/excel/doc/exportTemp.xls");
 	Workbook book = ExcelExportUtil.exportExcel(params, CourseEntity.class, list,
 			map);
+```			
 6.导入
 	设置导入参数,传入文件或者流,即可获得相应的list
+```Java
 	ImportParams params = new ImportParams();
 	params.setTitleRows(2);
 	params.setHeadRows(2);
@@ -100,3 +109,4 @@ EasyPoi导出实例
 	long start = new Date().getTime();
 	List<CourseEntity> list = ExcelImportUtil.importExcel(new File(
 			"d:/tt.xls"), CourseEntity.class, params);
+```			
