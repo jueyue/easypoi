@@ -21,6 +21,12 @@ EasyPoi的几个入口工具类
 	2.ExcelImportUtil Excel导入
 	3.WordExportUtil Word导出(只支持docx ,doc版本poi存在图片的bug,暂不支持)
 	
+--------------------------
+版本修改
+--------------------------
+ - 2.0.6-SNAPSHOT
+	 - 增加map的导出
+	 - 增加index 列
 
 ---------------------------
 EasyPoi导出实例
@@ -128,12 +134,4 @@ EasyPoi导出实例
 	}
 ```	
 
-###版本修改
-
- - 2.0.6-SNAPSHOT
-	 - 增加map的导出
-	 - 增加index 列
-	 
-	 
-	 
 	 
