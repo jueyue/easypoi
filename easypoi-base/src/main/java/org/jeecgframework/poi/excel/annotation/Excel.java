@@ -47,6 +47,10 @@ public @interface Excel {
      * 导入的时间格式,以这个是否为空来判断是否需要格式化日期
      */
     public String importFormat() default "";
+    /**
+     * 文字后缀,如% 90 变成90%
+     */
+    public String suffix() default "";
 
     /**
      * 是否换行 即支持\n

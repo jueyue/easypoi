@@ -47,12 +47,7 @@ public class ExportBase {
                                                                                                   throws Exception {
         Excel excel = field.getAnnotation(Excel.class);
         ExcelExportEntity excelEntity = new ExcelExportEntity();
-        try {
-            excelEntity.setType(excel.type());
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        excelEntity.setType(excel.type());
         getExcelField(targetId, field, excelEntity, excel, pojoClass);
         if (getMethods != null) {
             List<Method> newMethods = new ArrayList<Method>();
@@ -162,17 +157,22 @@ public class ExportBase {
     public Object getCellValue(ExcelExportEntity entity, Object obj) throws Exception {
         Object value;
         if (obj instanceof Map) {
-            return ((Map<?, ?>) obj).get(entity.getKey());
+            value = ((Map<?, ?>) obj).get(entity.getKey());
         } else {
             value = entity.getMethods() != null ? getFieldBySomeMethod(entity.getMethods(), obj)
                 : entity.getMethod().invoke(obj, new Object[] {});
         }
+        if (StringUtils.isNotEmpty(entity.getFormat())) {
+            value = formatValue(value, entity);
+        }
+        if (entity.getReplace() != null && entity.getReplace().length > 0) {
+            value = replaceValue(entity.getReplace(), String.valueOf(value));
+        }
         if (needHanlderList != null && needHanlderList.contains(entity.getName())) {
             value = dataHanlder.exportHandler(obj, entity.getName(), value);
-        } else if (StringUtils.isNotEmpty(entity.getFormat())) {
-            value = formatValue(value, entity);
-        } else if (entity.getReplace() != null && entity.getReplace().length > 0) {
-            value = replaceValue(entity.getReplace(), String.valueOf(value));
+        }
+        if (StringUtils.isNotEmpty(entity.getSuffix()) && value != null) {
+            value = value + entity.getSuffix();
         }
         return value == null ? "" : value.toString();
     }
@@ -199,6 +199,7 @@ public class ExportBase {
         excelEntity.setOrderNum(getCellOrder(excel.orderNum(), targetId));
         excelEntity.setWrap(excel.isWrap());
         excelEntity.setExportImageType(excel.imageType());
+        excelEntity.setSuffix(excel.suffix());
         excelEntity.setDatabaseFormat(excel.databaseFormat());
         excelEntity.setFormat(StringUtils.isNotEmpty(excel.exportFormat()) ? excel.exportFormat()
             : excel.format());

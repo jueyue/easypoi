@@ -25,7 +25,7 @@ public class StudentEntity implements java.io.Serializable {
     /**
      * 学生性别
      */
-    @Excel(name = "学生性别", replace = { "男_1", "女_2" })
+    @Excel(name = "学生性别", replace = { "男_1", "女_2" },suffix = "生")
     private int          sex;
 
     @Excel(name = "出生日期", format = "yyyy-MM-dd HH:mm:ss", mergeVertical = true)
