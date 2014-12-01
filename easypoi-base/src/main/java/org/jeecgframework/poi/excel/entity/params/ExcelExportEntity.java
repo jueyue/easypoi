@@ -50,13 +50,21 @@ public class ExcelExportEntity extends ExcelBaseEntity {
      * cell 函数
      */
     private String                  cellFormula;
+    /**
+     * 后缀
+     */
+    private String                  suffix;
+
     private List<ExcelExportEntity> list;
+
     public ExcelExportEntity() {
 
     }
+
     public ExcelExportEntity(String name) {
         super.name = name;
     }
+
     public ExcelExportEntity(String name, Object key) {
         super.name = name;
         this.key = key;
@@ -154,6 +162,14 @@ public class ExcelExportEntity extends ExcelBaseEntity {
 
     public void setWrap(boolean isWrap) {
         this.isWrap = isWrap;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
 }
