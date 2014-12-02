@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
 import org.jeecgframework.poi.excel.export.template.ExcelExportOfTemplateUtil;
 
@@ -29,14 +31,20 @@ public final class ExcelExportUtil {
      * @param dataSet
      *            Excel对象数据List
      */
-    public static HSSFWorkbook exportExcel(ExportParams entity, Class<?> pojoClass,
-                                           Collection<?> dataSet) {
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        new ExcelExportServer().createSheet(workbook, entity, pojoClass, dataSet);
+    public static Workbook exportExcel(ExportParams entity, Class<?> pojoClass,
+                                       Collection<?> dataSet) {
+        Workbook workbook;
+        if (entity.getType().equals(PoiBaseConstants.HSSF)) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+        new ExcelExportServer().createSheet(workbook, entity, pojoClass, dataSet, entity.getType());
         return workbook;
     }
 
     /**
+     * 根据Map创建对应的Excel
      * @param entity
      *            表格标题属性
      * @param pojoClass
@@ -44,10 +52,16 @@ public final class ExcelExportUtil {
      * @param dataSet
      *            Excel对象数据List
      */
-    public static HSSFWorkbook exportExcel(ExportParams entity, List<ExcelExportEntity> entityList,
-                                           Collection<? extends Map<?, ?>> dataSet) {
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        new ExcelExportServer().createSheetForMap(workbook, entity, entityList, dataSet);
+    public static Workbook exportExcel(ExportParams entity, List<ExcelExportEntity> entityList,
+                                       Collection<? extends Map<?, ?>> dataSet) {
+        Workbook workbook;
+        if (entity.getType().equals(PoiBaseConstants.HSSF)) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+        new ExcelExportServer().createSheetForMap(workbook, entity, entityList, dataSet,
+            entity.getType());
         return workbook;
     }
 
@@ -59,12 +73,17 @@ public final class ExcelExportUtil {
      *            Collection 数据
      * @return
      */
-    public static HSSFWorkbook exportExcel(List<Map<String, Object>> list) {
-        HSSFWorkbook workbook = new HSSFWorkbook();
+    public static Workbook exportExcel(List<Map<String, Object>> list, String type) {
+        Workbook workbook;
+        if (type.equals(PoiBaseConstants.HSSF)) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
         ExcelExportServer server = new ExcelExportServer();
         for (Map<String, Object> map : list) {
             server.createSheet(workbook, (ExportParams) map.get("title"),
-                (Class<?>) map.get("entity"), (Collection<?>) map.get("data"));
+                (Class<?>) map.get("entity"), (Collection<?>) map.get("data"), type);
         }
         return workbook;
     }

@@ -9,14 +9,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.junit.Test;
 
 public class ExcelExportForMap {
-
-    @Test
+    /**
+     * Map 测试
+     */
+    // @Test
     public void test() {
         try {
             List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
@@ -32,9 +36,39 @@ public class ExcelExportForMap {
                 list.add(map);
             }
 
-            HSSFWorkbook workbook = ExcelExportUtil.exportExcel(new ExportParams("测试", "测试"),
-                entity, list);
+            Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("测试", "测试"), entity,
+                list);
             FileOutputStream fos = new FileOutputStream("d:/tt.xls");
+            workbook.write(fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testMany() {
+        try {
+            List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
+            for (int i = 0; i < 500; i++) {
+                entity.add(new ExcelExportEntity("姓名" + i, "name" + i));
+            }
+
+            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+            Map<String, String> map;
+            for (int i = 0; i < 10; i++) {
+                map = new HashMap<String, String>();
+                for (int j = 0; j < 500; j++) {
+                    map.put("name" + j, j + "_" + i);
+                }
+                list.add(map);
+            }
+            ExportParams params = new ExportParams("测试", "测试");
+            params.setType(PoiBaseConstants.XSSF);
+            Workbook workbook = ExcelExportUtil.exportExcel(params, entity, list);
+            FileOutputStream fos = new FileOutputStream("d:/tt.xlsx");
             workbook.write(fos);
             fos.close();
         } catch (FileNotFoundException e) {

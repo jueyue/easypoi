@@ -1,6 +1,7 @@
 package org.jeecgframework.poi.excel.entity;
 
 import org.apache.poi.hssf.util.HSSFColor;
+import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 
 /**
  * Excel 导出参数
@@ -49,9 +50,15 @@ public class ExportParams extends ExcelBaseParams {
      * 属性说明行的颜色 例如:HSSFColor.SKY_BLUE.index 默认
      */
     private short    headerColor       = HSSFColor.SKY_BLUE.index;
+    /**
+     * Excel 导出版本
+     */
+    private String   type              = PoiBaseConstants.HSSF;
+
     public ExportParams() {
 
     }
+
     public ExportParams(String title, String sheetName) {
         this.title = title;
         this.sheetName = sheetName;
@@ -133,5 +140,13 @@ public class ExportParams extends ExcelBaseParams {
 
     public void setTitleHeight(short titleHeight) {
         this.titleHeight = titleHeight;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

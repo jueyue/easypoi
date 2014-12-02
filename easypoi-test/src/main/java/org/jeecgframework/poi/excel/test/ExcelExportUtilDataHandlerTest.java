@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.entity.CourseEntity;
 import org.jeecgframework.poi.entity.StudentEntity;
 import org.jeecgframework.poi.entity.TeacherEntity;
@@ -64,7 +65,7 @@ public class ExcelExportUtilDataHandlerTest {
         CourseHanlder hanlder = new CourseHanlder();
         hanlder.setNeedHandlerFields(new String[] { "课程名称" });
         exportParams.setDataHanlder(hanlder);
-        HSSFWorkbook workbook = ExcelExportUtil.exportExcel(exportParams, CourseEntity.class, list);
+        Workbook workbook = ExcelExportUtil.exportExcel(exportParams, CourseEntity.class, list);
         FileOutputStream fos = new FileOutputStream("d:/tt.xls");
         workbook.write(fos);
         fos.close();

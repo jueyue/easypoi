@@ -9,15 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -40,12 +38,12 @@ public class ExcelExportServer extends ExcelExportBase {
 
     private final static Logger logger     = LoggerFactory.getLogger(ExcelExportServer.class);
 
-    private static final short  cellFormat = HSSFDataFormat.getBuiltinFormat("TEXT");
+    private static final short  cellFormat = (short) BuiltinFormats.getBuiltinFormat("TEXT");
 
     // 最大行数,超过自动多Sheet
-    private final int           MAX_NUM    = 60000;
+    private int                 MAX_NUM    = 60000;
 
-    private int createHeaderAndTitle(ExportParams entity, Sheet sheet, HSSFWorkbook workbook,
+    private int createHeaderAndTitle(ExportParams entity, Sheet sheet, Workbook workbook,
                                      List<ExcelExportEntity> excelParams) {
         int rows = 0, feildWidth = getFieldWidth(excelParams);
         if (entity.getTitle() != null) {
@@ -64,8 +62,7 @@ public class ExcelExportServer extends ExcelExportBase {
      * @param workbook
      * @param feildWidth
      */
-    public int createHeaderRow(ExportParams entity, Sheet sheet, HSSFWorkbook workbook,
-                               int feildWidth) {
+    public int createHeaderRow(ExportParams entity, Sheet sheet, Workbook workbook, int feildWidth) {
         Row row = sheet.createRow(0);
         row.setHeight(entity.getTitleHeight());
         createStringCell(row, 0, entity.getTitle(), getHeaderStyle(workbook, entity), null);
@@ -73,8 +70,8 @@ public class ExcelExportServer extends ExcelExportBase {
         if (entity.getSecondTitle() != null) {
             row = sheet.createRow(1);
             row.setHeight(entity.getSecondTitleHeight());
-            HSSFCellStyle style = workbook.createCellStyle();
-            style.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+            CellStyle style = workbook.createCellStyle();
+            style.setAlignment(CellStyle.ALIGN_RIGHT);
             createStringCell(row, 0, entity.getSecondTitle(), style, null);
             sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, feildWidth));
             return 2;
@@ -82,14 +79,19 @@ public class ExcelExportServer extends ExcelExportBase {
         return 1;
     }
 
-    public void createSheet(HSSFWorkbook workbook, ExportParams entity, Class<?> pojoClass,
-                            Collection<?> dataSet) {
+    public void createSheet(Workbook workbook, ExportParams entity, Class<?> pojoClass,
+                            Collection<?> dataSet, String type) {
         if (logger.isDebugEnabled()) {
             logger.debug("Excel export start ,class is {}", pojoClass);
+            logger.debug("Excel version is {}", type.equals(PoiBaseConstants.HSSF) ? "03" : "07");
         }
         if (workbook == null || entity == null || pojoClass == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
+        if (type.equals(PoiBaseConstants.XSSF)) {
+            MAX_NUM = 1000000;
+        }
+        super.type = type;
         Sheet sheet = null;
         try {
             sheet = workbook.createSheet(entity.getSheetName());
@@ -103,7 +105,7 @@ public class ExcelExportServer extends ExcelExportBase {
                 needHanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
             }
             // 创建表格属性
-            Map<String, HSSFCellStyle> styles = createStyles(workbook);
+            Map<String, CellStyle> styles = createStyles(workbook);
             Drawing patriarch = sheet.createDrawingPatriarch();
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
@@ -139,7 +141,7 @@ public class ExcelExportServer extends ExcelExportBase {
             }
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {
-                createSheet(workbook, entity, pojoClass, dataSet);
+                createSheet(workbook, entity, pojoClass, dataSet, type);
             }
 
         } catch (Exception e) {
@@ -148,12 +150,19 @@ public class ExcelExportServer extends ExcelExportBase {
         }
     }
 
-    public void createSheetForMap(HSSFWorkbook workbook, ExportParams entity,
+    public void createSheetForMap(Workbook workbook, ExportParams entity,
                                   List<ExcelExportEntity> entityList,
-                                  Collection<? extends Map<?, ?>> dataSet) {
+                                  Collection<? extends Map<?, ?>> dataSet, String type) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Excel version is {}", type.equals(PoiBaseConstants.HSSF) ? "03" : "07");
+        }
         if (workbook == null || entity == null || entityList == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
+        if (type.equals(PoiBaseConstants.XSSF)) {
+            MAX_NUM = 1000000;
+        }
+        super.type = type;
         Sheet sheet = null;
         try {
             sheet = workbook.createSheet(entity.getSheetName());
@@ -167,7 +176,7 @@ public class ExcelExportServer extends ExcelExportBase {
                 needHanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
             }
             // 创建表格属性
-            Map<String, HSSFCellStyle> styles = createStyles(workbook);
+            Map<String, CellStyle> styles = createStyles(workbook);
             Drawing patriarch = sheet.createDrawingPatriarch();
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
@@ -199,7 +208,7 @@ public class ExcelExportServer extends ExcelExportBase {
             }
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {
-                createSheetForMap(workbook, entity, entityList, dataSet);
+                createSheetForMap(workbook, entity, entityList, dataSet, type);
             }
 
         } catch (Exception e) {
@@ -209,8 +218,8 @@ public class ExcelExportServer extends ExcelExportBase {
         }
     }
 
-    private Map<String, HSSFCellStyle> createStyles(HSSFWorkbook workbook) {
-        Map<String, HSSFCellStyle> map = new HashMap<String, HSSFCellStyle>();
+    private Map<String, CellStyle> createStyles(Workbook workbook) {
+        Map<String, CellStyle> map = new HashMap<String, CellStyle>();
         map.put("one", getOneStyle(workbook, false));
         map.put("oneWrap", getOneStyle(workbook, true));
         map.put("two", getTwoStyle(workbook, false));
@@ -224,7 +233,7 @@ public class ExcelExportServer extends ExcelExportBase {
      * @param title
      * @param index
      */
-    private int createTitleRow(ExportParams title, Sheet sheet, HSSFWorkbook workbook, int index,
+    private int createTitleRow(ExportParams title, Sheet sheet, Workbook workbook, int index,
                                List<ExcelExportEntity> excelParams) {
         Row row = sheet.createRow(index);
         int rows = getRowNums(excelParams);
@@ -264,25 +273,25 @@ public class ExcelExportServer extends ExcelExportBase {
      * @param workbook
      * @return
      */
-    public HSSFCellStyle getHeaderStyle(HSSFWorkbook workbook, ExportParams entity) {
-        HSSFCellStyle titleStyle = workbook.createCellStyle();
+    public CellStyle getHeaderStyle(Workbook workbook, ExportParams entity) {
+        CellStyle titleStyle = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setFontHeightInPoints((short) 24);
         titleStyle.setFont(font);
         titleStyle.setFillForegroundColor(entity.getColor());
-        titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        titleStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        titleStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         return titleStyle;
     }
 
-    public HSSFCellStyle getOneStyle(HSSFWorkbook workbook, boolean isWarp) {
-        HSSFCellStyle style = workbook.createCellStyle();
+    public CellStyle getOneStyle(Workbook workbook, boolean isWarp) {
+        CellStyle style = workbook.createCellStyle();
         style.setBorderLeft((short) 1); // 左边框
         style.setBorderRight((short) 1); // 右边框
         style.setBorderBottom((short) 1);
         style.setBorderTop((short) 1);
-        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        style.setAlignment(CellStyle.ALIGN_CENTER);
+        style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         style.setDataFormat(cellFormat);
         if (isWarp) {
             style.setWrapText(true);
@@ -305,7 +314,7 @@ public class ExcelExportServer extends ExcelExportBase {
         return 1;
     }
 
-    public CellStyle getStyles(Map<String, HSSFCellStyle> map, boolean needOne, boolean isWrap) {
+    public CellStyle getStyles(Map<String, CellStyle> map, boolean needOne, boolean isWrap) {
         if (needOne && isWrap) {
             return map.get("oneWrap");
         }
@@ -324,26 +333,26 @@ public class ExcelExportServer extends ExcelExportBase {
      * @param workbook
      * @return
      */
-    public HSSFCellStyle getTitleStyle(HSSFWorkbook workbook, ExportParams entity) {
-        HSSFCellStyle titleStyle = workbook.createCellStyle();
+    public CellStyle getTitleStyle(Workbook workbook, ExportParams entity) {
+        CellStyle titleStyle = workbook.createCellStyle();
         titleStyle.setFillForegroundColor(entity.getHeaderColor()); // 填充的背景颜色
-        titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-        titleStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND); // 填充图案
+        titleStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        titleStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        titleStyle.setFillPattern(CellStyle.SOLID_FOREGROUND); // 填充图案
         titleStyle.setWrapText(true);
         return titleStyle;
     }
 
-    public HSSFCellStyle getTwoStyle(HSSFWorkbook workbook, boolean isWarp) {
-        HSSFCellStyle style = workbook.createCellStyle();
+    public CellStyle getTwoStyle(Workbook workbook, boolean isWarp) {
+        CellStyle style = workbook.createCellStyle();
         style.setBorderLeft((short) 1); // 左边框
         style.setBorderRight((short) 1); // 右边框
         style.setBorderBottom((short) 1);
         style.setBorderTop((short) 1);
-        style.setFillForegroundColor(HSSFColor.LIGHT_TURQUOISE.index); // 填充的背景颜色
-        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND); // 填充图案
-        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        style.setFillForegroundColor((short) 41); // 填充的背景颜色
+        style.setFillPattern(CellStyle.SOLID_FOREGROUND); // 填充图案
+        style.setAlignment(CellStyle.ALIGN_CENTER);
+        style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         style.setDataFormat(cellFormat);
         if (isWarp) {
             style.setWrapText(true);

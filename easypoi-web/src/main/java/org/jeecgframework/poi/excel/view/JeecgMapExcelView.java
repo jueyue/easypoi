@@ -41,7 +41,8 @@ public class JeecgMapExcelView extends AbstractExcelView {
         new ExcelExportServer().createSheetForMap(hssfWorkbook,
             (ExportParams) model.get(MapExcelConstants.PARAMS),
             (List<ExcelExportEntity>) model.get(MapExcelConstants.ENTITY_LIST),
-            (Collection<? extends Map<?, ?>>) model.get(MapExcelConstants.MAP_LIST));
+            (Collection<? extends Map<?, ?>>) model.get(MapExcelConstants.MAP_LIST),
+            ((ExportParams) model.get(MapExcelConstants.PARAMS)).getType());
     }
 
     public boolean isIE(HttpServletRequest request) {

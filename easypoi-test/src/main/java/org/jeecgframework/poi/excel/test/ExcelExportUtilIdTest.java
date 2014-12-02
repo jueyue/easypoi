@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.entity.CourseEntity;
 import org.jeecgframework.poi.entity.StudentEntity;
 import org.jeecgframework.poi.entity.TeacherEntity;
@@ -69,7 +70,7 @@ public class ExcelExportUtilIdTest {
     public void testExportExcel() throws Exception {
         ExportParams params = new ExportParams("2412312", "测试", "测试");
         params.setAddIndex(true);
-        HSSFWorkbook workbook = ExcelExportUtil.exportExcel(params, TeacherEntity.class, telist);
+        Workbook workbook = ExcelExportUtil.exportExcel(params, TeacherEntity.class, telist);
         FileOutputStream fos = new FileOutputStream("d:/tt.xls");
         workbook.write(fos);
         fos.close();

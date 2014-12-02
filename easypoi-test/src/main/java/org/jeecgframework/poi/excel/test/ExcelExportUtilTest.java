@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.entity.CourseEntity;
 import org.jeecgframework.poi.entity.StudentEntity;
@@ -38,7 +37,7 @@ public class ExcelExportUtilTest {
             list.add(courseEntity);
         }
         Date start = new Date();
-        HSSFWorkbook workbook = ExcelExportUtil.exportExcel(
+        Workbook workbook = ExcelExportUtil.exportExcel(
             new ExportParams("2412312", "测试", "测试"), CourseEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
@@ -97,7 +96,7 @@ public class ExcelExportUtilTest {
     //@Test
     public void testExportExcel() throws Exception {
         Date start = new Date();
-        HSSFWorkbook workbook = ExcelExportUtil.exportExcel(
+        Workbook workbook = ExcelExportUtil.exportExcel(
             new ExportParams("2412312", "测试", "测试"), CourseEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
@@ -117,7 +116,7 @@ public class ExcelExportUtilTest {
     //@Test
     public void testExportTitleExcel() throws Exception {
         Date start = new Date();
-        HSSFWorkbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试"),
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试"),
             CourseEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
