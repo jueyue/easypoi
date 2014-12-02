@@ -14,18 +14,19 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.params.MergeEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
@@ -39,7 +40,9 @@ import org.jeecgframework.poi.util.POIPublicUtil;
  */
 public abstract class ExcelExportBase extends ExportBase {
 
-    private int currentIndex = 0;
+    private int      currentIndex = 0;
+
+    protected String type         = PoiBaseConstants.HSSF;
 
     private boolean checkIsEqualByCellContents(MergeEntity mergeEntity, String text, Cell cell,
                                                int[] delys, int rowNum) {
@@ -69,7 +72,7 @@ public abstract class ExcelExportBase extends ExportBase {
      */
     public int createCells(Drawing patriarch, int index, Object t,
                            List<ExcelExportEntity> excelParams, Sheet sheet, Workbook workbook,
-                           Map<String, HSSFCellStyle> styles, short rowHeight) throws Exception {
+                           Map<String, CellStyle> styles, short rowHeight) throws Exception {
         ExcelExportEntity entity;
         Row row = sheet.createRow(index);
         row.setHeight(rowHeight);
@@ -128,29 +131,37 @@ public abstract class ExcelExportBase extends ExportBase {
      * @param entity
      * @param row
      * @param i
-     * @param string
+     * @param imagePath
      * @param obj
      * @throws Exception
      */
     public void createImageCell(Drawing patriarch, ExcelExportEntity entity, Row row, int i,
-                                String string, Object obj) throws Exception {
+                                String imagePath, Object obj) throws Exception {
         row.setHeight((short) (50 * entity.getHeight()));
         row.createCell(i);
-        HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, (short) i, row.getRowNum(),
-            (short) (i + 1), row.getRowNum() + 1);
-        if (StringUtils.isEmpty(string)) {
+        ClientAnchor anchor;
+        if (type.equals(PoiBaseConstants.HSSF)) {
+            anchor = new HSSFClientAnchor(0, 0, 0, 0, (short) i, row.getRowNum(), (short) (i + 1),
+                row.getRowNum() + 1);
+        } else {
+            anchor = new XSSFClientAnchor(0, 0, 0, 0, (short) i, row.getRowNum(), (short) (i + 1),
+                row.getRowNum() + 1);
+        }
+
+        if (StringUtils.isEmpty(imagePath)) {
             return;
         }
         if (entity.getExportImageType() == 1) {
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
             BufferedImage bufferImg;
             try {
-                String path = POIPublicUtil.getWebRootPath(string);
+                String path = POIPublicUtil.getWebRootPath(imagePath);
                 path = path.replace("WEB-INF/classes/", "");
                 path = path.replace("file:/", "");
                 bufferImg = ImageIO.read(new File(path));
                 ImageIO.write(bufferImg,
-                    string.substring(string.indexOf(".") + 1, string.length()), byteArrayOut);
+                    imagePath.substring(imagePath.indexOf(".") + 1, imagePath.length()),
+                    byteArrayOut);
                 byte[] value = byteArrayOut.toByteArray();
                 patriarch.createPicture(anchor,
                     row.getSheet().getWorkbook().addPicture(value, getImageType(value)));
@@ -168,7 +179,7 @@ public abstract class ExcelExportBase extends ExportBase {
 
     }
 
-    private int createIndexCell(Row row, Map<String, HSSFCellStyle> styles, int index,
+    private int createIndexCell(Row row, Map<String, CellStyle> styles, int index,
                                 ExcelExportEntity excelExportEntity) {
         if (excelExportEntity.getName().equals("序号")
             && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
@@ -188,8 +199,7 @@ public abstract class ExcelExportBase extends ExportBase {
      */
     public void createListCells(Drawing patriarch, int index, int cellNum, Object obj,
                                 List<ExcelExportEntity> excelParams, Sheet sheet,
-                                Workbook workbook, Map<String, HSSFCellStyle> styles)
-                                                                                     throws Exception {
+                                Workbook workbook, Map<String, CellStyle> styles) throws Exception {
         ExcelExportEntity entity;
         Row row;
         if (sheet.getRow(index) == null) {
@@ -234,7 +244,12 @@ public abstract class ExcelExportBase extends ExportBase {
     public void createStringCell(Row row, int index, String text, CellStyle style,
                                  ExcelExportEntity entity) {
         Cell cell = row.createCell(index);
-        RichTextString Rtext = new HSSFRichTextString(text);
+        RichTextString Rtext;
+        if (type.equals(PoiBaseConstants.HSSF)) {
+            Rtext = new HSSFRichTextString(text);
+        } else {
+            Rtext = new XSSFRichTextString(text);
+        }
         cell.setCellValue(Rtext);
         if (style != null) {
             cell.setCellStyle(style);
@@ -282,11 +297,11 @@ public abstract class ExcelExportBase extends ExportBase {
     public int getImageType(byte[] value) {
         String type = POIPublicUtil.getFileExtendName(value);
         if (type.equalsIgnoreCase("JPG")) {
-            return HSSFWorkbook.PICTURE_TYPE_JPEG;
+            return Workbook.PICTURE_TYPE_JPEG;
         } else if (type.equalsIgnoreCase("PNG")) {
-            return HSSFWorkbook.PICTURE_TYPE_PNG;
+            return Workbook.PICTURE_TYPE_PNG;
         }
-        return HSSFWorkbook.PICTURE_TYPE_JPEG;
+        return Workbook.PICTURE_TYPE_JPEG;
     }
 
     private Map<Integer, int[]> getMergeDataMap(List<ExcelExportEntity> excelParams) {
@@ -311,7 +326,7 @@ public abstract class ExcelExportBase extends ExportBase {
         return mergeMap;
     }
 
-    public CellStyle getStyles(Map<String, HSSFCellStyle> styles, boolean b, boolean wrap) {
+    public CellStyle getStyles(Map<String, CellStyle> styles, boolean b, boolean wrap) {
         return null;
     }
 
