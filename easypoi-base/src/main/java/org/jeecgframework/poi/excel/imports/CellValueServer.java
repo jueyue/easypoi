@@ -2,6 +2,7 @@ package org.jeecgframework.poi.excel.imports;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -131,6 +132,9 @@ public class CellValueServer {
             }
             if (xclass.equals("class java.lang.Integer") || xclass.equals("int")) {
                 return Integer.valueOf(String.valueOf(result));
+            }
+            if (xclass.equals("class java.math.BigDecimal")) {
+                return new BigDecimal(String.valueOf(result));
             }
             return String.valueOf(result);
         } catch (NumberFormatException e) {
