@@ -128,23 +128,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<!-- 内部 maven 地址 -->
-	<distributionManagement>
-		<repository>
-			<id>postaop-pay-platform-release</id>
-			<url>http://192.168.0.99:8081/nexus/content/repositories/postaop-common-release/</url>
-		</repository>
-		<snapshotRepository>
-			<id>postaop-pay-platform-snapshot</id>
-			<url>http://192.168.0.99:8081/nexus/content/repositories/postaop-common-snapshot/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<scm>
-		<connection>scm:svn:https://192.168.0.99:8443/svn/postaop-platform/qdcrm/trunk/</connection>
-		<developerConnection>scm:svn:https://192.168.0.99:8443/svn/postaop-platform/qdcrm/trunk/</developerConnection>
-	</scm>
-
 	<build>
 		<plugins>
 			<plugin>
