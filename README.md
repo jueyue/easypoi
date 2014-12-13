@@ -30,7 +30,7 @@ EasyPoi的几个入口工具类
  - 2.0.6-release
  	- 修复导入的自定义格式异常
  	- 修复导入的BigDecimal不识别
- 	- 导出大数据替换为SXSSFWorkbook,提高07版本Exceldaochu
+ 	- 导出大数据替换为SXSSFWorkbook,提高07版本Excel导出效率
  	- 根据sonar的提示,修复编码格式问题
  	- 做了更加丰富的测试
  	- word 导出的优化
