@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
@@ -36,8 +37,10 @@ public final class ExcelExportUtil {
         Workbook workbook;
         if (entity.getType().equals(PoiBaseConstants.HSSF)) {
             workbook = new HSSFWorkbook();
-        } else {
+        } else if (dataSet.size() < 1000) {
             workbook = new XSSFWorkbook();
+        } else {
+            workbook = new SXSSFWorkbook();
         }
         new ExcelExportServer().createSheet(workbook, entity, pojoClass, dataSet, entity.getType());
         return workbook;
@@ -57,8 +60,10 @@ public final class ExcelExportUtil {
         Workbook workbook;
         if (entity.getType().equals(PoiBaseConstants.HSSF)) {
             workbook = new HSSFWorkbook();
-        } else {
+        } else if (dataSet.size() < 1000) {
             workbook = new XSSFWorkbook();
+        } else {
+            workbook = new SXSSFWorkbook();
         }
         new ExcelExportServer().createSheetForMap(workbook, entity, entityList, dataSet,
             entity.getType());

@@ -59,7 +59,6 @@ public class CellValueServer {
         } else if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
             result = cell.getBooleanCellValue();
         } else {
-            cell.setCellType(Cell.CELL_TYPE_STRING);
             result = cell.getStringCellValue();
         }
         return result;
@@ -136,9 +135,11 @@ public class CellValueServer {
             if (xclass.equals("class java.math.BigDecimal")) {
                 return new BigDecimal(String.valueOf(result));
             }
-            return String.valueOf(result);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+            if (xclass.equals("class java.lang.String")) {
+                return String.valueOf(result);
+            }
+            return result;
+        } catch (Exception e) {
             throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
         }
     }
