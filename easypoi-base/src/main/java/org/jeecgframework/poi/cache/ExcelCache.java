@@ -7,6 +7,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.jeecgframework.poi.cache.manager.POICacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Excel类型的缓存
@@ -16,6 +18,8 @@ import org.jeecgframework.poi.cache.manager.POICacheManager;
  * @version 1.0
  */
 public final class ExcelCache {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelCache.class);
 
     public static Workbook getWorkbook(String url, int index) {
         InputStream is = null;
@@ -30,14 +34,14 @@ public final class ExcelCache {
             }
             return wb;
         } catch (InvalidFormatException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.fillInStackTrace());
             }
         }
         return null;

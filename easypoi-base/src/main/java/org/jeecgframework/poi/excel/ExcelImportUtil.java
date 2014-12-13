@@ -9,6 +9,8 @@ import java.util.List;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.result.ExcelImportResult;
 import org.jeecgframework.poi.excel.imports.ExcelImportServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Excel 导入工具
@@ -19,6 +21,8 @@ import org.jeecgframework.poi.excel.imports.ExcelImportServer;
  */
 @SuppressWarnings({ "unchecked" })
 public class ExcelImportUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelImportUtil.class);
 
     /**
      * Excel 导入 数据源本地文件,不返回校验结果 导入 字 段类型 Integer,Long,Double,Date,String,Boolean
@@ -36,12 +40,12 @@ public class ExcelImportUtil {
             in = new FileInputStream(file);
             result = new ExcelImportServer().importExcelByIs(in, pojoClass, params).getList();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(),e.fillInStackTrace());
         } finally {
             try {
                 in.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(),e.fillInStackTrace());
             }
         }
         return result;
@@ -92,12 +96,12 @@ public class ExcelImportUtil {
             in = new FileInputStream(file);
             return new ExcelImportServer().importExcelByIs(in, pojoClass, params);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(),e.fillInStackTrace());
         } finally {
             try {
                 in.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(),e.fillInStackTrace());
             }
         }
         return null;

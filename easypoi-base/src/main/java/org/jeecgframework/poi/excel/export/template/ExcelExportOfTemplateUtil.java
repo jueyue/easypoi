@@ -23,6 +23,8 @@ import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
 import org.jeecgframework.poi.util.POIPublicUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Excel 导出根据模板导出
@@ -32,6 +34,8 @@ import org.jeecgframework.poi.util.POIPublicUtil;
  * @version 1.0
  */
 public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportOfTemplateUtil.class);
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
@@ -48,7 +52,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         Map<String, Integer> titlemap = getTitleMap(params, sheet);
         Drawing patriarch = sheet.createDrawingPatriarch();
         // 得到所有字段
-        Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
+        Field[] fileds = POIPublicUtil.getClassFields(pojoClass);
         ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
         String targetId = null;
         if (etarget != null) {
@@ -94,7 +98,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 addDataToSheet(params, pojoClass, dataSet, wb.getSheetAt(0), wb);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           LOGGER.error(e.getMessage(), e.fillInStackTrace());
             return null;
         }
         return wb;

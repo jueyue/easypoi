@@ -12,12 +12,14 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.jeecgframework.poi.cache.WordCache;
-import org.jeecgframework.poi.word.entity.JeecgXWPFDocument;
+import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.word.entity.MyXWPFDocument;
 import org.jeecgframework.poi.word.entity.WordImageEntity;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
 import org.jeecgframework.poi.word.parse.excel.ExcelEntityParse;
 import org.jeecgframework.poi.word.parse.excel.ExcelMapParse;
-import org.jeecgframework.poi.word.util.ParseWordUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 解析07版的Word,替换文字,生成表格,生成图片
@@ -29,6 +31,8 @@ import org.jeecgframework.poi.word.util.ParseWordUtil;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ParseWord07 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParseWord07.class);
+
     /**
      * 添加图片
      * 
@@ -39,18 +43,18 @@ public class ParseWord07 {
      * @throws Exception
      */
     private void addAnImage(WordImageEntity obj, XWPFRun currentRun) throws Exception {
-        Object[] isAndType = ParseWordUtil.getIsAndType(obj);
+        Object[] isAndType = POIPublicUtil.getIsAndType(obj);
         String picId;
         try {
             picId = currentRun.getParagraph().getDocument()
                 .addPictureData((byte[]) isAndType[0], (Integer) isAndType[1]);
-            ((JeecgXWPFDocument) currentRun.getParagraph().getDocument()).createPicture(currentRun,
+            ((MyXWPFDocument) currentRun.getParagraph().getDocument()).createPicture(currentRun,
                 picId,
                 currentRun.getParagraph().getDocument()
                     .getNextPicNameNumber((Integer) isAndType[1]), obj.getWidth(), obj.getHeight());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
         }
 
     }
@@ -64,7 +68,7 @@ public class ParseWord07 {
      */
     private void changeValues(XWPFParagraph paragraph, XWPFRun currentRun, String currentText,
                               List<Integer> runIndex, Map<String, Object> map) throws Exception {
-        Object obj = ParseWordUtil.getRealValue(currentText, map);
+        Object obj = POIPublicUtil.getRealValue(currentText, map);
         if (obj instanceof WordImageEntity) {// 如果是图片就设置为图片
             currentRun.setText("", 0);
             addAnImage((WordImageEntity) obj, currentRun);
@@ -91,9 +95,7 @@ public class ParseWord07 {
         String text = cell.getText().trim();
         // 判断是不是迭代输出
         if (text.startsWith("{{") && text.endsWith("}}") && text.indexOf("in ") != -1) {
-            /*text = text.replace("{{", "").replace("}}", "")
-            		.replaceAll("\\s{1,}", " ").trim();*/
-            return ParseWordUtil.getRealValue(text.replace("in ", "").trim(), map);
+            return POIPublicUtil.getRealValue(text.replace("in ", "").trim(), map);
         }
         return null;
     }
@@ -217,7 +219,7 @@ public class ParseWord07 {
      * @throws Exception
      */
     public XWPFDocument parseWord(String url, Map<String, Object> map) throws Exception {
-        JeecgXWPFDocument doc = WordCache.getXWPFDocumen(url);
+        MyXWPFDocument doc = WordCache.getXWPFDocumen(url);
         parseWordSetValue(doc, map);
         return doc;
     }
@@ -231,10 +233,10 @@ public class ParseWord07 {
      * @throws Exception
      */
     public void parseWord(XWPFDocument document, Map<String, Object> map) throws Exception {
-        parseWordSetValue((JeecgXWPFDocument) document, map);
+        parseWordSetValue((MyXWPFDocument) document, map);
     }
 
-    private void parseWordSetValue(JeecgXWPFDocument doc, Map<String, Object> map) throws Exception {
+    private void parseWordSetValue(MyXWPFDocument doc, Map<String, Object> map) throws Exception {
         // 第一步解析文档
         parseAllParagraphic(doc.getParagraphs(), map);
         // 第二步解析所有表格
