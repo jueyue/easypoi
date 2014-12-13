@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jeecgframework</groupId>
 	<artifactId>easypoi</artifactId>
-	<version>2.0.6-SNAPSHOT</version>
+	<version>2.0.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>easypoi</name>
 	<modules>
@@ -23,7 +23,7 @@
 	</developers>
 
 	<properties>
-		<sub.version>2.0.6-SNAPSHOT</sub.version>
+		<sub.version>2.0.7-SNAPSHOT</sub.version>
 		<poi-ooxml-schemas.version>3.9</poi-ooxml-schemas.version>
 		<poi-ooxml.version>3.9</poi-ooxml.version>
 		<poi-scratchpad.version>3.9</poi-scratchpad.version>
