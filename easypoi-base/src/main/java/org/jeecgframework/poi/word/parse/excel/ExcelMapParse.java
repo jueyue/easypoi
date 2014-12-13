@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.jeecgframework.poi.word.util.ParseWordUtil;
+import org.jeecgframework.poi.util.POIPublicUtil;
 
 /**
  * 处理和生成Map 类型的数据变成表格
@@ -54,12 +54,12 @@ public final class ExcelMapParse {
                     .getTableCells()
                     .get(cellIndex)
                     .setText(
-                        ParseWordUtil.getValueDoWhile(obj, params[cellIndex].split("\\."), 0)
+                        POIPublicUtil.getValueDoWhile(obj, params[cellIndex].split("\\."), 0)
                             .toString());
             }
             for (; cellIndex < params.length; cellIndex++) {
                 currentRow.createCell().setText(
-                    ParseWordUtil.getValueDoWhile(obj, params[cellIndex].split("\\."), 0)
+                    POIPublicUtil.getValueDoWhile(obj, params[cellIndex].split("\\."), 0)
                         .toString());
             }
         }

@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings({ "rawtypes", "unchecked", "hiding" })
 public class ExcelImportServer {
 
-    private final static Logger logger     = LoggerFactory.getLogger(ExcelImportServer.class);
+    private final static Logger LOGGER     = LoggerFactory.getLogger(ExcelImportServer.class);
 
     private CellValueServer     cellValueServer;
 
@@ -62,8 +62,8 @@ public class ExcelImportServer {
     private boolean             verfiyFail = false;
 
     public ExcelImportServer() {
-        cellValueServer = new CellValueServer();
-        verifyHandlerServer = new VerifyHandlerServer();
+        this.cellValueServer = new CellValueServer();
+        this.verifyHandlerServer = new VerifyHandlerServer();
     }
 
     /**
@@ -412,8 +412,8 @@ public class ExcelImportServer {
      */
     public ExcelImportResult importExcelByIs(InputStream inputstream, Class<?> pojoClass,
                                              ImportParams params) throws Exception {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Excel import start ,class is {}", pojoClass);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Excel import start ,class is {}", pojoClass);
         }
         List<T> result = new ArrayList<T>();
         Workbook book = null;
@@ -429,8 +429,8 @@ public class ExcelImportServer {
         }
         Map<String, PictureData> pictures;
         for (int i = 0; i < params.getSheetNum(); i++) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(" start to read excel by is ,startTime is {}", new Date().getTime());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(" start to read excel by is ,startTime is {}", new Date().getTime());
             }
             if (isXSSFWorkbook) {
                 pictures = POIPublicUtil.getSheetPictrues07((XSSFSheet) book.getSheetAt(i),
@@ -439,12 +439,12 @@ public class ExcelImportServer {
                 pictures = POIPublicUtil.getSheetPictrues03((HSSFSheet) book.getSheetAt(i),
                     (HSSFWorkbook) book);
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug(" end to read excel by is ,endTime is {}", new Date().getTime());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(" end to read excel by is ,endTime is {}", new Date().getTime());
             }
             result.addAll(importExcel(result, book.getSheetAt(i), pojoClass, params, pictures));
-            if (logger.isDebugEnabled()) {
-                logger.debug(" end to read excel list by pos ,endTime is {}", new Date().getTime());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(" end to read excel list by pos ,endTime is {}", new Date().getTime());
             }
         }
         if (params.isNeedSave()) {

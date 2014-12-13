@@ -20,7 +20,7 @@ public class WordExportUtilBaseExcelTest {
     /**
      * 简单导出包含图片
      */
-    //@Test
+    @Test
     public void imageWordExport() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("department", "Jeecg");

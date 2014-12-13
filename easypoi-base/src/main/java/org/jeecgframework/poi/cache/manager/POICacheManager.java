@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -18,6 +21,9 @@ import com.google.common.cache.LoadingCache;
  * @version 1.0
  */
 public final class POICacheManager {
+
+    private static final Logger                 LOGGER = LoggerFactory
+                                                           .getLogger(POICacheManager.class);
 
     private static LoadingCache<String, byte[]> loadingCache;
 
@@ -37,7 +43,7 @@ public final class POICacheManager {
             byte[] result = Arrays.copyOf(loadingCache.get(id), loadingCache.get(id).length);
             return new ByteArrayInputStream(result);
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
         }
         return null;
     }

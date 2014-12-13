@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 class FileLoade {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileLoade.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileLoade.class);
 
     public byte[] getFile(String url) {
         FileInputStream fileis = null;
@@ -34,9 +34,9 @@ class FileLoade {
             baos.flush();
             return baos.toByteArray();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
         } finally {
             try {
                 if (fileis != null)
@@ -44,10 +44,10 @@ class FileLoade {
                 if (fileis != null)
                     baos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.fillInStackTrace());
             }
         }
-        logger.error(fileis + "这个路径文件没有找到,请查询");
+        LOGGER.error(fileis + "这个路径文件没有找到,请查询");
         return null;
     }
 

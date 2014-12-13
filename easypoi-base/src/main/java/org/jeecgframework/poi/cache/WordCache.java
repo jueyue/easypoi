@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jeecgframework.poi.cache.manager.POICacheManager;
-import org.jeecgframework.poi.word.entity.JeecgXWPFDocument;
+import org.jeecgframework.poi.word.entity.MyXWPFDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * word 缓存中心
@@ -14,19 +16,21 @@ import org.jeecgframework.poi.word.entity.JeecgXWPFDocument;
  */
 public class WordCache {
 
-    public static JeecgXWPFDocument getXWPFDocumen(String url) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WordCache.class);
+
+    public static MyXWPFDocument getXWPFDocumen(String url) {
         InputStream is = null;
         try {
             is = POICacheManager.getFile(url);
-            JeecgXWPFDocument doc = new JeecgXWPFDocument(is);
+            MyXWPFDocument doc = new MyXWPFDocument(is);
             return doc;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.fillInStackTrace());
             }
         }
         return null;

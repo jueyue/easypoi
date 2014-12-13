@@ -13,6 +13,10 @@ import org.jeecgframework.poi.word.parse.ParseWord07;
  * @version 1.0
  */
 public class WordExportUtil {
+    
+    private WordExportUtil(){
+        
+    }
 
     /**
      * 解析Word2007版本
