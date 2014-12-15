@@ -115,6 +115,11 @@ public abstract class ExcelExportBase extends ExportBase {
             if (entity.getList() != null) {
                 cellNum += entity.getList().size();
             } else if (entity.isNeedMerge()) {
+                for (int i = index + 1; i < index + maxHeight; i++) {
+                    sheet.getRow(i).createCell(cellNum);
+                    sheet.getRow(i).getCell(cellNum)
+                        .setCellStyle(getStyles(styles, false, entity.isWrap()));
+                }
                 sheet.addMergedRegion(new CellRangeAddress(index, index + maxHeight - 1, cellNum,
                     cellNum));
                 cellNum++;
@@ -326,7 +331,7 @@ public abstract class ExcelExportBase extends ExportBase {
         return mergeMap;
     }
 
-    public CellStyle getStyles(Map<String, CellStyle> styles, boolean b, boolean wrap) {
+    public CellStyle getStyles(Map<String, CellStyle> styles, boolean needOne, boolean wrap) {
         return null;
     }
 
@@ -379,6 +384,7 @@ public abstract class ExcelExportBase extends ExportBase {
      * 
      * @param sheet
      * @param excelParams
+     * @param styles 
      */
     public void mergeCells(Sheet sheet, List<ExcelExportEntity> excelParams, int titleHeight) {
         Map<Integer, int[]> mergeMap = getMergeDataMap(excelParams);
@@ -405,9 +411,11 @@ public abstract class ExcelExportBase extends ExportBase {
                 }
             }
         }
-        for (Integer index : sets) {
-            sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
-                mergeDataMap.get(index).getEndRow(), index, index));
+        if (mergeDataMap.size() > 0) {
+            for (Integer index : sets) {
+                sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
+                    mergeDataMap.get(index).getEndRow(), index, index));
+            }
         }
 
     }
