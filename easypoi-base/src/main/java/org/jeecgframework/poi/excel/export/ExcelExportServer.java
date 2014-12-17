@@ -139,12 +139,16 @@ public class ExcelExportServer extends ExcelExportBase {
                 its.next();
                 its.remove();
             }
+            // 创建合计信息
+            addStatisticsRow(styles.get("one"),sheet);
+            
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {
                 createSheet(workbook, entity, pojoClass, dataSet, type);
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage(), e.fillInStackTrace());
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
         }

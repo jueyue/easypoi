@@ -33,12 +33,9 @@ public class ExcelExportUtilTest {
     @Test
     public void oneHundredThousandRowTest() throws Exception {
 
-        for (int i = 0; i < 250; i++) {
-            list.add(courseEntity);
-        }
         Date start = new Date();
-        Workbook workbook = ExcelExportUtil.exportExcel(
-            new ExportParams("2412312", "测试", "测试"), CourseEntity.class, list);
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试"),
+            CourseEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
         if (!savefile.exists()) {
@@ -59,31 +56,31 @@ public class ExcelExportUtilTest {
 
     @Before
     public void testBefore() {
-        courseEntity = new CourseEntity();
-        courseEntity.setId("1131");
-        courseEntity.setName("小白");
 
-        TeacherEntity teacherEntity = new TeacherEntity();
-        teacherEntity.setId("12131231");
-        teacherEntity.setName("你们");
-        courseEntity.setTeacher(teacherEntity);
+        for (int i = 0; i < 2; i++) {
+            courseEntity = new CourseEntity();
+            courseEntity.setId("1131");
+            courseEntity.setName("海贼王必修(" + (i + 1) + ")");
 
-        teacherEntity = new TeacherEntity();
-        teacherEntity.setId("121312314312421131");
-        teacherEntity.setName("老王");
-        courseEntity.setShuxueteacher(teacherEntity);
+            TeacherEntity teacherEntity = new TeacherEntity();
+            teacherEntity.setId("12131231");
+            teacherEntity.setName("路飞");
+            courseEntity.setTeacher(teacherEntity);
 
-        StudentEntity studentEntity = new StudentEntity();
-        studentEntity.setId("11231");
-        studentEntity.setName("撒旦法司法局");
-        studentEntity.setBirthday(new Date());
-        studentEntity.setSex(1);
-        List<StudentEntity> studentList = new ArrayList<StudentEntity>();
-        studentList.add(studentEntity);
-        studentList.add(studentEntity);
-        courseEntity.setStudents(studentList);
+            teacherEntity = new TeacherEntity();
+            teacherEntity.setId("121312314312421131");
+            teacherEntity.setName("老王");
+            courseEntity.setShuxueteacher(teacherEntity);
 
-        for (int i = 0; i < 3; i++) {
+            StudentEntity studentEntity = new StudentEntity();
+            studentEntity.setId("11231");
+            studentEntity.setName("撒旦法司法局");
+            studentEntity.setBirthday(new Date());
+            studentEntity.setSex(1);
+            List<StudentEntity> studentList = new ArrayList<StudentEntity>();
+            studentList.add(studentEntity);
+            studentList.add(studentEntity);
+            courseEntity.setStudents(studentList);
             list.add(courseEntity);
         }
     }
@@ -96,8 +93,8 @@ public class ExcelExportUtilTest {
     //@Test
     public void testExportExcel() throws Exception {
         Date start = new Date();
-        Workbook workbook = ExcelExportUtil.exportExcel(
-            new ExportParams("2412312", "测试", "测试"), CourseEntity.class, list);
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试", "测试"),
+            CourseEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
         if (!savefile.exists()) {

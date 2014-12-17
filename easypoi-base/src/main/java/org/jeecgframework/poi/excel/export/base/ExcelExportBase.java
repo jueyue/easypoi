@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,9 +41,13 @@ import org.jeecgframework.poi.util.POIPublicUtil;
  */
 public abstract class ExcelExportBase extends ExportBase {
 
-    private int      currentIndex = 0;
+    private int                  currentIndex = 0;
 
-    protected String type         = PoiBaseConstants.HSSF;
+    protected String             type         = PoiBaseConstants.HSSF;
+
+    private Map<Integer, Double> statistics   = new HashMap<Integer, Double>();
+    
+    private static final DecimalFormat    DOUBLE_FORMAT   = new DecimalFormat("######0.00");  
 
     private boolean checkIsEqualByCellContents(MergeEntity mergeEntity, String text, Cell cell,
                                                int[] delys, int rowNum) {
@@ -258,6 +263,43 @@ public abstract class ExcelExportBase extends ExportBase {
         cell.setCellValue(Rtext);
         if (style != null) {
             cell.setCellStyle(style);
+        }
+        addStatisticsData(index, text, entity);
+    }
+
+    /**
+     * 创建统计行
+     * @param styles 
+     * @param sheet
+     */
+    public void addStatisticsRow(CellStyle styles, Sheet sheet) {
+        Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+        Set<Integer> keys = statistics.keySet();
+        createStringCell(row, 0, "合计", styles, null);
+        for (Integer key : keys) {
+            createStringCell(row, key, DOUBLE_FORMAT.format(statistics.get(key)), styles, null);
+        }
+        statistics.clear();
+
+    }
+
+    /**
+     * 合计统计信息
+     * @param index
+     * @param text
+     * @param entity
+     */
+    private void addStatisticsData(Integer index, String text, ExcelExportEntity entity) {
+        if (entity != null && entity.isStatistics()) {
+            Double temp = 0D;
+            if (!statistics.containsKey(index)) {
+                statistics.put(index, temp);
+            }
+            try {
+                temp = Double.valueOf(text);
+            } catch (NumberFormatException e) {
+            }
+            statistics.put(index, statistics.get(index) + temp);
         }
     }
 

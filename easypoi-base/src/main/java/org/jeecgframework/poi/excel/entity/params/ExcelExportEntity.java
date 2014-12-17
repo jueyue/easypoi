@@ -54,6 +54,10 @@ public class ExcelExportEntity extends ExcelBaseEntity {
      * 后缀
      */
     private String                  suffix;
+    /**
+     * 统计
+     */
+    private boolean                 isStatistics;
 
     private List<ExcelExportEntity> list;
 
@@ -170,6 +174,14 @@ public class ExcelExportEntity extends ExcelBaseEntity {
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+    public boolean isStatistics() {
+        return isStatistics;
+    }
+
+    public void setStatistics(boolean isStatistics) {
+        this.isStatistics = isStatistics;
     }
 
 }

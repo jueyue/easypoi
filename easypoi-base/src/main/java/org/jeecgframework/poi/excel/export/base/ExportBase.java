@@ -203,6 +203,7 @@ public class ExportBase {
         excelEntity.setDatabaseFormat(excel.databaseFormat());
         excelEntity.setFormat(StringUtils.isNotEmpty(excel.exportFormat()) ? excel.exportFormat()
             : excel.format());
+        excelEntity.setStatistics(excel.isStatistics());
         String fieldname = field.getName();
         excelEntity.setMethod(POIPublicUtil.getMethod(fieldname, pojoClass));
     }
