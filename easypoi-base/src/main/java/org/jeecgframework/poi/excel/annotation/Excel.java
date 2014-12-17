@@ -47,6 +47,7 @@ public @interface Excel {
      * 导入的时间格式,以这个是否为空来判断是否需要格式化日期
      */
     public String importFormat() default "";
+
     /**
      * 文字后缀,如% 90 变成90%
      */
@@ -104,4 +105,11 @@ public @interface Excel {
      * 性别列4【男女占1，但是列标题两个汉字】 限制1-255
      */
     public int width() default 10;
+
+    /**
+     * 是否自动统计数据,如果是统计,true的话在最后追加一行统计,把所有数据都和
+     * 这个处理会吞没异常,请注意这一点
+     * @return
+     */
+    public boolean isStatistics() default false;
 }

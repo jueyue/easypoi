@@ -25,19 +25,15 @@ public class StudentEntity implements java.io.Serializable {
     /**
      * 学生性别
      */
-    @Excel(name = "学生性别", replace = { "男_1", "女_2" },suffix = "生")
+    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生", mergeVertical = true)
     private int          sex;
 
-    @Excel(name = "出生日期", format = "yyyy-MM-dd HH:mm:ss", mergeVertical = true)
+    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd", mergeVertical = true)
     private Date         birthday;
     /**
      * 课程主键
      */
     private CourseEntity course;
-
-    public Date getBirthday() {
-        return birthday;
-    }
 
     public CourseEntity getCourse() {
         return course;
@@ -70,10 +66,6 @@ public class StudentEntity implements java.io.Serializable {
         return this.sex;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
     public void setCourse(CourseEntity course) {
         this.course = course;
     }
@@ -104,4 +96,13 @@ public class StudentEntity implements java.io.Serializable {
     public void setSex(int sex) {
         this.sex = sex;
     }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
 }
