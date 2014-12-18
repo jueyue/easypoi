@@ -361,7 +361,7 @@ public class ExcelImportServer {
             int i = row.getFirstCellNum();
             while (cellTitle.hasNext()) {
                 Cell cell = cellTitle.next();
-                String value = cell.getStringCellValue();
+                String value = getKeyValue(cell);
                 if (!StringUtils.isEmpty(value)) {
                     titlemap.put(i, value);
                 }
