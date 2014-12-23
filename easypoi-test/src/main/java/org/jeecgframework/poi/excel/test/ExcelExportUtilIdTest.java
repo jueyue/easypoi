@@ -50,6 +50,7 @@ public class ExcelExportUtilIdTest {
         studentEntity.setId("11231");
         studentEntity.setName("撒旦法司法局");
         studentEntity.setBirthday(new Date());
+        studentEntity.setRegistrationDate(new  java.sql.Time(new Date().getTime()));
         studentEntity.setSex(1);
         List<StudentEntity> studentList = new ArrayList<StudentEntity>();
         studentList.add(studentEntity);
@@ -70,7 +71,7 @@ public class ExcelExportUtilIdTest {
     public void testExportExcel() throws Exception {
         ExportParams params = new ExportParams("2412312", "测试", "测试");
         params.setAddIndex(true);
-        Workbook workbook = ExcelExportUtil.exportExcel(params, TeacherEntity.class, telist);
+        Workbook workbook = ExcelExportUtil.exportExcel(params, CourseEntity.class, list);
         FileOutputStream fos = new FileOutputStream("d:/tt.xls");
         workbook.write(fos);
         fos.close();

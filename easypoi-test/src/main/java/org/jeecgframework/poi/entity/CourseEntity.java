@@ -32,7 +32,7 @@ public class CourseEntity implements java.io.Serializable {
     //@ExcelEntity(id = "shuxue")
     private TeacherEntity       shuxueteacher;
 
-    //@ExcelCollection(name = "选课学生", orderNum = "4")
+    @ExcelCollection(name = "选课学生", orderNum = "4")
     private List<StudentEntity> students;
 
     /**
