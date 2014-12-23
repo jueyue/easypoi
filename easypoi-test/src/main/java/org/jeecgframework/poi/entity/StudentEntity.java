@@ -30,6 +30,9 @@ public class StudentEntity implements java.io.Serializable {
 
     @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd", mergeVertical = true)
     private Date         birthday;
+    
+    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd")
+    private java.sql.Time         registrationDate;
     /**
      * 课程主键
      */
@@ -103,6 +106,14 @@ public class StudentEntity implements java.io.Serializable {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public java.sql.Time getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(java.sql.Time registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
 }

@@ -41,13 +41,13 @@ import org.jeecgframework.poi.util.POIPublicUtil;
  */
 public abstract class ExcelExportBase extends ExportBase {
 
-    private int                  currentIndex = 0;
+    private int                        currentIndex  = 0;
 
-    protected String             type         = PoiBaseConstants.HSSF;
+    protected String                   type          = PoiBaseConstants.HSSF;
 
-    private Map<Integer, Double> statistics   = new HashMap<Integer, Double>();
-    
-    private static final DecimalFormat    DOUBLE_FORMAT   = new DecimalFormat("######0.00");  
+    private Map<Integer, Double>       statistics    = new HashMap<Integer, Double>();
+
+    private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("######0.00");
 
     private boolean checkIsEqualByCellContents(MergeEntity mergeEntity, String text, Cell cell,
                                                int[] delys, int rowNum) {
@@ -273,13 +273,15 @@ public abstract class ExcelExportBase extends ExportBase {
      * @param sheet
      */
     public void addStatisticsRow(CellStyle styles, Sheet sheet) {
-        Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-        Set<Integer> keys = statistics.keySet();
-        createStringCell(row, 0, "合计", styles, null);
-        for (Integer key : keys) {
-            createStringCell(row, key, DOUBLE_FORMAT.format(statistics.get(key)), styles, null);
+        if (statistics.size() > 0) {
+            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+            Set<Integer> keys = statistics.keySet();
+            createStringCell(row, 0, "合计", styles, null);
+            for (Integer key : keys) {
+                createStringCell(row, key, DOUBLE_FORMAT.format(statistics.get(key)), styles, null);
+            }
+            statistics.clear();
         }
-        statistics.clear();
 
     }
 
