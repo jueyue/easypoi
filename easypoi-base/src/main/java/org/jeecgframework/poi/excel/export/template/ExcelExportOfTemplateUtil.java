@@ -15,8 +15,10 @@ import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecgframework.poi.cache.ExcelCache;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
+import org.jeecgframework.poi.excel.entity.ExcelBaseParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
@@ -34,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportOfTemplateUtil.class);
 
     /**
@@ -48,6 +50,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     private void addDataToSheet(TemplateExportParams params, Class<?> pojoClass,
                                 Collection<?> dataSet, Sheet sheet, Workbook workbook)
                                                                                       throws Exception {
+
+        if (workbook instanceof XSSFWorkbook) {
+            super.type = ExcelBaseParams.XSSF;
+        }
         // 获取表头数据
         Map<String, Integer> titlemap = getTitleMap(params, sheet);
         Drawing patriarch = sheet.createDrawingPatriarch();
@@ -64,14 +70,58 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         // 根据表头进行筛选排序
         sortAndFilterExportField(excelParams, titlemap);
         short rowHeight = getRowHeight(excelParams);
+        int index = params.getHeadingRows() + params.getHeadingStartRow(), titleHeight = index;
+        //下移数据,模拟插入
+        sheet.shiftRows(params.getHeadingRows() + params.getHeadingStartRow(),
+            sheet.getLastRowNum(), getShiftRows(dataSet, excelParams), true, true);
+
         Iterator<?> its = dataSet.iterator();
-        int index = sheet.getLastRowNum() + 1, titleHeight = index;
         while (its.hasNext()) {
             Object t = its.next();
             index += createCells(patriarch, index, t, excelParams, sheet, workbook, null, rowHeight);
         }
         // 合并同类项
         mergeCells(sheet, excelParams, titleHeight);
+    }
+
+    /**
+     * 下移数据
+     * @param its
+     * @param excelParams
+     * @return
+     */
+    private int getShiftRows(Collection<?> dataSet, List<ExcelExportEntity> excelParams)
+                                                                                        throws Exception {
+        int size = 0;
+        Iterator<?> its = dataSet.iterator();
+        while (its.hasNext()) {
+            Object t = its.next();
+            size += getOneObjectSize(t, excelParams);
+        }
+        return size;
+    }
+
+    /**
+     * 获取单个对象的高度,主要是处理一堆多的情况
+     * 
+     * @param styles
+     * @param rowHeight
+     * @throws Exception
+     */
+    public int getOneObjectSize(Object t, List<ExcelExportEntity> excelParams) throws Exception {
+        ExcelExportEntity entity;
+        int maxHeight = 1;
+        for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
+            entity = excelParams.get(k);
+            if (entity.getList() != null) {
+                Collection<?> list = (Collection<?>) entity.getMethod().invoke(t, new Object[] {});
+                if (list != null && list.size() > maxHeight) {
+                    maxHeight = list.size();
+                }
+            }
+        }
+        return maxHeight;
+
     }
 
     public Workbook createExcleByTemplate(TemplateExportParams params, Class<?> pojoClass,
@@ -98,7 +148,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 addDataToSheet(params, pojoClass, dataSet, wb.getSheetAt(0), wb);
             }
         } catch (Exception e) {
-           LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(), e.fillInStackTrace());
             return null;
         }
         return wb;

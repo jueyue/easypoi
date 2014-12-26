@@ -32,7 +32,7 @@ public class TemplateExportParams extends ExcelBaseParams {
     /**
      * 表格列标题开始行,默认1
      */
-    private int    headingStartRow = 2;
+    private int    headingStartRow = 1;
 
     public TemplateExportParams() {
 
