@@ -28,6 +28,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.params.MergeEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
@@ -43,7 +44,7 @@ public abstract class ExcelExportBase extends ExportBase {
 
     private int                        currentIndex  = 0;
 
-    protected String                   type          = PoiBaseConstants.HSSF;
+    protected ExcelType                type          = ExcelType.HSSF;
 
     private Map<Integer, Double>       statistics    = new HashMap<Integer, Double>();
 
@@ -150,7 +151,7 @@ public abstract class ExcelExportBase extends ExportBase {
         row.setHeight((short) (50 * entity.getHeight()));
         row.createCell(i);
         ClientAnchor anchor;
-        if (type.equals(PoiBaseConstants.HSSF)) {
+        if (type.equals(ExcelType.HSSF)) {
             anchor = new HSSFClientAnchor(0, 0, 0, 0, (short) i, row.getRowNum(), (short) (i + 1),
                 row.getRowNum() + 1);
         } else {
@@ -255,7 +256,7 @@ public abstract class ExcelExportBase extends ExportBase {
                                  ExcelExportEntity entity) {
         Cell cell = row.createCell(index);
         RichTextString Rtext;
-        if (type.equals(PoiBaseConstants.HSSF)) {
+        if (type.equals(ExcelType.HSSF)) {
             Rtext = new HSSFRichTextString(text);
         } else {
             Rtext = new XSSFRichTextString(text);

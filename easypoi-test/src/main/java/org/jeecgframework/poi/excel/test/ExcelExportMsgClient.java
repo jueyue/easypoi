@@ -15,6 +15,7 @@ import org.jeecgframework.poi.entity.MsgClient;
 import org.jeecgframework.poi.entity.MsgClientGroup;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.junit.Test;
 /**
@@ -42,8 +43,7 @@ public class ExcelExportMsgClient {
             list.add(client);
         }
         Date start = new Date();
-        ExportParams params = new ExportParams("2412312", "测试");
-        params.setType(PoiBaseConstants.XSSF);
+        ExportParams params = new ExportParams("2412312", "测试", ExcelType.XSSF);
         Workbook workbook = ExcelExportUtil.exportExcel(params, MsgClient.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");

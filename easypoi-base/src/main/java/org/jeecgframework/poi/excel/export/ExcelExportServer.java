@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
@@ -80,18 +81,19 @@ public class ExcelExportServer extends ExcelExportBase {
     }
 
     public void createSheet(Workbook workbook, ExportParams entity, Class<?> pojoClass,
-                            Collection<?> dataSet, String type) {
+                            Collection<?> dataSet) {
         if (logger.isDebugEnabled()) {
             logger.debug("Excel export start ,class is {}", pojoClass);
-            logger.debug("Excel version is {}", type.equals(PoiBaseConstants.HSSF) ? "03" : "07");
+            logger.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
+                : "07");
         }
         if (workbook == null || entity == null || pojoClass == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
-        if (type.equals(PoiBaseConstants.XSSF)) {
+        super.type = entity.getType();
+        if (type.equals(ExcelType.XSSF)) {
             MAX_NUM = 1000000;
         }
-        super.type = type;
         Sheet sheet = null;
         try {
             sheet = workbook.createSheet(entity.getSheetName());
@@ -109,7 +111,7 @@ public class ExcelExportServer extends ExcelExportBase {
             Drawing patriarch = sheet.createDrawingPatriarch();
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
-                excelParams.add(indexExcelEntity());
+                excelParams.add(indexExcelEntity(entity));
             }
             // 得到所有字段
             Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
@@ -140,11 +142,11 @@ public class ExcelExportServer extends ExcelExportBase {
                 its.remove();
             }
             // 创建合计信息
-            addStatisticsRow(styles.get("one"),sheet);
-            
+            addStatisticsRow(styles.get("one"), sheet);
+
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {
-                createSheet(workbook, entity, pojoClass, dataSet, type);
+                createSheet(workbook, entity, pojoClass, dataSet);
             }
 
         } catch (Exception e) {
@@ -156,17 +158,18 @@ public class ExcelExportServer extends ExcelExportBase {
 
     public void createSheetForMap(Workbook workbook, ExportParams entity,
                                   List<ExcelExportEntity> entityList,
-                                  Collection<? extends Map<?, ?>> dataSet, String type) {
+                                  Collection<? extends Map<?, ?>> dataSet) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Excel version is {}", type.equals(PoiBaseConstants.HSSF) ? "03" : "07");
+            logger.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
+                : "07");
         }
         if (workbook == null || entity == null || entityList == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
-        if (type.equals(PoiBaseConstants.XSSF)) {
+        super.type = entity.getType();
+        if (type.equals(ExcelType.XSSF)) {
             MAX_NUM = 1000000;
         }
-        super.type = type;
         Sheet sheet = null;
         try {
             sheet = workbook.createSheet(entity.getSheetName());
@@ -184,7 +187,7 @@ public class ExcelExportServer extends ExcelExportBase {
             Drawing patriarch = sheet.createDrawingPatriarch();
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
-                excelParams.add(indexExcelEntity());
+                excelParams.add(indexExcelEntity(entity));
             }
             excelParams.addAll(entityList);
             sortAllParams(excelParams);
@@ -212,7 +215,7 @@ public class ExcelExportServer extends ExcelExportBase {
             }
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {
-                createSheetForMap(workbook, entity, entityList, dataSet, type);
+                createSheetForMap(workbook, entity, entityList, dataSet);
             }
 
         } catch (Exception e) {
@@ -364,13 +367,13 @@ public class ExcelExportServer extends ExcelExportBase {
         return style;
     }
 
-    private ExcelExportEntity indexExcelEntity() {
-        ExcelExportEntity entity = new ExcelExportEntity();
-        entity.setOrderNum(0);
-        entity.setName("序号");
-        entity.setWidth(10);
-        entity.setFormat(PoiBaseConstants.IS_ADD_INDEX);
-        return entity;
+    private ExcelExportEntity indexExcelEntity(ExportParams entity) {
+        ExcelExportEntity exportEntity = new ExcelExportEntity();
+        exportEntity.setOrderNum(0);
+        exportEntity.setName(entity.getIndexName());
+        exportEntity.setWidth(10);
+        exportEntity.setFormat(PoiBaseConstants.IS_ADD_INDEX);
+        return exportEntity;
     }
 
 }

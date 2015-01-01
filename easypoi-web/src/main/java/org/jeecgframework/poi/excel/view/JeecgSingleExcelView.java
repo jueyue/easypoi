@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.vo.MapExcelConstants;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
@@ -42,15 +41,13 @@ public class JeecgSingleExcelView extends AbstractExcelView {
                 new ExcelExportServer().createSheet(hssfWorkbook,
                     (ExportParams) map.get(NormalExcelConstants.PARAMS),
                     (Class<?>) map.get(NormalExcelConstants.CLASS),
-                    (Collection<?>) map.get(NormalExcelConstants.DATA_LIST),
-                    ((ExportParams) model.get(MapExcelConstants.PARAMS)).getType());
+                    (Collection<?>) map.get(NormalExcelConstants.DATA_LIST));
             }
         } else {
             new ExcelExportServer().createSheet(hssfWorkbook,
                 (ExportParams) model.get(NormalExcelConstants.PARAMS),
                 (Class<?>) model.get(NormalExcelConstants.CLASS),
-                (Collection<?>) model.get(NormalExcelConstants.DATA_LIST),
-                ((ExportParams) model.get(MapExcelConstants.PARAMS)).getType());
+                (Collection<?>) model.get(NormalExcelConstants.DATA_LIST));
         }
     }
 
