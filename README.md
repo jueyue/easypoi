@@ -52,7 +52,6 @@ EasyPoi的几个入口工具类
 EasyPoi 文档
 ---------------------------
 这几篇是旧的教程,不过和现在大同小异
-<<<<<<< master
 
 	[Excel 介绍篇](http://note.youdao.com/share/?id=ea5166076313d437abbfb28a18d85486&type=note)
 	[Excel 工具类](http://note.youdao.com/share/?id=dcfef5355d1d75b718be8fd563ad5216&type=note)
@@ -60,26 +59,12 @@ EasyPoi 文档
 	[Excel 注解介绍.第二篇](http://note.youdao.com/share/?id=9898d1777ca97b81d82a6e151b880dbb&type=note)
 	[Excel 实体类](http://note.youdao.com/share/?id=dab97eababf8e91356f87be204b581e8&type=note)
 	[Word模板导出教程](http://note.youdao.com/share/?id=26794c8eb4a285828663178c0ae854a2&type=note)
-=======
-[Excel 介绍篇](http://note.youdao.com/share/?id=ea5166076313d437abbfb28a18d85486&type=note)
-[Excel 工具类](http://note.youdao.com/share/?id=dcfef5355d1d75b718be8fd563ad5216&type=note)
-[Excel 注解介绍.第一篇](http://note.youdao.com/share/?id=9898d1777ca97b81d82a6e151b880dbb&type=note)
-[Excel 注解介绍.第二篇](http://note.youdao.com/share/?id=9898d1777ca97b81d82a6e151b880dbb&type=note)
-[Excel 实体类](http://note.youdao.com/share/?id=dab97eababf8e91356f87be204b581e8&type=note)
-[Word模板导出教程](http://note.youdao.com/share/?id=26794c8eb4a285828663178c0ae854a2&type=note)
->>>>>>> b1115ba Update README.md
 
 后面都是新的了
-<<<<<<< master
 
 	[EasyPoi-在财务报表中的应用](http://git.oschina.net/jueyue/easypoi/wikis/EasyPoi-%E5%9C%A8%E8%B4%A2%E5%8A%A1%E6%8A%A5%E8%A1%A8%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8)
 	
 	[EasyPoi-如何筛选导出属性](http://git.oschina.net/jueyue/easypoi/wikis/EasyPoi-%E5%A6%82%E4%BD%95%E7%AD%9B%E9%80%89%E5%AF%BC%E5%87%BA%E5%B1%9E%E6%80%A7)
-=======
-[EasyPoi-在财务报表中的应用](http://git.oschina.net/jueyue/easypoi/wikis/EasyPoi-%E5%9C%A8%E8%B4%A2%E5%8A%A1%E6%8A%A5%E8%A1%A8%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8)
-
-[EasyPoi-如何筛选导出属性](http://git.oschina.net/jueyue/easypoi/wikis/EasyPoi-%E5%A6%82%E4%BD%95%E7%AD%9B%E9%80%89%E5%AF%BC%E5%87%BA%E5%B1%9E%E6%80%A7)
->>>>>>> b1115ba Update README.md
 
 
 ---------------------------
@@ -186,6 +171,4 @@ EasyPoi导出实例
         return NormalExcelConstants.JEECG_EXCEL_VIEW;
 
 	}
-```	
-
-	 
+```
