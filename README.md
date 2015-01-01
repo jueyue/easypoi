@@ -5,9 +5,8 @@ EasyPoi Excel和 Word简易工具类
 就可以方便的写出Excel导出,Excel模板导出,Excel导入,Word模板导出,通过简单的注解和模板
 语言(熟悉的表达式语法),完成以前复杂的写法
 
-作者博客：http://blog.csdn.net/qjueyue
-作者邮箱： qrb.jueyue@gmail.com
-
+	作者博客：http://blog.csdn.net/qjueyue
+	作者邮箱： qrb.jueyue@gmail.com
 ---------------------------
 EasyPoi的主要特点
 --------------------------
