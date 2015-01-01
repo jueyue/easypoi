@@ -21,13 +21,5 @@ public interface PoiBaseConstants {
      * 是否增加属性列
      */
     public static String IS_ADD_INDEX = "isAddIndex";
-    /**
-     * 03版本Excel
-     */
-    public static String HSSF = "HSSF";
-    /**
-     * 07版本Excel
-     */
-    public static String XSSF = "XSSF";
 
 }

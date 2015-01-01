@@ -18,8 +18,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecgframework.poi.cache.ExcelCache;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
-import org.jeecgframework.poi.excel.entity.ExcelBaseParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
@@ -52,7 +52,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                                                                                       throws Exception {
 
         if (workbook instanceof XSSFWorkbook) {
-            super.type = ExcelBaseParams.XSSF;
+            super.type = ExcelType.XSSF;
         }
         // 获取表头数据
         Map<String, Integer> titlemap = getTitleMap(params, sheet);

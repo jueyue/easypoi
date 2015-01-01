@@ -10,6 +10,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
@@ -35,14 +36,14 @@ public final class ExcelExportUtil {
     public static Workbook exportExcel(ExportParams entity, Class<?> pojoClass,
                                        Collection<?> dataSet) {
         Workbook workbook;
-        if (entity.getType().equals(PoiBaseConstants.HSSF)) {
+        if (entity.getType().equals(ExcelType.HSSF)) {
             workbook = new HSSFWorkbook();
         } else if (dataSet.size() < 1000) {
             workbook = new XSSFWorkbook();
         } else {
             workbook = new SXSSFWorkbook();
         }
-        new ExcelExportServer().createSheet(workbook, entity, pojoClass, dataSet, entity.getType());
+        new ExcelExportServer().createSheet(workbook, entity, pojoClass, dataSet);
         return workbook;
     }
 
@@ -58,15 +59,14 @@ public final class ExcelExportUtil {
     public static Workbook exportExcel(ExportParams entity, List<ExcelExportEntity> entityList,
                                        Collection<? extends Map<?, ?>> dataSet) {
         Workbook workbook;
-        if (entity.getType().equals(PoiBaseConstants.HSSF)) {
+        if (entity.getType().equals(ExcelType.HSSF)) {
             workbook = new HSSFWorkbook();
         } else if (dataSet.size() < 1000) {
             workbook = new XSSFWorkbook();
         } else {
             workbook = new SXSSFWorkbook();
         }
-        new ExcelExportServer().createSheetForMap(workbook, entity, entityList, dataSet,
-            entity.getType());
+        new ExcelExportServer().createSheetForMap(workbook, entity, entityList, dataSet);
         return workbook;
     }
 
@@ -80,7 +80,7 @@ public final class ExcelExportUtil {
      */
     public static Workbook exportExcel(List<Map<String, Object>> list, String type) {
         Workbook workbook;
-        if (type.equals(PoiBaseConstants.HSSF)) {
+        if (type.equals(ExcelType.HSSF)) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -88,7 +88,7 @@ public final class ExcelExportUtil {
         ExcelExportServer server = new ExcelExportServer();
         for (Map<String, Object> map : list) {
             server.createSheet(workbook, (ExportParams) map.get("title"),
-                (Class<?>) map.get("entity"), (Collection<?>) map.get("data"), type);
+                (Class<?>) map.get("entity"), (Collection<?>) map.get("data"));
         }
         return workbook;
     }

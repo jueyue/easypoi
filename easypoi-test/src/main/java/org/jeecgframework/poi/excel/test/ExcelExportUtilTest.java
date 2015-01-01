@@ -14,6 +14,7 @@ import org.jeecgframework.poi.entity.TeacherEntity;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,15 +34,15 @@ public class ExcelExportUtilTest {
     @Test
     public void oneHundredThousandRowTest() throws Exception {
 
+        ExportParams params = new ExportParams("2412312", "测试", ExcelType.XSSF);
         Date start = new Date();
-        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试"),
-            CourseEntity.class, list);
+        Workbook workbook = ExcelExportUtil.exportExcel(params, CourseEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
         if (!savefile.exists()) {
             savefile.mkdirs();
         }
-        FileOutputStream fos = new FileOutputStream("d:/tt.xls");
+        FileOutputStream fos = new FileOutputStream("d:/tt.xlsx");
         workbook.write(fos);
         fos.close();
         savefile = new File("d:/1");
@@ -49,7 +50,7 @@ public class ExcelExportUtilTest {
             savefile.setWritable(true, false);
             savefile.mkdirs();
         }
-        fos = new FileOutputStream("d:/1/tt3.xls");
+        fos = new FileOutputStream("d:/1/tt3.xlsx");
         workbook.write(fos);
         fos.close();
     }
@@ -57,7 +58,7 @@ public class ExcelExportUtilTest {
     @Before
     public void testBefore() {
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2000000; i++) {
             courseEntity = new CourseEntity();
             courseEntity.setId("1131");
             courseEntity.setName("海贼王必修(" + (i + 1) + ")");
