@@ -17,7 +17,7 @@ public class WordExportUtilTest {
     /**
      * 简单导出包含图片
      */
-    @Test
+    //@Test
     public void imageWordExport() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("department", "Jeecg");
@@ -49,6 +49,8 @@ public class WordExportUtilTest {
         map.put("department", "Jeecg");
         map.put("person", "JueYue");
         map.put("time", format.format(new Date()));
+        map.put("me","JueYue");
+        map.put("date", "2015-01-03");
         try {
             XWPFDocument doc = WordExportUtil.exportWord07(
                 "org/jeecgframework/poi/word/doc/Simple.docx", map);
