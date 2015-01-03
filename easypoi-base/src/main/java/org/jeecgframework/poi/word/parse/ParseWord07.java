@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -42,6 +44,7 @@ public class ParseWord07 {
      * @param currentRun
      * @throws Exception
      */
+    @SuppressWarnings("deprecation")
     private void addAnImage(WordImageEntity obj, XWPFRun currentRun) throws Exception {
         Object[] isAndType = POIPublicUtil.getIsAndType(obj);
         String picId;
@@ -239,7 +242,9 @@ public class ParseWord07 {
     private void parseWordSetValue(MyXWPFDocument doc, Map<String, Object> map) throws Exception {
         // 第一步解析文档
         parseAllParagraphic(doc.getParagraphs(), map);
-        // 第二步解析所有表格
+        // 第二步解析页眉,页脚
+        parseHeaderAndFoot(doc, map);
+        // 第三步解析所有表格
         XWPFTable table;
         Iterator<XWPFTable> itTable = doc.getTablesIterator();
         while (itTable.hasNext()) {
@@ -251,4 +256,25 @@ public class ParseWord07 {
 
     }
 
+    /**
+     * 解析页眉和页脚
+     * @param doc
+     * @param map
+     * @throws Exception
+     */
+    private void parseHeaderAndFoot(MyXWPFDocument doc, Map<String, Object> map) throws Exception {
+        List<XWPFHeader> headerList = doc.getHeaderList();
+        for (XWPFHeader xwpfHeader : headerList) {
+            for (int i = 0; i < xwpfHeader.getListParagraph().size(); i++) {
+                parseThisParagraph(xwpfHeader.getListParagraph().get(i), map);
+            }
+        }
+        List<XWPFFooter> footerList = doc.getFooterList();
+        for (XWPFFooter xwpfFooter : footerList) {
+            for (int i = 0; i < xwpfFooter.getListParagraph().size(); i++) {
+                parseThisParagraph(xwpfFooter.getListParagraph().get(i), map);
+            }
+        }
+
+    }
 }
