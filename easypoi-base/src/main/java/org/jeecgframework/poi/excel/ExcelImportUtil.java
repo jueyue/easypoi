@@ -40,12 +40,12 @@ public class ExcelImportUtil {
             in = new FileInputStream(file);
             result = new ExcelImportServer().importExcelByIs(in, pojoClass, params).getList();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         } finally {
             try {
                 in.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(),e.fillInStackTrace());
+                LOGGER.error(e.getMessage(),e);
             }
         }
         return result;
@@ -96,12 +96,12 @@ public class ExcelImportUtil {
             in = new FileInputStream(file);
             return new ExcelImportServer().importExcelByIs(in, pojoClass, params);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         } finally {
             try {
                 in.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(),e.fillInStackTrace());
+                LOGGER.error(e.getMessage(),e);
             }
         }
         return null;
