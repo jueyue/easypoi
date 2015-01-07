@@ -57,7 +57,7 @@ public class ParseWord07 {
                     .getNextPicNameNumber((Integer) isAndType[1]), obj.getWidth(), obj.getHeight());
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         }
 
     }

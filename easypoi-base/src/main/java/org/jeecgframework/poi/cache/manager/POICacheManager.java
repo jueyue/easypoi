@@ -43,7 +43,7 @@ public final class POICacheManager {
             byte[] result = Arrays.copyOf(loadingCache.get(id), loadingCache.get(id).length);
             return new ByteArrayInputStream(result);
         } catch (ExecutionException e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         }
         return null;
     }

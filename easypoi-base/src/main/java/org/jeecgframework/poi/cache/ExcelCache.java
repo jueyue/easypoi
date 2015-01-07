@@ -34,14 +34,14 @@ public final class ExcelCache {
             }
             return wb;
         } catch (InvalidFormatException e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e.fillInStackTrace());
+                LOGGER.error(e.getMessage(),e);
             }
         }
         return null;
