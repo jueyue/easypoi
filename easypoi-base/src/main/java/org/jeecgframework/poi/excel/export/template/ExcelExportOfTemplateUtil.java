@@ -148,7 +148,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 addDataToSheet(params, pojoClass, dataSet, wb.getSheetAt(0), wb);
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
             return null;
         }
         return wb;

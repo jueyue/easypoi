@@ -25,12 +25,12 @@ public class WordCache {
             MyXWPFDocument doc = new MyXWPFDocument(is);
             return doc;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e.fillInStackTrace());
+                LOGGER.error(e.getMessage(),e);
             }
         }
         return null;

@@ -34,9 +34,9 @@ class FileLoade {
             baos.flush();
             return baos.toByteArray();
         } catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e.fillInStackTrace());
+            LOGGER.error(e.getMessage(),e);
         } finally {
             try {
                 if (fileis != null)
@@ -44,7 +44,7 @@ class FileLoade {
                 if (fileis != null)
                     baos.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e.fillInStackTrace());
+                LOGGER.error(e.getMessage(),e);
             }
         }
         LOGGER.error(fileis + "这个路径文件没有找到,请查询");
