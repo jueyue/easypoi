@@ -2,6 +2,7 @@ package org.jeecgframework.poi.excel.entity;
 
 import org.apache.poi.hssf.util.HSSFColor;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
+import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerDefaultImpl;
 
 /**
  * Excel 导出参数
@@ -19,7 +20,7 @@ public class ExportParams extends ExcelBaseParams {
     /**
      * 表格名称
      */
-    private short     titleHeight       = 20;
+    private short     titleHeight       = 10;
 
     /**
      * 第二行名称
@@ -58,6 +59,10 @@ public class ExportParams extends ExcelBaseParams {
      * Excel 导出版本
      */
     private ExcelType type              = ExcelType.HSSF;
+    /**
+     * Excel 导出style
+     */
+    private Class<?>  style             = ExcelExportStylerDefaultImpl.class;
 
     public ExportParams() {
 
@@ -166,6 +171,14 @@ public class ExportParams extends ExcelBaseParams {
 
     public void setIndexName(String indexName) {
         this.indexName = indexName;
+    }
+
+    public Class<?> getStyle() {
+        return style;
+    }
+
+    public void setStyle(Class<?> style) {
+        this.style = style;
     }
 
 }

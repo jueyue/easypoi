@@ -17,6 +17,9 @@ import org.jeecgframework.poi.entity.temp.PayeeEntity;
 import org.jeecgframework.poi.entity.temp.TemplateExcelExportEntity;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
+import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerBorderImpl;
+import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerColorImpl;
+import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerDefaultImpl;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -29,6 +32,7 @@ public class TemplateExcelExportTest {
             "org/jeecgframework/poi/excel/doc/专项支出用款申请书.xls");
         params.setHeadingStartRow(3);
         params.setHeadingRows(2);
+        params.setStyle(ExcelExportStylerColorImpl.class);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("date", "2014-12-25");
         map.put("money", 2000000.00);
@@ -40,7 +44,7 @@ public class TemplateExcelExportTest {
 
         List<TemplateExcelExportEntity> list = new ArrayList<TemplateExcelExportEntity>();
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 4; i++) {
             TemplateExcelExportEntity entity = new TemplateExcelExportEntity();
             entity.setIndex(i + 1 + "");
             entity.setAccountType("开源项目");

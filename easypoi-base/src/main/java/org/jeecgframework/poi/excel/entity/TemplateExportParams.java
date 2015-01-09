@@ -1,5 +1,7 @@
 package org.jeecgframework.poi.excel.entity;
 
+import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerDefaultImpl;
+
 /**
  * 模板导出参数设置
  * 
@@ -12,27 +14,31 @@ public class TemplateExportParams extends ExcelBaseParams {
     /**
      * 模板的路径
      */
-    private String templateUrl;
+    private String   templateUrl;
 
     /**
      * 需要导出的第几个 sheetNum,默认是第0个
      */
-    private int    sheetNum        = 0;
+    private int      sheetNum        = 0;
 
     /**
      * 这只sheetName 不填就使用原来的
      */
-    private String sheetName;
+    private String   sheetName;
 
     /**
      * 表格列标题行数,默认1
      */
-    private int    headingRows     = 1;
+    private int      headingRows     = 1;
 
     /**
      * 表格列标题开始行,默认1
      */
-    private int    headingStartRow = 1;
+    private int      headingStartRow = 1;
+    /**
+     * Excel 导出style
+     */
+    private Class<?> style           = ExcelExportStylerDefaultImpl.class;
 
     public TemplateExportParams() {
 
@@ -41,14 +47,17 @@ public class TemplateExportParams extends ExcelBaseParams {
     public TemplateExportParams(String templateUrl) {
         this.templateUrl = templateUrl;
     }
+
     public TemplateExportParams(String templateUrl, int sheetNum) {
         this.templateUrl = templateUrl;
         this.sheetNum = sheetNum;
     }
+
     public TemplateExportParams(String templateUrl, String sheetName) {
         this.templateUrl = templateUrl;
         this.sheetName = sheetName;
     }
+
     public TemplateExportParams(String templateUrl, String sheetName, int sheetNum) {
         this.templateUrl = templateUrl;
         this.sheetName = sheetName;
@@ -93,6 +102,14 @@ public class TemplateExportParams extends ExcelBaseParams {
 
     public void setTemplateUrl(String templateUrl) {
         this.templateUrl = templateUrl;
+    }
+
+    public Class<?> getStyle() {
+        return style;
+    }
+
+    public void setStyle(Class<?> style) {
+        this.style = style;
     }
 
 }

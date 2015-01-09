@@ -32,10 +32,11 @@ import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.params.MergeEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
+import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.util.POIPublicUtil;
 
 /**
- * 导出基础服务
+ * 提供POI基础操作服务
  * 
  * @author JueYue
  * @date 2014年6月17日 下午6:15:13
@@ -49,6 +50,8 @@ public abstract class ExcelExportBase extends ExportBase {
     private Map<Integer, Double>       statistics    = new HashMap<Integer, Double>();
 
     private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("######0.00");
+
+    private IExcelExportStyler          excelExportStyler;
 
     private boolean checkIsEqualByCellContents(MergeEntity mergeEntity, String text, Cell cell,
                                                int[] delys, int rowNum) {
@@ -78,12 +81,12 @@ public abstract class ExcelExportBase extends ExportBase {
      */
     public int createCells(Drawing patriarch, int index, Object t,
                            List<ExcelExportEntity> excelParams, Sheet sheet, Workbook workbook,
-                           Map<String, CellStyle> styles, short rowHeight) throws Exception {
+                           short rowHeight) throws Exception {
         ExcelExportEntity entity;
         Row row = sheet.createRow(index);
         row.setHeight(rowHeight);
         int maxHeight = 1, cellNum = 0;
-        int indexKey = createIndexCell(row, styles, index, excelParams.get(0));
+        int indexKey = createIndexCell(row, index, excelParams.get(0));
         cellNum += indexKey;
         for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);
@@ -92,7 +95,7 @@ public abstract class ExcelExportBase extends ExportBase {
                 int listC = 0;
                 for (Object obj : list) {
                     createListCells(patriarch, index + listC, cellNum, obj, entity.getList(),
-                        sheet, workbook, styles);
+                        sheet, workbook);
                     listC++;
                 }
                 cellNum += entity.getList().size();
@@ -106,8 +109,8 @@ public abstract class ExcelExportBase extends ExportBase {
                         row,
                         cellNum++,
                         value == null ? "" : value.toString(),
-                        index % 2 == 0 ? getStyles(styles, false, entity.isWrap()) : getStyles(
-                            styles, true, entity.isWrap()), entity);
+                        index % 2 == 0 ? getStyles(false, entity.isWrap()) : getStyles(true,
+                            entity.isWrap()), entity);
                 } else {
                     createImageCell(patriarch, entity, row, cellNum++,
                         value == null ? "" : value.toString(), t);
@@ -124,7 +127,7 @@ public abstract class ExcelExportBase extends ExportBase {
                 for (int i = index + 1; i < index + maxHeight; i++) {
                     sheet.getRow(i).createCell(cellNum);
                     sheet.getRow(i).getCell(cellNum)
-                        .setCellStyle(getStyles(styles, false, entity.isWrap()));
+                        .setCellStyle(getStyles(false, entity.isWrap()));
                 }
                 sheet.addMergedRegion(new CellRangeAddress(index, index + maxHeight - 1, cellNum,
                     cellNum));
@@ -190,13 +193,11 @@ public abstract class ExcelExportBase extends ExportBase {
 
     }
 
-    private int createIndexCell(Row row, Map<String, CellStyle> styles, int index,
-                                ExcelExportEntity excelExportEntity) {
+    private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
         if (excelExportEntity.getName().equals("序号")
             && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
-            createStringCell(row, 0, currentIndex + "",
-                index % 2 == 0 ? getStyles(styles, false, false) : getStyles(styles, true, false),
-                null);
+            createStringCell(row, 0, currentIndex + "", index % 2 == 0 ? getStyles(false, false)
+                : getStyles(true, false), null);
             currentIndex = currentIndex + 1;
             return 1;
         }
@@ -209,8 +210,8 @@ public abstract class ExcelExportBase extends ExportBase {
      * @param styles
      */
     public void createListCells(Drawing patriarch, int index, int cellNum, Object obj,
-                                List<ExcelExportEntity> excelParams, Sheet sheet,
-                                Workbook workbook, Map<String, CellStyle> styles) throws Exception {
+                                List<ExcelExportEntity> excelParams, Sheet sheet, Workbook workbook)
+                                                                                                    throws Exception {
         ExcelExportEntity entity;
         Row row;
         if (sheet.getRow(index) == null) {
@@ -223,9 +224,12 @@ public abstract class ExcelExportBase extends ExportBase {
             entity = excelParams.get(k);
             Object value = getCellValue(entity, obj);
             if (entity.getType() == 1) {
-                createStringCell(row, cellNum++, value == null ? "" : value.toString(),
-                    row.getRowNum() % 2 == 0 ? getStyles(styles, false, entity.isWrap())
-                        : getStyles(styles, true, entity.isWrap()), entity);
+                createStringCell(
+                    row,
+                    cellNum++,
+                    value == null ? "" : value.toString(),
+                    row.getRowNum() % 2 == 0 ? getStyles(false, entity.isWrap()) : getStyles(true,
+                        entity.isWrap()), entity);
             } else {
                 createImageCell(patriarch, entity, row, cellNum++,
                     value == null ? "" : value.toString(), obj);
@@ -376,8 +380,14 @@ public abstract class ExcelExportBase extends ExportBase {
         return mergeMap;
     }
 
-    public CellStyle getStyles(Map<String, CellStyle> styles, boolean needOne, boolean wrap) {
-        return null;
+    /**
+     * 获取样式
+     * @param needOne
+     * @param isWrap
+     * @return
+     */
+    public CellStyle getStyles(boolean needOne, boolean isWrap) {
+        return excelExportStyler.getStyles(needOne, isWrap);
     }
 
     /**
@@ -483,6 +493,14 @@ public abstract class ExcelExportBase extends ExportBase {
 
     public void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
+    }
+
+    public void setExcelExportStyler(IExcelExportStyler excelExportStyler) {
+        this.excelExportStyler = excelExportStyler;
+    }
+
+    public IExcelExportStyler getExcelExportStyler() {
+        return excelExportStyler;
     }
 
 }

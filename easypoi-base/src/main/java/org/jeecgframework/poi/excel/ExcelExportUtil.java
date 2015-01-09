@@ -12,7 +12,6 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
-import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
 import org.jeecgframework.poi.excel.export.template.ExcelExportOfTemplateUtil;
 
@@ -85,8 +84,8 @@ public final class ExcelExportUtil {
         } else {
             workbook = new XSSFWorkbook();
         }
-        ExcelExportServer server = new ExcelExportServer();
         for (Map<String, Object> map : list) {
+            ExcelExportServer server = new ExcelExportServer();
             server.createSheet(workbook, (ExportParams) map.get("title"),
                 (Class<?>) map.get("entity"), (Collection<?>) map.get("data"));
         }

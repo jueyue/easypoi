@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.entity.statistics.StatisticEntity;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelStyleType;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class ExcelExportStatisticTest {
     public void test() throws Exception {
 
         List<StatisticEntity> list = new ArrayList<StatisticEntity>();
-        for (int i = 0; i < 25000; i++) {
+        for (int i = 0; i < 20; i++) {
             StatisticEntity client = new StatisticEntity();
             client.setName("index" + i);
             client.setIntTest(1 + i);
@@ -32,6 +33,7 @@ public class ExcelExportStatisticTest {
         }
         Date start = new Date();
         ExportParams params = new ExportParams("2412312", "测试", ExcelType.XSSF);
+        params.setStyle(ExcelStyleType.COLOR.getClazz());
         Workbook workbook = ExcelExportUtil.exportExcel(params, StatisticEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
