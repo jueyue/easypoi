@@ -34,7 +34,7 @@ public interface IExcelExportStyler {
     public CellStyle getStyles(boolean needOne, boolean isWrap);
 
     /**
-     * 创建样式
+     * 创建单行样式
      * @param workbook
      * @param isWarp
      * @return
