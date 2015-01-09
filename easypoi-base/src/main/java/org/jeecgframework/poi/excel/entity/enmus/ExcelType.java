@@ -8,5 +8,5 @@ package org.jeecgframework.poi.excel.entity.enmus;
 public enum ExcelType {
     
     HSSF, XSSF;
-    
+
 }

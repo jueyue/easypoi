@@ -41,6 +41,10 @@ public interface IExcelDataHandler {
      */
     public Object importHandler(Object obj, String name, Object value);
 
+    /**
+     * 设置需要处理的属性列表
+     * @param fields
+     */
     public void setNeedHandlerFields(String[] fields);
 
 }

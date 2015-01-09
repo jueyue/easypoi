@@ -22,6 +22,7 @@ import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
+import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
 import org.jeecgframework.poi.util.POIPublicUtil;
@@ -64,6 +65,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         if (etarget != null) {
             targetId = etarget.value();
         }
+        // 创建表格样式
+        setExcelExportStyler((IExcelExportStyler) params.getStyle().getConstructor(Workbook.class)
+            .newInstance(workbook));
         // 获取实体对象的导出数据
         List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
         getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
@@ -78,7 +82,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         Iterator<?> its = dataSet.iterator();
         while (its.hasNext()) {
             Object t = its.next();
-            index += createCells(patriarch, index, t, excelParams, sheet, workbook, null, rowHeight);
+            index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight);
         }
         // 合并同类项
         mergeCells(sheet, excelParams, titleHeight);
@@ -148,7 +152,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 addDataToSheet(params, pojoClass, dataSet, wb.getSheetAt(0), wb);
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
         return wb;

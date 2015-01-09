@@ -12,6 +12,7 @@ import org.jeecgframework.poi.handler.inter.IExcelVerifyHandler;
  * @date 2014年6月29日 下午4:37:56
  */
 public class VerifyHandlerServer {
+    
     private void addVerifyResult(ExcelVerifyHanlderResult temp, ExcelVerifyHanlderResult result) {
         if (!temp.isSuccess()) {
             result.setSuccess(false);

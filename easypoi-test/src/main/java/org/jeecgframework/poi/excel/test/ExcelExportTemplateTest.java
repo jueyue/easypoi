@@ -14,6 +14,7 @@ import org.jeecgframework.poi.entity.StudentEntity;
 import org.jeecgframework.poi.entity.TeacherEntity;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
+import org.jeecgframework.poi.excel.entity.enmus.ExcelStyleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,6 +28,7 @@ public class ExcelExportTemplateTest {
         TemplateExportParams params = new TemplateExportParams();
         params.setHeadingRows(2);
         params.setHeadingStartRow(2);
+        params.setStyle(ExcelStyleType.BORDER.getClazz());
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("year", "2013");
         map.put("sunCourses", list.size());
