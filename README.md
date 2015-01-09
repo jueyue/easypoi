@@ -67,6 +67,8 @@ EasyPoi 文档
 
 [EasyPoi 在spring mvc中简易开发方式](http://note.youdao.com/share/?id=8b04c4d88a0574a59aeaffd142c8e34b&type=note)
 
+[EasyPoi-新版自定义导出样式类型](http://note.youdao.com/share/?id=7937a9fe15f1016b8f39bf813be894f8&type=note)
+
 
 ---------------------------
 EasyPoi导出实例
