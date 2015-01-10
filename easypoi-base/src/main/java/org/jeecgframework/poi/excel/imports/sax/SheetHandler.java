@@ -99,16 +99,15 @@ public class SheetHandler extends DefaultHandler {
             } else if (CellValueType.Number.equals(type)) {
                 BigDecimal bd = new BigDecimal(value);
                 rowlist.add(curCol, new SaxReadCellEntity(CellValueType.Number, bd));
+            } else if (CellValueType.String.equals(type)) {
+                rowlist.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
             }
             curCol++;
-        } else {
-            //如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法  
-            if (name.equals("row")) {
-                read.parse(curRow, rowlist);
-                rowlist.clear();
-                curRow++;
-                curCol = 0;
-            }
+        } else if (name.equals("row")) {//如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法  
+            read.parse(curRow, rowlist);
+            rowlist.clear();
+            curRow++;
+            curCol = 0;
         }
 
     }
