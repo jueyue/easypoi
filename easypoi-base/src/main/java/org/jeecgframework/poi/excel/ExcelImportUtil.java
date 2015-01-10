@@ -133,7 +133,7 @@ public class ExcelImportUtil {
      * @throws Exception
      */
     public static <T> List<T> importExcelBySax(InputStream inputstream, Class<?> pojoClass,
-                                               ImportParams params) throws Exception {
+                                               ImportParams params) {
         return new SaxReadExcel().readExcel(inputstream, pojoClass, params, null);
     }
 
@@ -142,14 +142,12 @@ public class ExcelImportUtil {
      * 导入 数据源本地文件,不返回校验结果 导入 字 段类型 Integer,Long,Double,Date,String,Boolean
      * 
      * @param file
-     * @param pojoClass
-     * @param params
+     * @param rowRead
      * @return
      * @throws Exception
      */
-    public static <T> List<T> importExcelBySax(File file, Class<?> pojoClass, ImportParams params,
-                                               ISaxRowRead rowRead) {
-        return new SaxReadExcel().readExcel(file, pojoClass, params, rowRead);
+    public static <T> List<T> importExcelBySax(File file, ISaxRowRead rowRead) {
+        return new SaxReadExcel().readExcel(file, null, null, rowRead);
     }
 
     /**
@@ -157,15 +155,12 @@ public class ExcelImportUtil {
      * 导入 数据源IO流,不返回校验结果 导入 字段类型 Integer,Long,Double,Date,String,Boolean
      * 
      * @param file
-     * @param pojoClass
-     * @param params
+     * @param rowRead
      * @return
      * @throws Exception
      */
-    public static <T> List<T> importExcelBySax(InputStream inputstream, Class<?> pojoClass,
-                                               ImportParams params, ISaxRowRead rowRead)
-                                                                                        throws Exception {
-        return new SaxReadExcel().readExcel(inputstream, pojoClass, params, rowRead);
+    public static <T> List<T> importExcelBySax(InputStream inputstream, ISaxRowRead rowRead) {
+        return new SaxReadExcel().readExcel(inputstream, null, null, rowRead);
     }
 
 }
