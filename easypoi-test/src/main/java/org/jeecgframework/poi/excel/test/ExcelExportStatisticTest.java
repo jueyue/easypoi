@@ -21,7 +21,7 @@ public class ExcelExportStatisticTest {
     public void test() throws Exception {
 
         List<StatisticEntity> list = new ArrayList<StatisticEntity>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 20000; i++) {
             StatisticEntity client = new StatisticEntity();
             client.setName("index" + i);
             client.setIntTest(1 + i);
@@ -32,8 +32,7 @@ public class ExcelExportStatisticTest {
             list.add(client);
         }
         Date start = new Date();
-        ExportParams params = new ExportParams("2412312", "测试", ExcelType.XSSF);
-        params.setStyle(ExcelStyleType.COLOR.getClazz());
+        ExportParams params = new ExportParams("2412312", "测试",ExcelType.XSSF);
         Workbook workbook = ExcelExportUtil.exportExcel(params, StatisticEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");

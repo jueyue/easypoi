@@ -25,6 +25,10 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xerces</artifactId>
+		</dependency>
 
 		<!-- google 工具类 -->
 		<dependency>

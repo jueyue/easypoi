@@ -317,7 +317,7 @@ public class POIPublicUtil {
      * 返回流和图片类型
      *@Author JueYue
      *@date   2013-11-20
-     *@param obj
+     *@param entity
      *@return  (byte[]) isAndType[0],(Integer)isAndType[1]
      * @throws Exception 
      */
@@ -395,9 +395,6 @@ public class POIPublicUtil {
      * @param index
      * @return
      * @throws Exception
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
     @SuppressWarnings("rawtypes")
     public static Object getValueDoWhile(Object object, String[] paramsArr, int index)

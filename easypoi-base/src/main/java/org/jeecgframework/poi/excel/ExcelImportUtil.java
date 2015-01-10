@@ -9,6 +9,8 @@ import java.util.List;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.result.ExcelImportResult;
 import org.jeecgframework.poi.excel.imports.ExcelImportServer;
+import org.jeecgframework.poi.excel.imports.sax.SaxReadExcel;
+import org.jeecgframework.poi.excel.imports.sax.parse.ISaxRowRead;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +42,12 @@ public class ExcelImportUtil {
             in = new FileInputStream(file);
             result = new ExcelImportServer().importExcelByIs(in, pojoClass, params).getList();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 in.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(),e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return result;
@@ -60,8 +62,8 @@ public class ExcelImportUtil {
      * @return
      * @throws Exception
      */
-    public static <T> List<T> importExcelByIs(InputStream inputstream, Class<?> pojoClass,
-                                              ImportParams params) throws Exception {
+    public static <T> List<T> importExcel(InputStream inputstream, Class<?> pojoClass,
+                                          ImportParams params) throws Exception {
         return new ExcelImportServer().importExcelByIs(inputstream, pojoClass, params).getList();
     }
 
@@ -74,9 +76,8 @@ public class ExcelImportUtil {
      * @return
      * @throws Exception
      */
-    public static ExcelImportResult importExcelByIsAndVerify(InputStream inputstream,
-                                                             Class<?> pojoClass, ImportParams params)
-                                                                                                     throws Exception {
+    public static ExcelImportResult importExcelVerify(InputStream inputstream, Class<?> pojoClass,
+                                                      ImportParams params) throws Exception {
         return new ExcelImportServer().importExcelByIs(inputstream, pojoClass, params);
     }
 
@@ -96,15 +97,75 @@ public class ExcelImportUtil {
             in = new FileInputStream(file);
             return new ExcelImportServer().importExcelByIs(in, pojoClass, params);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 in.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(),e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return null;
+    }
+
+    /**
+     * Excel 通过SAX解析方法,适合大数据导入,不支持图片
+     * 导入 数据源本地文件,不返回校验结果 导入 字 段类型 Integer,Long,Double,Date,String,Boolean
+     * 
+     * @param file
+     * @param pojoClass
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public static <T> List<T> importExcelBySax(File file, Class<?> pojoClass, ImportParams params) {
+        return new SaxReadExcel().readExcel(file, pojoClass, params, null);
+    }
+
+    /**
+     * Excel 通过SAX解析方法,适合大数据导入,不支持图片
+     * 导入 数据源IO流,不返回校验结果 导入 字段类型 Integer,Long,Double,Date,String,Boolean
+     * 
+     * @param file
+     * @param pojoClass
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public static <T> List<T> importExcelBySax(InputStream inputstream, Class<?> pojoClass,
+                                               ImportParams params) throws Exception {
+        return new SaxReadExcel().readExcel(inputstream, pojoClass, params, null);
+    }
+
+    /**
+     * Excel 通过SAX解析方法,适合大数据导入,不支持图片
+     * 导入 数据源本地文件,不返回校验结果 导入 字 段类型 Integer,Long,Double,Date,String,Boolean
+     * 
+     * @param file
+     * @param pojoClass
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public static <T> List<T> importExcelBySax(File file, Class<?> pojoClass, ImportParams params,
+                                               ISaxRowRead rowRead) {
+        return new SaxReadExcel().readExcel(file, pojoClass, params, rowRead);
+    }
+
+    /**
+     * Excel 通过SAX解析方法,适合大数据导入,不支持图片
+     * 导入 数据源IO流,不返回校验结果 导入 字段类型 Integer,Long,Double,Date,String,Boolean
+     * 
+     * @param file
+     * @param pojoClass
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public static <T> List<T> importExcelBySax(InputStream inputstream, Class<?> pojoClass,
+                                               ImportParams params, ISaxRowRead rowRead)
+                                                                                        throws Exception {
+        return new SaxReadExcel().readExcel(inputstream, pojoClass, params, rowRead);
     }
 
 }

@@ -5,27 +5,31 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.jeecgframework.poi.entity.CourseEntity;
 import org.jeecgframework.poi.entity.TestEntity;
+import org.jeecgframework.poi.entity.statistics.StatisticEntity;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.junit.Test;
 
 public class ExcelImportUtilTest {
 
-    //@Test
+    @Test
     public void test() {
         ImportParams params = new ImportParams();
-        params.setTitleRows(2);
-        params.setHeadRows(2);
-        //params.setSheetNum(9);
-        params.setNeedSave(true);
+        params.setTitleRows(1);
         long start = new Date().getTime();
-        List<CourseEntity> list = ExcelImportUtil.importExcel(new File("d:/tt.xlsx"),
-            CourseEntity.class, params);
+        List<StatisticEntity> list = ExcelImportUtil.importExcelBySax(new File("d:/tt.xlsx"),
+            StatisticEntity.class, params);
+//        List<StatisticEntity> list = ExcelImportUtil.importExcelBySax(new File("d:/tt.xlsx"),
+//            StatisticEntity.class, params);
+        /*for (int i = 0; i < list.size(); i++) {
+            System.out.println(ReflectionToStringBuilder.toString(list.get(i)));
+        }*/
         System.out.println(list.size() + "-----" + (new Date().getTime() - start));
     }
 
-    @Test
+    // @Test
     public void test2() {
         ImportParams params = new ImportParams();
         params.setTitleRows(1);

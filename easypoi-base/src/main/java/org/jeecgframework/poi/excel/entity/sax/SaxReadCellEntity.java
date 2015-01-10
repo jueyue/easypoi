@@ -38,4 +38,9 @@ public class SaxReadCellEntity {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "[type=" + cellType.toString() + ",value=" + value + "]";
+    }
+
 }

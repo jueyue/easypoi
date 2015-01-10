@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.jeecgframework.poi.excel.entity.params.ExcelImportEntity;
+import org.jeecgframework.poi.excel.entity.sax.SaxReadCellEntity;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelImportEnum;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CellValueServer {
 
-    private static final Logger logger      = LoggerFactory.getLogger(CellValueServer.class);
+    private static final Logger LOGGER      = LoggerFactory.getLogger(CellValueServer.class);
 
     private List<String>        hanlderList = null;
 
@@ -79,7 +80,7 @@ public class CellValueServer {
             try {
                 return format.parse(value);
             } catch (ParseException e) {
-                logger.error("时间格式化失败,格式化:{},值:{}", entity.getFormat(), value);
+                LOGGER.error("时间格式化失败,格式化:{},值:{}", entity.getFormat(), value);
                 throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
             }
         }
@@ -103,6 +104,29 @@ public class CellValueServer {
         Type[] ts = setMethod.getGenericParameterTypes();
         String xclass = ts[0].toString();
         Object result = getCellValue(xclass, cell, entity);
+        result = replaceValue(entity.getReplace(), result);
+        result = hanlderValue(dataHanlder, object, result, titleString);
+        return getValueByType(xclass, result);
+    }
+
+    /**
+     * 获取cell值
+     * @param dataHanlder
+     * @param object
+     * @param entity
+     * @param excelParams
+     * @param titleString
+     * @return
+     */
+    public Object getValue(IExcelDataHandler dataHanlder, Object object,
+                           SaxReadCellEntity cellEntity,
+                           Map<String, ExcelImportEntity> excelParams, String titleString) {
+        ExcelImportEntity entity = excelParams.get(titleString);
+        Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0 ? entity
+            .getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
+        Type[] ts = setMethod.getGenericParameterTypes();
+        String xclass = ts[0].toString();
+        Object result = cellEntity.getValue();
         result = replaceValue(entity.getReplace(), result);
         result = hanlderValue(dataHanlder, object, result, titleString);
         return getValueByType(xclass, result);
@@ -140,6 +164,7 @@ public class CellValueServer {
             }
             return result;
         } catch (Exception e) {
+            LOGGER.error(e.getMessage(),e);
             throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
         }
     }
