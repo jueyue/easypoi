@@ -1,6 +1,5 @@
 package org.jeecgframework.poi.excel.imports.sax;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +11,7 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.imports.sax.parse.ISaxRowRead;
 import org.jeecgframework.poi.excel.imports.sax.parse.SaxRowRead;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
+import org.jeecgframework.poi.handler.inter.IExcelReadRowHanlder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.ContentHandler;
@@ -26,26 +26,16 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @date 2014年12月29日 下午9:41:38
  * @version 1.0
  */
+@SuppressWarnings("rawtypes")
 public class SaxReadExcel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SaxReadExcel.class);
 
     public <T> List<T> readExcel(InputStream inputstream, Class<?> pojoClass, ImportParams params,
-                                 ISaxRowRead rowRead) {
+                                 ISaxRowRead rowRead, IExcelReadRowHanlder hanlder) {
         try {
             OPCPackage opcPackage = OPCPackage.open(inputstream);
-            return readExcel(opcPackage, pojoClass, params, rowRead);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ExcelImportException(e.getMessage());
-        }
-    }
-
-    public <T> List<T> readExcel(File file, Class<?> pojoClass, ImportParams params,
-                                 ISaxRowRead rowRead) {
-        try {
-            OPCPackage opcPackage = OPCPackage.open(file);
-            return readExcel(opcPackage, pojoClass, params, rowRead);
+            return readExcel(opcPackage, pojoClass, params, rowRead, hanlder);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ExcelImportException(e.getMessage());
@@ -53,12 +43,12 @@ public class SaxReadExcel {
     }
 
     private <T> List<T> readExcel(OPCPackage opcPackage, Class<?> pojoClass, ImportParams params,
-                                  ISaxRowRead rowRead) {
+                                  ISaxRowRead rowRead, IExcelReadRowHanlder hanlder) {
         try {
             XSSFReader xssfReader = new XSSFReader(opcPackage);
             SharedStringsTable sst = xssfReader.getSharedStringsTable();
             if (rowRead == null) {
-                rowRead = new SaxRowRead(pojoClass, params);
+                rowRead = new SaxRowRead(pojoClass, params, hanlder);
             }
             XMLReader parser = fetchSheetParser(sst, rowRead);
             Iterator<InputStream> sheets = xssfReader.getSheetsData();

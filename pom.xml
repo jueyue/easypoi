@@ -161,4 +161,15 @@
 		</plugins>
 	</build>
 
+	<distributionManagement>
+		<repository>
+			<id>postaop-common-release</id>
+			<url>http://192.168.1.99:8081/nexus/content/repositories/postaop-common-release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>postaop-common-snapshot</id>
+			<url>http://192.168.1.99:8081/nexus/content/repositories/postaop-common-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 </project>
