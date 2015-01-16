@@ -16,6 +16,7 @@ import org.jeecgframework.poi.excel.entity.sax.SaxReadCellEntity;
 import org.jeecgframework.poi.excel.imports.CellValueServer;
 import org.jeecgframework.poi.excel.imports.base.ImportBaseService;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
+import org.jeecgframework.poi.handler.inter.IExcelReadRowHanlder;
 import org.jeecgframework.poi.util.POIPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +53,14 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
 
     private CellValueServer                cellValueServer;
 
-    public SaxRowRead(Class<?> pojoClass, ImportParams params) {
+    private IExcelReadRowHanlder           hanlder;
+
+    public SaxRowRead(Class<?> pojoClass, ImportParams params, IExcelReadRowHanlder hanlder) {
         list = Lists.newArrayList();
         this.params = params;
         this.pojoClass = pojoClass;
         cellValueServer = new CellValueServer();
+        this.hanlder = hanlder;
         initParams(pojoClass, params);
     }
 
@@ -115,6 +119,9 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
                 addListContinue(object, param, datas, titlemap, targetId, params);
             }
         } else {
+            if (object != null && hanlder != null) {
+                hanlder.hanlder(object);
+            }
             object = POIPublicUtil.createObject(pojoClass, targetId);
             SaxReadCellEntity entity;
             for (int i = 0, le = datas.size(); i < le; i++) {
@@ -127,7 +134,9 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
             for (ExcelCollectionParams param : excelCollection) {
                 addListContinue(object, param, datas, titlemap, targetId, params);
             }
-            list.add(object);
+            if (hanlder == null) {
+                list.add(object);
+            }
         }
 
     }

@@ -1,6 +1,8 @@
 package org.jeecgframework.poi.excel;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 
@@ -16,17 +18,22 @@ public class ExcelImportUtilTest {
 
     @Test
     public void test() {
-        ImportParams params = new ImportParams();
-        params.setTitleRows(1);
-        long start = new Date().getTime();
-        List<StatisticEntity> list = ExcelImportUtil.importExcelBySax(new File("d:/tt.xlsx"),
-            StatisticEntity.class, params);
-//        List<StatisticEntity> list = ExcelImportUtil.importExcelBySax(new File("d:/tt.xlsx"),
-//            StatisticEntity.class, params);
-        /*for (int i = 0; i < list.size(); i++) {
-            System.out.println(ReflectionToStringBuilder.toString(list.get(i)));
-        }*/
-        System.out.println(list.size() + "-----" + (new Date().getTime() - start));
+        try {
+            ImportParams params = new ImportParams();
+            params.setTitleRows(1);
+            long start = new Date().getTime();
+            List<StatisticEntity> list = ExcelImportUtil.importExcelBySax(new FileInputStream(
+               new File("d:/tt.xlsx")), StatisticEntity.class, params);
+            //        List<StatisticEntity> list = ExcelImportUtil.importExcelBySax(new File("d:/tt.xlsx"),
+            //            StatisticEntity.class, params);
+            /*for (int i = 0; i < list.size(); i++) {
+                System.out.println(ReflectionToStringBuilder.toString(list.get(i)));
+            }*/
+            System.out.println(list.size() + "-----" + (new Date().getTime() - start));
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // @Test
