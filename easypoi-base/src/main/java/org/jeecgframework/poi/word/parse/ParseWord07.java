@@ -44,7 +44,6 @@ public class ParseWord07 {
      * @param currentRun
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     private void addAnImage(WordImageEntity obj, XWPFRun currentRun) throws Exception {
         Object[] isAndType = POIPublicUtil.getIsAndType(obj);
         String picId;

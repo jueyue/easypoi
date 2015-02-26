@@ -1,17 +1,24 @@
 package org.jeecgframework.poi.excel.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Excel 导入校验
  * 
  * @author JueYue
  * @date 2014年6月23日 下午10:46:26
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface ExcelVerify {
     /**
      * 接口校验
      * @return
      */
-    public boolean interHandler() default true;
+    public boolean interHandler() default false;
 
     /**
      * 是电子邮件

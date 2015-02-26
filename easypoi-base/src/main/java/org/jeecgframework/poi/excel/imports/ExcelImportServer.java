@@ -21,6 +21,8 @@ import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -35,6 +37,8 @@ import org.jeecgframework.poi.excel.entity.result.ExcelImportResult;
 import org.jeecgframework.poi.excel.entity.result.ExcelVerifyHanlderResult;
 import org.jeecgframework.poi.excel.imports.base.ImportBaseService;
 import org.jeecgframework.poi.excel.imports.verifys.VerifyHandlerServer;
+import org.jeecgframework.poi.exception.excel.ExcelImportException;
+import org.jeecgframework.poi.exception.excel.enums.ExcelImportEnum;
 import org.jeecgframework.poi.util.POIPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +59,10 @@ public class ExcelImportServer extends ImportBaseService {
     private VerifyHandlerServer verifyHandlerServer;
 
     private boolean             verfiyFail = false;
+    /**
+     * 异常数据styler
+     */
+    private CellStyle           errorCellStyle;
 
     public ExcelImportServer() {
         this.cellValueServer = new CellValueServer();
@@ -190,22 +198,29 @@ public class ExcelImportServer extends ImportBaseService {
                 }
             } else {
                 object = POIPublicUtil.createObject(pojoClass, targetId);
-                for (int i = row.getFirstCellNum(), le = row.getLastCellNum(); i < le; i++) {
-                    Cell cell = row.getCell(i);
-                    String titleString = (String) titlemap.get(i);
-                    if (excelParams.containsKey(titleString)) {
-                        if (excelParams.get(titleString).getType() == 2) {
-                            picId = row.getRowNum() + "_" + i;
-                            saveImage(object, picId, excelParams, titleString, pictures, params);
-                        } else {
-                            saveFieldValue(params, object, cell, excelParams, titleString, row);
+                try {
+                    for (int i = row.getFirstCellNum(), le = row.getLastCellNum(); i < le; i++) {
+                        Cell cell = row.getCell(i);
+                        String titleString = (String) titlemap.get(i);
+                        if (excelParams.containsKey(titleString)) {
+                            if (excelParams.get(titleString).getType() == 2) {
+                                picId = row.getRowNum() + "_" + i;
+                                saveImage(object, picId, excelParams, titleString, pictures, params);
+                            } else {
+                                saveFieldValue(params, object, cell, excelParams, titleString, row);
+                            }
                         }
                     }
+
+                    for (ExcelCollectionParams param : excelCollection) {
+                        addListContinue(object, param, row, titlemap, targetId, pictures, params);
+                    }
+                    collection.add(object);
+                } catch (ExcelImportException e) {
+                    if (!e.getType().equals(ExcelImportEnum.VERIFY_ERROR)) {
+                        throw new ExcelImportException(e.getType(), e);
+                    }
                 }
-                for (ExcelCollectionParams param : excelCollection) {
-                    addListContinue(object, param, row, titlemap, targetId, pictures, params);
-                }
-                collection.add(object);
             }
         }
         return collection;
@@ -237,6 +252,7 @@ public class ExcelImportServer extends ImportBaseService {
         } else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
             book = new XSSFWorkbook(OPCPackage.open(inputstream));
         }
+        createErrorCellStyle(book);
         Map<String, PictureData> pictures;
         for (int i = 0; i < params.getSheetNum(); i++) {
             if (LOGGER.isDebugEnabled()) {
@@ -271,7 +287,6 @@ public class ExcelImportServer extends ImportBaseService {
      * @param cell
      * @param excelParams
      * @param titleString
-     * @param excelParams2
      * @param row
      * @throws Exception
      */
@@ -288,7 +303,9 @@ public class ExcelImportServer extends ImportBaseService {
         } else {
             Cell errorCell = row.createCell(row.getLastCellNum());
             errorCell.setCellValue(verifyResult.getMsg());
+            errorCell.setCellStyle(errorCellStyle);
             verfiyFail = true;
+            throw new ExcelImportException(ExcelImportEnum.VERIFY_ERROR);
         }
     }
 
@@ -328,6 +345,13 @@ public class ExcelImportServer extends ImportBaseService {
         } else {
             setValues(excelParams.get(titleString), object, data);
         }
+    }
+
+    private void createErrorCellStyle(Workbook workbook) {
+        errorCellStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setColor(Font.COLOR_RED);
+        errorCellStyle.setFont(font);
     }
 
 }
