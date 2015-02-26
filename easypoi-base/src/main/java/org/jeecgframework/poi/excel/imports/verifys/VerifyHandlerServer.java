@@ -12,11 +12,16 @@ import org.jeecgframework.poi.handler.inter.IExcelVerifyHandler;
  * @date 2014年6月29日 下午4:37:56
  */
 public class VerifyHandlerServer {
-    
-    private void addVerifyResult(ExcelVerifyHanlderResult temp, ExcelVerifyHanlderResult result) {
-        if (!temp.isSuccess()) {
+
+    private final static ExcelVerifyHanlderResult DEFAULT_RESULT = new ExcelVerifyHanlderResult(
+                                                                     true);
+
+    private void addVerifyResult(ExcelVerifyHanlderResult hanlderResult,
+                                 ExcelVerifyHanlderResult result) {
+        if (!hanlderResult.isSuccess()) {
             result.setSuccess(false);
-            result.setMsg(result.getMsg() + temp.getMsg());
+            result.setMsg((StringUtils.isEmpty(result.getMsg()) ? "" : result.getMsg() + " , ")
+                          + hanlderResult.getMsg());
         }
     }
 
@@ -27,26 +32,23 @@ public class VerifyHandlerServer {
      * @param value
      * @param titleString
      * @param verify
-     * @param iExcelVerifyHandler
+     * @param excelVerifyHandler
      */
     public ExcelVerifyHanlderResult verifyData(Object object, Object value, String name,
                                                ExcelVerifyEntity verify,
-                                               IExcelVerifyHandler iExcelVerifyHandler) {
-        ExcelVerifyHanlderResult result = new ExcelVerifyHanlderResult(true, "");
+                                               IExcelVerifyHandler excelVerifyHandler) {
         if (verify == null) {
-            return result;
+            return DEFAULT_RESULT;
+        }
+        ExcelVerifyHanlderResult result = new ExcelVerifyHanlderResult(true, "");
+        if (verify.isNotNull()) {
+            addVerifyResult(BaseVerifyHandler.notNull(name, value), result);
         }
         if (verify.isEmail()) {
             addVerifyResult(BaseVerifyHandler.isEmail(name, value), result);
         }
-        if (verify.isInterHandler()) {
-            addVerifyResult(iExcelVerifyHandler.verifyHandler(object, name, value), result);
-        }
         if (verify.isMobile()) {
             addVerifyResult(BaseVerifyHandler.isMobile(name, value), result);
-        }
-        if (verify.isNotNull()) {
-            addVerifyResult(BaseVerifyHandler.notNull(name, value), result);
         }
         if (verify.isTel()) {
             addVerifyResult(BaseVerifyHandler.isTel(name, value), result);
@@ -61,6 +63,9 @@ public class VerifyHandlerServer {
             addVerifyResult(
                 BaseVerifyHandler.regex(name, value, verify.getRegex(), verify.getRegexTip()),
                 result);
+        }
+        if (verify.isInterHandler()) {
+            addVerifyResult(excelVerifyHandler.verifyHandler(object, name, value), result);
         }
         return result;
 

@@ -19,14 +19,12 @@ public class BaseVerifyHandler {
     private static String  MIN_LENGHT    = "小于规定长度";
     private static String  MAX_LENGHT    = "超过规定长度";
 
-    private static Pattern mobilePattern = Pattern
-                                             .compile("/^[+]{0,1}(\\d){1,3}[ ]?([-]?((\\d)|[ ]){1,12})+$/");
+    private static Pattern mobilePattern = Pattern.compile("^[1][3,4,5,8,7][0-9]{9}$");
 
-    private static Pattern telPattern    = Pattern
-                                             .compile("/^[+]{0,1}(\\d){1,3}[ ]?([-]?((\\d)|[ ]){1,12})+$/");
+    private static Pattern telPattern    = Pattern.compile("^([0][1-9]{2,3}-)?[0-9]{5,10}$");
 
     private static Pattern emailPattern  = Pattern
-                                             .compile(" /^([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$/");
+                                             .compile("^([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$");
 
     /**
      * email校验
@@ -107,7 +105,7 @@ public class BaseVerifyHandler {
      * @return
      */
     public static ExcelVerifyHanlderResult notNull(String name, Object val) {
-        if (val == null) {
+        if (val == null || val.toString().equals("")) {
             return new ExcelVerifyHanlderResult(false, name + NOT_NULL);
         }
         return new ExcelVerifyHanlderResult(true);

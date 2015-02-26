@@ -10,13 +10,12 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author JueYue
  * @date 2014年6月29日 下午5:12:10
  */
-@SuppressWarnings("rawtypes")
-public class ExcelImportResult {
+public class ExcelImportResult<T> {
 
     /**
      * 结果集
      */
-    private List     list;
+    private List<T>  list;
 
     /**
      * 是否存在校验失败
@@ -27,16 +26,18 @@ public class ExcelImportResult {
      * 数据源
      */
     private Workbook workbook;
+
     public ExcelImportResult() {
 
     }
-    public ExcelImportResult(List list, boolean verfiyFail, Workbook workbook) {
+
+    public ExcelImportResult(List<T> list, boolean verfiyFail, Workbook workbook) {
         this.list = list;
         this.verfiyFail = verfiyFail;
         this.workbook = workbook;
     }
 
-    public List getList() {
+    public List<T> getList() {
         return list;
     }
 
@@ -48,7 +49,7 @@ public class ExcelImportResult {
         return verfiyFail;
     }
 
-    public void setList(List list) {
+    public void setList(List<T> list) {
         this.list = list;
     }
 
