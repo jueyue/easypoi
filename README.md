@@ -186,3 +186,25 @@ EasyPoi导出实例
 
 	}
 ```
+
+8.Excel导入校验,过滤不符合规则的数据,追加错误信息到Excel,提供常用的校验规则,已经通用的校验接口
+```Java
+	/**
+     * Email校验
+     */
+    @Excel(name = "Email", width = 25)
+    @ExcelVerify(isEmail = true, notNull = true)
+    private String email;
+    /**
+     * 手机号校验
+     */
+    @Excel(name = "Mobile", width = 20)
+    @ExcelVerify(isMobile = true, notNull = true)
+    private String mobile;
+    
+    ExcelImportResult<ExcelVerifyEntity> result = ExcelImportUtil.importExcelVerify(new File(
+            "d:/tt.xls"), ExcelVerifyEntity.class, params);
+    for (int i = 0; i < result.getList().size(); i++) {
+        System.out.println(ReflectionToStringBuilder.toString(result.getList().get(i)));
+    }
+```
