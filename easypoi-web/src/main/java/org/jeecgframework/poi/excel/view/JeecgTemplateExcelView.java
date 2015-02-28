@@ -13,7 +13,6 @@ import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.vo.TemplateExcelConstants;
-import org.springframework.web.servlet.view.AbstractView;
 
 /**
  * Excel模板视图
@@ -22,20 +21,10 @@ import org.springframework.web.servlet.view.AbstractView;
  * @date 2014年6月30日 下午9:15:49
  */
 @SuppressWarnings("unchecked")
-public class JeecgTemplateExcelView extends AbstractView {
-
-    private static final String CONTENT_TYPE = "application/vnd.ms-excel";
-
-    private static final String HSSF         = ".xls";
-    private static final String XSSF         = ".xlsx";
+public class JeecgTemplateExcelView extends MiniAbstractExcelView {
 
     public JeecgTemplateExcelView() {
-        setContentType(CONTENT_TYPE);
-    }
-
-    public boolean isIE(HttpServletRequest request) {
-        return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request
-            .getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true : false;
+        super();
     }
 
     @Override
