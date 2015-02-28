@@ -10,6 +10,7 @@
 		<module>easypoi-base</module>
 		<module>easypoi-web</module>
 		<module>easypoi-test</module>
+		<module>easypoi-annotation</module>
 	</modules>
 
 	<url>www.jeecg.org</url>
@@ -128,6 +129,11 @@
 				<artifactId>easypoi-base</artifactId>
 				<version>${sub.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jeecgframework</groupId>
+				<artifactId>easypoi-annotation</artifactId>
+				<version>${sub.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -164,11 +170,11 @@
 	<distributionManagement>
 		<repository>
 			<id>postaop-common-release</id>
-			<url>http://192.168.1.99:8081/nexus/content/repositories/postaop-common-release/</url>
+			<url>http://172.16.100.99:8081/nexus/content/repositories/postaop-common-release/</url>
 		</repository>
 		<snapshotRepository>
 			<id>postaop-common-snapshot</id>
-			<url>http://192.168.1.99:8081/nexus/content/repositories/postaop-common-snapshot/</url>
+			<url>http://172.16.100.99:8081/nexus/content/repositories/postaop-common-snapshot/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
