@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jeecgframework.poi.excel.entity.vo.TemplateWordConstants;
 import org.jeecgframework.poi.word.WordExportUtil;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.view.AbstractView;
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.view.AbstractView;
  * @date 2014年6月30日 下午9:15:49
  */
 @SuppressWarnings("unchecked")
+@Controller(TemplateWordConstants.JEECG_TEMPLATE_WORD_VIEW)
 public class JeecgTemplateWordView extends AbstractView {
 
     private static final String CONTENT_TYPE = "application/msword";

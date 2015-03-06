@@ -14,6 +14,7 @@ import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.vo.MapExcelConstants;
+import org.springframework.stereotype.Controller;
 
 /**
  * Map 对象接口
@@ -22,6 +23,7 @@ import org.jeecgframework.poi.excel.entity.vo.MapExcelConstants;
  * @date 2014年11月25日 下午3:26:32
  */
 @SuppressWarnings("unchecked")
+@Controller(MapExcelConstants.JEECG_MAP_EXCEL_VIEW)
 public class JeecgMapExcelView extends MiniAbstractExcelView {
 
     public JeecgMapExcelView() {
