@@ -13,6 +13,7 @@ import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.vo.TemplateExcelConstants;
+import org.springframework.stereotype.Controller;
 
 /**
  * Excel模板视图
@@ -21,6 +22,7 @@ import org.jeecgframework.poi.excel.entity.vo.TemplateExcelConstants;
  * @date 2014年6月30日 下午9:15:49
  */
 @SuppressWarnings("unchecked")
+@Controller(TemplateExcelConstants.JEECG_TEMPLATE_EXCEL_VIEW)
 public class JeecgTemplateExcelView extends MiniAbstractExcelView {
 
     public JeecgTemplateExcelView() {

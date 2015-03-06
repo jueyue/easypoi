@@ -14,11 +14,13 @@ import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.poi.excel.export.ExcelExportServer;
+import org.springframework.stereotype.Controller;
 
 /**
  * @Author JueYue on 14-3-8. Excel 生成解析器,减少用户操作
  */
 @SuppressWarnings("unchecked")
+@Controller(NormalExcelConstants.JEECG_EXCEL_VIEW)
 public class JeecgSingleExcelView extends MiniAbstractExcelView {
 
     public JeecgSingleExcelView() {
