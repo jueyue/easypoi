@@ -8,6 +8,8 @@ EasyPoi Excel和 Word简易工具类
 	作者博客：http://blog.csdn.net/qjueyue
 	作者邮箱： qrb.jueyue@gmail.com
 	QQ群:  364192721
+	
+上传到maven实在太麻烦了,大家可以把工程下载下来,然后install.bat就可以了
 ---------------------------
 EasyPoi的主要特点
 --------------------------
