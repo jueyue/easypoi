@@ -58,6 +58,10 @@ public class ExcelExportEntity extends ExcelBaseEntity {
      * 统计
      */
     private boolean                 isStatistics;
+    /**
+     * 统计
+     */
+    private boolean                 isFreeze;
 
     private List<ExcelExportEntity> list;
 
@@ -182,6 +186,14 @@ public class ExcelExportEntity extends ExcelBaseEntity {
 
     public void setStatistics(boolean isStatistics) {
         this.isStatistics = isStatistics;
+    }
+
+    public boolean isFreeze() {
+        return isFreeze;
+    }
+
+    public void setFreeze(boolean isFreeze) {
+        this.isFreeze = isFreeze;
     }
 
 }

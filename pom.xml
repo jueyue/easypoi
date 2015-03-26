@@ -26,7 +26,7 @@
 	<properties>
 		<sub.version>2.0.8-SNAPSHOT</sub.version>
 		<poi.version>3.9</poi.version>
-		<xerces.version>2.4.0</xerces.version>
+		<xerces.version>2.9.1</xerces.version>
 		<guava.version>16.0.1</guava.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<slf4j.version>1.6.1</slf4j.version>
@@ -103,7 +103,7 @@
 			</dependency>
 			<dependency>
 				<groupId>xerces</groupId>
-				<artifactId>xerces</artifactId>
+				<artifactId>xercesImpl</artifactId>
 				<version>${xerces.version}</version>
 			</dependency>
 

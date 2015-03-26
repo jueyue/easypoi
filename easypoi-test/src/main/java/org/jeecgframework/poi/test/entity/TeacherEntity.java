@@ -18,7 +18,7 @@ public class TeacherEntity implements java.io.Serializable {
     @Excel(name = "老师ID_teacherEntity,老师属性_courseEntity", orderNum = "2", needMerge = false)
     private String id;
     /** name */
-    @Excel(name = "语文老师_yuwen,数学老师_shuxue", orderNum = "2", mergeVertical = true)
+    @Excel(name = "语文老师_yuwen,数学老师_shuxue", orderNum = "2", mergeVertical = true, isFreeze = true)
     private String name;
 
     /*
