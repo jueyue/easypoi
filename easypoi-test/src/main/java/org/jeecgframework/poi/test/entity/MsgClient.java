@@ -18,7 +18,7 @@ public class MsgClient implements java.io.Serializable {
     /** id */
     private java.lang.String id;
     // 电话号码(主键)
-    @Excel(name = "电话号码")
+    @Excel(name = "电话号码", isFreeze = true)
     private String           clientPhone = null;
     // 客户姓名
     @Excel(name = "姓名")

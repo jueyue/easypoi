@@ -112,4 +112,10 @@ public @interface Excel {
      * @return
      */
     public boolean isStatistics() default false;
+
+    /**
+     * 冰冻列
+     * @return
+     */
+    public boolean isFreeze() default false;
 }

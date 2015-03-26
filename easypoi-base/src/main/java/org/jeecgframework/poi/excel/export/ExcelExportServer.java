@@ -140,6 +140,11 @@ public class ExcelExportServer extends ExcelExportBase {
                     break;
             }
             mergeCells(sheet, excelParams, titleHeight);
+            for (int i = 0; i < excelParams.size(); i++) {
+                if (excelParams.get(i).isFreeze()) {
+                    sheet.createFreezePane(i + 1, 0, i + 1, 0);
+                }
+            }
 
             its = dataSet.iterator();
             for (int i = 0, le = tempList.size(); i < le; i++) {

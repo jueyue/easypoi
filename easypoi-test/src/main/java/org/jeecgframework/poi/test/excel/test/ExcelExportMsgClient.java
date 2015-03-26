@@ -5,12 +5,14 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
+import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
@@ -28,6 +30,12 @@ public class ExcelExportMsgClient {
     @Test
     public void test() throws Exception {
 
+        Field[] fields =  MsgClient.class.getFields();
+        for (int i = 0; i < fields.length; i++) {
+            Excel excel = fields[i].getAnnotation(Excel.class);
+            System.out.println(excel);
+        }
+        
         List<MsgClient> list = new ArrayList<MsgClient>();
         for (int i = 0; i < 50000; i++) {
             MsgClient client = new MsgClient();

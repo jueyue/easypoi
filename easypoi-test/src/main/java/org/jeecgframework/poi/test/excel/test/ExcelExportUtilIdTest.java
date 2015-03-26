@@ -70,7 +70,6 @@ public class ExcelExportUtilIdTest {
     @Test
     public void testExportExcel() throws Exception {
         ExportParams params = new ExportParams("2412312", "测试", "测试");
-        params.setAddIndex(true);
         Workbook workbook = ExcelExportUtil.exportExcel(params, CourseEntity.class, list);
         FileOutputStream fos = new FileOutputStream("d:/tt.xls");
         workbook.write(fos);
