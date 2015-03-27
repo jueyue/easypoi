@@ -2,8 +2,6 @@ package org.jeecgframework.poi.excel.entity.params;
 
 import java.util.List;
 
-import org.jeecgframework.poi.excel.entity.enmus.CellValueType;
-
 /**
  * excel 导出工具类,对cell类型做映射
  * 
