@@ -21,7 +21,6 @@ public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
     protected Workbook           workbook;
 
     protected static final short STRING_FORMAT = (short) BuiltinFormats.getBuiltinFormat("TEXT");
-    protected static final short NUMBER_FORMAT = (short) BuiltinFormats.getBuiltinFormat("0.00");
 
     protected void createStyles(Workbook workbook) {
         this.stringNoneStyle = stringNoneStyle(workbook, false);
