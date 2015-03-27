@@ -1,7 +1,7 @@
 package org.jeecgframework.poi.excel.export.styler;
 
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 
 /**
  * Excel导出样式接口
@@ -26,27 +26,10 @@ public interface IExcelExportStyler {
 
     /**
      * 获取样式方法
-     * @param map
-     * @param needOne
-     * @param isWrap
+     * @param noneStyler
+     * @param entity
      * @return
      */
-    public CellStyle getStyles(boolean needOne, boolean isWrap);
-
-    /**
-     * 创建单行样式
-     * @param workbook
-     * @param isWarp
-     * @return
-     */
-    public CellStyle createOneStyle(Workbook workbook, boolean isWarp);
-
-    /**
-     * 创建双行样式
-     * @param workbook
-     * @param isWarp
-     * @return
-     */
-    public CellStyle createDoubleStyle(Workbook workbook, boolean isWarp);
+    public CellStyle getStyles(boolean noneStyler, ExcelExportEntity entity);
 
 }

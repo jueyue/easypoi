@@ -140,10 +140,9 @@ public class ExcelExportServer extends ExcelExportBase {
                     break;
             }
             mergeCells(sheet, excelParams, titleHeight);
-            for (int i = 0; i < excelParams.size(); i++) {
-                if (excelParams.get(i).isFreeze()) {
-                    sheet.createFreezePane(i + 1, 0, i + 1, 0);
-                }
+
+            if (entity.getFreezeCol() != 0) {
+                sheet.createFreezePane(1, 0, entity.getFreezeCol(), 0);
             }
 
             its = dataSet.iterator();
@@ -152,7 +151,7 @@ public class ExcelExportServer extends ExcelExportBase {
                 its.remove();
             }
             // 创建合计信息
-            addStatisticsRow(getExcelExportStyler().getStyles(true, true), sheet);
+            addStatisticsRow(getExcelExportStyler().getStyles(true, null), sheet);
 
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {

@@ -13,10 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Excel {
-    /**
-     * cell 写入的设置的函数
-     */
-    public String cellFormula() default "";
 
     /**
      * 导出时间设置,如果字段是Date类型则不需要设置 数据库如果是string 类型,这个需要设置这个数据库格式
@@ -112,10 +108,4 @@ public @interface Excel {
      * @return
      */
     public boolean isStatistics() default false;
-
-    /**
-     * 冰冻列
-     * @return
-     */
-    public boolean isFreeze() default false;
 }

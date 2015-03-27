@@ -7,7 +7,7 @@ import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerDefaultImpl;
 /**
  * Excel 导出参数
  * 
- * @author jueyue
+ * @author JueYue
  * @version 1.0 2013年8月24日
  */
 public class ExportParams extends ExcelBaseParams {
@@ -47,6 +47,10 @@ public class ExportParams extends ExcelBaseParams {
      * 是否添加需要需要
      */
     private String    indexName         = "序号";
+    /**
+     * 冰冻列
+     */
+    private int       freezeCol;
     /**
      * 表头颜色
      */
@@ -179,6 +183,14 @@ public class ExportParams extends ExcelBaseParams {
 
     public void setStyle(Class<?> style) {
         this.style = style;
+    }
+
+    public int getFreezeCol() {
+        return freezeCol;
+    }
+
+    public void setFreezeCol(int freezeCol) {
+        this.freezeCol = freezeCol;
     }
 
 }

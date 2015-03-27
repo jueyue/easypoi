@@ -51,7 +51,7 @@ public abstract class ExcelExportBase extends ExportBase {
 
     private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("######0.00");
 
-    private IExcelExportStyler          excelExportStyler;
+    private IExcelExportStyler         excelExportStyler;
 
     private boolean checkIsEqualByCellContents(MergeEntity mergeEntity, String text, Cell cell,
                                                int[] delys, int rowNum) {
@@ -105,12 +105,8 @@ public abstract class ExcelExportBase extends ExportBase {
             } else {
                 Object value = getCellValue(entity, t);
                 if (entity.getType() == 1) {
-                    createStringCell(
-                        row,
-                        cellNum++,
-                        value == null ? "" : value.toString(),
-                        index % 2 == 0 ? getStyles(false, entity.isWrap()) : getStyles(true,
-                            entity.isWrap()), entity);
+                    createStringCell(row, cellNum++, value == null ? "" : value.toString(),
+                        index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity), entity);
                 } else {
                     createImageCell(patriarch, entity, row, cellNum++,
                         value == null ? "" : value.toString(), t);
@@ -126,8 +122,7 @@ public abstract class ExcelExportBase extends ExportBase {
             } else if (entity.isNeedMerge()) {
                 for (int i = index + 1; i < index + maxHeight; i++) {
                     sheet.getRow(i).createCell(cellNum);
-                    sheet.getRow(i).getCell(cellNum)
-                        .setCellStyle(getStyles(false, entity.isWrap()));
+                    sheet.getRow(i).getCell(cellNum).setCellStyle(getStyles(false, entity));
                 }
                 sheet.addMergedRegion(new CellRangeAddress(index, index + maxHeight - 1, cellNum,
                     cellNum));
@@ -196,8 +191,8 @@ public abstract class ExcelExportBase extends ExportBase {
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
         if (excelExportEntity.getName().equals("序号")
             && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
-            createStringCell(row, 0, currentIndex + "", index % 2 == 0 ? getStyles(false, false)
-                : getStyles(true, false), null);
+            createStringCell(row, 0, currentIndex + "", index % 2 == 0 ? getStyles(false, null)
+                : getStyles(true, null), null);
             currentIndex = currentIndex + 1;
             return 1;
         }
@@ -224,12 +219,9 @@ public abstract class ExcelExportBase extends ExportBase {
             entity = excelParams.get(k);
             Object value = getCellValue(entity, obj);
             if (entity.getType() == 1) {
-                createStringCell(
-                    row,
-                    cellNum++,
-                    value == null ? "" : value.toString(),
-                    row.getRowNum() % 2 == 0 ? getStyles(false, entity.isWrap()) : getStyles(true,
-                        entity.isWrap()), entity);
+                createStringCell(row, cellNum++, value == null ? "" : value.toString(),
+                    row.getRowNum() % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
+                    entity);
             } else {
                 createImageCell(patriarch, entity, row, cellNum++,
                     value == null ? "" : value.toString(), obj);
@@ -265,7 +257,7 @@ public abstract class ExcelExportBase extends ExportBase {
         } else {
             Rtext = new XSSFRichTextString(text);
         }
-        cell.setCellValue(Rtext);
+        cell.setCellValue(text);
         if (style != null) {
             cell.setCellStyle(style);
         }
@@ -382,12 +374,12 @@ public abstract class ExcelExportBase extends ExportBase {
 
     /**
      * 获取样式
+     * @param entity 
      * @param needOne
-     * @param isWrap
      * @return
      */
-    public CellStyle getStyles(boolean needOne, boolean isWrap) {
-        return excelExportStyler.getStyles(needOne, isWrap);
+    public CellStyle getStyles(boolean needOne, ExcelExportEntity entity) {
+        return excelExportStyler.getStyles(needOne, entity);
     }
 
     /**

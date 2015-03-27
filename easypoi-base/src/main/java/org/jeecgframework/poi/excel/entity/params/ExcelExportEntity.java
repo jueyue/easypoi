@@ -2,10 +2,12 @@ package org.jeecgframework.poi.excel.entity.params;
 
 import java.util.List;
 
+import org.jeecgframework.poi.excel.entity.enmus.CellValueType;
+
 /**
  * excel 导出工具类,对cell类型做映射
  * 
- * @author jueyue
+ * @author JueYue
  * @version 1.0 2013年8月24日
  */
 public class ExcelExportEntity extends ExcelBaseEntity {
@@ -58,10 +60,6 @@ public class ExcelExportEntity extends ExcelBaseEntity {
      * 统计
      */
     private boolean                 isStatistics;
-    /**
-     * 统计
-     */
-    private boolean                 isFreeze;
 
     private List<ExcelExportEntity> list;
 
@@ -186,14 +184,6 @@ public class ExcelExportEntity extends ExcelBaseEntity {
 
     public void setStatistics(boolean isStatistics) {
         this.isStatistics = isStatistics;
-    }
-
-    public boolean isFreeze() {
-        return isFreeze;
-    }
-
-    public void setFreeze(boolean isFreeze) {
-        this.isFreeze = isFreeze;
     }
 
 }
