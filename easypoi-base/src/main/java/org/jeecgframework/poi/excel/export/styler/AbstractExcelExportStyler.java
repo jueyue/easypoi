@@ -3,6 +3,7 @@ package org.jeecgframework.poi.excel.export.styler;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 
 /**
  * 抽象接口提供两个公共方法
@@ -10,44 +11,45 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @date 2015年1月9日 下午5:48:55
  */
 public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
-
-    protected CellStyle          oneStyle;
-    protected CellStyle          oneWrapStyle;
-    protected CellStyle          doubleStyle;
-    protected CellStyle          doubleWrapStyle;
+    //单行
+    protected CellStyle          stringNoneStyle;
+    protected CellStyle          stringNoneWrapStyle;
+    //间隔行
+    protected CellStyle          stringSeptailStyle;
+    protected CellStyle          stringSeptailWrapStyle;
+    
     protected Workbook           workbook;
 
-    protected static final short cellFormat = (short) BuiltinFormats.getBuiltinFormat("TEXT");
+    protected static final short STRING_FORMAT = (short) BuiltinFormats.getBuiltinFormat("TEXT");
+    protected static final short NUMBER_FORMAT = (short) BuiltinFormats.getBuiltinFormat("0.00");
 
     protected void createStyles(Workbook workbook) {
-        this.oneStyle = createOneStyle(workbook, false);
-        this.oneWrapStyle = createOneStyle(workbook, true);
-        this.doubleStyle = createDoubleStyle(workbook, false);
-        this.doubleWrapStyle = createDoubleStyle(workbook, true);
+        this.stringNoneStyle = stringNoneStyle(workbook, false);
+        this.stringNoneWrapStyle = stringNoneStyle(workbook, true);
+        this.stringSeptailStyle = stringSeptailStyle(workbook, false);
+        this.stringSeptailWrapStyle = stringSeptailStyle(workbook, true);
         this.workbook = workbook;
     }
 
     @Override
-    public CellStyle getStyles(boolean needOne, boolean isWrap) {
-        if (needOne && isWrap) {
-            return oneWrapStyle;
+    public CellStyle getStyles(boolean noneStyler, ExcelExportEntity entity) {
+        if (noneStyler && (entity == null || entity.isWrap())) {
+            return stringNoneWrapStyle;
         }
-        if (needOne) {
-            return oneStyle;
+        if (noneStyler) {
+            return stringNoneStyle;
         }
-        if (needOne == false && isWrap) {
-            return doubleWrapStyle;
+        if (noneStyler == false && (entity == null || entity.isWrap())) {
+            return stringSeptailWrapStyle;
         }
-        return doubleStyle;
+        return stringSeptailStyle;
     }
 
-    @Override
-    public CellStyle createOneStyle(Workbook workbook, boolean isWarp) {
+    public CellStyle stringNoneStyle(Workbook workbook, boolean isWarp) {
         return null;
     }
 
-    @Override
-    public CellStyle createDoubleStyle(Workbook workbook, boolean isWarp) {
+    public CellStyle stringSeptailStyle(Workbook workbook, boolean isWarp) {
         return null;
     }
 

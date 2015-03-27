@@ -32,7 +32,7 @@ public class ExcelExportStylerBorderImpl extends AbstractExcelExportStyler imple
     }
 
     @Override
-    public CellStyle createOneStyle(Workbook workbook, boolean isWarp) {
+    public CellStyle stringNoneStyle(Workbook workbook, boolean isWarp) {
         CellStyle style = workbook.createCellStyle();
         style.setBorderLeft((short) 1); // 左边框
         style.setBorderRight((short) 1); // 右边框
@@ -40,7 +40,7 @@ public class ExcelExportStylerBorderImpl extends AbstractExcelExportStyler imple
         style.setBorderTop((short) 1);
         style.setAlignment(CellStyle.ALIGN_CENTER);
         style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-        style.setDataFormat(cellFormat);
+        style.setDataFormat(STRING_FORMAT);
         if (isWarp) {
             style.setWrapText(true);
         }
@@ -61,8 +61,8 @@ public class ExcelExportStylerBorderImpl extends AbstractExcelExportStyler imple
     }
 
     @Override
-    public CellStyle createDoubleStyle(Workbook workbook, boolean isWarp) {
-        return isWarp ? oneWrapStyle : oneStyle;
+    public CellStyle stringSeptailStyle(Workbook workbook, boolean isWarp) {
+        return isWarp ? stringNoneWrapStyle : stringNoneStyle;
     }
 
 }

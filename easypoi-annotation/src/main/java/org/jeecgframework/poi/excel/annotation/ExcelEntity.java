@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 标记是不是导出excel 标记为实体类
  * 
- * @author jueyue
+ * @author JueYue
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -11,7 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public class ExcelExportStylerDefaultImpl extends AbstractExcelExportStyler implements
                                                                            IExcelExportStyler {
-    
+
     public ExcelExportStylerDefaultImpl(Workbook workbook) {
         super.createStyles(workbook);
     }
@@ -26,11 +26,11 @@ public class ExcelExportStylerDefaultImpl extends AbstractExcelExportStyler impl
     }
 
     @Override
-    public CellStyle createDoubleStyle(Workbook workbook, boolean isWarp) {
+    public CellStyle stringSeptailStyle(Workbook workbook, boolean isWarp) {
         CellStyle style = workbook.createCellStyle();
         style.setAlignment(CellStyle.ALIGN_CENTER);
         style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-        style.setDataFormat(cellFormat);
+        style.setDataFormat(STRING_FORMAT);
         if (isWarp) {
             style.setWrapText(true);
         }
@@ -49,11 +49,11 @@ public class ExcelExportStylerDefaultImpl extends AbstractExcelExportStyler impl
     }
 
     @Override
-    public CellStyle createOneStyle(Workbook workbook, boolean isWarp) {
+    public CellStyle stringNoneStyle(Workbook workbook, boolean isWarp) {
         CellStyle style = workbook.createCellStyle();
         style.setAlignment(CellStyle.ALIGN_CENTER);
         style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-        style.setDataFormat(cellFormat);
+        style.setDataFormat(STRING_FORMAT);
         if (isWarp) {
             style.setWrapText(true);
         }

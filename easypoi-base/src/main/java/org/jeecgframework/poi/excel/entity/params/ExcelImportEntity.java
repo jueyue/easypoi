@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * excel 导入工具类,对cell类型做映射
- * @author jueyue
+ * @author JueYue
  * @version 1.0 2013年8月24日
  */
 public class ExcelImportEntity extends ExcelBaseEntity {

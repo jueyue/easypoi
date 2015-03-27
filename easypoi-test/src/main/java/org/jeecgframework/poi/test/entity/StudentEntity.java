@@ -5,7 +5,7 @@ import java.util.Date;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
 /**
- * @author jueyue
+ * @author JueYue
  * @version V1.0
  * @Title: Entity
  * @Description: 学生

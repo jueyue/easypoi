@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * 导出的集合
  * 
- * @author jueyue 2013年8月24日
+ * @author JueYue 2013年8月24日
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

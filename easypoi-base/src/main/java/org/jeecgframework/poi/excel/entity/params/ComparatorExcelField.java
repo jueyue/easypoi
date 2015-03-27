@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 /**
  * 按照升序排序
- * @author jueyue
+ * @author JueYue
  *
  */
 public class ComparatorExcelField implements Comparator<ExcelExportEntity> {

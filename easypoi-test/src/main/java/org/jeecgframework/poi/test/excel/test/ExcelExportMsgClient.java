@@ -42,7 +42,7 @@ public class ExcelExportMsgClient {
             client.setBirthday(new Date());
             client.setClientName("小明" + i);
             client.setClientPhone("18797" + i);
-            client.setCreateBy("jueyue");
+            client.setCreateBy("JueYue");
             client.setId("1" + i);
             client.setRemark("测试" + i);
             MsgClientGroup group = new MsgClientGroup();
@@ -52,6 +52,7 @@ public class ExcelExportMsgClient {
         }
         Date start = new Date();
         ExportParams params = new ExportParams("2412312", "测试", ExcelType.XSSF);
+        params.setFreezeCol(2);
         Workbook workbook = ExcelExportUtil.exportExcel(params, MsgClient.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
