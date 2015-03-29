@@ -142,7 +142,7 @@ public class ExcelExportServer extends ExcelExportBase {
             mergeCells(sheet, excelParams, titleHeight);
 
             if (entity.getFreezeCol() != 0) {
-                sheet.createFreezePane(1, 0, entity.getFreezeCol(), 0);
+                sheet.createFreezePane(entity.getFreezeCol(), 0, entity.getFreezeCol(), 0);
             }
 
             its = dataSet.iterator();
@@ -215,6 +215,10 @@ public class ExcelExportServer extends ExcelExportBase {
                 if (index >= MAX_NUM)
                     break;
             }
+            if (entity.getFreezeCol() != 0) {
+                sheet.createFreezePane(entity.getFreezeCol(), 0, entity.getFreezeCol(), 0);
+            }
+
             mergeCells(sheet, excelParams, titleHeight);
 
             its = dataSet.iterator();

@@ -47,10 +47,6 @@ public class ExcelExportEntity extends ExcelBaseEntity {
      */
     private int[]                   mergeRely;
     /**
-     * cell 函数
-     */
-    private String                  cellFormula;
-    /**
      * 后缀
      */
     private String                  suffix;
@@ -78,10 +74,6 @@ public class ExcelExportEntity extends ExcelBaseEntity {
         super.name = name;
         this.width = width;
         this.key = key;
-    }
-
-    public String getCellFormula() {
-        return cellFormula;
     }
 
     public int getExportImageType() {
@@ -122,10 +114,6 @@ public class ExcelExportEntity extends ExcelBaseEntity {
 
     public boolean isWrap() {
         return isWrap;
-    }
-
-    public void setCellFormula(String cellFormula) {
-        this.cellFormula = cellFormula;
     }
 
     public void setExportImageType(int exportImageType) {
