@@ -22,7 +22,8 @@ EasyPoi的主要特点
 EasyPoi的几个入口工具类
 ---------------------------
 
-	1.ExcelExportUtil Excel导出(普通导出,模板导出)
+	1.ExcelExportUtil Excel导出(
+	普通导出,模板导出)
 	2.ExcelImportUtil Excel导入
 	3.WordExportUtil Word导出(只支持docx ,doc版本poi存在图片的bug,暂不支持)
 	
@@ -45,6 +46,15 @@ EasyPoi的几个入口工具类
 --------------------------
 版本修改
 --------------------------
+ - 2.0.8-release--小版本更新
+ 	- 分开了基础注解和base包,编译maven多模块集成
+ 	- 加强了Excel导入的校验功能,可以追加错误信息,过滤不合格数据
+ 	- 修复了spring mvc下的07版本不支持的问题
+ 	- 添加了@Controller 注解,扫描org.jeecgframework.poi.excel.view路径就可以了,不用写bean了
+ 	- 加强了styler的自定义功能,参数改为entity,自由控制
+ 	- test包下面增加了几个demo
+ 	- 导出添加了一个冰冻列属性,可以简单执行
+ 	- PS: 经过这段时间项目中的测试,模板导出Excel复杂报表可以省5倍以上的时间,特别是样式复杂的完全可以在Excel中完成,不是在代码中完成了
  - 2.0.7-release--推荐更新
  	- 增加了合计的参数,便于统计合计信息
  	- 修改了样式设置,使用默认设置,提供其他设置,和样式接口
