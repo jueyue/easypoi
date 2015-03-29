@@ -257,7 +257,7 @@ public abstract class ExcelExportBase extends ExportBase {
         } else {
             Rtext = new XSSFRichTextString(text);
         }
-        cell.setCellValue(text);
+        cell.setCellValue(Rtext);
         if (style != null) {
             cell.setCellStyle(style);
         }
