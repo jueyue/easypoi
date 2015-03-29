@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+//import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -66,7 +66,8 @@ public class ExcelExportForMap {
                 }
                 list.add(map);
             }
-            ExportParams params = new ExportParams("测试", "测试", ExcelType.HSSF);
+            ExportParams params = new ExportParams("测试", "测试", ExcelType.XSSF);
+            params.setFreezeCol(5);
             Workbook workbook = ExcelExportUtil.exportExcel(params, entity, list);
             FileOutputStream fos = new FileOutputStream("d:/tt.xlsx");
             workbook.write(fos);

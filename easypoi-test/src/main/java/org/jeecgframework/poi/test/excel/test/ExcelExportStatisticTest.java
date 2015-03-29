@@ -14,6 +14,7 @@ import org.jeecgframework.poi.excel.entity.enmus.ExcelStyleType;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.test.entity.statistics.StatisticEntity;
+import org.jeecgframework.poi.test.excel.styler.ExcelExportStatisticStyler;
 import org.junit.Test;
 
 public class ExcelExportStatisticTest {
@@ -32,7 +33,8 @@ public class ExcelExportStatisticTest {
             list.add(client);
         }
         Date start = new Date();
-        ExportParams params = new ExportParams("2412312", "测试",ExcelType.XSSF);
+        ExportParams params = new ExportParams("2412312", "测试", ExcelType.XSSF);
+        params.setStyle(ExcelExportStatisticStyler.class);
         Workbook workbook = ExcelExportUtil.exportExcel(params, StatisticEntity.class, list);
         System.out.println(new Date().getTime() - start.getTime());
         File savefile = new File("d:/");
