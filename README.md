@@ -50,7 +50,7 @@ EasyPoi的几个入口工具类
  	- 分开了基础注解和base包,编译maven多模块集成
  	- 加强了Excel导入的校验功能,可以追加错误信息,过滤不合格数据
  	- 修复了spring mvc下的07版本不支持的问题
- 	- 添加了@Controller 注解,扫描org.jeecgframework.poi.excel.view路径就可以了,不用写bean了
+ 	- 添加了@  Controller 注解,扫描org.jeecgframework.poi.excel.view路径就可以了,不用写bean了
  	- 加强了styler的自定义功能,参数改为entity,自由控制
  	- test包下面增加了几个demo
  	- 导出添加了一个冰冻列属性,可以简单执行
