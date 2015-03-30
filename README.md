@@ -9,7 +9,6 @@ EasyPoi Excel和 Word简易工具类
 	作者邮箱： qrb.jueyue@gmail.com
 	QQ群:  364192721
 	
-上传到maven实在太麻烦了,大家可以把工程下载下来,然后install.bat就可以了
 ---------------------------
 EasyPoi的主要特点
 --------------------------
@@ -42,6 +41,28 @@ EasyPoi的几个入口工具类
 	2.easypoi-annotation 基础注解包,作用与实体对象上,拆分后方便maven多工程的依赖管理
 	3.easypoi-base 导入导出的工具包,可以完成Excel导出,导入,Word的导出,Excel的导出功能
 	4.easypoi-web  耦合了spring-mvc 基于AbstractView,极大的简化spring-mvc下的导出功能
+	
+--------------------------
+maven 
+--------------------------
+用的oschina的第三方库http://maven.oschina.net/content/repositories/thirdparty/
+```xml
+		 <dependency>
+			<groupId>org.jeecgframework</groupId>
+			<artifactId>easypoi-base</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jeecgframework</groupId>
+			<artifactId>easypoi-web</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jeecgframework</groupId>
+			<artifactId>easypoi-annotation</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+```
 	
 --------------------------
 版本修改
