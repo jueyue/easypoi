@@ -214,12 +214,11 @@ public class POIPublicUtil {
     }
 
     public static String getWebRootPath(String filePath) {
-        // 这个path还是要测试的
         try {
             String path = POIPublicUtil.class.getClassLoader().getResource("").toURI().getPath();
             path = path.replace("WEB-INF/classes/", "");
             path = path.replace("file:/", "");
-            return path;
+            return path + filePath;
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
