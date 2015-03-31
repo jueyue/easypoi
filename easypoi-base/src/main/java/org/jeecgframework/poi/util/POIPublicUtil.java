@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -214,10 +215,14 @@ public class POIPublicUtil {
 
     public static String getWebRootPath(String filePath) {
         // 这个path还是要测试的
-        String path = POIPublicUtil.class.getClassLoader().getResource("").getPath() + filePath;
-        path = path.replace("WEB-INF/classes/", "");
-        path = path.replace("file:/", "");
-        return path;
+        try {
+            String path = POIPublicUtil.class.getClassLoader().getResource("").toURI().getPath();
+            path = path.replace("WEB-INF/classes/", "");
+            path = path.replace("file:/", "");
+            return path;
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
