@@ -251,13 +251,18 @@ public abstract class ExcelExportBase extends ExportBase {
     public void createStringCell(Row row, int index, String text, CellStyle style,
                                  ExcelExportEntity entity) {
         Cell cell = row.createCell(index);
-        RichTextString Rtext;
-        if (type.equals(ExcelType.HSSF)) {
-            Rtext = new HSSFRichTextString(text);
+        if (style != null && style.getDataFormat() > 0 && style.getDataFormat() < 12) {
+            cell.setCellValue(Double.parseDouble(text));
+            cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         } else {
-            Rtext = new XSSFRichTextString(text);
+            RichTextString Rtext;
+            if (type.equals(ExcelType.HSSF)) {
+                Rtext = new HSSFRichTextString(text);
+            } else {
+                Rtext = new XSSFRichTextString(text);
+            }
+            cell.setCellValue(Rtext);
         }
-        cell.setCellValue(Rtext);
         if (style != null) {
             cell.setCellStyle(style);
         }

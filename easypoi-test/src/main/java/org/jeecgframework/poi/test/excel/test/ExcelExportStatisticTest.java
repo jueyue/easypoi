@@ -22,7 +22,7 @@ public class ExcelExportStatisticTest {
     public void test() throws Exception {
 
         List<StatisticEntity> list = new ArrayList<StatisticEntity>();
-        for (int i = 0; i < 20000; i++) {
+        for (int i = 0; i < 20; i++) {
             StatisticEntity client = new StatisticEntity();
             client.setName("index" + i);
             client.setIntTest(1 + i);
