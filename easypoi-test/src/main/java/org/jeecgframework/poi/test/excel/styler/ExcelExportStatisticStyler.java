@@ -1,5 +1,6 @@
 package org.jeecgframework.poi.test.excel.styler;
 
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,14 +25,14 @@ public class ExcelExportStatisticStyler extends ExcelExportStylerDefaultImpl {
         numberCellStyle = workbook.createCellStyle();
         numberCellStyle.setAlignment(CellStyle.ALIGN_CENTER);
         numberCellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-        numberCellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0"));
+        numberCellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0.00"));
         numberCellStyle.setWrapText(true);
     }
 
     @Override
     public CellStyle getStyles(boolean noneStyler, ExcelExportEntity entity) {
         if (entity != null
-            && (entity.getName().contains("int") || entity.getName().contains("long"))) {
+            && (entity.getName().contains("int") || entity.getName().contains("double"))) {
             return numberCellStyle;
         }
         return super.getStyles(noneStyler, entity);
