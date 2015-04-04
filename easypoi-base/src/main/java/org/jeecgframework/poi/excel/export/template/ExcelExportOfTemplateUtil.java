@@ -42,6 +42,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     private static final Logger LOGGER            = LoggerFactory
                                                       .getLogger(ExcelExportOfTemplateUtil.class);
+
+    private static final String START_STR         = "{{";
+    private static final String END_STR           = "}}";
     /**
      * 缓存temp 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
      */
@@ -188,7 +191,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     private String getParamsValue(String params, Map<String, Object> map) throws Exception {
         if (params.indexOf(".") != -1) {
             String[] paramsArr = params.split("\\.");
-            return getValueDoWhile(map.get(paramsArr[0]), paramsArr, 1);
+            return String
+                .valueOf(POIPublicUtil.getValueDoWhile(map.get(paramsArr[0]), paramsArr, 1));
         }
         return map.containsKey(params) ? map.get(params).toString() : "";
     }
@@ -221,33 +225,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     }
 
-    /**
-     * 通过遍历过去对象值
-     * 
-     * @param object
-     * @param paramsArr
-     * @param index
-     * @return
-     * @throws Exception
-     * @throws java.lang.reflect.InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     */
-    @SuppressWarnings("rawtypes")
-    private String getValueDoWhile(Object object, String[] paramsArr, int index) throws Exception {
-        if (object == null) {
-            return "";
-        }
-        if (object instanceof Map) {
-            object = ((Map) object).get(paramsArr[index]);
-        } else {
-            object = POIPublicUtil.getMethod(paramsArr[index], object.getClass()).invoke(object,
-                new Object[] {});
-        }
-        return (index == paramsArr.length - 1) ? (object == null ? "" : object.toString())
-            : getValueDoWhile(object, paramsArr, ++index);
-    }
-
     private void parseTemplate(Sheet sheet, Map<String, Object> map) throws Exception {
         Row row = null;
         int index = 0;
@@ -274,14 +251,17 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         try {// step 1. 判断这个cell里面是不是函数
             oldString = cell.getStringCellValue();
         } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
             return;
         }
-        if (oldString != null && oldString.indexOf("{{") != -1 && !oldString.contains("foreach||")) {
+        if (oldString != null && oldString.indexOf(START_STR) != -1
+            && !oldString.contains("foreach||")) {
             // setp 2. 判断是否含有解析函数
             String params;
-            while (oldString.indexOf("{{") != -1) {
-                params = oldString.substring(oldString.indexOf("{{") + 2, oldString.indexOf("}}"));
-                oldString = oldString.replace("{{" + params + "}}",
+            while (oldString.indexOf(START_STR) != -1) {
+                params = oldString.substring(oldString.indexOf(START_STR) + 2,
+                    oldString.indexOf(END_STR));
+                oldString = oldString.replace(START_STR + params + END_STR,
                     getParamsValue(params.trim(), map));
             }
             cell.setCellValue(oldString);
@@ -305,7 +285,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                                                                                     throws Exception {
         boolean isCreate = !name.startsWith("!");
         Collection<?> datas = (Collection<?>) map.get(name.substring(name.indexOf("||") + 2,
-            name.indexOf("{{")));
+            name.indexOf(START_STR)));
         List<String> columns = getAllDataColumns(cell, name);
         if (datas == null) {
             return;
@@ -339,7 +319,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 row.createCell(i);
         }
         for (int i = 0, max = columns.size(); i < max; i++) {
-            String val = getValueDoWhile(t, columns.get(i).split("\\."), 0);
+            String val = String.valueOf(POIPublicUtil.getValueDoWhile(t, columns.get(i)
+                .split("\\."), 0));
             row.getCell(i + columnIndex).setCellValue(val);
             tempCreateCellSet.add(row.getRowNum() + "_" + (i + columnIndex));
         }
@@ -354,12 +335,12 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      */
     private List<String> getAllDataColumns(Cell cell, String name) {
         List<String> columns = new ArrayList<String>();
-        if (name.contains("}}")) {
-            columns.add(name.substring(name.indexOf("{{") + 2, name.indexOf("}}")).trim());
+        if (name.contains(END_STR)) {
+            columns.add(name.substring(name.indexOf(START_STR) + 2, name.indexOf(END_STR)).trim());
             cell.setCellValue("");
             return columns;
         }
-        columns.add(name.substring(name.indexOf("{{") + 2).trim());
+        columns.add(name.substring(name.indexOf(START_STR) + 2).trim());
         int index = cell.getColumnIndex();
         Cell tempCell;
         while (true) {
@@ -368,14 +349,15 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             try {//不允许为空
                 cellStringString = tempCell.getStringCellValue();
                 if (StringUtils.isBlank(cellStringString)) {
-                    throw new RuntimeException();
+                    throw new ExcelExportException();
                 }
             } catch (Exception e) {
                 throw new ExcelExportException("for each 当中存在空字符串,请检查模板");
             }
+            //把读取过的cell 置为空
             cell.setCellValue("");
-            if (cellStringString.contains("}}")) {
-                columns.add(cellStringString.trim().replace("}}", ""));
+            if (cellStringString.contains(END_STR)) {
+                columns.add(cellStringString.trim().replace(END_STR, ""));
                 break;
             } else {
                 columns.add(cellStringString.trim());

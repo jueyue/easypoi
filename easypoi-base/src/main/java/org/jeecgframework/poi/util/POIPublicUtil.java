@@ -37,8 +37,12 @@ import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.word.entity.WordImageEntity;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
-
-public class POIPublicUtil {
+/**
+ * EASYPOI 的公共基础类
+ * @author JueYue
+ * @date 2015年4月5日 上午12:59:22
+ */
+public final class POIPublicUtil {
 
     private POIPublicUtil() {
 
@@ -168,7 +172,7 @@ public class POIPublicUtil {
     public static Map<String, PictureData> getSheetPictrues03(HSSFSheet sheet, HSSFWorkbook workbook) {
         Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
         List<HSSFPictureData> pictures = workbook.getAllPictures();
-        if (pictures.size() != 0) {
+        if (!pictures.isEmpty()) {
             for (HSSFShape shape : sheet.getDrawingPatriarch().getChildren()) {
                 HSSFClientAnchor anchor = (HSSFClientAnchor) shape.getAnchor();
                 if (shape instanceof HSSFPicture) {
@@ -412,8 +416,7 @@ public class POIPublicUtil {
         if (object instanceof Map) {
             object = ((Map) object).get(paramsArr[index]);
         } else {
-            object = POIPublicUtil.getMethod(paramsArr[index], object.getClass()).invoke(object,
-                new Object[] {});
+            object = getMethod(paramsArr[index], object.getClass()).invoke(object, new Object[] {});
         }
         return (index == paramsArr.length - 1) ? (object == null ? "" : object) : getValueDoWhile(
             object, paramsArr, ++index);

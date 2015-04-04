@@ -1,6 +1,5 @@
 package org.jeecgframework.poi.cache;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -35,12 +34,12 @@ public final class ExcelCache {
             return wb;
         } catch (InvalidFormatException e) {
             LOGGER.error(e.getMessage(),e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(),e);
         } finally {
             try {
                 is.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOGGER.error(e.getMessage(),e);
             }
         }

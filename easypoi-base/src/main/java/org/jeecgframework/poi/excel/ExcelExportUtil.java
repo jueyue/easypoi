@@ -35,7 +35,7 @@ public final class ExcelExportUtil {
     public static Workbook exportExcel(ExportParams entity, Class<?> pojoClass,
                                        Collection<?> dataSet) {
         Workbook workbook;
-        if (entity.getType().equals(ExcelType.HSSF)) {
+        if (ExcelType.HSSF.equals(entity.getType())) {
             workbook = new HSSFWorkbook();
         } else if (dataSet.size() < 1000) {
             workbook = new XSSFWorkbook();
@@ -58,7 +58,7 @@ public final class ExcelExportUtil {
     public static Workbook exportExcel(ExportParams entity, List<ExcelExportEntity> entityList,
                                        Collection<? extends Map<?, ?>> dataSet) {
         Workbook workbook;
-        if (entity.getType().equals(ExcelType.HSSF)) {
+        if (ExcelType.HSSF.equals(entity.getType())) {
             workbook = new HSSFWorkbook();
         } else if (dataSet.size() < 1000) {
             workbook = new XSSFWorkbook();
@@ -79,7 +79,7 @@ public final class ExcelExportUtil {
      */
     public static Workbook exportExcel(List<Map<String, Object>> list, String type) {
         Workbook workbook;
-        if (type.equals(ExcelType.HSSF)) {
+        if (ExcelType.HSSF.equals(type)) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
