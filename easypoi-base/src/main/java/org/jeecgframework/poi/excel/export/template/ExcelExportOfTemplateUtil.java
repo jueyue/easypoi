@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -38,7 +40,12 @@ import org.slf4j.LoggerFactory;
  */
 public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportOfTemplateUtil.class);
+    private static final Logger LOGGER            = LoggerFactory
+                                                      .getLogger(ExcelExportOfTemplateUtil.class);
+    /**
+     * 缓存temp 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
+     */
+    private Set<String>         tempCreateCellSet = new HashSet<String>();
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
@@ -242,12 +249,16 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     }
 
     private void parseTemplate(Sheet sheet, Map<String, Object> map) throws Exception {
-        Iterator<Row> rows = sheet.rowIterator();
-        Row row;
-        while (rows.hasNext()) {
-            row = rows.next();
+        Row row = null;
+        int index = 0;
+        while (index <= sheet.getLastRowNum()) {
+            row = sheet.getRow(index++);
             for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
-                setValueForCellByMap(row.getCell(i), map);
+                if (!tempCreateCellSet.contains(row.getRowNum() + "_"
+                                                + row.getCell(i).getColumnIndex())) {
+                    System.out.println(row.getCell(i).getStringCellValue());
+                    setValueForCellByMap(row.getCell(i), map);
+                }
             }
         }
     }
@@ -265,7 +276,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         } catch (Exception e) {
             return;
         }
-        if (oldString != null && oldString.indexOf("{{") != -1) {
+        if (oldString != null && oldString.indexOf("{{") != -1 && !oldString.contains("foreach||")) {
             // setp 2. 判断是否含有解析函数
             String params;
             while (oldString.indexOf("{{") != -1) {
@@ -275,6 +286,103 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             }
             cell.setCellValue(oldString);
         }
+        //判断foreach 这种方法
+        if (oldString != null
+            && (oldString.trim().startsWith("foreach||") || oldString.trim().startsWith(
+                "!foreach||"))) {
+            addListDataToExcel(cell, map, oldString.trim());
+        }
+    }
+
+    /**
+     * 利用foreach循环输出数据
+     * @param cell 
+     * @param map
+     * @param oldString
+     * @throws Exception 
+     */
+    private void addListDataToExcel(Cell cell, Map<String, Object> map, String name)
+                                                                                    throws Exception {
+        boolean isCreate = !name.startsWith("!");
+        Collection<?> datas = (Collection<?>) map.get(name.substring(name.indexOf("||") + 2,
+            name.indexOf("{{")));
+        List<String> columns = getAllDataColumns(cell, name);
+        if (datas == null) {
+            return;
+        }
+        Iterator<?> its = datas.iterator();
+        Row row;
+        int rowIndex = cell.getRow().getRowNum() + 1;
+        //处理当前行
+        if (its.hasNext()) {
+            Object t = its.next();
+            setForEeachCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns);
+        }
+        while (its.hasNext()) {
+            Object t = its.next();
+            if (isCreate) {
+                row = cell.getRow().getSheet().createRow(rowIndex++);
+            } else {
+                row = cell.getRow().getSheet().getRow(rowIndex++);
+                if (row == null) {
+                    row = cell.getRow().getSheet().createRow(rowIndex - 1);
+                }
+            }
+            setForEeachCellValue(isCreate, row, cell.getColumnIndex(), t, columns);
+        }
+    }
+
+    private void setForEeachCellValue(boolean isCreate, Row row, int columnIndex, Object t,
+                                      List<String> columns) throws Exception {
+        for (int i = 0, max = columnIndex + columns.size(); i < max; i++) {
+            if (row.getCell(i) == null)
+                row.createCell(i);
+        }
+        for (int i = 0, max = columns.size(); i < max; i++) {
+            String val = getValueDoWhile(t, columns.get(i).split("\\."), 0);
+            row.getCell(i + columnIndex).setCellValue(val);
+            tempCreateCellSet.add(row.getRowNum() + "_" + (i + columnIndex));
+        }
+
+    }
+
+    /**
+     * 获取迭代的数据的值
+     * @param cell
+     * @param name
+     * @return
+     */
+    private List<String> getAllDataColumns(Cell cell, String name) {
+        List<String> columns = new ArrayList<String>();
+        if (name.contains("}}")) {
+            columns.add(name.substring(name.indexOf("{{") + 2, name.indexOf("}}")).trim());
+            cell.setCellValue("");
+            return columns;
+        }
+        columns.add(name.substring(name.indexOf("{{") + 2).trim());
+        int index = cell.getColumnIndex();
+        Cell tempCell;
+        while (true) {
+            tempCell = cell.getRow().getCell(++index);
+            String cellStringString;
+            try {//不允许为空
+                cellStringString = tempCell.getStringCellValue();
+                if (StringUtils.isBlank(cellStringString)) {
+                    throw new RuntimeException();
+                }
+            } catch (Exception e) {
+                throw new ExcelExportException("for each 当中存在空字符串,请检查模板");
+            }
+            cell.setCellValue("");
+            if (cellStringString.contains("}}")) {
+                columns.add(cellStringString.trim().replace("}}", ""));
+                break;
+            } else {
+                columns.add(cellStringString.trim());
+            }
+
+        }
+        return columns;
     }
 
     /**

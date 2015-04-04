@@ -29,7 +29,7 @@ public class TemplateExcelExportTest {
     @Test
     public void test() throws Exception {
         TemplateExportParams params = new TemplateExportParams(
-            "org/jeecgframework/poi/excel/doc/专项支出用款申请书.xls");
+            "org/jeecgframework/poi/test/excel/doc/专项支出用款申请书.xls");
         params.setHeadingStartRow(3);
         params.setHeadingRows(2);
         params.setStyle(ExcelExportStylerColorImpl.class);

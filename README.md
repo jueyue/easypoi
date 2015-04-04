@@ -249,3 +249,16 @@ EasyPoi导出实例
         System.out.println(ReflectionToStringBuilder.toString(result.getList().get(i)));
     }
 ```
+
+9.Excel 导出的ForEach **Angelia**的需求 可以到处更加复杂的模板Excel了
+	
+	foreach提供两个语法写法
+	
+	1.createRow的
+		foreach||entitylist{{accountType	projectName	approvedAmount	amountApplied}}	
+		foreach开头,|| 后面是map的key,{{这个里面是各个属性值}}
+	2.不createRow的,如果row不够了还是会create,但是首先会用现成的
+		!foreach||entitylist{{accountType	projectName	approvedAmount	amountApplied}}	
+		!foreach开头,|| 后面是map的key,{{这个里面是各个属性值}}
+		
+	demo是TemplateForEachTest
