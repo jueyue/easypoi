@@ -1,6 +1,5 @@
 package org.jeecgframework.poi.cache;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.jeecgframework.poi.cache.manager.POICacheManager;
@@ -29,7 +28,7 @@ public class WordCache {
         } finally {
             try {
                 is.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOGGER.error(e.getMessage(),e);
             }
         }

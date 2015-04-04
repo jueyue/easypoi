@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import org.jeecgframework.poi.excel.annotation.ExcelEntity;
-import org.jeecgframework.poi.excel.entity.params.ComparatorExcelField;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
 import org.jeecgframework.poi.util.POIPublicUtil;
@@ -296,10 +295,10 @@ public class ExportBase {
      * 对字段根据用户设置排序
      */
     public void sortAllParams(List<ExcelExportEntity> excelParams) {
-        Collections.sort(excelParams, new ComparatorExcelField());
+        Collections.sort(excelParams);
         for (ExcelExportEntity entity : excelParams) {
             if (entity.getList() != null) {
-                Collections.sort(entity.getList(), new ComparatorExcelField());
+                Collections.sort(entity.getList());
             }
         }
     }

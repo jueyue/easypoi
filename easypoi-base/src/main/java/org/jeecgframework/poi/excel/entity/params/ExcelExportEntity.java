@@ -8,7 +8,7 @@ import java.util.List;
  * @author JueYue
  * @version 1.0 2013年8月24日
  */
-public class ExcelExportEntity extends ExcelBaseEntity {
+public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<ExcelExportEntity> {
 
     /**
      * 如果是MAP导出,这个是map的key
@@ -170,6 +170,11 @@ public class ExcelExportEntity extends ExcelBaseEntity {
 
     public void setStatistics(boolean isStatistics) {
         this.isStatistics = isStatistics;
+    }
+
+    @Override
+    public int compareTo(ExcelExportEntity prev) {
+        return this.getOrderNum() - prev.getOrderNum();
     }
 
 }
