@@ -21,19 +21,31 @@ public class ExcelExportForMap {
     /**
      * Map 测试
      */
-    // @Test
+    @Test
     public void test() {
         try {
             List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
             entity.add(new ExcelExportEntity("姓名", "name"));
             entity.add(new ExcelExportEntity("性别", "sex"));
+            ExcelExportEntity excelentity = new ExcelExportEntity("学生", "students");
+            List<ExcelExportEntity> temp = new ArrayList<ExcelExportEntity>();
+            temp.add(new ExcelExportEntity("姓名", "name"));
+            temp.add(new ExcelExportEntity("性别", "sex"));
+            excelentity.setList(temp);
+            entity.add(excelentity);
 
-            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-            Map<String, String> map;
+            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+            Map<String, Object> map;
             for (int i = 0; i < 10; i++) {
-                map = new HashMap<String, String>();
+                map = new HashMap<String, Object>();
                 map.put("name", "1" + i);
                 map.put("sex", "2" + i);
+
+                List<Map<String, Object>> tempList = new ArrayList<Map<String, Object>>();
+                tempList.add(map);
+                tempList.add(map);
+                map.put("students", tempList);
+                
                 list.add(map);
             }
 
@@ -49,7 +61,7 @@ public class ExcelExportForMap {
         }
     }
 
-    @Test
+    //@Test
     public void testMany() {
         try {
             List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
