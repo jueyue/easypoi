@@ -92,7 +92,7 @@ public class ExcelExportTemplateTest {
             map.put("i" + i, temp);
         }
         params.setTemplateUrl("org/jeecgframework/poi/test/excel/doc/exportTemp.xls");
-        params.setSheetNum(1);
+        params.setSheetNum(new Integer[]{1});
         Workbook book = ExcelExportUtil.exportExcel(params, CourseEntity.class, list, map);
         File savefile = new File("d:/");
         if (!savefile.exists()) {

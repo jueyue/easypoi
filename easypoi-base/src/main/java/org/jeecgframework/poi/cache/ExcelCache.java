@@ -1,6 +1,8 @@
 package org.jeecgframework.poi.cache;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -20,27 +22,28 @@ public final class ExcelCache {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelCache.class);
 
-    public static Workbook getWorkbook(String url, int index) {
+    public static Workbook getWorkbook(String url, Integer[] sheetNums) {
         InputStream is = null;
+        List<Integer> sheetList = Arrays.asList(sheetNums);
         try {
             is = POICacheManager.getFile(url);
             Workbook wb = WorkbookFactory.create(is);
             // 删除其他的sheet
             for (int i = wb.getNumberOfSheets() - 1; i >= 0; i--) {
-                if (i != index) {
+                if (!sheetList.contains(i)) {
                     wb.removeSheetAt(i);
                 }
             }
             return wb;
         } catch (InvalidFormatException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 is.close();
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(),e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return null;

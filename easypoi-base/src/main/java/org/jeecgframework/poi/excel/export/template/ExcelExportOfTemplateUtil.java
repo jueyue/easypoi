@@ -156,7 +156,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 wb.setSheetName(0, params.getSheetName());
             }
             // step 3. 解析模板
-            parseTemplate(wb.getSheetAt(0), map);
+            for (int i = 0; i < params.getSheetNum().length; i++) {
+                parseTemplate(wb.getSheetAt(i), map);
+            }
             if (dataSet != null) {
                 // step 4. 正常的数据填充
                 dataHanlder = params.getDataHanlder();

@@ -93,7 +93,7 @@ public final class ExcelExportUtil {
     }
 
     /**
-     * 导出文件通过模板解析
+     * 导出文件通过模板解析,不推荐这个了,推荐全部通过模板来执行处理
      * 
      * @param params
      *            导出参数类
