@@ -478,11 +478,11 @@ public abstract class ExcelExportBase extends ExportBase {
             if (excelParams.get(i).getList() != null) {
                 List<ExcelExportEntity> list = excelParams.get(i).getList();
                 for (int j = 0; j < list.size(); j++) {
-                    sheet.setColumnWidth(index, 256 * list.get(j).getWidth());
+                    sheet.setColumnWidth(index, (int) (256 * list.get(j).getWidth()));
                     index++;
                 }
             } else {
-                sheet.setColumnWidth(index, 256 * excelParams.get(i).getWidth());
+                sheet.setColumnWidth(index, (int) (256 * excelParams.get(i).getWidth()));
                 index++;
             }
         }

@@ -271,7 +271,7 @@ public class ExportBase {
      * @return
      */
     public short getRowHeight(List<ExcelExportEntity> excelParams) {
-        int maxHeight = 0;
+        double maxHeight = 0;
         for (int i = 0; i < excelParams.size(); i++) {
             maxHeight = maxHeight > excelParams.get(i).getHeight() ? maxHeight : excelParams.get(i)
                 .getHeight();

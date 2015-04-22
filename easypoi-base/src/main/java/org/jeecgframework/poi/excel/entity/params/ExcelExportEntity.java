@@ -15,9 +15,9 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
      */
     private Object                  key;
 
-    private int                     width           = 10;
+    private double                  width           = 10;
 
-    private int                     height          = 10;
+    private double                  height          = 10;
 
     /**
      * 图片的类型,1是文件,2是数据库
@@ -80,7 +80,7 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
         return exportImageType;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
@@ -100,7 +100,7 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
         return orderNum;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
@@ -120,7 +120,7 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
         this.exportImageType = exportImageType;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
@@ -148,7 +148,7 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
         this.orderNum = orderNum;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
