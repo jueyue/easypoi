@@ -81,10 +81,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             .newInstance(workbook));
         // 获取实体对象的导出数据
         List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
+        getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
         if (excelParams.size() == 0) {
             return;
         }
-        getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
         // 根据表头进行筛选排序
         sortAndFilterExportField(excelParams, titlemap);
         short rowHeight = getRowHeight(excelParams);

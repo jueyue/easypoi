@@ -32,7 +32,7 @@ public @interface Excel {
     /**
      * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
      */
-    public int height() default 10;
+    public double height() default 10;
 
     /**
      * 导出类型 1 从file读取 2 是从数据库中读取 默认是文件 同样导入也是一样的
@@ -100,7 +100,7 @@ public @interface Excel {
      * 导出时在excel中每个列的宽 单位为字符，一个汉字=2个字符 如 以列名列内容中较合适的长度 例如姓名列6 【姓名一般三个字】
      * 性别列4【男女占1，但是列标题两个汉字】 限制1-255
      */
-    public int width() default 10;
+    public double width() default 10;
 
     /**
      * 是否自动统计数据,如果是统计,true的话在最后追加一行统计,把所有数据都和
