@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -174,6 +175,23 @@ public class ExportBase {
             value = value + entity.getSuffix();
         }
         return value == null ? "" : value.toString();
+    }
+
+    /**
+     * 获取集合的值
+     * @param entity
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public Collection<?> getListCellValue(ExcelExportEntity entity, Object obj) throws Exception {
+        Object value;
+        if (obj instanceof Map) {
+            value = ((Map<?, ?>) obj).get(entity.getKey());
+        } else {
+            value = (Collection<?>) entity.getMethod().invoke(obj, new Object[] {});
+        }
+        return (Collection<?>) value;
     }
 
     /**

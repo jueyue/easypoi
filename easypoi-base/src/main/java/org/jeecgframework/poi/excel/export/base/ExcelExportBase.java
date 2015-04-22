@@ -91,7 +91,7 @@ public abstract class ExcelExportBase extends ExportBase {
         for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);
             if (entity.getList() != null) {
-                Collection<?> list = (Collection<?>) entity.getMethod().invoke(t, new Object[] {});
+                Collection<?> list = getListCellValue(entity,t);
                 int listC = 0;
                 for (Object obj : list) {
                     createListCells(patriarch, index + listC, cellNum, obj, entity.getList(),
