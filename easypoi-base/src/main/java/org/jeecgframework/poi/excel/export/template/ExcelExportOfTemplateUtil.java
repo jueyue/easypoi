@@ -45,6 +45,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     private static final String START_STR         = "{{";
     private static final String END_STR           = "}}";
+    private static final String NUMBER_Symbol     = "N:";
     /**
      * 缓存temp 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
      */
@@ -80,6 +81,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             .newInstance(workbook));
         // 获取实体对象的导出数据
         List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
+        if (excelParams.size() == 0) {
+            return;
+        }
         getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
         // 根据表头进行筛选排序
         sortAndFilterExportField(excelParams, titlemap);
@@ -233,7 +237,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
                 if (!tempCreateCellSet.contains(row.getRowNum() + "_"
                                                 + row.getCell(i).getColumnIndex())) {
-                    System.out.println(row.getCell(i).getStringCellValue());
                     setValueForCellByMap(row.getCell(i), map);
                 }
             }
@@ -247,24 +250,36 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * @param map
      */
     private void setValueForCellByMap(Cell cell, Map<String, Object> map) throws Exception {
-        String oldString;
-        try {// step 1. 判断这个cell里面是不是函数
-            oldString = cell.getStringCellValue();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+        int cellType = cell.getCellType();
+        if (cellType != Cell.CELL_TYPE_STRING && cellType == Cell.CELL_TYPE_NUMERIC) {
             return;
         }
+        String oldString;
+        cell.setCellType(Cell.CELL_TYPE_STRING);
+        oldString = cell.getStringCellValue();
         if (oldString != null && oldString.indexOf(START_STR) != -1
             && !oldString.contains("foreach||")) {
             // setp 2. 判断是否含有解析函数
             String params;
+            boolean isNumber = false;
+            if (oldString.indexOf(NUMBER_Symbol) != -1) {
+                isNumber = true;
+                oldString = oldString.substring(2);
+            }
             while (oldString.indexOf(START_STR) != -1) {
                 params = oldString.substring(oldString.indexOf(START_STR) + 2,
                     oldString.indexOf(END_STR));
+
                 oldString = oldString.replace(START_STR + params + END_STR,
                     getParamsValue(params.trim(), map));
             }
-            cell.setCellValue(oldString);
+            //如何是数值 类型,就按照数值类型进行设置
+            if (isNumber) {
+                cell.setCellValue(Double.parseDouble(oldString));
+                cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+            } else {
+                cell.setCellValue(oldString);
+            }
         }
         //判断foreach 这种方法
         if (oldString != null
