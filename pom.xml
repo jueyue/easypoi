@@ -28,7 +28,7 @@
 		<poi.version>3.9</poi.version>
 		<xerces.version>2.9.1</xerces.version>
 		<guava.version>16.0.1</guava.version>
-		<commons-lang.version>2.6</commons-lang.version>
+		<commons-lang.version>3.2.1</commons-lang.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<junit.version>4.7</junit.version>
@@ -65,8 +65,8 @@
 			</dependency>
 
 			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
 				<version>${commons-lang.version}</version>
 			</dependency>
 
