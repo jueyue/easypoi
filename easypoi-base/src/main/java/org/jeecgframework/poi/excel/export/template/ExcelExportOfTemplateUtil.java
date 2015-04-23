@@ -82,9 +82,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         // 获取实体对象的导出数据
         List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
         getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
-        if (excelParams.size() == 0) {
-            return;
-        }
         // 根据表头进行筛选排序
         sortAndFilterExportField(excelParams, titlemap);
         short rowHeight = getRowHeight(excelParams);
@@ -92,7 +89,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         //下移数据,模拟插入
         sheet.shiftRows(params.getHeadingRows() + params.getHeadingStartRow(),
             sheet.getLastRowNum(), getShiftRows(dataSet, excelParams), true, true);
-
+        if (excelParams.size() == 0) {
+            return;
+        }
         Iterator<?> its = dataSet.iterator();
         while (its.hasNext()) {
             Object t = its.next();

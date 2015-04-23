@@ -23,19 +23,30 @@ public class ExcelExportTemplateTest {
     List<CourseEntity> list = new ArrayList<CourseEntity>();
     CourseEntity       courseEntity;
 
-    //@Test
+    @Test
     public void one() throws Exception {
-        TemplateExportParams params = new TemplateExportParams();
+        TemplateExportParams params = new TemplateExportParams(
+            "org/jeecgframework/poi/test/excel/doc/exportTemp.xls", 0, 1);
         params.setHeadingRows(2);
         params.setHeadingStartRow(2);
         params.setStyle(ExcelStyleType.BORDER.getClazz());
         Map<String, Object> map = new HashMap<String, Object>();
+        //sheet 1
         map.put("year", "2013");
         map.put("sunCourses", list.size());
         Map<String, Object> obj = new HashMap<String, Object>();
         map.put("obj", obj);
         obj.put("name", list.size());
-        params.setTemplateUrl("org/jeecgframework/poi/excel/doc/exportTemp.xls");
+        // sheet 2
+        map.put("month", 10);
+        Map<String, Object> temp;
+        for (int i = 1; i < 8; i++) {
+            temp = new HashMap<String, Object>();
+            temp.put("per", i * 10);
+            temp.put("mon", i * 1000);
+            temp.put("summon", i * 10000);
+            map.put("i" + i, temp);
+        }
         Workbook book = ExcelExportUtil.exportExcel(params, CourseEntity.class, list, map);
         File savefile = new File("d:/");
         if (!savefile.exists()) {
@@ -78,9 +89,10 @@ public class ExcelExportTemplateTest {
         }
     }
 
-    @Test
+    //@Test
     public void two() throws Exception {
-        TemplateExportParams params = new TemplateExportParams();
+        TemplateExportParams params = new TemplateExportParams(
+            "org/jeecgframework/poi/test/excel/doc/exportTemp.xls", 1);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("month", 10);
         Map<String, Object> temp;
@@ -91,9 +103,7 @@ public class ExcelExportTemplateTest {
             temp.put("summon", i * 10000);
             map.put("i" + i, temp);
         }
-        params.setTemplateUrl("org/jeecgframework/poi/test/excel/doc/exportTemp.xls");
-        params.setSheetNum(new Integer[]{1});
-        Workbook book = ExcelExportUtil.exportExcel(params, CourseEntity.class, list, map);
+        Workbook book = ExcelExportUtil.exportExcel(params, map);
         File savefile = new File("d:/");
         if (!savefile.exists()) {
             savefile.mkdirs();
@@ -103,5 +113,4 @@ public class ExcelExportTemplateTest {
         fos.close();
 
     }
-
 }
