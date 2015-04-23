@@ -26,7 +26,7 @@ public class ExcelExportTemplateTest {
     @Test
     public void one() throws Exception {
         TemplateExportParams params = new TemplateExportParams(
-            "org/jeecgframework/poi/test/excel/doc/exportTemp.xls", 0, 1);
+            "org/jeecgframework/poi/test/excel/doc/exportTemp.xls", true);
         params.setHeadingRows(2);
         params.setHeadingStartRow(2);
         params.setStyle(ExcelStyleType.BORDER.getClazz());
