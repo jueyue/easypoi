@@ -240,8 +240,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         while (index <= sheet.getLastRowNum()) {
             row = sheet.getRow(index++);
             for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
-                if (!tempCreateCellSet.contains(row.getRowNum() + "_"
-                                                + row.getCell(i).getColumnIndex())) {
+                if (row.getCell(i) != null
+                    && !tempCreateCellSet.contains(row.getRowNum() + "_"
+                                                   + row.getCell(i).getColumnIndex())) {
                     setValueForCellByMap(row.getCell(i), map);
                 }
             }

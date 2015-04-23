@@ -121,6 +121,8 @@ EasyPoi 文档
 
 [EasyPoi-新版自定义导出样式类型](http://note.youdao.com/share/?id=7937a9fe15f1016b8f39bf813be894f8&type=note)
 
+[EasyPoi-模板导出的语法介绍](http://blog.csdn.net/qjueyue/article/details/45231801)
+
 
 ---------------------------
 EasyPoi导出实例
