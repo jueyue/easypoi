@@ -22,16 +22,18 @@ public final class ExcelCache {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelCache.class);
 
-    public static Workbook getWorkbook(String url, Integer[] sheetNums) {
+    public static Workbook getWorkbook(String url, Integer[] sheetNums, boolean needAll) {
         InputStream is = null;
         List<Integer> sheetList = Arrays.asList(sheetNums);
         try {
             is = POICacheManager.getFile(url);
             Workbook wb = WorkbookFactory.create(is);
             // 删除其他的sheet
-            for (int i = wb.getNumberOfSheets() - 1; i >= 0; i--) {
-                if (!sheetList.contains(i)) {
-                    wb.removeSheetAt(i);
+            if (!needAll) {
+                for (int i = wb.getNumberOfSheets() - 1; i >= 0; i--) {
+                    if (!sheetList.contains(i)) {
+                        wb.removeSheetAt(i);
+                    }
                 }
             }
             return wb;

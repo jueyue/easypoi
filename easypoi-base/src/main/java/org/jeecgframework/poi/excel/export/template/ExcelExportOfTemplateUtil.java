@@ -45,9 +45,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     private static final String START_STR         = "{{";
     private static final String END_STR           = "}}";
-    private static final String NUMBER_Symbol     = "N:";
+    private static final String NUMBER_SYMBOL     = "N:";
     /**
-     * 缓存temp 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
+     * 缓存TEMP 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
      */
     private Set<String>         tempCreateCellSet = new HashSet<String>();
 
@@ -151,11 +151,13 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         // step 2. 判断模板的Excel类型,解析模板
         try {
             wb = getCloneWorkBook(params);
-            if (StringUtils.isNotEmpty(params.getSheetName())) {
-                wb.setSheetName(0, params.getSheetName());
-            }
             // step 3. 解析模板
-            for (int i = 0; i < params.getSheetNum().length; i++) {
+            for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets() : params
+                .getSheetNum().length; i < le; i++) {
+                if (params.getSheetName() != null && params.getSheetName().length > i
+                    && StringUtils.isNotEmpty(params.getSheetName()[i])) {
+                    wb.setSheetName(i, params.getSheetName()[i]);
+                }
                 parseTemplate(wb.getSheetAt(i), map);
             }
             if (dataSet != null) {
@@ -164,7 +166,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 if (dataHanlder != null) {
                     needHanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
                 }
-                addDataToSheet(params, pojoClass, dataSet, wb.getSheetAt(0), wb);
+                addDataToSheet(params, pojoClass, dataSet, wb.getSheetAt(params.getDataSheetNum()),
+                    wb);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -182,7 +185,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * @date 2013-11-11
      */
     private Workbook getCloneWorkBook(TemplateExportParams params) throws Exception {
-        return ExcelCache.getWorkbook(params.getTemplateUrl(), params.getSheetNum());
+        return ExcelCache.getWorkbook(params.getTemplateUrl(), params.getSheetNum(),
+            params.isScanAllsheet());
 
     }
 
@@ -260,12 +264,12 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         oldString = cell.getStringCellValue();
         if (oldString != null && oldString.indexOf(START_STR) != -1
             && !oldString.contains("foreach||")) {
-            // setp 2. 判断是否含有解析函数
+            // step 2. 判断是否含有解析函数
             String params;
             boolean isNumber = false;
-            if (oldString.indexOf(NUMBER_Symbol) != -1) {
+            if (oldString.contains(NUMBER_SYMBOL)) {
                 isNumber = true;
-                oldString = oldString.substring(2);
+                oldString = oldString.replace(NUMBER_SYMBOL, "");
             }
             while (oldString.indexOf(START_STR) != -1) {
                 params = oldString.substring(oldString.indexOf(START_STR) + 2,
