@@ -47,6 +47,10 @@ public class TemplateExportParams extends ExcelBaseParams {
      * Excel 导出style
      */
     private Class<?>  style           = ExcelExportStylerDefaultImpl.class;
+    /**
+     * FOR EACH 用到的局部变量
+     */
+    private String    tempParams      = "t";
 
     /**
      * 默认构造器
@@ -166,6 +170,14 @@ public class TemplateExportParams extends ExcelBaseParams {
 
     public void setScanAllsheet(boolean scanAllsheet) {
         this.scanAllsheet = scanAllsheet;
+    }
+
+    public String getTempParams() {
+        return tempParams;
+    }
+
+    public void setTempParams(String tempParams) {
+        this.tempParams = tempParams;
     }
 
 }

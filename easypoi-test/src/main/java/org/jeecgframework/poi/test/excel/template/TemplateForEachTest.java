@@ -3,6 +3,7 @@ package org.jeecgframework.poi.test.excel.template;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,9 @@ public class TemplateForEachTest {
             list.add(entity);
         }
         map.put("entitylist", list);
+        map.put("letest", "12345678");
+        map.put("fntest", "12345678.2341234");
+        map.put("fdtest", new Date());
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < 4; i++) {
             Map<String, Object> testMap = new HashMap<String, Object>();

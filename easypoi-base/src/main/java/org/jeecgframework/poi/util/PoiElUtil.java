@@ -11,13 +11,18 @@ import org.jeecgframework.poi.exception.excel.ExcelExportException;
  */
 public final class PoiElUtil {
 
-    private static final String LENGTH        = "le:";
-    private static final String FORMAT_DATE   = "fd:";
-    private static final String FORMAT_NUMBER = "fn:";
-    private static final String IF_DELETE     = "!if:";
-    private static final String EMPTY         = "";
-    private static final String LEFT_BRACKET  = "(";
-    private static final String RIGHT_BRACKET = ")";
+    public static final String LENGTH             = "le:";
+    public static final String FOREACH            = "fe:";
+    public static final String FOREACH_NOT_CREATE = "!fe:";
+    public static final String START_STR          = "{{";
+    public static final String END_STR            = "}}";
+    public static final String NUMBER_SYMBOL      = "n:";
+    public static final String FORMAT_DATE        = "fd:";
+    public static final String FORMAT_NUMBER      = "fn:";
+    public static final String IF_DELETE          = "!if:";
+    public static final String EMPTY              = "";
+    public static final String LEFT_BRACKET       = "(";
+    public static final String RIGHT_BRACKET      = ")";
 
     private PoiElUtil() {
     }
