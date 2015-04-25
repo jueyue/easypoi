@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
@@ -157,7 +158,7 @@ public class ParseWord07 {
         for (int i = 0; i < paragraph.getRuns().size(); i++) {
             run = paragraph.getRuns().get(i);
             text = run.getText(0);
-            if (text == null || text == "") {
+            if (StringUtils.isEmpty(text)) {
                 continue;
             }// 如果为空或者""这种这继续循环跳过
             if (isfinde) {
