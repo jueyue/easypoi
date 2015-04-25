@@ -14,7 +14,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.jeecgframework.poi.cache.WordCache;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.word.entity.MyXWPFDocument;
 import org.jeecgframework.poi.word.entity.WordImageEntity;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
@@ -45,7 +45,7 @@ public class ParseWord07 {
      * @throws Exception
      */
     private void addAnImage(WordImageEntity obj, XWPFRun currentRun) throws Exception {
-        Object[] isAndType = POIPublicUtil.getIsAndType(obj);
+        Object[] isAndType = PoiPublicUtil.getIsAndType(obj);
         String picId;
         try {
             picId = currentRun.getParagraph().getDocument()
@@ -70,7 +70,7 @@ public class ParseWord07 {
      */
     private void changeValues(XWPFParagraph paragraph, XWPFRun currentRun, String currentText,
                               List<Integer> runIndex, Map<String, Object> map) throws Exception {
-        Object obj = POIPublicUtil.getRealValue(currentText, map);
+        Object obj = PoiPublicUtil.getRealValue(currentText, map);
         if (obj instanceof WordImageEntity) {// 如果是图片就设置为图片
             currentRun.setText("", 0);
             addAnImage((WordImageEntity) obj, currentRun);
@@ -97,7 +97,7 @@ public class ParseWord07 {
         String text = cell.getText().trim();
         // 判断是不是迭代输出
         if (text.startsWith("{{") && text.endsWith("}}") && text.indexOf("in ") != -1) {
-            return POIPublicUtil.getRealValue(text.replace("in ", "").trim(), map);
+            return PoiPublicUtil.getRealValue(text.replace("in ", "").trim(), map);
         }
         return null;
     }

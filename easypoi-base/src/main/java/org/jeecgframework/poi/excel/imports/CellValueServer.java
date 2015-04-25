@@ -153,6 +153,9 @@ public class CellValueServer {
             if (xclass.equals("class java.lang.Long") || xclass.equals("long")) {
                 return Long.valueOf(String.valueOf(result));
             }
+            if (xclass.equals("class java.lang.Float") || xclass.equals("float")) {
+                return Float.valueOf(String.valueOf(result));
+            }
             if (xclass.equals("class java.lang.Integer") || xclass.equals("int")) {
                 return Integer.valueOf(String.valueOf(result));
             }

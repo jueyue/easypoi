@@ -20,7 +20,7 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelCollectionParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelImportEntity;
 import org.jeecgframework.poi.excel.entity.params.ExcelVerifyEntity;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 
 /**
  * 导入基础和,普通方法和Sax共用
@@ -104,10 +104,10 @@ public class ImportBaseService {
         ExcelImportEntity excelEntity = null;
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
-            if (POIPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
+            if (PoiPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
                 continue;
             }
-            if (POIPublicUtil.isCollection(field.getType())) {
+            if (PoiPublicUtil.isCollection(field.getType())) {
                 // 集合对象设置属性
                 ExcelCollectionParams collection = new ExcelCollectionParams();
                 collection.setName(field.getName());
@@ -115,18 +115,18 @@ public class ImportBaseService {
                 ParameterizedType pt = (ParameterizedType) field.getGenericType();
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
                 collection.setType(clz);
-                getExcelFieldList(targetId, POIPublicUtil.getClassFields(clz), clz, temp, null);
+                getExcelFieldList(targetId, PoiPublicUtil.getClassFields(clz), clz, temp, null);
                 collection.setExcelParams(temp);
                 excelCollection.add(collection);
-            } else if (POIPublicUtil.isJavaClass(field)) {
+            } else if (PoiPublicUtil.isJavaClass(field)) {
                 addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, excelParams);
             } else {
                 List<Method> newMethods = new ArrayList<Method>();
                 if (getMethods != null) {
                     newMethods.addAll(getMethods);
                 }
-                newMethods.add(POIPublicUtil.getMethod(field.getName(), pojoClass));
-                getAllExcelField(targetId, POIPublicUtil.getClassFields(field.getType()),
+                newMethods.add(PoiPublicUtil.getMethod(field.getName(), pojoClass));
+                getAllExcelField(targetId, PoiPublicUtil.getClassFields(field.getType()),
                     excelParams, excelCollection, field.getType(), newMethods);
             }
         }
@@ -136,7 +136,7 @@ public class ImportBaseService {
                                Excel excel, Class<?> pojoClass) throws Exception {
         excelEntity.setName(getExcelName(excel.name(), targetId));
         String fieldname = field.getName();
-        excelEntity.setMethod(POIPublicUtil.getMethod(fieldname, pojoClass, field.getType()));
+        excelEntity.setMethod(PoiPublicUtil.getMethod(fieldname, pojoClass, field.getType()));
         if (StringUtils.isEmpty(excel.importFormat())) {
             excelEntity.setFormat(excel.format());
         } else {
@@ -150,10 +150,10 @@ public class ImportBaseService {
         ExcelImportEntity excelEntity = null;
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
-            if (POIPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
+            if (PoiPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
                 continue;
             }
-            if (POIPublicUtil.isJavaClass(field)) {
+            if (PoiPublicUtil.isJavaClass(field)) {
                 addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, temp);
             } else {
                 List<Method> newMethods = new ArrayList<Method>();
@@ -161,8 +161,8 @@ public class ImportBaseService {
                     newMethods.addAll(getMethods);
                 }
                 newMethods
-                    .add(POIPublicUtil.getMethod(field.getName(), pojoClass, field.getType()));
-                getExcelFieldList(targetId, POIPublicUtil.getClassFields(field.getType()),
+                    .add(PoiPublicUtil.getMethod(field.getName(), pojoClass, field.getType()));
+                getExcelFieldList(targetId, PoiPublicUtil.getClassFields(field.getType()),
                     field.getType(), temp, newMethods);
             }
         }
@@ -199,7 +199,7 @@ public class ImportBaseService {
 
     public void saveThisExcel(ImportParams params, Class<?> pojoClass, boolean isXSSFWorkbook,
                                Workbook book) throws Exception {
-        String path = POIPublicUtil.getWebRootPath(getSaveExcelUrl(params, pojoClass));
+        String path = PoiPublicUtil.getWebRootPath(getSaveExcelUrl(params, pojoClass));
         File savefile = new File(path);
         if (!savefile.exists()) {
             savefile.mkdirs();

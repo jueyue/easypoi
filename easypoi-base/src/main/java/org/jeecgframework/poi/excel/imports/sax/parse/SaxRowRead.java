@@ -17,7 +17,7 @@ import org.jeecgframework.poi.excel.imports.CellValueServer;
 import org.jeecgframework.poi.excel.imports.base.ImportBaseService;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.handler.inter.IExcelReadRowHanlder;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +67,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private void initParams(Class<?> pojoClass, ImportParams params) {
         try {
 
-            Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
+            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             if (etarget != null) {
                 targetId = etarget.value();
@@ -122,7 +122,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
             if (object != null && hanlder != null) {
                 hanlder.hanlder(object);
             }
-            object = POIPublicUtil.createObject(pojoClass, targetId);
+            object = PoiPublicUtil.createObject(pojoClass, targetId);
             SaxReadCellEntity entity;
             for (int i = 0, le = datas.size(); i < le; i++) {
                 entity = datas.get(i);
@@ -155,9 +155,9 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private void addListContinue(Object object, ExcelCollectionParams param,
                                  List<SaxReadCellEntity> datas, Map<Integer, String> titlemap,
                                  String targetId, ImportParams params) throws Exception {
-        Collection collection = (Collection) POIPublicUtil.getMethod(param.getName(),
+        Collection collection = (Collection) PoiPublicUtil.getMethod(param.getName(),
             object.getClass()).invoke(object, new Object[] {});
-        Object entity = POIPublicUtil.createObject(param.getType(), targetId);
+        Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         boolean isUsed = false;// 是否需要加上这个对象
         for (int i = 0; i < datas.size(); i++) {
             String titleString = (String) titlemap.get(i);

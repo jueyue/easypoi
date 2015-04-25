@@ -33,7 +33,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.params.MergeEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 
 /**
  * 提供POI基础操作服务
@@ -164,7 +164,7 @@ public abstract class ExcelExportBase extends ExportBase {
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
             BufferedImage bufferImg;
             try {
-                String path = POIPublicUtil.getWebRootPath(imagePath);
+                String path = PoiPublicUtil.getWebRootPath(imagePath);
                 path = path.replace("WEB-INF/classes/", "");
                 path = path.replace("file:/", "");
                 bufferImg = ImageIO.read(new File(path));
@@ -346,7 +346,7 @@ public abstract class ExcelExportBase extends ExportBase {
      * @date 2013年11月25日
      */
     public int getImageType(byte[] value) {
-        String type = POIPublicUtil.getFileExtendName(value);
+        String type = PoiPublicUtil.getFileExtendName(value);
         if (type.equalsIgnoreCase("JPG")) {
             return Workbook.PICTURE_TYPE_JPEG;
         } else if (type.equalsIgnoreCase("PNG")) {

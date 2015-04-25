@@ -42,9 +42,9 @@ import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
  * @author JueYue
  * @date 2015年4月5日 上午12:59:22
  */
-public final class POIPublicUtil {
+public final class PoiPublicUtil {
 
-    private POIPublicUtil() {
+    private PoiPublicUtil() {
 
     }
 
@@ -219,7 +219,7 @@ public final class POIPublicUtil {
 
     public static String getWebRootPath(String filePath) {
         try {
-            String path = POIPublicUtil.class.getClassLoader().getResource("").toURI().getPath();
+            String path = PoiPublicUtil.class.getClassLoader().getResource("").toURI().getPath();
             path = path.replace("WEB-INF/classes/", "");
             path = path.replace("file:/", "");
             return path + filePath;
@@ -349,7 +349,7 @@ public final class POIPublicUtil {
             type = entity.getUrl().split("/.")[entity.getUrl().split("/.").length - 1];
         } else {
             result[0] = entity.getData();
-            type = POIPublicUtil.getFileExtendName(entity.getData());
+            type = PoiPublicUtil.getFileExtendName(entity.getData());
         }
         result[1] = getImageType(type);
         return result;
@@ -362,7 +362,7 @@ public final class POIPublicUtil {
      * @param map
      * @return
      */
-    private static Object getParamsValue(String params, Map<String, Object> map) throws Exception {
+    public static Object getParamsValue(String params, Map<String, Object> map) throws Exception {
         if (params.indexOf(".") != -1) {
             String[] paramsArr = params.split("\\.");
             return getValueDoWhile(map.get(paramsArr[0]), paramsArr, 1);

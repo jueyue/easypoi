@@ -39,7 +39,7 @@ import org.jeecgframework.poi.excel.imports.base.ImportBaseService;
 import org.jeecgframework.poi.excel.imports.verifys.VerifyHandlerServer;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelImportEnum;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,9 +85,9 @@ public class ExcelImportServer extends ImportBaseService {
                                  Map<Integer, String> titlemap, String targetId,
                                  Map<String, PictureData> pictures, ImportParams params)
                                                                                         throws Exception {
-        Collection collection = (Collection) POIPublicUtil.getMethod(param.getName(),
+        Collection collection = (Collection) PoiPublicUtil.getMethod(param.getName(),
             object.getClass()).invoke(object, new Object[] {});
-        Object entity = POIPublicUtil.createObject(param.getType(), targetId);
+        Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         String picId;
         boolean isUsed = false;// 是否需要加上这个对象
         for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
@@ -159,7 +159,7 @@ public class ExcelImportServer extends ImportBaseService {
         List collection = new ArrayList();
         Map<String, ExcelImportEntity> excelParams = new HashMap<String, ExcelImportEntity>();
         List<ExcelCollectionParams> excelCollection = new ArrayList<ExcelCollectionParams>();
-        Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
+        Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
         ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
         String targetId = null;
         if (etarget != null) {
@@ -197,7 +197,7 @@ public class ExcelImportServer extends ImportBaseService {
                     addListContinue(object, param, row, titlemap, targetId, pictures, params);
                 }
             } else {
-                object = POIPublicUtil.createObject(pojoClass, targetId);
+                object = PoiPublicUtil.createObject(pojoClass, targetId);
                 try {
                     for (int i = row.getFirstCellNum(), le = row.getLastCellNum(); i < le; i++) {
                         Cell cell = row.getCell(i);
@@ -259,10 +259,10 @@ public class ExcelImportServer extends ImportBaseService {
                 LOGGER.debug(" start to read excel by is ,startTime is {}", new Date().getTime());
             }
             if (isXSSFWorkbook) {
-                pictures = POIPublicUtil.getSheetPictrues07((XSSFSheet) book.getSheetAt(i),
+                pictures = PoiPublicUtil.getSheetPictrues07((XSSFSheet) book.getSheetAt(i),
                     (XSSFWorkbook) book);
             } else {
-                pictures = POIPublicUtil.getSheetPictrues03((HSSFSheet) book.getSheetAt(i),
+                pictures = PoiPublicUtil.getSheetPictrues03((HSSFSheet) book.getSheetAt(i),
                     (HSSFWorkbook) book);
             }
             if (LOGGER.isDebugEnabled()) {
@@ -328,9 +328,9 @@ public class ExcelImportServer extends ImportBaseService {
         PictureData image = pictures.get(picId);
         byte[] data = image.getData();
         String fileName = "pic" + Math.round(Math.random() * 100000000000L);
-        fileName += "." + POIPublicUtil.getFileExtendName(data);
+        fileName += "." + PoiPublicUtil.getFileExtendName(data);
         if (excelParams.get(titleString).getSaveType() == 1) {
-            String path = POIPublicUtil.getWebRootPath(getSaveUrl(excelParams.get(titleString),
+            String path = PoiPublicUtil.getWebRootPath(getSaveUrl(excelParams.get(titleString),
                 object));
             File savefile = new File(path);
             if (!savefile.exists()) {

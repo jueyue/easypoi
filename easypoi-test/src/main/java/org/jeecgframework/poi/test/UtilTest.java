@@ -7,6 +7,9 @@ public class UtilTest {
         text = text.replace("{{", "").replace("}}", "").replaceAll("\\s{1,}", " ").trim();
         System.out.println(text);
         System.out.println(text.length());
+        
+        
+        
     }
 
 }

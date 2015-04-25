@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +23,13 @@ class FileLoade {
         FileInputStream fileis = null;
         ByteArrayOutputStream baos = null;
         try {
-            String path = POIPublicUtil.getWebRootPath(url);
-            fileis = new FileInputStream(path);
+            //先用绝对路径查询,再查询相对路径
+            try {
+                fileis = new FileInputStream(url);
+            } catch (FileNotFoundException e) {
+                String path = PoiPublicUtil.getWebRootPath(url);
+                fileis = new FileInputStream(path);
+            }
             baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
             int len;
@@ -34,9 +39,9 @@ class FileLoade {
             baos.flush();
             return baos.toByteArray();
         } catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 if (fileis != null)
@@ -44,7 +49,7 @@ class FileLoade {
                 if (fileis != null)
                     baos.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(),e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         LOGGER.error(fileis + "这个路径文件没有找到,请查询");
