@@ -37,6 +37,7 @@ import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.word.entity.WordImageEntity;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
+
 /**
  * EASYPOI 的公共基础类
  * @author JueYue
@@ -362,12 +363,16 @@ public final class PoiPublicUtil {
      * @param map
      * @return
      */
-    public static Object getParamsValue(String params, Map<String, Object> map) throws Exception {
+    @SuppressWarnings("rawtypes")
+    public static Object getParamsValue(String params, Object object) throws Exception {
         if (params.indexOf(".") != -1) {
             String[] paramsArr = params.split("\\.");
-            return getValueDoWhile(map.get(paramsArr[0]), paramsArr, 1);
+            return getValueDoWhile(object, paramsArr, 0);
         }
-        return map.containsKey(params) ? map.get(params) : "";
+        if (object instanceof Map) {
+            return ((Map) object).get(params);
+        }
+        return getMethod(params, object.getClass()).invoke(object, new Object[] {});
     }
 
     /**

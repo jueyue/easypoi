@@ -27,7 +27,11 @@ import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
+
+import static org.jeecgframework.poi.util.PoiElUtil.*;
+
 import org.jeecgframework.poi.util.PoiPublicUtil;
+import org.jeecgframework.poi.util.PoiSheetUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,34 +44,34 @@ import org.slf4j.LoggerFactory;
  */
 public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
-    private static final Logger LOGGER            = LoggerFactory
-                                                      .getLogger(ExcelExportOfTemplateUtil.class);
+    private static final Logger  LOGGER            = LoggerFactory
+                                                       .getLogger(ExcelExportOfTemplateUtil.class);
 
-    private static final String START_STR         = "{{";
-    private static final String END_STR           = "}}";
-    private static final String NUMBER_SYMBOL     = "N:";
     /**
      * 缓存TEMP 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
      */
-    private Set<String>         tempCreateCellSet = new HashSet<String>();
+    private Set<String>          tempCreateCellSet = new HashSet<String>();
+    /**
+     * 模板参数,全局都用到
+     */
+    private TemplateExportParams teplateParams;
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
      * 
-     * @param params
+     * @param teplateParams
      * @param pojoClass
      * @param dataSet
      * @param workbook
      */
-    private void addDataToSheet(TemplateExportParams params, Class<?> pojoClass,
-                                Collection<?> dataSet, Sheet sheet, Workbook workbook)
-                                                                                      throws Exception {
+    private void addDataToSheet(Class<?> pojoClass, Collection<?> dataSet, Sheet sheet,
+                                Workbook workbook) throws Exception {
 
         if (workbook instanceof XSSFWorkbook) {
             super.type = ExcelType.XSSF;
         }
         // 获取表头数据
-        Map<String, Integer> titlemap = getTitleMap(params, sheet);
+        Map<String, Integer> titlemap = getTitleMap(sheet);
         Drawing patriarch = sheet.createDrawingPatriarch();
         // 得到所有字段
         Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
@@ -77,17 +81,17 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             targetId = etarget.value();
         }
         // 创建表格样式
-        setExcelExportStyler((IExcelExportStyler) params.getStyle().getConstructor(Workbook.class)
-            .newInstance(workbook));
+        setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+            .getConstructor(Workbook.class).newInstance(workbook));
         // 获取实体对象的导出数据
         List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
         getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
         // 根据表头进行筛选排序
         sortAndFilterExportField(excelParams, titlemap);
         short rowHeight = getRowHeight(excelParams);
-        int index = params.getHeadingRows() + params.getHeadingStartRow(), titleHeight = index;
+        int index = teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), titleHeight = index;
         //下移数据,模拟插入
-        sheet.shiftRows(params.getHeadingRows() + params.getHeadingStartRow(),
+        sheet.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(),
             sheet.getLastRowNum(), getShiftRows(dataSet, excelParams), true, true);
         if (excelParams.size() == 0) {
             return;
@@ -150,7 +154,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         Workbook wb = null;
         // step 2. 判断模板的Excel类型,解析模板
         try {
-            wb = getCloneWorkBook(params);
+            this.teplateParams = params;
+            wb = getCloneWorkBook();
             // step 3. 解析模板
             for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets() : params
                 .getSheetNum().length; i < le; i++) {
@@ -166,8 +171,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 if (dataHanlder != null) {
                     needHanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
                 }
-                addDataToSheet(params, pojoClass, dataSet, wb.getSheetAt(params.getDataSheetNum()),
-                    wb);
+                addDataToSheet(pojoClass, dataSet, wb.getSheetAt(params.getDataSheetNum()), wb);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -179,46 +183,30 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     /**
      * 克隆excel防止操作原对象,workbook无法克隆,只能对excel进行克隆
      * 
-     * @param params
+     * @param teplateParams
      * @throws Exception
      * @Author JueYue
      * @date 2013-11-11
      */
-    private Workbook getCloneWorkBook(TemplateExportParams params) throws Exception {
-        return ExcelCache.getWorkbook(params.getTemplateUrl(), params.getSheetNum(),
-            params.isScanAllsheet());
+    private Workbook getCloneWorkBook() throws Exception {
+        return ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),
+            teplateParams.isScanAllsheet());
 
-    }
-
-    /**
-     * 获取参数值
-     * 
-     * @param params
-     * @param map
-     * @return
-     */
-    private String getParamsValue(String params, Map<String, Object> map) throws Exception {
-        if (params.indexOf(".") != -1) {
-            String[] paramsArr = params.split("\\.");
-            return String
-                .valueOf(PoiPublicUtil.getValueDoWhile(map.get(paramsArr[0]), paramsArr, 1));
-        }
-        return map.containsKey(params) ? map.get(params).toString() : "";
     }
 
     /**
      * 获取表头数据,设置表头的序号
      * 
-     * @param params
+     * @param teplateParams
      * @param sheet
      * @return
      */
-    private Map<String, Integer> getTitleMap(TemplateExportParams params, Sheet sheet) {
+    private Map<String, Integer> getTitleMap(Sheet sheet) {
         Row row = null;
         Iterator<Cell> cellTitle;
         Map<String, Integer> titlemap = new HashMap<String, Integer>();
-        for (int j = 0; j < params.getHeadingRows(); j++) {
-            row = sheet.getRow(j + params.getHeadingStartRow());
+        for (int j = 0; j < teplateParams.getHeadingRows(); j++) {
+            row = sheet.getRow(j + teplateParams.getHeadingStartRow());
             cellTitle = row.cellIterator();
             int i = row.getFirstCellNum();
             while (cellTitle.hasNext()) {
@@ -235,15 +223,53 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     }
 
     private void parseTemplate(Sheet sheet, Map<String, Object> map) throws Exception {
+        deleteCell(sheet, map);
         Row row = null;
         int index = 0;
         while (index <= sheet.getLastRowNum()) {
             row = sheet.getRow(index++);
+            if (row == null) {
+                continue;
+            }
             for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
                 if (row.getCell(i) != null
                     && !tempCreateCellSet.contains(row.getRowNum() + "_"
                                                    + row.getCell(i).getColumnIndex())) {
                     setValueForCellByMap(row.getCell(i), map);
+                }
+            }
+        }
+    }
+
+    /**
+     * 先判断删除,省得影响效率
+     * @param sheet
+     * @param map
+     * @throws Exception 
+     */
+    private void deleteCell(Sheet sheet, Map<String, Object> map) throws Exception {
+        Row row = null;
+        Cell cell = null;
+        int index = 0;
+        while (index <= sheet.getLastRowNum()) {
+            row = sheet.getRow(index++);
+            if (row == null) {
+                continue;
+            }
+            for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+                cell = row.getCell(i);
+                if (row.getCell(i) != null
+                    && (cell.getCellType() == Cell.CELL_TYPE_STRING || cell.getCellType() == Cell.CELL_TYPE_NUMERIC)) {
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    String text = cell.getStringCellValue();
+                    if (text.contains(IF_DELETE)) {
+                        if (Boolean.valueOf(eval(
+                            text.substring(text.indexOf(START_STR) + 2, text.indexOf(END_STR))
+                                .trim(), map).toString())) {
+                            PoiSheetUtility.deleteColumn(sheet, i);
+                        }
+                        cell.setCellValue("");
+                    }
                 }
             }
         }
@@ -263,12 +289,11 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         String oldString;
         cell.setCellType(Cell.CELL_TYPE_STRING);
         oldString = cell.getStringCellValue();
-        if (oldString != null && oldString.indexOf(START_STR) != -1
-            && !oldString.contains("foreach||")) {
+        if (oldString != null && oldString.indexOf(START_STR) != -1 && !oldString.contains(FOREACH)) {
             // step 2. 判断是否含有解析函数
-            String params;
+            String params = null;
             boolean isNumber = false;
-            if (oldString.contains(NUMBER_SYMBOL)) {
+            if (isNumber(oldString)) {
                 isNumber = true;
                 oldString = oldString.replace(NUMBER_SYMBOL, "");
             }
@@ -276,8 +301,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 params = oldString.substring(oldString.indexOf(START_STR) + 2,
                     oldString.indexOf(END_STR));
 
-                oldString = oldString.replace(START_STR + params + END_STR,
-                    getParamsValue(params.trim(), map));
+                oldString = oldString.replace(START_STR + params + END_STR, eval(params, map)
+                    .toString());
             }
             //如何是数值 类型,就按照数值类型进行设置
             if (isNumber) {
@@ -288,11 +313,15 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             }
         }
         //判断foreach 这种方法
-        if (oldString != null
-            && (oldString.trim().startsWith("foreach||") || oldString.trim().startsWith(
-                "!foreach||"))) {
+        if (oldString != null && oldString.contains(FOREACH)) {
             addListDataToExcel(cell, map, oldString.trim());
         }
+
+    }
+
+    private boolean isNumber(String text) {
+        return text.startsWith(NUMBER_SYMBOL) || text.contains("{" + NUMBER_SYMBOL)
+               || text.contains(" " + NUMBER_SYMBOL);
     }
 
     /**
@@ -304,10 +333,12 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      */
     private void addListDataToExcel(Cell cell, Map<String, Object> map, String name)
                                                                                     throws Exception {
-        boolean isCreate = !name.startsWith("!");
-        Collection<?> datas = (Collection<?>) map.get(name.substring(name.indexOf("||") + 2,
-            name.indexOf(START_STR)));
-        List<String> columns = getAllDataColumns(cell, name);
+        boolean isCreate = !name.contains(FOREACH_NOT_CREATE);
+        name = name.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH, EMPTY)
+            .replace(START_STR, EMPTY);
+        String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
+        Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
+        List<String> columns = getAllDataColumns(cell, name.replace(keys[0], EMPTY));
         if (datas == null) {
             return;
         }
@@ -317,7 +348,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         //处理当前行
         if (its.hasNext()) {
             Object t = its.next();
-            setForEeachCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns);
+            setForEeachCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns, map);
         }
         while (its.hasNext()) {
             Object t = its.next();
@@ -329,20 +360,32 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     row = cell.getRow().getSheet().createRow(rowIndex - 1);
                 }
             }
-            setForEeachCellValue(isCreate, row, cell.getColumnIndex(), t, columns);
+            setForEeachCellValue(isCreate, row, cell.getColumnIndex(), t, columns, map);
         }
     }
 
     private void setForEeachCellValue(boolean isCreate, Row row, int columnIndex, Object t,
-                                      List<String> columns) throws Exception {
+                                      List<String> columns, Map<String, Object> map)
+                                                                                    throws Exception {
         for (int i = 0, max = columnIndex + columns.size(); i < max; i++) {
             if (row.getCell(i) == null)
                 row.createCell(i);
         }
         for (int i = 0, max = columns.size(); i < max; i++) {
-            String val = String.valueOf(PoiPublicUtil.getValueDoWhile(t, columns.get(i)
-                .split("\\."), 0));
-            row.getCell(i + columnIndex).setCellValue(val);
+            boolean isNumber = false;
+            String tempStr = new String(columns.get(i));
+            if (isNumber(tempStr)) {
+                isNumber = true;
+                tempStr = tempStr.replace(NUMBER_SYMBOL, "");
+            }
+            map.put(teplateParams.getTempParams(), t);
+            String val = eval(tempStr, map).toString();
+            if (isNumber) {
+                row.getCell(i + columnIndex).setCellValue(Double.parseDouble(val));
+                row.getCell(i + columnIndex).setCellType(Cell.CELL_TYPE_NUMERIC);
+            } else {
+                row.getCell(i + columnIndex).setCellValue(val);
+            }
             tempCreateCellSet.add(row.getRowNum() + "_" + (i + columnIndex));
         }
 
@@ -357,20 +400,23 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     private List<String> getAllDataColumns(Cell cell, String name) {
         List<String> columns = new ArrayList<String>();
         if (name.contains(END_STR)) {
-            columns.add(name.substring(name.indexOf(START_STR) + 2, name.indexOf(END_STR)).trim());
+            columns.add(name.replace(END_STR, EMPTY));
             cell.setCellValue("");
             return columns;
         }
-        columns.add(name.substring(name.indexOf(START_STR) + 2).trim());
+        columns.add(name.trim());
         int index = cell.getColumnIndex();
         Cell tempCell;
         while (true) {
             tempCell = cell.getRow().getCell(++index);
+            if (tempCell == null) {
+                break;
+            }
             String cellStringString;
-            try {//不允许为空
+            try {//允许为空,单表示已经完结了,因为可能被删除了
                 cellStringString = tempCell.getStringCellValue();
                 if (StringUtils.isBlank(cellStringString)) {
-                    throw new ExcelExportException();
+                    break;
                 }
             } catch (Exception e) {
                 throw new ExcelExportException("for each 当中存在空字符串,请检查模板");
@@ -381,7 +427,12 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 columns.add(cellStringString.trim().replace(END_STR, ""));
                 break;
             } else {
-                columns.add(cellStringString.trim());
+                if (cellStringString.trim().contains(teplateParams.getTempParams())) {
+                    columns.add(cellStringString.trim());
+                } else {
+                    //最后一行被删除了
+                    break;
+                }
             }
 
         }
