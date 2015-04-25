@@ -23,7 +23,10 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 @SuppressWarnings({ "unchecked" })
-public class ExcelImportUtil {
+public final class ExcelImportUtil {
+
+    private ExcelImportUtil() {
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelImportUtil.class);
 

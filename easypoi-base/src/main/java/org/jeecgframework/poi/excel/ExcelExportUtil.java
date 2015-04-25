@@ -24,6 +24,9 @@ import org.jeecgframework.poi.excel.export.template.ExcelExportOfTemplateUtil;
  */
 public final class ExcelExportUtil {
 
+    private ExcelExportUtil() {
+    }
+
     /**
      * @param entity
      *            表格标题属性

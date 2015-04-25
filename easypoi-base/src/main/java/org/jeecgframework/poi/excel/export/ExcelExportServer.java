@@ -23,7 +23,7 @@ import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +120,7 @@ public class ExcelExportServer extends ExcelExportBase {
                 excelParams.add(indexExcelEntity(entity));
             }
             // 得到所有字段
-            Field fileds[] = POIPublicUtil.getClassFields(pojoClass);
+            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass, null);

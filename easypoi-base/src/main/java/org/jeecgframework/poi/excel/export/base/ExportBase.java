@@ -18,7 +18,7 @@ import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import org.jeecgframework.poi.excel.annotation.ExcelEntity;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 
 /**
  * 导出基础处理,不设计POI,只设计对象,保证复用性
@@ -91,23 +91,23 @@ public class ExportBase {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             // 先判断是不是collection,在判断是不是java自带对象,之后就是我们自己的对象了
-            if (POIPublicUtil.isNotUserExcelUserThis(exclusionsList, field, targetId)) {
+            if (PoiPublicUtil.isNotUserExcelUserThis(exclusionsList, field, targetId)) {
                 continue;
             }
             // 首先判断Excel 可能一下特殊数据用户回自定义处理
             if (field.getAnnotation(Excel.class) != null) {
                 excelParams.add(createExcelExportEntity(field, targetId, pojoClass, getMethods));
-            } else if (POIPublicUtil.isCollection(field.getType())) {
+            } else if (PoiPublicUtil.isCollection(field.getType())) {
                 ExcelCollection excel = field.getAnnotation(ExcelCollection.class);
                 ParameterizedType pt = (ParameterizedType) field.getGenericType();
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
                 List<ExcelExportEntity> list = new ArrayList<ExcelExportEntity>();
                 getAllExcelField(exclusions, StringUtils.isNotEmpty(excel.id()) ? excel.id()
-                    : targetId, POIPublicUtil.getClassFields(clz), list, clz, null);
+                    : targetId, PoiPublicUtil.getClassFields(clz), list, clz, null);
                 excelEntity = new ExcelExportEntity();
                 excelEntity.setName(getExcelName(excel.name(), targetId));
                 excelEntity.setOrderNum(getCellOrder(excel.orderNum(), targetId));
-                excelEntity.setMethod(POIPublicUtil.getMethod(field.getName(), pojoClass));
+                excelEntity.setMethod(PoiPublicUtil.getMethod(field.getName(), pojoClass));
                 excelEntity.setList(list);
                 excelParams.add(excelEntity);
             } else {
@@ -115,10 +115,10 @@ public class ExportBase {
                 if (getMethods != null) {
                     newMethods.addAll(getMethods);
                 }
-                newMethods.add(POIPublicUtil.getMethod(field.getName(), pojoClass));
+                newMethods.add(PoiPublicUtil.getMethod(field.getName(), pojoClass));
                 ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
                 getAllExcelField(exclusions, StringUtils.isNotEmpty(excel.id()) ? excel.id()
-                    : targetId, POIPublicUtil.getClassFields(field.getType()), excelParams,
+                    : targetId, PoiPublicUtil.getClassFields(field.getType()), excelParams,
                     field.getType(), newMethods);
             }
         }
@@ -222,7 +222,7 @@ public class ExportBase {
             : excel.format());
         excelEntity.setStatistics(excel.isStatistics());
         String fieldname = field.getName();
-        excelEntity.setMethod(POIPublicUtil.getMethod(fieldname, pojoClass));
+        excelEntity.setMethod(PoiPublicUtil.getMethod(fieldname, pojoClass));
     }
 
     /**

@@ -17,7 +17,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.export.base.ExportBase;
 import org.jeecgframework.poi.exception.word.WordExportException;
 import org.jeecgframework.poi.exception.word.enmus.WordExportEnum;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
 
 /**
@@ -139,7 +139,7 @@ public class ExcelEntityParse extends ExportBase {
         Map<String, Integer> titlemap = getTitleMap(table, index, entity.getHeadRows());
         try {
             // 得到所有字段
-            Field fileds[] = POIPublicUtil.getClassFields(entity.getClazz());
+            Field fileds[] = PoiPublicUtil.getClassFields(entity.getClazz());
             ExcelTarget etarget = entity.getClazz().getAnnotation(ExcelTarget.class);
             String targetId = null;
             if (etarget != null) {

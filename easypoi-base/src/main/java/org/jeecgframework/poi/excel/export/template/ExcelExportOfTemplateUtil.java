@@ -27,7 +27,7 @@ import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
-import org.jeecgframework.poi.util.POIPublicUtil;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +70,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         Map<String, Integer> titlemap = getTitleMap(params, sheet);
         Drawing patriarch = sheet.createDrawingPatriarch();
         // 得到所有字段
-        Field[] fileds = POIPublicUtil.getClassFields(pojoClass);
+        Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
         ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
         String targetId = null;
         if (etarget != null) {
@@ -201,7 +201,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         if (params.indexOf(".") != -1) {
             String[] paramsArr = params.split("\\.");
             return String
-                .valueOf(POIPublicUtil.getValueDoWhile(map.get(paramsArr[0]), paramsArr, 1));
+                .valueOf(PoiPublicUtil.getValueDoWhile(map.get(paramsArr[0]), paramsArr, 1));
         }
         return map.containsKey(params) ? map.get(params).toString() : "";
     }
@@ -257,7 +257,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      */
     private void setValueForCellByMap(Cell cell, Map<String, Object> map) throws Exception {
         int cellType = cell.getCellType();
-        if (cellType != Cell.CELL_TYPE_STRING && cellType == Cell.CELL_TYPE_NUMERIC) {
+        if (cellType != Cell.CELL_TYPE_STRING && cellType != Cell.CELL_TYPE_NUMERIC) {
             return;
         }
         String oldString;
@@ -340,7 +340,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 row.createCell(i);
         }
         for (int i = 0, max = columns.size(); i < max; i++) {
-            String val = String.valueOf(POIPublicUtil.getValueDoWhile(t, columns.get(i)
+            String val = String.valueOf(PoiPublicUtil.getValueDoWhile(t, columns.get(i)
                 .split("\\."), 0));
             row.getCell(i + columnIndex).setCellValue(val);
             tempCreateCellSet.add(row.getRowNum() + "_" + (i + columnIndex));
