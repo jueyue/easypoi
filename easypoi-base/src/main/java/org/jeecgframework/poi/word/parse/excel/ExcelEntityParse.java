@@ -34,6 +34,8 @@ import org.jeecgframework.poi.exception.word.WordExportException;
 import org.jeecgframework.poi.exception.word.enmus.WordExportEnum;
 import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 解析实体类对象 复用注解
@@ -42,6 +44,8 @@ import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
  * @date 2014年8月9日 下午10:30:57
  */
 public class ExcelEntityParse extends ExportBase {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelEntityParse.class);
 
     private static void checkExcelParams(ExcelListEntity entity) {
         if (entity.getList() == null || entity.getClazz() == null) {
@@ -172,7 +176,7 @@ public class ExcelEntityParse extends ExportBase {
                 index += createCells(index, t, excelParams, table, rowHeight);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

@@ -62,7 +62,7 @@ public class CellValueServer {
         }
         Object result = null;
         // 日期格式比较特殊,和cell格式不一致
-        if (xclass.equals("class java.util.Date")) {
+        if ("class java.util.Date".equals(xclass)) {
             if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
                 // 日期格式
                 result = cell.getDateCellValue();
@@ -156,28 +156,28 @@ public class CellValueServer {
      */
     private Object getValueByType(String xclass, Object result) {
         try {
-            if (xclass.equals("class java.util.Date")) {
+            if ("class java.util.Date".equals(xclass)) {
                 return result;
             }
-            if (xclass.equals("class java.lang.Boolean") || xclass.equals("boolean")) {
+            if ("class java.lang.Boolean".equals(xclass) || "boolean".equals(xclass)) {
                 return Boolean.valueOf(String.valueOf(result));
             }
-            if (xclass.equals("class java.lang.Double") || xclass.equals("double")) {
+            if ("class java.lang.Double".equals(xclass) || "double".equals(xclass)) {
                 return Double.valueOf(String.valueOf(result));
             }
-            if (xclass.equals("class java.lang.Long") || xclass.equals("long")) {
+            if ("class java.lang.Long".equals(xclass) || "long".equals(xclass)) {
                 return Long.valueOf(String.valueOf(result));
             }
-            if (xclass.equals("class java.lang.Float") || xclass.equals("float")) {
+            if ("class java.lang.Float".equals(xclass) || "float".equals(xclass)) {
                 return Float.valueOf(String.valueOf(result));
             }
-            if (xclass.equals("class java.lang.Integer") || xclass.equals("int")) {
+            if ("class java.lang.Integer".equals(xclass) || "int".equals(xclass)) {
                 return Integer.valueOf(String.valueOf(result));
             }
-            if (xclass.equals("class java.math.BigDecimal")) {
+            if ("class java.math.BigDecimal".equals(xclass)) {
                 return new BigDecimal(String.valueOf(result));
             }
-            if (xclass.equals("class java.lang.String")) {
+            if ("class java.lang.String".equals(xclass)) {
                 return String.valueOf(result);
             }
             return result;

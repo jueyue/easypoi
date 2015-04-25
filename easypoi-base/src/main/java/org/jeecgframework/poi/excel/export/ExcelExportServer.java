@@ -49,8 +49,8 @@ import org.slf4j.LoggerFactory;
  * @date 2014年6月17日 下午5:30:54
  */
 public class ExcelExportServer extends ExcelExportBase {
-
-    private final static Logger logger  = LoggerFactory.getLogger(ExcelExportServer.class);
+    
+    private final static Logger LOGGER  = LoggerFactory.getLogger(ExcelExportServer.class);
 
     // 最大行数,超过自动多Sheet
     private int                 MAX_NUM = 60000;
@@ -102,9 +102,9 @@ public class ExcelExportServer extends ExcelExportBase {
 
     public void createSheet(Workbook workbook, ExportParams entity, Class<?> pojoClass,
                             Collection<?> dataSet) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Excel export start ,class is {}", pojoClass);
-            logger.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Excel export start ,class is {}", pojoClass);
+            LOGGER.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
                 : "07");
         }
         if (workbook == null || entity == null || pojoClass == null || dataSet == null) {
@@ -174,8 +174,8 @@ public class ExcelExportServer extends ExcelExportBase {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage(), e);
+             LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
         }
     }
@@ -183,8 +183,8 @@ public class ExcelExportServer extends ExcelExportBase {
     public void createSheetForMap(Workbook workbook, ExportParams entity,
                                   List<ExcelExportEntity> entityList,
                                   Collection<? extends Map<?, ?>> dataSet) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
                 : "07");
         }
         if (workbook == null || entity == null || entityList == null || dataSet == null) {
@@ -247,7 +247,7 @@ public class ExcelExportServer extends ExcelExportBase {
             }
 
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
         }
     }
