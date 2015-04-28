@@ -68,13 +68,13 @@ maven
 版本修改
 --------------------------
  - 2.0.9-release--模板功能更新
- 	-修复了中文路径,float类型导入等bug
- 	-增加了根据CellStyler判断cell类型的功能
- 	-优化了一下代码,sort 的compare 改为类实现接口,getValue统一由public处理
- 	-height和width 都改成double 可能更加准确的调整
- 	-升级到common-lang3
- 	-可以循环解析多个模板
- 	-!!模板增加了多个标签功能
+ 	- 修复了中文路径,float类型导入等bug
+ 	- 增加了根据CellStyler判断cell类型的功能
+ 	- 优化了一下代码,sort 的compare 改为类实现接口,getValue统一由public处理
+ 	- height和width 都改成double 可能更加准确的调整
+ 	- 升级到common-lang3
+ 	- 可以循环解析多个模板
+ 	- !!模板增加了多个标签功能
  - 2.0.8-release--小版本更新
  	- 分开了基础注解和base包,编译maven多模块集成
  	- 加强了Excel导入的校验功能,可以追加错误信息,过滤不合格数据
