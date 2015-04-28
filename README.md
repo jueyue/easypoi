@@ -50,23 +50,31 @@ maven
 		 <dependency>
 			<groupId>org.jeecgframework</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.0.8</version>
+			<version>2.0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecgframework</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.0.8</version>
+			<version>2.0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecgframework</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.0.8</version>
+			<version>2.0.9</version>
 		</dependency>
 ```
 	
 --------------------------
 版本修改
 --------------------------
+ - 2.0.9-release--模板功能更新
+ 	-修复了中文路径,float类型导入等bug
+ 	-增加了根据CellStyler判断cell类型的功能
+ 	-优化了一下代码,sort 的compare 改为类实现接口,getValue统一由public处理
+ 	-height和width 都改成double 可能更加准确的调整
+ 	-升级到common-lang3
+ 	-可以循环解析多个模板
+ 	-!!模板增加了多个标签功能
  - 2.0.8-release--小版本更新
  	- 分开了基础注解和base包,编译maven多模块集成
  	- 加强了Excel导入的校验功能,可以追加错误信息,过滤不合格数据
@@ -121,7 +129,7 @@ EasyPoi 文档
 
 [EasyPoi-新版自定义导出样式类型](http://note.youdao.com/share/?id=7937a9fe15f1016b8f39bf813be894f8&type=note)
 
-[EasyPoi-模板导出的语法介绍](http://blog.csdn.net/qjueyue/article/details/45231801)
+[EasyPoi-标签-模板导出的语法介绍](http://blog.csdn.net/qjueyue/article/details/45231801)
 
 
 --------------------------
@@ -266,16 +274,3 @@ EasyPoi导出实例
         System.out.println(ReflectionToStringBuilder.toString(result.getList().get(i)));
     }
 ```
-
-9.Excel 导出的ForEach **Angelia**的需求 可以到处更加复杂的模板Excel了
-	
-	foreach提供两个语法写法
-	
-	1.createRow的
-		foreach||entitylist{{accountType	projectName	approvedAmount	amountApplied}}	
-		foreach开头,|| 后面是map的key,{{这个里面是各个属性值}}
-	2.不createRow的,如果row不够了还是会create,但是首先会用现成的
-		!foreach||entitylist{{accountType	projectName	approvedAmount	amountApplied}}	
-		!foreach开头,|| 后面是map的key,{{这个里面是各个属性值}}
-		
-	demo是TemplateForEachTest
