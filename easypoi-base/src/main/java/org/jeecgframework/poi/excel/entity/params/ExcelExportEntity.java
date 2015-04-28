@@ -108,7 +108,7 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
     }
 
     public int[] getMergeRely() {
-        return mergeRely;
+        return mergeRely == null ? new int[0] : mergeRely;
     }
 
     public int getOrderNum() {
