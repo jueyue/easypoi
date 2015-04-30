@@ -420,8 +420,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     private List<ExcelTemplateParams> getAllDataColumns(Cell cell, String name) {
         List<ExcelTemplateParams> columns = new ArrayList<ExcelTemplateParams>();
         if (name.contains(END_STR)) {
-            columns.add(new ExcelTemplateParams(name.replace(END_STR, EMPTY), cell.getCellStyle(),
-                cell.getRow().getHeight()));
+            columns.add(new ExcelTemplateParams(name.replace(END_STR, EMPTY).trim(), cell
+                .getCellStyle(), cell.getRow().getHeight()));
             cell.setCellValue("");
             return columns;
         }
