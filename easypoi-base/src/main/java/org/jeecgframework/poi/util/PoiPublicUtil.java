@@ -74,6 +74,9 @@ public final class PoiPublicUtil {
         Object obj = null;
         Method setMethod;
         try {
+            if(clazz.equals(Map.class)){
+                return new HashMap<String, Object>();
+            }
             obj = clazz.newInstance();
             Field[] fields = getClassFields(clazz);
             for (Field field : fields) {
