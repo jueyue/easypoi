@@ -114,12 +114,17 @@ public class CellValueServer {
                            Map<String, ExcelImportEntity> excelParams, String titleString)
                                                                                           throws Exception {
         ExcelImportEntity entity = excelParams.get(titleString);
-        Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0 ? entity
-            .getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
-        Type[] ts = setMethod.getGenericParameterTypes();
-        String xclass = ts[0].toString();
+        String xclass = "class java.lang.Object";
+        if (!(object instanceof Map)) {
+            Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0 ? entity
+                .getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
+            Type[] ts = setMethod.getGenericParameterTypes();
+            xclass = ts[0].toString();
+        }
         Object result = getCellValue(xclass, cell, entity);
-        result = replaceValue(entity.getReplace(), result);
+        if (entity != null) {
+            result = replaceValue(entity.getReplace(), result);
+        }
         result = hanlderValue(dataHanlder, object, result, titleString);
         return getValueByType(xclass, result);
     }
@@ -182,7 +187,7 @@ public class CellValueServer {
             }
             return result;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
         }
     }

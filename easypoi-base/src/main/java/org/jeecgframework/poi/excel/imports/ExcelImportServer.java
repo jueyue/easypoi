@@ -174,13 +174,15 @@ public class ExcelImportServer extends ImportBaseService {
         List collection = new ArrayList();
         Map<String, ExcelImportEntity> excelParams = new HashMap<String, ExcelImportEntity>();
         List<ExcelCollectionParams> excelCollection = new ArrayList<ExcelCollectionParams>();
-        Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
-        ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
         String targetId = null;
-        if (etarget != null) {
-            targetId = etarget.value();
+        if (!Map.class.equals(pojoClass)) {
+            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
+            ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
+            if (etarget != null) {
+                targetId = etarget.value();
+            }
+            getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null);
         }
-        getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null);
         Iterator<Row> rows = sheet.rowIterator();
         for (int j = 0; j < params.getTitleRows(); j++) {
             rows.next();
@@ -217,8 +219,9 @@ public class ExcelImportServer extends ImportBaseService {
                     for (int i = row.getFirstCellNum(), le = row.getLastCellNum(); i < le; i++) {
                         Cell cell = row.getCell(i);
                         String titleString = (String) titlemap.get(i);
-                        if (excelParams.containsKey(titleString)) {
-                            if (excelParams.get(titleString).getType() == 2) {
+                        if (excelParams.containsKey(titleString) || Map.class.equals(pojoClass)) {
+                            if (excelParams.get(titleString) != null
+                                && excelParams.get(titleString).getType() == 2) {
                                 picId = row.getRowNum() + "_" + i;
                                 saveImage(object, picId, excelParams, titleString, pictures, params);
                             } else {
@@ -308,19 +311,22 @@ public class ExcelImportServer extends ImportBaseService {
     private void saveFieldValue(ImportParams params, Object object, Cell cell,
                                 Map<String, ExcelImportEntity> excelParams, String titleString,
                                 Row row) throws Exception {
-        ExcelVerifyHanlderResult verifyResult;
         Object value = cellValueServer.getValue(params.getDataHanlder(), object, cell, excelParams,
             titleString);
-        verifyResult = verifyHandlerServer.verifyData(object, value, titleString,
-            excelParams.get(titleString).getVerify(), params.getVerifyHanlder());
-        if (verifyResult.isSuccess()) {
-            setValues(excelParams.get(titleString), object, value);
+        if (object instanceof Map) {
+            ((Map) object).put(titleString, value);
         } else {
-            Cell errorCell = row.createCell(row.getLastCellNum());
-            errorCell.setCellValue(verifyResult.getMsg());
-            errorCell.setCellStyle(errorCellStyle);
-            verfiyFail = true;
-            throw new ExcelImportException(ExcelImportEnum.VERIFY_ERROR);
+            ExcelVerifyHanlderResult verifyResult = verifyHandlerServer.verifyData(object, value,
+                titleString, excelParams.get(titleString).getVerify(), params.getVerifyHanlder());
+            if (verifyResult.isSuccess()) {
+                setValues(excelParams.get(titleString), object, value);
+            } else {
+                Cell errorCell = row.createCell(row.getLastCellNum());
+                errorCell.setCellValue(verifyResult.getMsg());
+                errorCell.setCellStyle(errorCellStyle);
+                verfiyFail = true;
+                throw new ExcelImportException(ExcelImportEnum.VERIFY_ERROR);
+            }
         }
     }
 
