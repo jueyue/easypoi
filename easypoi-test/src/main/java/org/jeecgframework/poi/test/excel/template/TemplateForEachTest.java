@@ -45,12 +45,21 @@ public class TemplateForEachTest {
         for (int i = 0; i < 4; i++) {
             Map<String, Object> testMap = new HashMap<String, Object>();
 
-            testMap.put("id", i);
+            testMap.put("id", "xman");
             testMap.put("name", "小明" + i);
             testMap.put("sex", "man");
             mapList.add(testMap);
         }
         map.put("maplist", mapList);
+        
+        mapList = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < 6; i++) {
+            Map<String, Object> testMap = new HashMap<String, Object>();
+            
+            testMap.put("si", "xman");
+            mapList.add(testMap);
+        }
+        map.put("sitest", mapList);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         File savefile = new File("d:/");
         if (!savefile.exists()) {

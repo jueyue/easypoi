@@ -96,9 +96,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         if (etarget != null) {
             targetId = etarget.value();
         }
-        // 创建表格样式
-        setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
-            .getConstructor(Workbook.class).newInstance(workbook));
         // 获取实体对象的导出数据
         List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
         getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
@@ -172,6 +169,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         try {
             this.teplateParams = params;
             wb = getCloneWorkBook();
+            // 创建表格样式
+            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+                .getConstructor(Workbook.class).newInstance(wb));
             // step 3. 解析模板
             for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets() : params
                 .getSheetNum().length; i < le; i++) {

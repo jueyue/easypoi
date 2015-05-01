@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
@@ -49,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @date 2014年6月17日 下午5:30:54
  */
 public class ExcelExportServer extends ExcelExportBase {
-    
+
     private final static Logger LOGGER  = LoggerFactory.getLogger(ExcelExportServer.class);
 
     // 最大行数,超过自动多Sheet
@@ -174,7 +175,7 @@ public class ExcelExportServer extends ExcelExportBase {
             }
 
         } catch (Exception e) {
-             LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             LOGGER.error(e.getMessage(), e);
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
         }
@@ -272,15 +273,20 @@ public class ExcelExportServer extends ExcelExportBase {
         CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
         for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
             ExcelExportEntity entity = excelParams.get(i);
-            createStringCell(row, cellIndex, entity.getName(), titleStyle, entity);
+            if (StringUtils.isNoneBlank(entity.getName())) {
+                createStringCell(row, cellIndex, entity.getName(), titleStyle, entity);
+            }
             if (entity.getList() != null) {
                 List<ExcelExportEntity> sTitel = entity.getList();
-                sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex
-                                                                                    + sTitel.size()
-                                                                                    - 1));
+                if (StringUtils.isNoneBlank(entity.getName())) {
+                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex
+                                                                                        + sTitel
+                                                                                            .size()
+                                                                                        - 1));
+                }
                 for (int j = 0, size = sTitel.size(); j < size; j++) {
-                    createStringCell(listRow, cellIndex, sTitel.get(j).getName(), titleStyle,
-                        entity);
+                    createStringCell(rows == 2 ? listRow : row, cellIndex, sTitel.get(j).getName(),
+                        titleStyle, entity);
                     cellIndex++;
                 }
             } else if (rows == 2) {
@@ -301,7 +307,8 @@ public class ExcelExportServer extends ExcelExportBase {
      */
     private int getRowNums(List<ExcelExportEntity> excelParams) {
         for (int i = 0; i < excelParams.size(); i++) {
-            if (excelParams.get(i).getList() != null) {
+            if (excelParams.get(i).getList() != null
+                && StringUtils.isNoneBlank(excelParams.get(i).getName())) {
                 return 2;
             }
         }

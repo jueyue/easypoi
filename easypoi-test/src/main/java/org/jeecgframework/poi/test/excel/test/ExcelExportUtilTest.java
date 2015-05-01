@@ -45,20 +45,20 @@ public class ExcelExportUtilTest {
         FileOutputStream fos = new FileOutputStream("d:/tt.xlsx");
         workbook.write(fos);
         fos.close();
-        savefile = new File("d:/1");
-        if (!savefile.exists()) {
-            savefile.setWritable(true, false);
-            savefile.mkdirs();
-        }
-        fos = new FileOutputStream("d:/1/tt3.xlsx");
-        workbook.write(fos);
-        fos.close();
+//        savefile = new File("d:/1");
+//        if (!savefile.exists()) {
+//            savefile.setWritable(true, false);
+//            savefile.mkdirs();
+//        }
+//        fos = new FileOutputStream("d:/1/tt3.xlsx");
+//        workbook.write(fos);
+//        fos.close();
     }
 
     @Before
     public void testBefore() {
 
-        for (int i = 0; i < 2000000; i++) {
+        for (int i = 0; i < 20; i++) {
             courseEntity = new CourseEntity();
             courseEntity.setId("1131");
             courseEntity.setName("海贼王必修(" + (i + 1) + ")");

@@ -16,27 +16,27 @@ public class StudentEntity implements java.io.Serializable {
     /**
      * id
      */
-    private String       id;
+    private String        id;
     /**
      * 学生姓名
      */
     @Excel(name = "学生姓名", height = 20, width = 30)
-    private String       name;
+    private String        name;
     /**
      * 学生性别
      */
-    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生", mergeVertical = true)
-    private int          sex;
+    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生")
+    private int           sex;
 
-    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd", mergeVertical = true)
-    private Date         birthday;
-    
+    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd")
+    private Date          birthday;
+
     @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd")
-    private java.sql.Time         registrationDate;
+    private java.sql.Time registrationDate;
     /**
      * 课程主键
      */
-    private CourseEntity course;
+    private CourseEntity  course;
 
     public CourseEntity getCourse() {
         return course;
