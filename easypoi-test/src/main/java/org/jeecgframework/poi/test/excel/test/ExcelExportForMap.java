@@ -21,7 +21,7 @@ public class ExcelExportForMap {
     /**
      * Map 测试
      */
-    //@Test
+    @Test
     public void test() {
         try {
             List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
@@ -29,7 +29,7 @@ public class ExcelExportForMap {
             excelentity.setNeedMerge(true);
             entity.add(excelentity);
             entity.add(new ExcelExportEntity("性别", "sex"));
-            excelentity = new ExcelExportEntity("学生", "students");
+            excelentity = new ExcelExportEntity(null, "students");
             List<ExcelExportEntity> temp = new ArrayList<ExcelExportEntity>();
             temp.add(new ExcelExportEntity("姓名", "name"));
             temp.add(new ExcelExportEntity("性别", "sex"));
@@ -65,7 +65,7 @@ public class ExcelExportForMap {
     /**
      * 合并同类项
      */
-    @Test
+    //@Test
     public void testMerge() {
         try {
             List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();

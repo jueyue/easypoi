@@ -30,12 +30,12 @@ public class WordExportUtilBaseExcelTest {
         WordImageEntity image = new WordImageEntity();
         image.setHeight(200);
         image.setWidth(500);
-        image.setUrl("org/jeecgframework/poi/word/img/testCode.png");
+        image.setUrl("org/jeecgframework/poi/test/word/img/testCode.png");
         image.setType(WordImageEntity.URL);
         map.put("testCode", image);
         try {
             XWPFDocument doc = WordExportUtil.exportWord07(
-                "org/jeecgframework/poi/word/doc/Image.docx", map);
+                "org/jeecgframework/poi/test/word/doc/Image.docx", map);
             FileOutputStream fos = new FileOutputStream("d:/image.docx");
             doc.write(fos);
             fos.close();
@@ -68,7 +68,7 @@ public class WordExportUtilBaseExcelTest {
         map.put("pList", list);
         try {
             XWPFDocument doc = WordExportUtil.exportWord07(
-                "org/jeecgframework/poi/word/doc/SimpleExcel.docx", map);
+                "org/jeecgframework/poi/test/word/doc/SimpleExcel.docx", map);
             FileOutputStream fos = new FileOutputStream("d:/simpleExcel.docx");
             doc.write(fos);
             fos.close();

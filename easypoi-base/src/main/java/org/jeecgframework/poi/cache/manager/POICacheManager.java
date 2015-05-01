@@ -43,7 +43,7 @@ public final class POICacheManager {
     private static LoadingCache<String, byte[]> loadingCache;
 
     static {
-        loadingCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).maximumSize(50)
+        loadingCache = CacheBuilder.newBuilder().expireAfterWrite(7, TimeUnit.DAYS).maximumSize(50)
             .build(new CacheLoader<String, byte[]>() {
                 @Override
                 public byte[] load(String url) throws Exception {

@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class ExcelImportUtilTest {
 
-    @Test
+    //@Test
     public void test() {
         try {
             ImportParams params = new ImportParams();
@@ -37,7 +37,7 @@ public class ExcelImportUtilTest {
         }
     }
 
-    // @Test
+    @Test
     public void test2() {
         ImportParams params = new ImportParams();
         params.setTitleRows(1);

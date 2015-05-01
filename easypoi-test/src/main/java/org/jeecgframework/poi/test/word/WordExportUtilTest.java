@@ -32,7 +32,7 @@ public class WordExportUtilTest {
         map.put("testCode", image);
         try {
             XWPFDocument doc = WordExportUtil.exportWord07(
-                "org/jeecgframework/poi/word/doc/Image.docx", map);
+                "org/jeecgframework/poi/test/word/doc/Image.docx", map);
             FileOutputStream fos = new FileOutputStream("d:/image.docx");
             doc.write(fos);
             fos.close();
@@ -54,7 +54,7 @@ public class WordExportUtilTest {
         map.put("date", "2015-01-03");
         try {
             XWPFDocument doc = WordExportUtil.exportWord07(
-                "org/jeecgframework/poi/word/doc/Simple.docx", map);
+                "org/jeecgframework/poi/test/word/doc/Simple.docx", map);
             FileOutputStream fos = new FileOutputStream("d:/simple.docx");
             doc.write(fos);
             fos.close();
