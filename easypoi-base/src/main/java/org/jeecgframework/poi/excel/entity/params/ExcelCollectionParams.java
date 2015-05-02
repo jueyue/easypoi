@@ -31,6 +31,10 @@ public class ExcelCollectionParams {
      */
     private String                         name;
     /**
+     * Excel 列名称
+     */
+    private String                         excelName;
+    /**
      * 实体对象
      */
     private Class<?>                       type;
@@ -61,5 +65,13 @@ public class ExcelCollectionParams {
 
     public void setType(Class<?> type) {
         this.type = type;
+    }
+
+    public String getExcelName() {
+        return excelName;
+    }
+
+    public void setExcelName(String excelName) {
+        this.excelName = excelName;
     }
 }

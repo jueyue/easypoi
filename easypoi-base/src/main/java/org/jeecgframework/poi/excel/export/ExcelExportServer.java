@@ -289,6 +289,7 @@ public class ExcelExportServer extends ExcelExportBase {
                         titleStyle, entity);
                     cellIndex++;
                 }
+                cellIndex--;
             } else if (rows == 2) {
                 createStringCell(listRow, cellIndex, "", titleStyle, entity);
                 sheet.addMergedRegion(new CellRangeAddress(index, index + 1, cellIndex, cellIndex));

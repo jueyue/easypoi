@@ -144,7 +144,7 @@ public class ExcelImportServer extends ImportBaseService {
                 obj = cell.getNumericCellValue();
                 break;
         }
-        return obj == null ? null : obj.toString();
+        return obj == null ? null : obj.toString().trim();
     }
 
     /**
@@ -187,22 +187,8 @@ public class ExcelImportServer extends ImportBaseService {
         for (int j = 0; j < params.getTitleRows(); j++) {
             rows.next();
         }
+        Map<Integer, String> titlemap = getTitleMap(rows, params, excelCollection);
         Row row = null;
-        Iterator<Cell> cellTitle;
-        Map<Integer, String> titlemap = new HashMap<Integer, String>();
-        for (int j = 0; j < params.getHeadRows(); j++) {
-            row = rows.next();
-            cellTitle = row.cellIterator();
-            int i = row.getFirstCellNum();
-            while (cellTitle.hasNext()) {
-                Cell cell = cellTitle.next();
-                String value = getKeyValue(cell);
-                if (!StringUtils.isEmpty(value)) {
-                    titlemap.put(i, value);
-                }
-                i = i + 1;
-            }
-        }
         Object object = null;
         String picId;
         while (rows.hasNext()) {
@@ -242,6 +228,67 @@ public class ExcelImportServer extends ImportBaseService {
             }
         }
         return collection;
+    }
+
+    /**
+     * 获取表格字段列名对应信息
+     * @param rows
+     * @param params
+     * @param excelCollection
+     * @return
+     */
+    private Map<Integer, String> getTitleMap(Iterator<Row> rows, ImportParams params,
+                                             List<ExcelCollectionParams> excelCollection) {
+        Map<Integer, String> titlemap = new HashMap<Integer, String>();
+        Iterator<Cell> cellTitle;
+        String collectionName = null;
+        ExcelCollectionParams collectionParams = null;
+        Row row = null;
+        //还没想到好办法判断
+        for (int j = 0; j < params.getHeadRows(); j++) {
+            row = rows.next();
+            cellTitle = row.cellIterator();
+            while (cellTitle.hasNext()) {
+                Cell cell = cellTitle.next();
+                String value = getKeyValue(cell);
+                int i = cell.getColumnIndex();
+                //用以支持重名导入
+                if (StringUtils.isNotEmpty(value)) {
+                    if (titlemap.containsKey(i)) {
+                        collectionName = titlemap.get(i);
+                        collectionParams = getCollectionParams(excelCollection, collectionName);
+                        titlemap.put(i, collectionName + "_" + value);
+                    } else if (StringUtils.isNotEmpty(collectionName)
+                               && collectionParams.getExcelParams().containsKey(
+                                   collectionName + "_" + value)) {
+                        titlemap.put(i, collectionName + "_" + value);
+                    } else {
+                        collectionName = null;
+                        collectionParams = null;
+                    }
+                    if (StringUtils.isEmpty(collectionName)) {
+                        titlemap.put(i, value);
+                    }
+                }
+            }
+        }
+        return titlemap;
+    }
+
+    /**
+     * 获取这个名称对应的集合信息
+     * @param excelCollection 
+     * @param collectionName
+     * @return
+     */
+    private ExcelCollectionParams getCollectionParams(List<ExcelCollectionParams> excelCollection,
+                                                      String collectionName) {
+        for (ExcelCollectionParams excelCollectionParams : excelCollection) {
+            if (collectionName.equals(excelCollectionParams.getExcelName())) {
+                return excelCollectionParams;
+            }
+        }
+        return null;
     }
 
     /**

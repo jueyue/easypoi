@@ -18,6 +18,7 @@ package org.jeecgframework.poi.excel.imports;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -62,13 +63,16 @@ public class CellValueServer {
         }
         Object result = null;
         // 日期格式比较特殊,和cell格式不一致
-        if ("class java.util.Date".equals(xclass)) {
+        if ("class java.util.Date".equals(xclass) || ("class java.sql.Time").equals(xclass)) {
             if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
                 // 日期格式
                 result = cell.getDateCellValue();
             } else {
                 cell.setCellType(Cell.CELL_TYPE_STRING);
                 result = getDateData(entity, cell.getStringCellValue());
+            }
+            if (("class java.sql.Time").equals(xclass)) {
+                result = new Time(((Date)result).getTime());
             }
         } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
             result = cell.getNumericCellValue();
@@ -123,6 +127,7 @@ public class CellValueServer {
         }
         Object result = getCellValue(xclass, cell, entity);
         if (entity != null) {
+            result = hanlderSuffix(entity.getSuffix(), result);
             result = replaceValue(entity.getReplace(), result);
         }
         result = hanlderValue(dataHanlder, object, result, titleString);
@@ -147,9 +152,24 @@ public class CellValueServer {
         Type[] ts = setMethod.getGenericParameterTypes();
         String xclass = ts[0].toString();
         Object result = cellEntity.getValue();
+        result = hanlderSuffix(entity.getSuffix(), result);
         result = replaceValue(entity.getReplace(), result);
         result = hanlderValue(dataHanlder, object, result, titleString);
         return getValueByType(xclass, result);
+    }
+
+    /**
+     * 把后缀删除掉
+     * @param result 
+     * @param suffix 
+     * @return
+     */
+    private Object hanlderSuffix(String suffix, Object result) {
+        if (StringUtils.isNotEmpty(suffix) && result != null && result.toString().endsWith(suffix)) {
+            String temp = result.toString();
+            return temp.substring(0, temp.length() - suffix.length());
+        }
+        return result;
     }
 
     /**

@@ -28,10 +28,10 @@ public class StudentEntity implements java.io.Serializable {
     @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生")
     private int           sex;
 
-    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd")
+    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
     private Date          birthday;
 
-    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", exportFormat = "yyyy-MM-dd")
+    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
     private java.sql.Time registrationDate;
     /**
      * 课程主键

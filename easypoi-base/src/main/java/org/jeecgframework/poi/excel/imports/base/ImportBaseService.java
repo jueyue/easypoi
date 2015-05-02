@@ -24,12 +24,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.annotation.Excel;
+import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import org.jeecgframework.poi.excel.annotation.ExcelVerify;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelCollectionParams;
@@ -56,8 +59,8 @@ public class ImportBaseService {
      * @throws Exception
      */
     public void addEntityToMap(String targetId, Field field, ExcelImportEntity excelEntity,
-                                Class<?> pojoClass, List<Method> getMethods,
-                                Map<String, ExcelImportEntity> temp) throws Exception {
+                               Class<?> pojoClass, List<Method> getMethods,
+                               Map<String, ExcelImportEntity> temp) throws Exception {
         Excel excel = field.getAnnotation(Excel.class);
         excelEntity = new ExcelImportEntity();
         excelEntity.setType(excel.type());
@@ -66,6 +69,7 @@ public class ImportBaseService {
         excelEntity.setReplace(excel.replace());
         excelEntity.setDatabaseFormat(excel.databaseFormat());
         excelEntity.setVerify(getImportVerify(field));
+        excelEntity.setSuffix(excel.suffix());
         getExcelField(targetId, field, excelEntity, excel, pojoClass);
         if (getMethods != null) {
             List<Method> newMethods = new ArrayList<Method>();
@@ -113,9 +117,9 @@ public class ImportBaseService {
      * @throws Exception
      */
     public void getAllExcelField(String targetId, Field[] fields,
-                                  Map<String, ExcelImportEntity> excelParams,
-                                  List<ExcelCollectionParams> excelCollection, Class<?> pojoClass,
-                                  List<Method> getMethods) throws Exception {
+                                 Map<String, ExcelImportEntity> excelParams,
+                                 List<ExcelCollectionParams> excelCollection, Class<?> pojoClass,
+                                 List<Method> getMethods) throws Exception {
         ExcelImportEntity excelEntity = null;
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
@@ -132,6 +136,8 @@ public class ImportBaseService {
                 collection.setType(clz);
                 getExcelFieldList(targetId, PoiPublicUtil.getClassFields(clz), clz, temp, null);
                 collection.setExcelParams(temp);
+                collection.setExcelName(field.getAnnotation(ExcelCollection.class).name());
+                additionalCollectionName(collection);
                 excelCollection.add(collection);
             } else if (PoiPublicUtil.isJavaClass(field)) {
                 addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, excelParams);
@@ -147,21 +153,35 @@ public class ImportBaseService {
         }
     }
 
+    /**
+     * 追加集合名称到前面
+     * @param collection
+     */
+    private void additionalCollectionName(ExcelCollectionParams collection) {
+        Set<String> keys = new HashSet<String>();
+        keys.addAll(collection.getExcelParams().keySet());
+        for (String key : keys) {
+            collection.getExcelParams().put(collection.getExcelName() + "_" + key,
+                collection.getExcelParams().get(key));
+            collection.getExcelParams().remove(key);
+        }
+    }
+
     public void getExcelField(String targetId, Field field, ExcelImportEntity excelEntity,
-                               Excel excel, Class<?> pojoClass) throws Exception {
+                              Excel excel, Class<?> pojoClass) throws Exception {
         excelEntity.setName(getExcelName(excel.name(), targetId));
         String fieldname = field.getName();
         excelEntity.setMethod(PoiPublicUtil.getMethod(fieldname, pojoClass, field.getType()));
-        if (StringUtils.isEmpty(excel.importFormat())) {
-            excelEntity.setFormat(excel.format());
-        } else {
+        if (StringUtils.isNotEmpty(excel.importFormat())) {
             excelEntity.setFormat(excel.importFormat());
+        } else {
+            excelEntity.setFormat(excel.format());
         }
     }
 
     public void getExcelFieldList(String targetId, Field[] fields, Class<?> pojoClass,
-                                   Map<String, ExcelImportEntity> temp, List<Method> getMethods)
-                                                                                                throws Exception {
+                                  Map<String, ExcelImportEntity> temp, List<Method> getMethods)
+                                                                                               throws Exception {
         ExcelImportEntity excelEntity = null;
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
@@ -213,7 +233,7 @@ public class ImportBaseService {
     }
 
     public void saveThisExcel(ImportParams params, Class<?> pojoClass, boolean isXSSFWorkbook,
-                               Workbook book) throws Exception {
+                              Workbook book) throws Exception {
         String path = PoiPublicUtil.getWebRootPath(getSaveExcelUrl(params, pojoClass));
         File savefile = new File(path);
         if (!savefile.exists()) {
@@ -251,7 +271,7 @@ public class ImportBaseService {
      * @param object
      */
     public void setFieldBySomeMethod(List<Method> setMethods, Object object, Object value)
-                                                                                           throws Exception {
+                                                                                          throws Exception {
         Object t = getFieldBySomeMethod(setMethods, object);
         setMethods.get(setMethods.size() - 1).invoke(t, value);
     }
