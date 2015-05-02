@@ -43,6 +43,10 @@ public class ExcelImportEntity extends ExcelBaseEntity {
      * 校驗參數
      */
     private ExcelVerifyEntity       verify;
+    /**
+     * 后缀
+     */
+    private String                  suffix;
 
     private List<ExcelImportEntity> list;
 
@@ -92,6 +96,14 @@ public class ExcelImportEntity extends ExcelBaseEntity {
 
     public void setVerify(ExcelVerifyEntity verify) {
         this.verify = verify;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
 }

@@ -52,6 +52,8 @@ import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.word.entity.WordImageEntity;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * EASYPOI 的公共基础类
@@ -59,6 +61,8 @@ import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
  * @date 2015年4月5日 上午12:59:22
  */
 public final class PoiPublicUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PoiPublicUtil.class);
 
     private PoiPublicUtil() {
 
@@ -74,7 +78,7 @@ public final class PoiPublicUtil {
         Object obj = null;
         Method setMethod;
         try {
-            if(clazz.equals(Map.class)){
+            if (clazz.equals(Map.class)) {
                 return new HashMap<String, Object>();
             }
             obj = clazz.newInstance();
@@ -94,6 +98,7 @@ public final class PoiPublicUtil {
             }
 
         } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
             throw new RuntimeException("创建对象异常");
         }
         return obj;
@@ -271,6 +276,7 @@ public final class PoiPublicUtil {
         } else if (fieldType.isPrimitive() || fieldType.getPackage() == null
                    || fieldType.getPackage().getName().equals("java.lang")
                    || fieldType.getPackage().getName().equals("java.math")
+                   || fieldType.getPackage().getName().equals("java.sql")
                    || fieldType.getPackage().getName().equals("java.util")) {
             isBaseClass = true;
         }
