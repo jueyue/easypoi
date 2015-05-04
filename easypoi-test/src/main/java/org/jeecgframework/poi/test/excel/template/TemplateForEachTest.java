@@ -40,7 +40,7 @@ public class TemplateForEachTest {
         map.put("entitylist", list);
         map.put("letest", "12345678");
         map.put("fntest", "12345678.2341234");
-        map.put("fdtest", new Date());
+        map.put("fdtest", null);
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < 4; i++) {
             Map<String, Object> testMap = new HashMap<String, Object>();

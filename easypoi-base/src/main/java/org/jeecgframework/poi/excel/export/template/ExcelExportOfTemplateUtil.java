@@ -350,8 +350,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     private void addListDataToExcel(Cell cell, Map<String, Object> map, String name)
                                                                                     throws Exception {
         boolean isCreate = !name.contains(FOREACH_NOT_CREATE);
-        name = name.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH, EMPTY)
-            .replace(START_STR, EMPTY);
+        boolean isShift = name.contains(FOREACH_AND_SHIFT);
+        name = name.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
+            .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
         String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
         Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
         List<ExcelTemplateParams> columns = getAllDataColumns(cell, name.replace(keys[0], EMPTY));
@@ -366,6 +367,12 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             Object t = its.next();
             cell.getRow().setHeight(columns.get(0).getHeight());
             setForEeachCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns, map);
+        }
+        if (isShift) {
+            cell.getRow()
+                .getSheet()
+                .shiftRows(cell.getRowIndex() + 1, cell.getRow().getSheet().getLastRowNum(),
+                    datas.size() - 1, true, true);
         }
         while (its.hasNext()) {
             Object t = its.next();
@@ -398,14 +405,13 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             }
             map.put(teplateParams.getTempParams(), t);
             String val = eval(tempStr, map).toString();
-            if (isNumber) {
+            if (isNumber && StringUtils.isNoneEmpty(val)) {
                 row.getCell(i + columnIndex).setCellValue(Double.parseDouble(val));
                 row.getCell(i + columnIndex).setCellType(Cell.CELL_TYPE_NUMERIC);
-                row.getCell(i + columnIndex).setCellStyle(columns.get(i).getCellStyle());
             } else {
                 row.getCell(i + columnIndex).setCellValue(val);
-                row.getCell(i + columnIndex).setCellStyle(columns.get(i).getCellStyle());
             }
+            row.getCell(i + columnIndex).setCellStyle(columns.get(i).getCellStyle());
             tempCreateCellSet.add(row.getRowNum() + "_" + (i + columnIndex));
         }
 
@@ -419,10 +425,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      */
     private List<ExcelTemplateParams> getAllDataColumns(Cell cell, String name) {
         List<ExcelTemplateParams> columns = new ArrayList<ExcelTemplateParams>();
+        cell.setCellValue("");
         if (name.contains(END_STR)) {
             columns.add(new ExcelTemplateParams(name.replace(END_STR, EMPTY).trim(), cell
                 .getCellStyle(), cell.getRow().getHeight()));
-            cell.setCellValue("");
             return columns;
         }
         columns.add(new ExcelTemplateParams(name.trim(), cell.getCellStyle(), cell.getRow()
@@ -444,7 +450,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 throw new ExcelExportException("for each 当中存在空字符串,请检查模板");
             }
             //把读取过的cell 置为空
-            cell.setCellValue("");
+            tempCell.setCellValue("");
             if (cellStringString.contains(END_STR)) {
                 columns.add(new ExcelTemplateParams(cellStringString.trim().replace(END_STR, ""),
                     tempCell.getCellStyle(), tempCell.getRow().getHeight()));

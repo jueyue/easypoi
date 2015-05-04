@@ -29,6 +29,7 @@ public final class PoiElUtil {
     public static final String LENGTH             = "le:";
     public static final String FOREACH            = "fe:";
     public static final String FOREACH_NOT_CREATE = "!fe:";
+    public static final String FOREACH_AND_SHIFT  = "$fe:";
     public static final String START_STR          = "{{";
     public static final String END_STR            = "}}";
     public static final String NUMBER_SYMBOL      = "n:";
