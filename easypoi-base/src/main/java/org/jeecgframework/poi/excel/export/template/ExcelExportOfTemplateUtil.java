@@ -321,7 +321,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     .toString());
             }
             //如何是数值 类型,就按照数值类型进行设置
-            if (isNumber) {
+            if (isNumber && StringUtils.isNotBlank(oldString)) {
                 cell.setCellValue(Double.parseDouble(oldString));
                 cell.setCellType(Cell.CELL_TYPE_NUMERIC);
             } else {
