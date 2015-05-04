@@ -191,7 +191,8 @@ public class ExcelImportServer extends ImportBaseService {
         Row row = null;
         Object object = null;
         String picId;
-        while (rows.hasNext()) {
+        while (rows.hasNext()
+               && sheet.getLastRowNum() - row.getRowNum() > params.getLastOfInvalidRow()) {
             row = rows.next();
             // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
             if ((row.getCell(params.getKeyIndex()) == null || StringUtils.isEmpty(getKeyValue(row

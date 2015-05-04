@@ -98,7 +98,7 @@ public final class PoiFunctionUtil {
      * @return
      */
     public static String formatDate(Object obj, String format) {
-        if (obj == null) {
+        if (obj == null || obj.toString() == "") {
             return "";
         }
         SimpleDateFormat dateFormat = null;
@@ -148,11 +148,11 @@ public final class PoiFunctionUtil {
      * @return
      */
     private static boolean isGt(Object first, Object second) {
-        if (first == null) {
+        if (first == null || first.toString() == "") {
             return false;
         }
-        if (second == null) {
-            return false;
+        if (second == null || second.toString() == "") {
+            return true;
         }
         double one = Double.valueOf(first.toString());
         double two = Double.valueOf(second.toString());

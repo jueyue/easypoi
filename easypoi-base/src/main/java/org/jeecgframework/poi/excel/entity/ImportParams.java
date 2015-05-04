@@ -58,6 +58,10 @@ public class ImportParams extends ExcelBaseParams {
      * 校验处理接口
      */
     private IExcelVerifyHandler verifyHanlder;
+    /**
+     * 最后的无效行数
+     */
+    private int                 lastOfInvalidRow;
 
     public int getHeadRows() {
         return headRows;
@@ -121,6 +125,14 @@ public class ImportParams extends ExcelBaseParams {
 
     public void setVerifyHanlder(IExcelVerifyHandler verifyHanlder) {
         this.verifyHanlder = verifyHanlder;
+    }
+
+    public int getLastOfInvalidRow() {
+        return lastOfInvalidRow;
+    }
+
+    public void setLastOfInvalidRow(int lastOfInvalidRow) {
+        this.lastOfInvalidRow = lastOfInvalidRow;
     }
 
 }
