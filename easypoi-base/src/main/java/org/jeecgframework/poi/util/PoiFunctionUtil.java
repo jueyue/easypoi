@@ -77,7 +77,7 @@ public final class PoiFunctionUtil {
      * @return
      */
     public static String formatNumber(Object obj, String format) {
-        if (obj == null) {
+        if (obj == null || obj.toString() == "") {
             return "";
         }
         double number = Double.valueOf(obj.toString());
