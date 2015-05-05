@@ -273,12 +273,12 @@ public class ExcelExportServer extends ExcelExportBase {
         CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
         for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
             ExcelExportEntity entity = excelParams.get(i);
-            if (StringUtils.isNoneBlank(entity.getName())) {
+            if (StringUtils.isNotBlank(entity.getName())) {
                 createStringCell(row, cellIndex, entity.getName(), titleStyle, entity);
             }
             if (entity.getList() != null) {
                 List<ExcelExportEntity> sTitel = entity.getList();
-                if (StringUtils.isNoneBlank(entity.getName())) {
+                if (StringUtils.isNotBlank(entity.getName())) {
                     sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex
                                                                                         + sTitel
                                                                                             .size()
@@ -309,7 +309,7 @@ public class ExcelExportServer extends ExcelExportBase {
     private int getRowNums(List<ExcelExportEntity> excelParams) {
         for (int i = 0; i < excelParams.size(); i++) {
             if (excelParams.get(i).getList() != null
-                && StringUtils.isNoneBlank(excelParams.get(i).getName())) {
+                && StringUtils.isNotBlank(excelParams.get(i).getName())) {
                 return 2;
             }
         }

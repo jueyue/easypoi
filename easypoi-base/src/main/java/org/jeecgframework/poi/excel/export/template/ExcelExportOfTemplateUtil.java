@@ -405,7 +405,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             }
             map.put(teplateParams.getTempParams(), t);
             String val = eval(tempStr, map).toString();
-            if (isNumber && StringUtils.isNoneEmpty(val)) {
+            if (isNumber && StringUtils.isNotEmpty(val)) {
                 row.getCell(i + columnIndex).setCellValue(Double.parseDouble(val));
                 row.getCell(i + columnIndex).setCellType(Cell.CELL_TYPE_NUMERIC);
             } else {
