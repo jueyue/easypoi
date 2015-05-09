@@ -50,23 +50,27 @@ maven
 		 <dependency>
 			<groupId>org.jeecgframework</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.0.9</version>
+			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecgframework</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.0.9</version>
+			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecgframework</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.0.9</version>
+			<version>2.1.1</version>
 		</dependency>
 ```
 	
 --------------------------
 版本修改
 --------------------------
+ - 2.1.1-release -小更新/防止下一个预览功能太久不能发布更新
+ 	- $fe标签
+ 	- 几个可能影响使用的bug
+ 	- 导入Map的支持
  - 2.0.9-release--模板功能更新
  	- 修复了中文路径,float类型导入等bug
  	- 增加了根据CellStyler判断cell类型的功能
