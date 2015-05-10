@@ -135,6 +135,8 @@ EasyPoi 文档
 
 [EasyPoi-标签-模板导出的语法介绍](http://blog.csdn.net/qjueyue/article/details/45231801)
 
+[EasyPoi-Excel预览](http://blog.csdn.net/qjueyue/article/details/45620931)
+
 
 --------------------------
 EasyPoi 模板 表达式支持
