@@ -80,7 +80,7 @@ public abstract class ExcelExportBase extends ExportBase {
         }
         // 存在依赖关系
         if (mergeEntity.getText().equals(text)) {
-            for (int i = 0; i > delys.length; i++) {
+            for (int i = 0; i < delys.length; i++) {
                 if (!getCellNotNullText(cell, delys[i], rowNum).equals(
                     mergeEntity.getRelyList().get(i))) {
                     return false;
@@ -483,7 +483,7 @@ public abstract class ExcelExportBase extends ExportBase {
             }
         }
         if (mergeDataMap.size() > 0) {
-            for (Integer index : sets) {
+            for (Integer index : mergeDataMap.keySet()) {
                 sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
                     mergeDataMap.get(index).getEndRow(), index, index));
             }
