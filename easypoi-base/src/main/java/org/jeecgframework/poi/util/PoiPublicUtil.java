@@ -68,6 +68,15 @@ public final class PoiPublicUtil {
 
     }
 
+    @SuppressWarnings({ "unchecked" })
+    public static <K, V> Map<K, V> mapFor(Object... mapping) {
+        Map<K, V> map = new HashMap<K, V>();
+        for (int i = 0; i < mapping.length; i += 2) {
+            map.put((K) mapping[i], (V) mapping[i + 1]);
+        }
+        return map;
+    }
+
     /**
      * 彻底创建一个对象
      * 
