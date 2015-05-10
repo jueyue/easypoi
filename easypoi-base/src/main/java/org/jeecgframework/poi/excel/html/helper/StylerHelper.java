@@ -43,19 +43,23 @@ import org.jeecgframework.poi.util.PoiPublicUtil;
  */
 public class StylerHelper {
 
-    private static String                   DEFAULTS_CLASS_CSS;
+    private static String                   DEFAULTS_CLASS_CSS = ".excelDefaults {background-color: white;color: black;text-decoration: none;direction: ltr;text-transform: none;text-indent: 0;letter-spacing: 0;word-spacing: 0;white-space: normal;unicode-bidi: normal;vertical-align: 0;text-shadow: none;padding: 0;margin: 0;border-collapse: collapse;white-space: pre-wrap;word-wrap: break-word;word-break: break-all;}.excelDefaults td {padding: 1px 5px;border: 1px solid silver;border-color: #000000;text-align: center;vertical-align: middle;font-size: 12pt;}.excelDefaults .colHeader {background-color: silver;font-weight: bold;border: 1px solid black;text-align: center;padding: 1px 5px;}.excelDefaults .rowHeader {background-color: silver;font-weight: bold;border: 1px solid black;text-align: right;padding: 1px 5px;}";
 
-    private static final String             DEFAULTS_CLASS = "excelDefaults";
+    private static final String             DEFAULTS_CLASS     = "excelDefaults";
 
-    private static final Map<Short, String> ALIGN          = PoiPublicUtil.mapFor(ALIGN_LEFT,
-                                                               "left", ALIGN_CENTER, "center",
-                                                               ALIGN_RIGHT, "right", ALIGN_FILL,
-                                                               "left", ALIGN_JUSTIFY, "left",
-                                                               ALIGN_CENTER_SELECTION, "center");
+    private static final Map<Short, String> ALIGN              = PoiPublicUtil
+                                                                   .mapFor(ALIGN_LEFT, "left",
+                                                                       ALIGN_CENTER, "center",
+                                                                       ALIGN_RIGHT, "right",
+                                                                       ALIGN_FILL, "left",
+                                                                       ALIGN_JUSTIFY, "left",
+                                                                       ALIGN_CENTER_SELECTION,
+                                                                       "center");
 
-    private static final Map<Short, String> VERTICAL_ALIGN = PoiPublicUtil.mapFor(VERTICAL_BOTTOM,
-                                                               "bottom", VERTICAL_CENTER, "middle",
-                                                               VERTICAL_TOP, "top");
+    private static final Map<Short, String> VERTICAL_ALIGN     = PoiPublicUtil.mapFor(
+                                                                   VERTICAL_BOTTOM, "bottom",
+                                                                   VERTICAL_CENTER, "middle",
+                                                                   VERTICAL_TOP, "top");
 
     private Formatter                       out;
 
@@ -123,8 +127,8 @@ public class StylerHelper {
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb);
         try {
-            in = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
-                "excelStyle.css")));
+            in = new BufferedReader(new InputStreamReader(
+                StylerHelper.class.getResourceAsStream("excelStyle.css")));
             String line;
             while ((line = in.readLine()) != null) {
                 formatter.format("%s%n", line);
