@@ -118,7 +118,6 @@ public class StylerHelper {
         }
     }
 
-    @SuppressWarnings("resource")
     private String getDefaultsClassCss() {
         BufferedReader in = null;
         StringBuilder sb = new StringBuilder();
@@ -130,6 +129,7 @@ public class StylerHelper {
             while ((line = in.readLine()) != null) {
                 formatter.format("%s%n", line);
             }
+            return formatter.toString();
         } catch (IOException e) {
             throw new IllegalStateException("Reading standard css", e);
         } finally {
@@ -140,8 +140,8 @@ public class StylerHelper {
                     throw new IllegalStateException("Reading standard css", e);
                 }
             }
+            formatter.close();
         }
-        return formatter.toString();
     }
 
     private void printStyle(CellStyle style) {
