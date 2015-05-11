@@ -93,7 +93,7 @@ public class StylerHelper {
     }
 
     private void prontFonts(Workbook wb) {
-        for (short i = 0, le = wb.getNumberOfFonts(); i < le; i++) {
+        for (short i = 0, le = wb.getNumberOfFonts(); i <= le; i++) {
             Font font = wb.getFontAt(i);
             out.format(".%s .%s {%n", DEFAULTS_CLASS, "font_" + i + "_" + cssRandom);
             fontStyle(font);

@@ -83,18 +83,27 @@ public class ExcelToHtmlServer {
     }
 
     private void printSheet(Sheet sheet) {
-        out.format("<table style='word-break:break-all' class=%s>%n", DEFAULTS_CLASS);
+        out.format("<table class='%s' width='%s'>%n", DEFAULTS_CLASS, getTableWidth(sheet));
         printCols(sheet);
         printSheetContent(sheet);
         out.format("</table>%n");
     }
 
     private void printCols(Sheet sheet) {
-        out.format("<col/>%n");
+        //out.format("<col/>%n");
         ensureColumnBounds(sheet);
         for (int i = firstColumn; i < endColumn; i++) {
             out.format("<col style='width:%spx;' />%n", sheet.getColumnWidth(i) / 32);
         }
+    }
+
+    private int getTableWidth(Sheet sheet) {
+        ensureColumnBounds(sheet);
+        int width = 0;
+        for (int i = firstColumn; i < endColumn; i++) {
+            width = width + (sheet.getColumnWidth(i) / 32);
+        }
+        return width;
     }
 
     private void ensureColumnBounds(Sheet sheet) {
@@ -134,7 +143,7 @@ public class ExcelToHtmlServer {
     }
 
     private void printSheetContent(Sheet sheet) {
-        printColumnHeads(sheet);
+        //printColumnHeads(sheet);
         MergedRegionHelper mergedRegionHelper = new MergedRegionHelper(sheet);
         CellValueHelper cellValueHelper = new CellValueHelper(wb, cssRandom);
         out.format("<tbody>%n");
@@ -143,7 +152,7 @@ public class ExcelToHtmlServer {
         while (rows.hasNext()) {
             Row row = rows.next();
             out.format("  <tr style='height:%spx;'>%n", row.getHeight() / 15);
-            out.format("    <td class='%s'>%d</td>%n", ROW_HEAD_CLASS, row.getRowNum() + 1);
+            //out.format("    <td class='%s'>%d</td>%n", ROW_HEAD_CLASS, row.getRowNum() + 1);
             for (int i = firstColumn; i < endColumn; i++) {
                 if (mergedRegionHelper.isNeedCreate(rowIndex, i)) {
                     String content = "&nbsp;";

@@ -28,25 +28,34 @@ public class MergedRegionHelper {
             handerMergedString(sheet.getMergedRegion(i).formatAsString());
         }
     }
-    
+
     /**
      * 根据合并输出内容,处理合并单元格事情
      * @param formatAsString
      */
     private void handerMergedString(String formatAsString) {
         String[] strArr = formatAsString.split(":");
-        int startCol = strArr[0].charAt(0) - 65;
-        int startRol = Integer.valueOf(strArr[0].substring(1));
-        int endCol = strArr[1].charAt(0) - 65;
-        int endRol = Integer.valueOf(strArr[1].substring(1));
-        mergedCache.put(startRol + "_" + startCol, new Integer[] { endRol - startRol + 1,
-                endCol - startCol + 1 });
-        for (int i = startRol; i <= endRol; i++) {
-            for (int j = startCol; j <= endCol; j++) {
-                notNeedCread.add(i + "_" + j);
+        if (strArr.length == 2) {
+            int startCol = strArr[0].charAt(0) - 65;
+            if (strArr[0].charAt(1) >= 65) {
+                startCol = (startCol + 1) * 26 + (strArr[0].charAt(1) - 65);
             }
+            int startRol = Integer.valueOf(strArr[0].substring(strArr[0].charAt(1) >= 65 ? 2 : 1));
+            int endCol = strArr[1].charAt(0) - 65;
+            if (strArr[1].charAt(1) >= 65) {
+                endCol = (endCol + 1) * 26 + (strArr[1].charAt(1) - 65);
+            }
+            int endRol = Integer.valueOf(strArr[1].substring(strArr[1].charAt(1) >= 65 ? 2 : 1));
+            mergedCache.put(startRol + "_" + startCol, new Integer[] { endRol - startRol + 1,
+                    endCol - startCol + 1 });
+            for (int i = startRol; i <= endRol; i++) {
+                for (int j = startCol; j <= endCol; j++) {
+                    notNeedCread.add(i + "_" + j);
+                }
+            }
+            notNeedCread.remove(startRol + "_" + startCol);
         }
-        notNeedCread.remove(startRol + "_" + startCol);
+
     }
 
     /**
@@ -78,4 +87,5 @@ public class MergedRegionHelper {
     public Integer[] getRowAndColSpan(int row, int col) {
         return mergedCache.get(row + "_" + col);
     }
+
 }

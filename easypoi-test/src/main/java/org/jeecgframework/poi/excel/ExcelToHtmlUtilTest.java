@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class ExcelToHtmlUtilTest {
 
-    @Test
+    //@Test
     public void testToTableHtmlWorkbook() {
         try {
             Workbook wb = new HSSFWorkbook(new FileInputStream(
@@ -33,7 +33,7 @@ public class ExcelToHtmlUtilTest {
         }
     }
 
-    @Test
+    //@Test
     public void testToTableHtmlWorkbookInt() {
         try {
             Workbook wb = new HSSFWorkbook(new FileInputStream(new File(
@@ -55,10 +55,12 @@ public class ExcelToHtmlUtilTest {
 
         try {
             Workbook wb = new HSSFWorkbook(new FileInputStream(
-                new File(
-                    PoiPublicUtil
-                        .getWebRootPath("org/jeecgframework/poi/test/excel/doc/专项支出用款申请书.xls"))));
-            String html = ExcelToHtmlUtil.toAllHtml(wb);
+                new File("d:/tt.xls")));
+//            Workbook wb = new HSSFWorkbook(new FileInputStream(
+//                new File(
+//                    PoiPublicUtil
+//                    .getWebRootPath("org/jeecgframework/poi/test/excel/doc/专项支出用款申请书.xls"))));
+            String html = ExcelToHtmlUtil.toTableHtml(wb);
             FileWriter fw = new FileWriter("d:/专项支出用款申请书_all.html");
             fw.write(html);
             fw.close();
@@ -69,7 +71,7 @@ public class ExcelToHtmlUtilTest {
         }
     }
 
-    @Test
+    //@Test
     public void testToAllHtmlWorkbookInt() {
         try {
             Workbook wb = new HSSFWorkbook(new FileInputStream(new File(
