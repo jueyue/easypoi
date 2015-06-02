@@ -141,7 +141,8 @@ public class ExcelExportServer extends ExcelExportBase {
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass, null);
             sortAllParams(excelParams);
-            int index = createHeaderAndTitle(entity, sheet, workbook, excelParams);
+            int index = entity.isCreateHeadRows() ? createHeaderAndTitle(entity, sheet, workbook,
+                excelParams) : 0;
             int titleHeight = index;
             setCellWith(excelParams, sheet);
             short rowHeight = getRowHeight(excelParams);
@@ -217,7 +218,8 @@ public class ExcelExportServer extends ExcelExportBase {
             }
             excelParams.addAll(entityList);
             sortAllParams(excelParams);
-            int index = createHeaderAndTitle(entity, sheet, workbook, excelParams);
+            int index = entity.isCreateHeadRows() ? createHeaderAndTitle(entity, sheet, workbook,
+                excelParams) : 0;
             int titleHeight = index;
             setCellWith(excelParams, sheet);
             short rowHeight = getRowHeight(excelParams);
