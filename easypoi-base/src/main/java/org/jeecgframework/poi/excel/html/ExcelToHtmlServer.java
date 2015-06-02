@@ -124,6 +124,8 @@ public class ExcelToHtmlServer {
         gotBounds = true;
     }
 
+    @SuppressWarnings("unused")
+    /**本来是用来生成 A，B 那个列名称的**/
     private void printColumnHeads(Sheet sheet) {
         out.format("<thead>%n");
         out.format("  <tr class=%s>%n", COL_HEAD_CLASS);

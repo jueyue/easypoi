@@ -82,6 +82,10 @@ public class ExportParams extends ExcelBaseParams {
      * Excel 导出style
      */
     private Class<?>  style             = ExcelExportStylerDefaultImpl.class;
+    /**
+     * 是否创建表头
+     */
+    private boolean   isCreateHeadRows  = true;
 
     public ExportParams() {
 
@@ -206,6 +210,14 @@ public class ExportParams extends ExcelBaseParams {
 
     public void setFreezeCol(int freezeCol) {
         this.freezeCol = freezeCol;
+    }
+
+    public boolean isCreateHeadRows() {
+        return isCreateHeadRows;
+    }
+
+    public void setCreateHeadRows(boolean isCreateHeadRows) {
+        this.isCreateHeadRows = isCreateHeadRows;
     }
 
 }
