@@ -58,7 +58,7 @@ public class ExcelExportUtilTest {
     @Before
     public void testBefore() {
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 20000; i++) {
             courseEntity = new CourseEntity();
             courseEntity.setId("1131");
             courseEntity.setName("海贼王必修(" + (i + 1) + ")");
