@@ -37,7 +37,7 @@ public class ExcelExportMsgClient {
         }
         
         List<MsgClient> list = new ArrayList<MsgClient>();
-        for (int i = 0; i < 50000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             MsgClient client = new MsgClient();
             client.setBirthday(new Date());
             client.setClientName("小明" + i);
