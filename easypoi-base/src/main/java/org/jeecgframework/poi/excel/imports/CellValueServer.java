@@ -72,7 +72,7 @@ public class CellValueServer {
                 result = getDateData(entity, cell.getStringCellValue());
             }
             if (("class java.sql.Time").equals(xclass)) {
-                result = new Time(((Date)result).getTime());
+                result = new Time(((Date) result).getTime());
             }
         } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
             result = cell.getNumericCellValue();
@@ -131,7 +131,7 @@ public class CellValueServer {
             result = replaceValue(entity.getReplace(), result);
         }
         result = hanlderValue(dataHanlder, object, result, titleString);
-        return getValueByType(xclass, result);
+        return getValueByType(xclass, result, entity);
     }
 
     /**
@@ -155,7 +155,7 @@ public class CellValueServer {
         result = hanlderSuffix(entity.getSuffix(), result);
         result = replaceValue(entity.getReplace(), result);
         result = hanlderValue(dataHanlder, object, result, titleString);
-        return getValueByType(xclass, result);
+        return getValueByType(xclass, result, entity);
     }
 
     /**
@@ -177,9 +177,10 @@ public class CellValueServer {
      * 
      * @param xclass
      * @param result
+     * @param entity 
      * @return
      */
-    private Object getValueByType(String xclass, Object result) {
+    private Object getValueByType(String xclass, Object result, ExcelImportEntity entity) {
         try {
             if ("class java.util.Date".equals(xclass)) {
                 return result;
@@ -203,6 +204,14 @@ public class CellValueServer {
                 return new BigDecimal(String.valueOf(result));
             }
             if ("class java.lang.String".equals(xclass)) {
+                //针对String 类型,但是Excel获取的数据却不是String,比如Double类型,防止科学计数法
+                if (result instanceof String) {
+                    return result;
+                }
+                // 想要的结果是long
+                if (entity.getType() == 4 && result instanceof Double) {
+                    result = String.valueOf(((Double) result).longValue());
+                }
                 return String.valueOf(result);
             }
             return result;
