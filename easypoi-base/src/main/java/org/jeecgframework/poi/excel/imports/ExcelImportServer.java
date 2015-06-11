@@ -143,6 +143,9 @@ public class ExcelImportServer extends ImportBaseService {
             case Cell.CELL_TYPE_NUMERIC:
                 obj = cell.getNumericCellValue();
                 break;
+            case Cell.CELL_TYPE_FORMULA:
+                obj = cell.getCellFormula();
+                break;
         }
         return obj == null ? null : obj.toString().trim();
     }
