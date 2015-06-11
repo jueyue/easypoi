@@ -45,7 +45,9 @@ EasyPoi的几个入口工具类
 --------------------------
 maven 
 --------------------------
-用的oschina的第三方库http://maven.oschina.net/content/repositories/thirdparty/
+maven库应该都可以了
+SNAPSHOT 版本
+https://oss.sonatype.org/content/repositories/snapshots/
 ```xml
 		 <dependency>
 			<groupId>org.jeecgframework</groupId>
