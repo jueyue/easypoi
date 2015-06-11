@@ -1,37 +1,49 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jeecgframework</groupId>
+	<groupId>org.jeecg</groupId>
 	<artifactId>easypoi</artifactId>
-	<version>2.1.2-SNAPSHOT</version>
+	<version>2.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>easypoi</name>
 	<modules>
 		<module>easypoi-base</module>
 		<module>easypoi-web</module>
-		<module>easypoi-test</module>
 		<module>easypoi-annotation</module>
 	</modules>
 
-	<url>www.jeecg.org</url>
+	<url>http://git.oschina.net/jueyue/easypoi</url>
 	<description> office 工具类 基于 poi</description>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<developerConnection>scm:https://git.oschina.net/jueyue/easypoi.git</developerConnection>
+		<connection>scm:https://git.oschina.net/jueyue/easypoi.git</connection>
+	</scm>
 
 	<developers>
 		<developer>
 			<name>JueYue</name>
 			<email>qrb.jueyue@gmail.com</email>
+			<organization>Jeecg</organization>
+			<organizationUrl>http://www.jeecg.org</organizationUrl>
 		</developer>
 	</developers>
 
 	<properties>
-		<sub.version>2.1.2-SNAPSHOT</sub.version>
+		<sub.version>2.2.0-SNAPSHOT</sub.version>
 		<poi.version>3.9</poi.version>
 		<xerces.version>2.9.1</xerces.version>
 		<guava.version>16.0.1</guava.version>
 		<commons-lang.version>3.2.1</commons-lang.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<spring.version>3.1.1.RELEASE</spring.version>
-		<junit.version>4.7</junit.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -46,7 +58,7 @@
 				<artifactId>poi-ooxml</artifactId>
 				<version>${poi.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml-schemas</artifactId>
@@ -118,22 +130,14 @@
 				<optional>true</optional>
 			</dependency>
 
-			<!-- test -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
-			</dependency>
-
 			<!-- 模块版本 -->
 			<dependency>
-				<groupId>org.jeecgframework</groupId>
+				<groupId>org.jeecg</groupId>
 				<artifactId>easypoi-base</artifactId>
 				<version>${sub.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.jeecgframework</groupId>
+				<groupId>org.jeecg</groupId>
 				<artifactId>easypoi-annotation</artifactId>
 				<version>${sub.version}</version>
 			</dependency>
@@ -143,41 +147,93 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.5</version>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<useReleaseProfile>false</useReleaseProfile>
+					<releaseProfiles>release</releaseProfiles>
+					<goals>deploy</goals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.0</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<showWarnings>true</showWarnings>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<attach>true</attach>
-				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
 				<executions>
 					<execution>
-						<phase>compile</phase>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
 						<goals>
 							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
 	<distributionManagement>
 		<repository>
-			<id>postaop-common-release</id>
-			<url>http://172.16.100.99:8081/nexus/content/repositories/postaop-common-release/</url>
+			<id>oss-release</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>postaop-common-snapshot</id>
-			<url>http://172.16.100.99:8081/nexus/content/repositories/postaop-common-snapshot/</url>
+			<id>oss-snapshot</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
