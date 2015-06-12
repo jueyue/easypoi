@@ -50,19 +50,19 @@ SNAPSHOT 版本
 https://oss.sonatype.org/content/repositories/snapshots/
 ```xml
 		 <dependency>
-			<groupId>org.jeecgframework</groupId>
+			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.1.1</version>
+			<version>2.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jeecgframework</groupId>
+			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.1.1</version>
+			<version>2.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jeecgframework</groupId>
+			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.1.1</version>
+			<version>2.2.0</version>
 		</dependency>
 ```
 	
@@ -70,11 +70,12 @@ https://oss.sonatype.org/content/repositories/snapshots/
 版本修改
 --------------------------
 
- - 2.2.0-SNAPSHOT
- 	- !!!没有功能更新,但是groupId 改成org.jeecg,为了以后可以直接提交到中央库了
+ - 2.2.0
+ 	- groupId 改成org.jeecg,为了以后可以直接提交到中央库了
  	- 把test 那个模块删除了
- 	
- 	
+ 	- 提供了Excel 预览的功能
+ 	- type 新增一个 4类型,用于Excel是数字,但是java 是String,防止科学计数法
+ 	- 修复一些bug
  - 2.1.1-release -小更新/防止下一个预览功能太久不能发布更新
  	- $fe标签
  	- 几个可能影响使用的bug
