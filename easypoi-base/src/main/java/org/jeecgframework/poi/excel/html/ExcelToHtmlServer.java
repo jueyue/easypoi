@@ -31,7 +31,7 @@ public class ExcelToHtmlServer {
     private int                 firstColumn;
     private int                 endColumn;
     private static final String COL_HEAD_CLASS = "colHeader";
-    private static final String ROW_HEAD_CLASS = "rowHeader";
+    //private static final String ROW_HEAD_CLASS = "rowHeader";
 
     private static final String DEFAULTS_CLASS = "excelDefaults";
 
