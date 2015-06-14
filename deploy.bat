@@ -1,1 +1,1 @@
-cmd /k mvn clean deploy -D skipTest
+cmd /k mvn clean deploy -Dmaven.test.skip=true -Dgpg.passphrase=jeecg123456

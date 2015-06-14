@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -458,6 +459,20 @@ public final class PoiPublicUtil {
         }
         return (index == paramsArr.length - 1) ? (object == null ? "" : object) : getValueDoWhile(
             object, paramsArr, ++index);
+    }
+
+    /**
+     * double to String 防止科学计数法
+     * @param value
+     * @return
+     */
+    public static String doubleToString(Double value) {
+        String temp = value.toString();
+        if (temp.contains("E")) {
+            BigDecimal bigDecimal = new BigDecimal(temp);
+            temp = bigDecimal.toPlainString();
+        }
+        return temp;
     }
 
 }

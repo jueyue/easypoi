@@ -33,6 +33,7 @@ import org.jeecgframework.poi.excel.entity.sax.SaxReadCellEntity;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelImportEnum;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -208,9 +209,9 @@ public class CellValueServer {
                 if (result instanceof String) {
                     return result;
                 }
-                // 想要的结果是long
-                if (entity.getType() == 4 && result instanceof Double) {
-                    result = String.valueOf(((Double) result).longValue());
+                // double类型防止科学计数法
+                if (result instanceof Double) {
+                    return PoiPublicUtil.doubleToString((Double) result);
                 }
                 return String.valueOf(result);
             }

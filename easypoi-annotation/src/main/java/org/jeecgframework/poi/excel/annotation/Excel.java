@@ -107,7 +107,7 @@ public @interface Excel {
     public String savePath() default "upload";
 
     /**
-     * 导出类型 1 是文本 2 是图片,3是函数 默认是文本 ,4 String-Long型 
+     * 导出类型 1 是文本 2 是图片,3是函数 默认是文本
      */
     public int type() default 1;
 
