@@ -15,6 +15,8 @@
  */
 package org.jeecgframework.poi.handler.impl;
 
+import java.util.Map;
+
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
 
 /**
@@ -47,6 +49,11 @@ public abstract class ExcelDataHandlerDefaultImpl implements IExcelDataHandler {
     @Override
     public void setNeedHandlerFields(String[] needHandlerFields) {
         this.needHandlerFields = needHandlerFields;
+    }
+
+    @Override
+    public void setMapValue(Map<String, Object> map, String originKey, Object value) {
+        map.put(originKey, value);
     }
 
 }

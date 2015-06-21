@@ -15,6 +15,8 @@
  */
 package org.jeecgframework.poi.handler.inter;
 
+import java.util.Map;
+
 /**
  * Excel 导入导出 数据处理接口
  * 
@@ -61,5 +63,13 @@ public interface IExcelDataHandler {
      * @param fields
      */
     public void setNeedHandlerFields(String[] fields);
+
+    /**
+     * 设置Map导入,自定义 put
+     * @param map
+     * @param originKey
+     * @param value
+     */
+    public void setMapValue(Map<String, Object> map, String originKey, Object value);
 
 }

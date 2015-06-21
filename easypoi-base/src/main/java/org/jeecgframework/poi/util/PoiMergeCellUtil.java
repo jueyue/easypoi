@@ -31,6 +31,19 @@ public final class PoiMergeCellUtil {
      * @param startRow 开始行
      */
     public static void mergeCells(Sheet sheet, Map<Integer, int[]> mergeMap, int startRow) {
+        mergeCells(sheet, mergeMap, startRow, sheet.getLastRowNum());
+    }
+
+    /**
+     * 纵向合并相同内容的单元格
+     * 
+     * @param sheet
+     * @param mergeMap key--列,value--依赖的列,没有传空
+     * @param startRow 开始行
+     * @param endRow 结束行
+     */
+    public static void mergeCells(Sheet sheet, Map<Integer, int[]> mergeMap, int startRow,
+                                  int endRow) {
         Map<Integer, MergeEntity> mergeDataMap = new HashMap<Integer, MergeEntity>();
         if (mergeMap.size() == 0) {
             return;
@@ -38,11 +51,11 @@ public final class PoiMergeCellUtil {
         Row row;
         Set<Integer> sets = mergeMap.keySet();
         String text;
-        for (int i = startRow; i <= sheet.getLastRowNum(); i++) {
+        for (int i = startRow; i <= endRow; i++) {
             row = sheet.getRow(i);
             for (Integer index : sets) {
-                if (row.getCell(index) == null) {
-                    mergeDataMap.get(index).setEndRow(i);
+                if (row == null || row.getCell(index) == null) {
+                    mergeDataMap.get(index).setEndRow(i - 1);
                 } else {
                     text = row.getCell(index).getStringCellValue();
                     if (StringUtils.isNotEmpty(text)) {
