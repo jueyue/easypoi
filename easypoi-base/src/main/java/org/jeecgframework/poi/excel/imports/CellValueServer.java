@@ -233,7 +233,8 @@ public class CellValueServer {
      */
     private Object hanlderValue(IExcelDataHandler dataHanlder, Object object, Object result,
                                 String titleString) {
-        if (dataHanlder == null) {
+        if (dataHanlder == null || dataHanlder.getNeedHandlerFields() == null
+            || dataHanlder.getNeedHandlerFields().length == 0) {
             return result;
         }
         if (hanlderList == null) {
