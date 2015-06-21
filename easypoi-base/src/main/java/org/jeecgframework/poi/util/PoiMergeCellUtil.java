@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jeecgframework.poi.excel.entity.params.MergeEntity;
+import org.jeecgframework.poi.exception.excel.ExcelExportException;
 
 /**
  * 纵向合并单元格工具类
@@ -21,6 +22,24 @@ import org.jeecgframework.poi.excel.entity.params.MergeEntity;
 public final class PoiMergeCellUtil {
 
     private PoiMergeCellUtil() {
+    }
+
+    /**
+     * 纵向合并相同内容的单元格
+     * 
+     * @param sheet
+     * @param startRow 开始行
+     * @param columns 需要处理的列
+     */
+    public static void mergeCells(Sheet sheet, int startRow, Integer... columns) {
+        if (columns == null) {
+            throw new ExcelExportException("至少需要处理1列");
+        }
+        Map<Integer, int[]> mergeMap = new HashMap<Integer, int[]>();
+        for (int i = 0; i < columns.length; i++) {
+            mergeMap.put(columns[i], null);
+        }
+        mergeCells(sheet, mergeMap, startRow, sheet.getLastRowNum());
     }
 
     /**
@@ -55,7 +74,12 @@ public final class PoiMergeCellUtil {
             row = sheet.getRow(i);
             for (Integer index : sets) {
                 if (row == null || row.getCell(index) == null) {
-                    mergeDataMap.get(index).setEndRow(i - 1);
+                    if (mergeDataMap.get(index) == null) {
+                        continue;
+                    }
+                    if (mergeDataMap.get(index).getEndRow() == 0) {
+                        mergeDataMap.get(index).setEndRow(i - 1);
+                    }
                 } else {
                     text = row.getCell(index).getStringCellValue();
                     if (StringUtils.isNotEmpty(text)) {
@@ -122,10 +146,13 @@ public final class PoiMergeCellUtil {
 
     private static MergeEntity createMergeEntity(String text, int rowNum, Cell cell, int[] delys) {
         MergeEntity mergeEntity = new MergeEntity(text, rowNum, rowNum);
-        List<String> list = new ArrayList<String>(delys.length);
-        mergeEntity.setRelyList(list);
-        for (int i = 0; i < delys.length; i++) {
-            list.add(getCellNotNullText(cell, delys[i], rowNum));
+        // 存在依赖关系
+        if (delys != null && delys.length != 0) {
+            List<String> list = new ArrayList<String>(delys.length);
+            mergeEntity.setRelyList(list);
+            for (int i = 0; i < delys.length; i++) {
+                list.add(getCellNotNullText(cell, delys[i], rowNum));
+            }
         }
         return mergeEntity;
     }
