@@ -366,7 +366,11 @@ public class ExcelImportServer extends ImportBaseService {
         Object value = cellValueServer.getValue(params.getDataHanlder(), object, cell, excelParams,
             titleString);
         if (object instanceof Map) {
-            ((Map) object).put(titleString, value);
+            if (params.getDataHanlder() != null) {
+                params.getDataHanlder().setMapValue((Map) object, titleString, value);
+            } else {
+                ((Map) object).put(titleString, value);
+            }
         } else {
             ExcelVerifyHanlderResult verifyResult = verifyHandlerServer.verifyData(object, value,
                 titleString, excelParams.get(titleString).getVerify(), params.getVerifyHanlder());
