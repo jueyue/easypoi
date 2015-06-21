@@ -71,7 +71,7 @@ https://oss.sonatype.org/content/repositories/snapshots/
 版本修改
 --------------------------
 
- - 2.2.0
+ - 2.1.2
  	- groupId 改成org.jeecg,为了以后可以直接提交到中央库了
  	- 把test 那个模块删除了
  	- 提供了Excel 预览的功能
@@ -291,3 +291,11 @@ EasyPoi导出实例
         System.out.println(ReflectionToStringBuilder.toString(result.getList().get(i)));
     }
 ```
+
+9.导入Map
+	设置导入参数,传入文件或者流,即可获得相应的list,自定义Key,需要实现IExcelDataHandler接口
+```Java
+	ImportParams params = new ImportParams();
+	List<Map<String,Object>> list = ExcelImportUtil.importExcel(new File(
+			"d:/tt.xls"), Map.class, params);
+```	
