@@ -249,9 +249,11 @@ public class ExcelImportServer extends ImportBaseService {
         String collectionName = null;
         ExcelCollectionParams collectionParams = null;
         Row row = null;
-        //还没想到好办法判断
         for (int j = 0; j < params.getHeadRows(); j++) {
             row = rows.next();
+            if(row == null){
+                continue;
+            }
             cellTitle = row.cellIterator();
             while (cellTitle.hasNext()) {
                 Cell cell = cellTitle.next();
