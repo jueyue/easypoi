@@ -179,6 +179,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     && StringUtils.isNotEmpty(params.getSheetName()[i])) {
                     wb.setSheetName(i, params.getSheetName()[i]);
                 }
+                tempCreateCellSet.clear();
                 parseTemplate(wb.getSheetAt(i), map);
             }
             if (dataSet != null) {
