@@ -53,23 +53,30 @@ https://oss.sonatype.org/content/repositories/snapshots/
 		 <dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.1.2</version>
+			<version>2.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.1.2</version>
+			<version>2.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.1.2</version>
+			<version>2.1.3</version>
 		</dependency>
 ```
 	
 --------------------------
 版本修改
 --------------------------
+
+ - 2.1.3
+ 	- 屏蔽了科学计数法的问题
+ 	- 修复了多模版记得清空记录信息
+ 	- 加入了map setValue的接口,用以自定义setValue,主要是可以自定义key
+ 	- 把合并单元格的数据提起出来,让大家都可以复用
+ 	- 多个sheet导出问题
 
  - 2.1.2
  	- groupId 改成org.jeecg,为了以后可以直接提交到中央库了
