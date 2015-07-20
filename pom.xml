@@ -23,10 +23,10 @@
 	</licenses>
 
 	<scm>
-        <connection>scm:git@git.oschina.net:jueyue/easypoi.git</connection>
-        <developerConnection>scm:git@git.oschina.net:jueyue/easypoi.git</developerConnection>
-        <url>git@git.oschina.net:jueyue/easypoi.git</url>
-    </scm>
+		<connection>scm:git@git.oschina.net:jueyue/easypoi.git</connection>
+		<developerConnection>scm:git@git.oschina.net:jueyue/easypoi.git</developerConnection>
+		<url>git@git.oschina.net:jueyue/easypoi.git</url>
+	</scm>
 
 	<developers>
 		<developer>
@@ -63,6 +63,12 @@
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml-schemas</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>xerces</groupId>
+						<artifactId>xercesImpl</artifactId>
+					</exclusion>
+				</exclusions>
 				<version>${poi.version}</version>
 			</dependency>
 			<!-- sax 读取时候用到的 -->
@@ -76,6 +82,7 @@
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-scratchpad</artifactId>
 				<version>${poi.version}</version>
+				<optional>true</optional>
 			</dependency>
 
 			<!-- google 工具类 -->

@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +44,6 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
-import org.jeecgframework.poi.excel.entity.params.MergeEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.util.PoiMergeCellUtil;
@@ -61,18 +59,17 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ExcelExportBase extends ExportBase {
 
-    private static final Logger        LOGGER        = LoggerFactory
-                                                         .getLogger(ExcelExportBase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportBase.class);
 
-    private int                        currentIndex  = 0;
+    private int currentIndex = 0;
 
-    protected ExcelType                type          = ExcelType.HSSF;
+    protected ExcelType type = ExcelType.HSSF;
 
-    private Map<Integer, Double>       statistics    = new HashMap<Integer, Double>();
+    private Map<Integer, Double> statistics = new HashMap<Integer, Double>();
 
     private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("######0.00");
 
-    private IExcelExportStyler         excelExportStyler;
+    private IExcelExportStyler excelExportStyler;
 
     /**
      * 创建 最主要的 Cells
@@ -96,8 +93,8 @@ public abstract class ExcelExportBase extends ExportBase {
                 Collection<?> list = getListCellValue(entity, t);
                 int listC = 0;
                 for (Object obj : list) {
-                    createListCells(patriarch, index + listC, cellNum, obj, entity.getList(),
-                        sheet, workbook);
+                    createListCells(patriarch, index + listC, cellNum, obj, entity.getList(), sheet,
+                        workbook);
                     listC++;
                 }
                 cellNum += entity.getList().size();
@@ -108,7 +105,14 @@ public abstract class ExcelExportBase extends ExportBase {
                 Object value = getCellValue(entity, t);
                 if (entity.getType() == 1) {
                     createStringCell(row, cellNum++, value == null ? "" : value.toString(),
-                        index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity), entity);
+                        index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
+                        entity);
+                    if (entity.isHyperlink()) {
+                        row.getCell(cellNum - 1)
+                            .setHyperlink(dataHanlder.getHyperlink(
+                                row.getSheet().getWorkbook().getCreationHelper(), t,
+                                entity.getName(), value));
+                    }
                 } else {
                     createImageCell(patriarch, entity, row, cellNum++,
                         value == null ? "" : value.toString(), t);
@@ -126,8 +130,8 @@ public abstract class ExcelExportBase extends ExportBase {
                     sheet.getRow(i).createCell(cellNum);
                     sheet.getRow(i).getCell(cellNum).setCellStyle(getStyles(false, entity));
                 }
-                sheet.addMergedRegion(new CellRangeAddress(index, index + maxHeight - 1, cellNum,
-                    cellNum));
+                sheet.addMergedRegion(
+                    new CellRangeAddress(index, index + maxHeight - 1, cellNum, cellNum));
                 cellNum++;
             }
         }
@@ -180,8 +184,9 @@ public abstract class ExcelExportBase extends ExportBase {
                 LOGGER.error(e.getMessage(), e);
             }
         } else {
-            byte[] value = (byte[]) (entity.getMethods() != null ? getFieldBySomeMethod(
-                entity.getMethods(), obj) : entity.getMethod().invoke(obj, new Object[] {}));
+            byte[] value = (byte[]) (entity.getMethods() != null
+                ? getFieldBySomeMethod(entity.getMethods(), obj)
+                : entity.getMethod().invoke(obj, new Object[] {}));
             if (value != null) {
                 patriarch.createPicture(anchor,
                     row.getSheet().getWorkbook().addPicture(value, getImageType(value)));
@@ -193,8 +198,8 @@ public abstract class ExcelExportBase extends ExportBase {
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
         if (excelExportEntity.getName().equals("序号")
             && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
-            createStringCell(row, 0, currentIndex + "", index % 2 == 0 ? getStyles(false, null)
-                : getStyles(true, null), null);
+            createStringCell(row, 0, currentIndex + "",
+                index % 2 == 0 ? getStyles(false, null) : getStyles(true, null), null);
             currentIndex = currentIndex + 1;
             return 1;
         }
@@ -207,8 +212,8 @@ public abstract class ExcelExportBase extends ExportBase {
      * @param styles
      */
     public void createListCells(Drawing patriarch, int index, int cellNum, Object obj,
-                                List<ExcelExportEntity> excelParams, Sheet sheet, Workbook workbook)
-                                                                                                    throws Exception {
+                                List<ExcelExportEntity> excelParams, Sheet sheet,
+                                Workbook workbook) throws Exception {
         ExcelExportEntity entity;
         Row row;
         if (sheet.getRow(index) == null) {
@@ -224,6 +229,12 @@ public abstract class ExcelExportBase extends ExportBase {
                 createStringCell(row, cellNum++, value == null ? "" : value.toString(),
                     row.getRowNum() % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                     entity);
+                if (entity.isHyperlink()) {
+                    row.getCell(cellNum - 1)
+                        .setHyperlink(dataHanlder.getHyperlink(
+                            row.getSheet().getWorkbook().getCreationHelper(), obj, entity.getName(),
+                            value));
+                }
             } else {
                 createImageCell(patriarch, entity, row, cellNum++,
                     value == null ? "" : value.toString(), obj);

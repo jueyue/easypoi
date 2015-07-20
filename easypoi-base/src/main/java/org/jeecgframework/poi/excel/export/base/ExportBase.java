@@ -236,6 +236,7 @@ public class ExportBase {
         excelEntity.setFormat(StringUtils.isNotEmpty(excel.exportFormat()) ? excel.exportFormat()
             : excel.format());
         excelEntity.setStatistics(excel.isStatistics());
+        excelEntity.setHyperlink(excel.isHyperlink());
         String fieldname = field.getName();
         excelEntity.setMethod(PoiPublicUtil.getMethod(fieldname, pojoClass));
     }
