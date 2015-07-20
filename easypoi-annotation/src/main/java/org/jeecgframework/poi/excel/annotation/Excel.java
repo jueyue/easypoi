@@ -123,4 +123,10 @@ public @interface Excel {
      * @return
      */
     public boolean isStatistics() default false;
+    
+    /**
+     * 这个是不是超链接,如果是需要实现接口返回对象
+     * @return
+     */
+    public boolean isHyperlink() default false;
 }

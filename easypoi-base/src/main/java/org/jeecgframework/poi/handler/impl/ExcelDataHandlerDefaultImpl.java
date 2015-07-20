@@ -17,6 +17,8 @@ package org.jeecgframework.poi.handler.impl;
 
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
 
 /**
@@ -54,6 +56,11 @@ public abstract class ExcelDataHandlerDefaultImpl implements IExcelDataHandler {
     @Override
     public void setMapValue(Map<String, Object> map, String originKey, Object value) {
         map.put(originKey, value);
+    }
+
+    @Override
+    public Hyperlink getHyperlink(CreationHelper creationHelper, Object obj, String name, Object value) {
+        return null;
     }
 
 }

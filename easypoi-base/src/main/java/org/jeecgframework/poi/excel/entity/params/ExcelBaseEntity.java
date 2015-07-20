@@ -48,6 +48,11 @@ public class ExcelBaseEntity {
      * set/get方法
      */
     private Method       method;
+    /**
+     * 这个是不是超链接,如果是需要实现接口返回对象
+     * @return
+     */
+    private boolean      hyperlink;
 
     private List<Method> methods;
 
@@ -105,6 +110,14 @@ public class ExcelBaseEntity {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public boolean isHyperlink() {
+        return hyperlink;
+    }
+
+    public void setHyperlink(boolean hyperlink) {
+        this.hyperlink = hyperlink;
     }
 
 }
