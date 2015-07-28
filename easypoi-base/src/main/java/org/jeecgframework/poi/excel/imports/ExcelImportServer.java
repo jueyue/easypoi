@@ -55,6 +55,7 @@ import org.jeecgframework.poi.excel.imports.verifys.VerifyHandlerServer;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelImportEnum;
 import org.jeecgframework.poi.util.PoiPublicUtil;
+import org.jeecgframework.poi.util.PoiReflectorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,8 +101,7 @@ public class ExcelImportServer extends ImportBaseService {
                                  Map<Integer, String> titlemap, String targetId,
                                  Map<String, PictureData> pictures, ImportParams params)
                                                                                         throws Exception {
-        Collection collection = (Collection) PoiPublicUtil.getMethod(param.getName(),
-            object.getClass()).invoke(object, new Object[] {});
+        Collection collection = (Collection) PoiReflectorUtil.fromCache(object.getClass()).getValue(object, param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         String picId;
         boolean isUsed = false;// 是否需要加上这个对象

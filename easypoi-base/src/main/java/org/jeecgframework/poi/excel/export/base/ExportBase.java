@@ -34,6 +34,7 @@ import org.jeecgframework.poi.excel.annotation.ExcelEntity;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
 import org.jeecgframework.poi.util.PoiPublicUtil;
+import org.jeecgframework.poi.util.PoiReflectorUtil;
 
 /**
  * 导出基础处理,不设计POI,只设计对象,保证复用性
@@ -122,7 +123,7 @@ public class ExportBase {
                 excelEntity = new ExcelExportEntity();
                 excelEntity.setName(getExcelName(excel.name(), targetId));
                 excelEntity.setOrderNum(getCellOrder(excel.orderNum(), targetId));
-                excelEntity.setMethod(PoiPublicUtil.getMethod(field.getName(), pojoClass));
+                excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 excelEntity.setList(list);
                 excelParams.add(excelEntity);
             } else {
@@ -130,7 +131,7 @@ public class ExportBase {
                 if (getMethods != null) {
                     newMethods.addAll(getMethods);
                 }
-                newMethods.add(PoiPublicUtil.getMethod(field.getName(), pojoClass));
+                newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
                 getAllExcelField(exclusions, StringUtils.isNotEmpty(excel.id()) ? excel.id()
                     : targetId, PoiPublicUtil.getClassFields(field.getType()), excelParams,
@@ -237,8 +238,7 @@ public class ExportBase {
             : excel.format());
         excelEntity.setStatistics(excel.isStatistics());
         excelEntity.setHyperlink(excel.isHyperlink());
-        String fieldname = field.getName();
-        excelEntity.setMethod(PoiPublicUtil.getMethod(fieldname, pojoClass));
+        excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
     }
 
     /**

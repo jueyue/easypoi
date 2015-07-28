@@ -33,6 +33,7 @@ import org.jeecgframework.poi.excel.imports.base.ImportBaseService;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.handler.inter.IExcelReadRowHanlder;
 import org.jeecgframework.poi.util.PoiPublicUtil;
+import org.jeecgframework.poi.util.PoiReflectorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,8 +171,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private void addListContinue(Object object, ExcelCollectionParams param,
                                  List<SaxReadCellEntity> datas, Map<Integer, String> titlemap,
                                  String targetId, ImportParams params) throws Exception {
-        Collection collection = (Collection) PoiPublicUtil.getMethod(param.getName(),
-            object.getClass()).invoke(object, new Object[] {});
+        Collection collection = (Collection) PoiReflectorUtil.fromCache(pojoClass).getValue(object, param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         boolean isUsed = false;// 是否需要加上这个对象
         for (int i = 0; i < datas.size(); i++) {
