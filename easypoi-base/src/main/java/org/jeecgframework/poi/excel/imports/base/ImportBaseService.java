@@ -39,6 +39,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelCollectionParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelImportEntity;
 import org.jeecgframework.poi.excel.entity.params.ExcelVerifyEntity;
 import org.jeecgframework.poi.util.PoiPublicUtil;
+import org.jeecgframework.poi.util.PoiReflectorUtil;
 
 /**
  * 导入基础和,普通方法和Sax共用
@@ -146,7 +147,7 @@ public class ImportBaseService {
                 if (getMethods != null) {
                     newMethods.addAll(getMethods);
                 }
-                newMethods.add(PoiPublicUtil.getMethod(field.getName(), pojoClass));
+                newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 getAllExcelField(targetId, PoiPublicUtil.getClassFields(field.getType()),
                     excelParams, excelCollection, field.getType(), newMethods);
             }
@@ -171,7 +172,7 @@ public class ImportBaseService {
                               Excel excel, Class<?> pojoClass) throws Exception {
         excelEntity.setName(getExcelName(excel.name(), targetId));
         String fieldname = field.getName();
-        excelEntity.setMethod(PoiPublicUtil.getMethod(fieldname, pojoClass, field.getType()));
+        excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(fieldname));
         if (StringUtils.isNotEmpty(excel.importFormat())) {
             excelEntity.setFormat(excel.importFormat());
         } else {
@@ -196,7 +197,7 @@ public class ImportBaseService {
                     newMethods.addAll(getMethods);
                 }
                 newMethods
-                    .add(PoiPublicUtil.getMethod(field.getName(), pojoClass, field.getType()));
+                    .add(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));
                 getExcelFieldList(targetId, PoiPublicUtil.getClassFields(field.getType()),
                     field.getType(), temp, newMethods);
             }

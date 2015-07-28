@@ -15,7 +15,10 @@
  */
 package org.jeecgframework.poi.word.parse;
 
+import static org.jeecgframework.poi.util.PoiElUtil.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -64,15 +67,15 @@ public class ParseWord07 {
         Object[] isAndType = PoiPublicUtil.getIsAndType(obj);
         String picId;
         try {
-            picId = currentRun.getParagraph().getDocument()
-                .addPictureData((byte[]) isAndType[0], (Integer) isAndType[1]);
+            picId = currentRun.getParagraph().getDocument().addPictureData((byte[]) isAndType[0],
+                (Integer) isAndType[1]);
             ((MyXWPFDocument) currentRun.getParagraph().getDocument()).createPicture(currentRun,
-                picId,
-                currentRun.getParagraph().getDocument()
-                    .getNextPicNameNumber((Integer) isAndType[1]), obj.getWidth(), obj.getHeight());
+                picId, currentRun.getParagraph().getDocument()
+                    .getNextPicNameNumber((Integer) isAndType[1]),
+                obj.getWidth(), obj.getHeight());
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         }
 
     }
@@ -108,12 +111,15 @@ public class ParseWord07 {
      * @return
      * @throws Exception
      */
-    private Object checkThisTableIsNeedIterator(XWPFTableCell cell, Map<String, Object> map)
-                                                                                            throws Exception {
+    private Object checkThisTableIsNeedIterator(XWPFTableCell cell,
+                                                Map<String, Object> map) throws Exception {
         String text = cell.getText().trim();
         // 判断是不是迭代输出
-        if (text.startsWith("{{") && text.endsWith("}}") && text.indexOf("in ") != -1) {
-            return PoiPublicUtil.getRealValue(text.replace("in ", "").trim(), map);
+        if (text != null && text.contains(FOREACH) && text.startsWith(START_STR)) {
+            text = text.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
+                .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
+            String[] keys = text.replaceAll("\\s{1,}", " ").trim().split(" ");
+            return (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
         }
         return null;
     }
@@ -126,12 +132,12 @@ public class ParseWord07 {
      * @param paragraphs
      * @param map
      */
-    private void parseAllParagraphic(List<XWPFParagraph> paragraphs, Map<String, Object> map)
-                                                                                             throws Exception {
+    private void parseAllParagraphic(List<XWPFParagraph> paragraphs,
+                                     Map<String, Object> map) throws Exception {
         XWPFParagraph paragraph;
         for (int i = 0; i < paragraphs.size(); i++) {
             paragraph = paragraphs.get(i);
-            if (paragraph.getText().indexOf("{{") != -1) {
+            if (paragraph.getText().indexOf(START_STR) != -1) {
                 parseThisParagraph(paragraph, map);
             }
 
@@ -147,8 +153,8 @@ public class ParseWord07 {
      * @param paragraph
      * @param map
      */
-    private void parseThisParagraph(XWPFParagraph paragraph, Map<String, Object> map)
-                                                                                     throws Exception {
+    private void parseThisParagraph(XWPFParagraph paragraph,
+                                    Map<String, Object> map) throws Exception {
         XWPFRun run;
         XWPFRun currentRun = null;// 拿到的第一个run,用来set值,可以保存格式
         String currentText = "";// 存放当前的text
@@ -160,28 +166,28 @@ public class ParseWord07 {
             text = run.getText(0);
             if (StringUtils.isEmpty(text)) {
                 continue;
-            }// 如果为空或者""这种这继续循环跳过
+            } // 如果为空或者""这种这继续循环跳过
             if (isfinde) {
                 currentText += text;
-                if (currentText.indexOf("{{") == -1) {
+                if (currentText.indexOf(START_STR) == -1) {
                     isfinde = false;
                     runIndex.clear();
                 } else {
                     runIndex.add(i);
                 }
-                if (currentText.indexOf("}}") != -1) {
+                if (currentText.indexOf(END_STR) != -1) {
                     changeValues(paragraph, currentRun, currentText, runIndex, map);
                     currentText = "";
                     isfinde = false;
                 }
-            } else if (text.indexOf("{") >= 0) {// 判断是不是开始
+            } else if (text.indexOf(START_STR) >= 0) {// 判断是不是开始
                 currentText = text;
                 isfinde = true;
                 currentRun = run;
             } else {
                 currentText = "";
             }
-            if (currentText.indexOf("}}") != -1) {
+            if (currentText.indexOf(END_STR) != -1) {
                 changeValues(paragraph, currentRun, currentText, runIndex, map);
                 isfinde = false;
             }
@@ -207,23 +213,17 @@ public class ParseWord07 {
         XWPFTableRow row;
         List<XWPFTableCell> cells;
         Object listobj;
-        ExcelEntityParse excelEntityParse = new ExcelEntityParse();
         for (int i = 0; i < table.getNumberOfRows(); i++) {
             row = table.getRow(i);
             cells = row.getTableCells();
-            if (cells.size() == 1) {
-                listobj = checkThisTableIsNeedIterator(cells.get(0), map);
-                if (listobj == null) {
-                    parseThisRow(cells, map);
-                } else if (listobj instanceof ExcelListEntity) {
-                    table.removeRow(i);// 删除这一行
-                    excelEntityParse.parseNextRowAndAddRow(table, i, (ExcelListEntity) listobj);
-                } else {
-                    table.removeRow(i);// 删除这一行
-                    ExcelMapParse.parseNextRowAndAddRow(table, i, (List) listobj);
-                }
-            } else {
+            listobj = checkThisTableIsNeedIterator(cells.get(0), map);
+            if (listobj == null) {
                 parseThisRow(cells, map);
+            } else if (listobj instanceof ExcelListEntity) {
+                table.removeRow(i);// 删除这一行
+                new ExcelEntityParse().parseNextRowAndAddRow(table, i, (ExcelListEntity) listobj);
+            } else {
+                ExcelMapParse.parseNextRowAndAddRow(table, i, (List) listobj);
             }
         }
     }
@@ -264,7 +264,7 @@ public class ParseWord07 {
         Iterator<XWPFTable> itTable = doc.getTablesIterator();
         while (itTable.hasNext()) {
             table = itTable.next();
-            if (table.getText().indexOf("{{") != -1) {
+            if (table.getText().indexOf(START_STR) != -1) {
                 parseThisTable(table, map);
             }
         }

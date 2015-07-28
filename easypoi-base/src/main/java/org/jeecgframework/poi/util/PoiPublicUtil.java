@@ -15,6 +15,8 @@
  */
 package org.jeecgframework.poi.util;
 
+import static org.jeecgframework.poi.util.PoiElUtil.*;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,7 +51,6 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import org.jeecgframework.poi.excel.annotation.ExcelEntity;
 import org.jeecgframework.poi.excel.annotation.ExcelIgnore;
-import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.word.entity.WordImageEntity;
 import org.jeecgframework.poi.word.entity.params.ExcelListEntity;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
@@ -86,7 +87,6 @@ public final class PoiPublicUtil {
      */
     public static Object createObject(Class<?> clazz, String targetId) {
         Object obj = null;
-        Method setMethod;
         try {
             if (clazz.equals(Map.class)) {
                 return new HashMap<String, Object>();
@@ -99,11 +99,9 @@ public final class PoiPublicUtil {
                 }
                 if (isCollection(field.getType())) {
                     ExcelCollection collection = field.getAnnotation(ExcelCollection.class);
-                    setMethod = getMethod(field.getName(), clazz, field.getType());
-                    setMethod.invoke(obj, collection.type().newInstance());
+                    PoiReflectorUtil.fromCache(clazz).setValue(obj , field.getName(), collection.type().newInstance());
                 } else if (!isJavaClass(field)) {
-                    setMethod = getMethod(field.getName(), clazz, field.getType());
-                    setMethod.invoke(obj, createObject(field.getType(), targetId));
+                    PoiReflectorUtil.fromCache(clazz).setValue(obj , field.getName(), createObject(field.getType(), targetId));
                 }
             }
 
@@ -153,45 +151,6 @@ public final class PoiPublicUtil {
             strFileExtendName = "PNG";
         }
         return strFileExtendName;
-    }
-
-    /**
-     * 获取GET方法
-     * 
-     * @param name
-     * @param pojoClass
-     * @return
-     * @throws Exception
-     */
-    public static Method getMethod(String name, Class<?> pojoClass) throws Exception {
-        StringBuffer getMethodName = new StringBuffer(PoiBaseConstants.GET);
-        getMethodName.append(name.substring(0, 1).toUpperCase());
-        getMethodName.append(name.substring(1));
-        Method method = null;
-        try {
-            method = pojoClass.getMethod(getMethodName.toString(), new Class[] {});
-        } catch (Exception e) {
-            method = pojoClass.getMethod(
-                getMethodName.toString().replace(PoiBaseConstants.GET, PoiBaseConstants.IS),
-                new Class[] {});
-        }
-        return method;
-    }
-
-    /**
-     * 获取SET方法
-     * 
-     * @param name
-     * @param pojoClass
-     * @param type
-     * @return
-     * @throws Exception
-     */
-    public static Method getMethod(String name, Class<?> pojoClass, Class<?> type) throws Exception {
-        StringBuffer getMethodName = new StringBuffer(PoiBaseConstants.SET);
-        getMethodName.append(name.substring(0, 1).toUpperCase());
-        getMethodName.append(name.substring(1));
-        return pojoClass.getMethod(getMethodName.toString(), new Class[] { type });
     }
 
     /**
@@ -406,7 +365,7 @@ public final class PoiPublicUtil {
         if (object instanceof Map) {
             return ((Map) object).get(params);
         }
-        return getMethod(params, object.getClass()).invoke(object, new Object[] {});
+        return PoiReflectorUtil.fromCache(object.getClass()).getValue(object, params);
     }
 
     /**
@@ -418,17 +377,17 @@ public final class PoiPublicUtil {
      */
     public static Object getRealValue(String currentText, Map<String, Object> map) throws Exception {
         String params = "";
-        while (currentText.indexOf("{{") != -1) {
+        while (currentText.indexOf(START_STR) != -1) {
             params = currentText
-                .substring(currentText.indexOf("{{") + 2, currentText.indexOf("}}"));
-            Object obj = getParamsValue(params.trim(), map);
+                .substring(currentText.indexOf(START_STR) + 2, currentText.indexOf(END_STR));
+            Object obj = PoiElUtil.eval(params.trim(), map);
             //判断图片或者是集合
 
             if (obj instanceof WordImageEntity || obj instanceof List
                 || obj instanceof ExcelListEntity) {
                 return obj;
             } else {
-                currentText = currentText.replace("{{" + params + "}}", obj.toString());
+                currentText = currentText.replace(START_STR + params + END_STR, obj.toString());
             }
         }
         return currentText;
@@ -455,7 +414,7 @@ public final class PoiPublicUtil {
         if (object instanceof Map) {
             object = ((Map) object).get(paramsArr[index]);
         } else {
-            object = getMethod(paramsArr[index], object.getClass()).invoke(object, new Object[] {});
+            object =  PoiReflectorUtil.fromCache(object.getClass()).getValue(object, paramsArr[index]);
         }
         return (index == paramsArr.length - 1) ? (object == null ? "" : object) : getValueDoWhile(
             object, paramsArr, ++index);

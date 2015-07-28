@@ -15,12 +15,16 @@
  */
 package org.jeecgframework.poi.word.parse.excel;
 
+import static org.jeecgframework.poi.util.PoiElUtil.*;
+
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.jeecgframework.poi.util.PoiPublicUtil;
+
+import com.google.common.collect.Maps;
 
 /**
  * 处理和生成Map 类型的数据变成表格
@@ -43,7 +47,8 @@ public final class ExcelMapParse {
         String text;
         for (int i = 0; i < cells.size(); i++) {
             text = cells.get(i).getText();
-            params[i] = text == null ? "" : text.trim().replace("{{", "").replace("}}", "");
+            params[i] = text == null ? ""
+                : text.trim().replace(START_STR, EMPTY).replace(END_STR, EMPTY);
         }
         return params;
     }
@@ -56,26 +61,30 @@ public final class ExcelMapParse {
      * @param table
      * @param listobj2
      */
-    public static void parseNextRowAndAddRow(XWPFTable table, int index, List<Object> list)
-                                                                                           throws Exception {
+    public static void parseNextRowAndAddRow(XWPFTable table, int index,
+                                             List<Object> list) throws Exception {
         XWPFTableRow currentRow = table.getRow(index);
         String[] params = parseCurrentRowGetParams(currentRow);
+        String listname = params[0];
+        boolean isCreate = !listname.contains(FOREACH_NOT_CREATE);
+        listname = listname.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
+            .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
+        String[] keys = listname.replaceAll("\\s{1,}", " ").trim().split(" ");
+        params[0] = keys[1];
         table.removeRow(index);// 移除这一行
         int cellIndex = 0;// 创建完成对象一行好像多了一个cell
+        Map<String, Object> tempMap = Maps.newHashMap();
         for (Object obj : list) {
-            currentRow = table.createRow();
+            currentRow = isCreate ? table.createRow() : table.getRow(index++);
+            tempMap.put("t", obj);
             for (cellIndex = 0; cellIndex < currentRow.getTableCells().size(); cellIndex++) {
-                currentRow
-                    .getTableCells()
-                    .get(cellIndex)
-                    .setText(
-                        PoiPublicUtil.getValueDoWhile(obj, params[cellIndex].split("\\."), 0)
-                            .toString());
+                String val = eval(params[cellIndex], tempMap).toString();
+                currentRow.getTableCells().get(cellIndex).setText(val);
             }
+
             for (; cellIndex < params.length; cellIndex++) {
-                currentRow.createCell().setText(
-                    PoiPublicUtil.getValueDoWhile(obj, params[cellIndex].split("\\."), 0)
-                        .toString());
+                String val = eval(params[cellIndex], tempMap).toString();
+                currentRow.createCell().setText(val);
             }
         }
 
