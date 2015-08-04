@@ -42,6 +42,10 @@ public class ImportParams extends ExcelBaseParams {
      */
     private int                 keyIndex         = 0;
     /**
+     * 开始读取的sheet位置,默认为0
+     */
+    private int                 startSheetIndex  = 0;
+    /**
      * 上传表格需要读取的sheet 数量,默认为1
      */
     private int                 sheetNum         = 1;
@@ -133,6 +137,14 @@ public class ImportParams extends ExcelBaseParams {
 
     public void setLastOfInvalidRow(int lastOfInvalidRow) {
         this.lastOfInvalidRow = lastOfInvalidRow;
+    }
+
+    public int getStartSheetIndex() {
+        return startSheetIndex;
+    }
+
+    public void setStartSheetIndex(int startSheetIndex) {
+        this.startSheetIndex = startSheetIndex;
     }
 
 }
