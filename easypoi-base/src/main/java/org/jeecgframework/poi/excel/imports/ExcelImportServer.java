@@ -326,7 +326,7 @@ public class ExcelImportServer extends ImportBaseService {
         }
         createErrorCellStyle(book);
         Map<String, PictureData> pictures;
-        for (int i = 0; i < params.getSheetNum(); i++) {
+        for (int i = params.getStartSheetIndex(); i < params.getSheetNum(); i++) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(" start to read excel by is ,startTime is {}", new Date().getTime());
             }
