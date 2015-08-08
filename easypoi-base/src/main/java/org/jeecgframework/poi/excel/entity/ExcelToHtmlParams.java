@@ -21,7 +21,7 @@ public class ExcelToHtmlParams {
      */
     private int      sheetNum;
     /**
-     * 图片保存路径
+     * 图片保存路径,/开始或者含有: 认为是绝对路径,其他是相对路径,每次img名称随机生成,按照天生成文件夹
      */
     private String   path;
 
