@@ -32,11 +32,14 @@ public final class PoiElUtil {
     public static final String FOREACH_AND_SHIFT  = "$fe:";
     public static final String START_STR          = "{{";
     public static final String END_STR            = "}}";
+    public static final String WRAP               = "]]";
     public static final String NUMBER_SYMBOL      = "n:";
     public static final String FORMAT_DATE        = "fd:";
     public static final String FORMAT_NUMBER      = "fn:";
     public static final String IF_DELETE          = "!if:";
     public static final String EMPTY              = "";
+    public static final String CONST              = "'";
+    public static final String NULL              = "&NULL&";
     public static final String LEFT_BRACKET       = "(";
     public static final String RIGHT_BRACKET      = ")";
 
@@ -167,7 +170,8 @@ public final class PoiElUtil {
         text = text.replace(FORMAT_DATE, EMPTY);
         return innerEval(
             replacinnerEvalue(text,
-                PoiFunctionUtil.formatDate(PoiPublicUtil.getParamsValue(key[0], map), key[1])), map);
+                PoiFunctionUtil.formatDate(PoiPublicUtil.getParamsValue(key[0], map), key[1])),
+            map);
     }
 
     /**
@@ -199,7 +203,8 @@ public final class PoiElUtil {
         while (text.charAt(index) == " ".charAt(0)) {
             text = text.substring(0, index) + text.substring(index + 1, text.length());
         }
-        for (int i = text.indexOf(prefix + LEFT_BRACKET) + prefix.length() + 1; i < text.length(); i++) {
+        for (int i = text.indexOf(prefix + LEFT_BRACKET) + prefix.length() + 1; i < text
+            .length(); i++) {
             if (text.charAt(i) == LEFT_BRACKET.charAt(0)) {
                 leftBracket++;
             }
