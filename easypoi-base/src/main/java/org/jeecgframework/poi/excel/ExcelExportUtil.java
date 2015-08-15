@@ -142,4 +142,18 @@ public final class ExcelExportUtil {
         return new ExcelExportOfTemplateUtil().createExcleByTemplate(params, null, null, map);
     }
 
+    /**
+     * 导出文件通过模板解析只有模板,没有集合
+     * 每个sheet对应一个map,导出到处,key是sheet的NUM
+     * @param params
+     *            导出参数类
+     * @param map
+     *            模板集合
+     * @return
+     */
+    public static Workbook exportExcel(Map<Integer, Map<String, Object>> map,
+                                       TemplateExportParams params) {
+        return new ExcelExportOfTemplateUtil().createExcleByTemplate(params, map);
+    }
+
 }
