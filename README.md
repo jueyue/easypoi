@@ -93,6 +93,8 @@ EasyPoi 文档
 
 [EasyPoi-Excel预览(New)](http://blog.afterturn.cn/?p=34)
 
+[EasyPoi-多行模板输出(New)](http://blog.afterturn.cn/?p=40)
+
 
 --------------------------
 EasyPoi 模板 表达式支持
