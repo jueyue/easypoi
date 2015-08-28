@@ -428,6 +428,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         row = row.getSheet().getRow(row.getRowNum() - rowspan + 1);
         for (int k = 0; k < rowspan; k++) {
             int ci = columnIndex;//cell的序号
+            row.setHeight(columns.get(0 * colspan).getHeight());
             for (int i = 0; i < colspan && i < columns.size(); i++) {
                 boolean isNumber = false;
                 params = columns.get(colspan * k + i);
@@ -461,19 +462,39 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     row.getCell(ci).setCellValue(val);
                 }
                 row.getCell(ci).setCellStyle(columns.get(i).getCellStyle());
+                //如果合并单元格,就把这个单元格的样式和之前的保持一致
+                setMergedRegionStyle(row, ci, columns.get(i));
                 //合并对应单元格
                 if ((params.getRowspan() != 1 || params.getColspan() != 1)
                     && !mergedRegionHelper.isMergedRegion(row.getRowNum() + 1, ci)) {
                     row.getSheet()
                         .addMergedRegion(new CellRangeAddress(row.getRowNum(),
-                            row.getRowNum() + params.getRowspan() - 1, i + columnIndex,
-                            i + columnIndex + params.getColspan() - 1));
+                            row.getRowNum() + params.getRowspan() - 1, ci,
+                            ci + params.getColspan() - 1));
                 }
                 ci = ci - i + columns.get(i).getColspan() - 1;
             }
             row = row.getSheet().getRow(row.getRowNum() + 1);
         }
 
+    }
+
+    /**
+     * 设置合并单元格的样式
+     * @param row
+     * @param ci
+     * @param excelForEachParams
+     */
+    private void setMergedRegionStyle(Row row, int ci, ExcelForEachParams params) {
+        //第一行数据
+        for (int i = 1; i < params.getColspan(); i++) {
+            row.getCell(ci + i).setCellStyle(params.getCellStyle());
+        }
+        for (int i = 1; i < params.getRowspan(); i++) {
+            for (int j = 0; j < params.getColspan(); j++) {
+                row.getCell(ci + j).setCellStyle(params.getCellStyle());
+            }
+        }
     }
 
     /**
@@ -520,7 +541,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 //把读取过的cell 置为空
                 cell.setCellValue("");
                 if (cellStringString.contains(END_STR)) {
-                    colspan = index - startIndex + 1;
                     columns.add(getExcelTemplateParams(cellStringString.replace(END_STR, EMPTY),
                         cell, mergedRegionHelper));
                     break;
@@ -537,6 +557,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                         mergedRegionHelper));
                 }
             }
+        }
+        colspan = 0;
+        for (int i = 0; i < columns.size(); i++) {
+            colspan += columns.get(i).getColspan();
         }
         return new Object[] { rowspan, colspan, columns };
     }
