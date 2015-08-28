@@ -199,7 +199,12 @@ public class CellValueServer {
                 return Float.valueOf(String.valueOf(result));
             }
             if ("class java.lang.Integer".equals(xclass) || "int".equals(xclass)) {
-                return Integer.valueOf(String.valueOf(result));
+                try {
+                    return Integer.valueOf(String.valueOf(result));
+                } catch (Exception e) {
+                    //格式错误的时候,就用double,然后获取Int值
+                    return Double.valueOf(String.valueOf(result)).intValue();
+                }
             }
             if ("class java.math.BigDecimal".equals(xclass)) {
                 return new BigDecimal(String.valueOf(result));
