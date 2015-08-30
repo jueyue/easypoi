@@ -314,7 +314,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             boolean isNumber = false;
             if (isNumber(oldString)) {
                 isNumber = true;
-                oldString = oldString.replace(NUMBER_SYMBOL, "");
+                oldString = oldString.replaceFirst(NUMBER_SYMBOL, "");
             }
             while (oldString.indexOf(START_STR) != -1) {
                 params = oldString.substring(oldString.indexOf(START_STR) + 2,
@@ -450,7 +450,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     String tempStr = new String(params.getName());
                     if (isNumber(tempStr)) {
                         isNumber = true;
-                        tempStr = tempStr.replace(NUMBER_SYMBOL, "");
+                        tempStr = tempStr.replaceFirst(NUMBER_SYMBOL, "");
                     }
                     map.put(teplateParams.getTempParams(), t);
                     val = eval(tempStr, map).toString();
