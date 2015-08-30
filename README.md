@@ -53,17 +53,17 @@ https://oss.sonatype.org/content/repositories/snapshots/
 		 <dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.1.3</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.1.3</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.1.3</version>
+			<version>2.1.4</version>
 		</dependency>
 ```
 	
@@ -117,6 +117,15 @@ EasyPoi 模板 表达式支持
 --------------------------
 版本修改
 --------------------------
+
+ - 2.1.4
+ 	- 模板输出自动合并单元格功能
+ 	- 多行模板数据导出
+ 	- 导出链接功能
+ 	- 把反射加入了缓存
+ 	- word和Excel语法保持了统一
+ 	- Excel to Html 增加了图片显示和缓存功能
+ 	- 导入增加一个参数startSheetIndex 用以指定sheet位置
 
  - 2.1.3
  	- 屏蔽了科学计数法的问题
