@@ -242,6 +242,9 @@ public class CellValueServer {
      */
     private Object getValueByType(String xclass, Object result, ExcelImportEntity entity) {
         try {
+            if(result == null){
+                return null;
+            }
             if ("class java.util.Date".equals(xclass)) {
                 return result;
             }
