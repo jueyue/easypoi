@@ -40,7 +40,7 @@ public class ImportParams extends ExcelBaseParams {
     /**
      * 主键设置,如何这个cell没有值,就跳过 或者认为这个是list的下面的值
      */
-    private int                 keyIndex         = 0;
+    private Integer             keyIndex         = 0;
     /**
      * 开始读取的sheet位置,默认为0
      */
@@ -71,7 +71,7 @@ public class ImportParams extends ExcelBaseParams {
         return headRows;
     }
 
-    public int getKeyIndex() {
+    public Integer getKeyIndex() {
         return keyIndex;
     }
 
@@ -103,7 +103,7 @@ public class ImportParams extends ExcelBaseParams {
         this.headRows = headRows;
     }
 
-    public void setKeyIndex(int keyIndex) {
+    public void setKeyIndex(Integer keyIndex) {
         this.keyIndex = keyIndex;
     }
 
