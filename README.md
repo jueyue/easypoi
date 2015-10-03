@@ -116,6 +116,26 @@ EasyPoi 模板 表达式支持
 
 
 --------------------------
+pom说明
+--------------------------
+word和sax读取的时候才使用,就不是必须的了,请手动引用
+```xml
+			<!-- sax 读取时候用到的 -->
+			<dependency>
+				<groupId>xerces</groupId>
+				<artifactId>xercesImpl</artifactId>
+				<version>${xerces.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-scratchpad</artifactId>
+				<version>${poi.version}</version>
+				<optional>true</optional>
+			</dependency>
+```
+
+--------------------------
 版本修改
 --------------------------
 
