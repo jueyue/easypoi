@@ -377,9 +377,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 rowspan, colspan, mergedRegionHelper);
             rowIndex += rowspan - 1;
         }
-        if (isShift) {
+        if (isShift && datas.size() * rowspan > 1) {
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + 1,
-                cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
+                cell.getRow().getSheet().getLastRowNum(), datas.size() * rowspan - 1, true, true);
         }
         while (its.hasNext()) {
             Object t = its.next();
