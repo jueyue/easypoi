@@ -138,6 +138,20 @@
 				<optional>true</optional>
 			</dependency>
 
+			<!-- PDF -->
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>itextpdf</artifactId>
+				<version>5.5.6</version>
+				<optional>true</optional>
+			</dependency>
+
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>itext-asian</artifactId>
+				<version>5.2.0</version>
+			</dependency>
+
 			<!-- 模块版本 -->
 			<dependency>
 				<groupId>org.jeecg</groupId>

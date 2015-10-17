@@ -9,7 +9,7 @@ import org.jeecgframework.poi.excel.entity.ExcelToHtmlParams;
  * @author JueYue
  * @date 2015年5月10日 上午11:51:48
  */
-public final class ExcelToHtmlUtil {
+public class ExcelToHtmlUtil {
 
     private ExcelToHtmlUtil() {
     }

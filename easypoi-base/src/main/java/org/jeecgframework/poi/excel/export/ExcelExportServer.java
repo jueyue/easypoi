@@ -318,13 +318,4 @@ public class ExcelExportServer extends ExcelExportBase {
         return 1;
     }
 
-    private ExcelExportEntity indexExcelEntity(ExportParams entity) {
-        ExcelExportEntity exportEntity = new ExcelExportEntity();
-        exportEntity.setOrderNum(0);
-        exportEntity.setName(entity.getIndexName());
-        exportEntity.setWidth(10);
-        exportEntity.setFormat(PoiBaseConstants.IS_ADD_INDEX);
-        return exportEntity;
-    }
-
 }

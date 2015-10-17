@@ -40,6 +40,18 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- PDF -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-asian</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- google 工具类 -->
 		<dependency>
 			<groupId>com.google.guava</groupId>

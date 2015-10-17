@@ -31,7 +31,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import org.jeecgframework.poi.excel.annotation.ExcelEntity;
+import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
 import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.util.PoiReflectorUtil;
@@ -335,6 +337,20 @@ public class ExportBase {
                 Collections.sort(entity.getList());
             }
         }
+    }
+    
+    /**
+     * 添加Index列
+     * @param entity
+     * @return
+     */
+    public ExcelExportEntity indexExcelEntity(ExportParams entity) {
+        ExcelExportEntity exportEntity = new ExcelExportEntity();
+        exportEntity.setOrderNum(0);
+        exportEntity.setName(entity.getIndexName());
+        exportEntity.setWidth(10);
+        exportEntity.setFormat(PoiBaseConstants.IS_ADD_INDEX);
+        return exportEntity;
     }
 
 }
