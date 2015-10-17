@@ -88,12 +88,12 @@ public class StylerHelper {
     private void printInlineStyle(Workbook wb) {
         out.format("<style type=\"text/css\">%n");
         printStyles(wb);
-        prontFonts(wb);
+        printFonts(wb);
         out.format("</style>%n");
     }
 
-    private void prontFonts(Workbook wb) {
-        for (short i = 0, le = wb.getNumberOfFonts(); i <= le; i++) {
+    private void printFonts(Workbook wb) {
+        for (short i = 0, le = wb.getNumberOfFonts(); i < le; i++) {
             Font font = wb.getFontAt(i);
             out.format(".%s .%s {%n", DEFAULTS_CLASS, "font_" + i + "_" + cssRandom);
             fontStyle(font);

@@ -37,19 +37,26 @@ import com.google.common.cache.LoadingCache;
  */
 public final class POICacheManager {
 
-    private static final Logger                 LOGGER = LoggerFactory
-                                                           .getLogger(POICacheManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(POICacheManager.class);
 
     private static LoadingCache<String, byte[]> loadingCache;
+
+    private static IFileLoader fileLoder;
+
+    private static ThreadLocal<IFileLoader> LOCAL_FILELOADER = new ThreadLocal<IFileLoader>();
 
     static {
         loadingCache = CacheBuilder.newBuilder().expireAfterWrite(7, TimeUnit.DAYS).maximumSize(50)
             .build(new CacheLoader<String, byte[]>() {
                 @Override
                 public byte[] load(String url) throws Exception {
-                    return new FileLoade().getFile(url);
+                    if (LOCAL_FILELOADER.get() != null)
+                        return LOCAL_FILELOADER.get().getFile(url);
+                    return fileLoder.getFile(url);
                 }
             });
+        //设置默认实现
+        fileLoder = new FileLoadeImpl();
     }
 
     public static InputStream getFile(String id) {
@@ -58,9 +65,26 @@ public final class POICacheManager {
             byte[] result = Arrays.copyOf(loadingCache.get(id), loadingCache.get(id).length);
             return new ByteArrayInputStream(result);
         } catch (ExecutionException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    public static void setFileLoder(IFileLoader fileLoder) {
+        POICacheManager.fileLoder = fileLoder;
+    }
+
+    /**
+     * 一次线程有效
+     * @param fileLoder
+     */
+    public static void setFileLoderOnce(IFileLoader fileLoder) {
+        if (fileLoder != null)
+            LOCAL_FILELOADER.set(fileLoder);
+    }
+
+    public static void setLoadingCache(LoadingCache<String, byte[]> loadingCache) {
+        POICacheManager.loadingCache = loadingCache;
     }
 
 }

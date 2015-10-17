@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
  * @date 2014年2月10日
  * @version 1.0
  */
-class FileLoade {
+public class FileLoadeImpl implements IFileLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileLoade.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileLoadeImpl.class);
 
     public byte[] getFile(String url) {
         FileInputStream fileis = null;
