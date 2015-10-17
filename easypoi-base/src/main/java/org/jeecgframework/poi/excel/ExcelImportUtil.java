@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 @SuppressWarnings({ "unchecked" })
-public final class ExcelImportUtil {
+public class ExcelImportUtil {
 
     private ExcelImportUtil() {
     }

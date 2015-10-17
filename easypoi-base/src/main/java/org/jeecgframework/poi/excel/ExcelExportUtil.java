@@ -37,7 +37,7 @@ import org.jeecgframework.poi.excel.export.template.ExcelExportOfTemplateUtil;
  * @version 1.0
  * @date 2013-10-17
  */
-public final class ExcelExportUtil {
+public class ExcelExportUtil {
 
     private ExcelExportUtil() {
     }
