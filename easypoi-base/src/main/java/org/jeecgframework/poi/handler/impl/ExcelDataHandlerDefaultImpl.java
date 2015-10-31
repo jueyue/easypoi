@@ -27,14 +27,14 @@ import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
  * @author JueYue
  * @date 2014年6月20日 上午12:11:52
  */
-public abstract class ExcelDataHandlerDefaultImpl implements IExcelDataHandler {
+public abstract class ExcelDataHandlerDefaultImpl<T> implements IExcelDataHandler<T> {
     /**
      * 需要处理的字段
      */
     private String[] needHandlerFields;
 
     @Override
-    public Object exportHandler(Object obj, String name, Object value) {
+    public Object exportHandler(T obj, String name, Object value) {
         return value;
     }
 
@@ -44,7 +44,7 @@ public abstract class ExcelDataHandlerDefaultImpl implements IExcelDataHandler {
     }
 
     @Override
-    public Object importHandler(Object obj, String name, Object value) {
+    public Object importHandler(T obj, String name, Object value) {
         return value;
     }
 
@@ -59,7 +59,7 @@ public abstract class ExcelDataHandlerDefaultImpl implements IExcelDataHandler {
     }
 
     @Override
-    public Hyperlink getHyperlink(CreationHelper creationHelper, Object obj, String name, Object value) {
+    public Hyperlink getHyperlink(CreationHelper creationHelper, T obj, String name, Object value) {
         return null;
     }
 

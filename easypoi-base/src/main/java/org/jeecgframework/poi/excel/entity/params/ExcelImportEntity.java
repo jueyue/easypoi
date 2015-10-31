@@ -40,10 +40,6 @@ public class ExcelImportEntity extends ExcelBaseEntity {
      */
     private String                  classType;
     /**
-     * 校驗參數
-     */
-    private ExcelVerifyEntity       verify;
-    /**
      * 后缀
      */
     private String                  suffix;
@@ -70,10 +66,6 @@ public class ExcelImportEntity extends ExcelBaseEntity {
         return saveUrl;
     }
 
-    public ExcelVerifyEntity getVerify() {
-        return verify;
-    }
-
     public void setClassType(String classType) {
         this.classType = classType;
     }
@@ -92,10 +84,6 @@ public class ExcelImportEntity extends ExcelBaseEntity {
 
     public void setSaveUrl(String saveUrl) {
         this.saveUrl = saveUrl;
-    }
-
-    public void setVerify(ExcelVerifyEntity verify) {
-        this.verify = verify;
     }
 
     public String getSuffix() {

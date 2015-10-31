@@ -33,7 +33,8 @@ import com.google.common.cache.LoadingCache;
  * 
  * @author JueYue
  * @date 2014年2月10日
- * @version 1.0
+ * @date 2015年10月17日
+ * @version 1.1
  */
 public final class POICacheManager {
 

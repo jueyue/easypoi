@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 package org.jeecgframework.poi.handler.inter;
-
-import org.jeecgframework.poi.excel.entity.result.ExcelVerifyHanlderResult;
-
 /**
- * 导入校验接口
- * 
+ * Excel标记类
  * @author JueYue
- * @date 2014年6月23日 下午11:08:21
+ * @date 2015年10月31日 下午9:31:47
  */
-public interface IExcelVerifyHandler<T> {
-
+public interface IExcelModel {
+    
     /**
-     * 导出处理方法
-     * 
-     * @param obj
-     *            当前对象
+     * 获取错误数据
      * @return
      */
-    public ExcelVerifyHanlderResult verifyHandler(T obj);
+    public String getErrorMsg();
+    /**
+     *  设置错误信息
+     * @param errorMsg
+     */
+    public void setErrorMsg(String errorMsg);
 
 }
