@@ -26,7 +26,7 @@ import org.apache.poi.ss.usermodel.Hyperlink;
  * @author JueYue
  * @date 2014年6月19日 下午11:59:45
  */
-public interface IExcelDataHandler {
+public interface IExcelDataHandler<T> {
 
     /**
      * 导出处理方法
@@ -39,7 +39,7 @@ public interface IExcelDataHandler {
      *            当前值
      * @return
      */
-    public Object exportHandler(Object obj, String name, Object value);
+    public Object exportHandler(T obj, String name, Object value);
 
     /**
      * 获取需要处理的字段,导入和导出统一处理了, 减少书写的字段
@@ -59,7 +59,7 @@ public interface IExcelDataHandler {
      *            当前值
      * @return
      */
-    public Object importHandler(Object obj, String name, Object value);
+    public Object importHandler(T obj, String name, Object value);
 
     /**
      * 设置需要处理的属性列表
@@ -83,6 +83,6 @@ public interface IExcelDataHandler {
      * @param value
      * @return
      */
-    public Hyperlink getHyperlink(CreationHelper creationHelper, Object obj, String name, Object value);
+    public Hyperlink getHyperlink(CreationHelper creationHelper, T obj, String name, Object value);
 
 }

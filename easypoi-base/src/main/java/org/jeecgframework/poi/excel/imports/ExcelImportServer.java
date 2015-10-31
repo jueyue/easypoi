@@ -27,6 +27,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.POIXMLDocument;
@@ -51,9 +57,9 @@ import org.jeecgframework.poi.excel.entity.params.ExcelImportEntity;
 import org.jeecgframework.poi.excel.entity.result.ExcelImportResult;
 import org.jeecgframework.poi.excel.entity.result.ExcelVerifyHanlderResult;
 import org.jeecgframework.poi.excel.imports.base.ImportBaseService;
-import org.jeecgframework.poi.excel.imports.verifys.VerifyHandlerServer;
 import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelImportEnum;
+import org.jeecgframework.poi.handler.inter.IExcelModel;
 import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.util.PoiReflectorUtil;
 import org.slf4j.Logger;
@@ -70,9 +76,14 @@ public class ExcelImportServer extends ImportBaseService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ExcelImportServer.class);
 
-    private CellValueServer cellValueServer;
+    private final static Validator validator;
 
-    private VerifyHandlerServer verifyHandlerServer;
+    static {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
+
+    private CellValueServer cellValueServer;
 
     private boolean   verfiyFail = false;
     /**
@@ -82,7 +93,6 @@ public class ExcelImportServer extends ImportBaseService {
 
     public ExcelImportServer() {
         this.cellValueServer = new CellValueServer();
-        this.verifyHandlerServer = new VerifyHandlerServer();
     }
 
     /***
@@ -147,6 +157,9 @@ public class ExcelImportServer extends ImportBaseService {
             case Cell.CELL_TYPE_FORMULA:
                 obj = cell.getCellFormula();
                 break;
+            default:
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+                obj = cell.getStringCellValue();
         }
         return obj == null ? null : obj.toString().trim();
     }
@@ -231,7 +244,9 @@ public class ExcelImportServer extends ImportBaseService {
                     for (ExcelCollectionParams param : excelCollection) {
                         addListContinue(object, param, row, titlemap, targetId, pictures, params);
                     }
-                    collection.add(object);
+                    if (verifyingDataValidity(object, row, params, pojoClass)) {
+                        collection.add(object);
+                    }
                 } catch (ExcelImportException e) {
                     if (!e.getType().equals(ExcelImportEnum.VERIFY_ERROR)) {
                         throw new ExcelImportException(e.getType(), e);
@@ -240,6 +255,61 @@ public class ExcelImportServer extends ImportBaseService {
             }
         }
         return collection;
+    }
+
+    /**
+     * 校验数据合法性
+     * @param object
+     * @param row
+     * @param params
+     * @param pojoClass
+     * @return
+     */
+    private boolean verifyingDataValidity(Object object, Row row, ImportParams params,
+                                          Class<?> pojoClass) {
+        boolean isAdd = true;
+        Cell cell = null;
+        if (params.isNeedVerfiy()) {
+            Set<ConstraintViolation<Object>> set = validator.validate(object);
+            if (set.size() > 0) {
+                cell = row.createCell(row.getLastCellNum());
+                String errMsg = getValidateErrMsg(set);
+                cell.setCellValue(errMsg);
+                if (object instanceof IExcelModel) {
+                    IExcelModel model = (IExcelModel) object;
+                    model.setErrorMsg(errMsg);
+                } else {
+                    isAdd = false;
+                }
+            }
+        }
+        if (params.getVerifyHanlder() != null) {
+            ExcelVerifyHanlderResult result = params.getVerifyHanlder().verifyHandler(object);
+            if (!result.isSuccess()) {
+                if (cell == null)
+                    cell = row.createCell(row.getLastCellNum());
+                cell.setCellValue((StringUtils.isNoneBlank(cell.getStringCellValue())
+                    ? cell.getStringCellValue() + "," : "") + result.getMsg());
+                if (object instanceof IExcelModel) {
+                    IExcelModel model = (IExcelModel) object;
+                    model.setErrorMsg((StringUtils.isNoneBlank(model.getErrorMsg())
+                        ? model.getErrorMsg() + "," : "") + result.getMsg());
+                } else {
+                    isAdd = false;
+                }
+            }
+        }
+        if (cell != null)
+            cell.setCellStyle(errorCellStyle);
+        return isAdd;
+    }
+
+    private String getValidateErrMsg(Set<ConstraintViolation<Object>> set) {
+        StringBuilder builder = new StringBuilder();
+        for (ConstraintViolation<Object> constraintViolation : set) {
+            builder.append(constraintViolation.getMessage()).append(",");
+        }
+        return builder.substring(0, builder.length() - 1).toString();
     }
 
     /**
@@ -381,17 +451,7 @@ public class ExcelImportServer extends ImportBaseService {
                 ((Map) object).put(titleString, value);
             }
         } else {
-            ExcelVerifyHanlderResult verifyResult = verifyHandlerServer.verifyData(object, value,
-                titleString, excelParams.get(titleString).getVerify(), params.getVerifyHanlder());
-            if (verifyResult.isSuccess()) {
-                setValues(excelParams.get(titleString), object, value);
-            } else {
-                Cell errorCell = row.createCell(row.getLastCellNum());
-                errorCell.setCellValue(verifyResult.getMsg());
-                errorCell.setCellStyle(errorCellStyle);
-                verfiyFail = true;
-                throw new ExcelImportException(ExcelImportEnum.VERIFY_ERROR);
-            }
+            setValues(excelParams.get(titleString), object, value);
         }
     }
 

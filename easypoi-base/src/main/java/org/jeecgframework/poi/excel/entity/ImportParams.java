@@ -24,6 +24,7 @@ import org.jeecgframework.poi.handler.inter.IExcelVerifyHandler;
  * @date 2013-9-24
  * @version 1.0
  */
+@SuppressWarnings("rawtypes")
 public class ImportParams extends ExcelBaseParams {
     /**
      * 表格标题行数,默认0
@@ -53,6 +54,10 @@ public class ImportParams extends ExcelBaseParams {
      * 是否需要保存上传的Excel,默认为false
      */
     private boolean             needSave         = false;
+    /**
+     * 是否需要校验上传的Excel,默认为false
+     */
+    private boolean             needVerfiy         = false;
     /**
      * 保存上传的Excel目录,默认是 如 TestEntity这个类保存路径就是
      * upload/excelUpload/Test/yyyyMMddHHmss_***** 保存名称上传时间_五位随机数
@@ -145,6 +150,14 @@ public class ImportParams extends ExcelBaseParams {
 
     public void setStartSheetIndex(int startSheetIndex) {
         this.startSheetIndex = startSheetIndex;
+    }
+
+    public boolean isNeedVerfiy() {
+        return needVerfiy;
+    }
+
+    public void setNeedVerfiy(boolean needVerfiy) {
+        this.needVerfiy = needVerfiy;
     }
 
 }

@@ -31,13 +31,12 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
-import org.jeecgframework.poi.excel.annotation.ExcelVerify;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelCollectionParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelImportEntity;
-import org.jeecgframework.poi.excel.entity.params.ExcelVerifyEntity;
 import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.util.PoiReflectorUtil;
 
@@ -69,7 +68,6 @@ public class ImportBaseService {
         excelEntity.setSaveType(excel.imageType());
         excelEntity.setReplace(excel.replace());
         excelEntity.setDatabaseFormat(excel.databaseFormat());
-        excelEntity.setVerify(getImportVerify(field));
         excelEntity.setSuffix(excel.suffix());
         getExcelField(targetId, field, excelEntity, excel, pojoClass);
         if (getMethods != null) {
@@ -80,30 +78,6 @@ public class ImportBaseService {
         }
         temp.put(excelEntity.getName(), excelEntity);
 
-    }
-
-    /**
-     * 获取导入校验参数
-     * 
-     * @param field
-     * @return
-     */
-    public ExcelVerifyEntity getImportVerify(Field field) {
-        ExcelVerify verify = field.getAnnotation(ExcelVerify.class);
-        if (verify != null) {
-            ExcelVerifyEntity entity = new ExcelVerifyEntity();
-            entity.setEmail(verify.isEmail());
-            entity.setInterHandler(verify.interHandler());
-            entity.setMaxLength(verify.maxLength());
-            entity.setMinLength(verify.minLength());
-            entity.setMobile(verify.isMobile());
-            entity.setNotNull(verify.notNull());
-            entity.setRegex(verify.regex());
-            entity.setRegexTip(verify.regexTip());
-            entity.setTel(verify.isTel());
-            return entity;
-        }
-        return null;
     }
 
     /**
@@ -245,7 +219,7 @@ public class ImportBaseService {
                                                     + Math.round(Math.random() * 100000)
                                                     + (isXSSFWorkbook == true ? ".xlsx" : ".xls"));
         book.write(fos);
-        fos.close();
+        IOUtils.closeQuietly(fos);
     }
 
     /**

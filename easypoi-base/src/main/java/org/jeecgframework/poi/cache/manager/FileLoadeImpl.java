@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.poi.util.IOUtils;
 import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,14 +59,8 @@ public class FileLoadeImpl implements IFileLoader {
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
-            try {
-                if (fileis != null)
-                    fileis.close();
-                if (fileis != null)
-                    baos.close();
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
+            IOUtils.closeQuietly(fileis);
+            IOUtils.closeQuietly(baos);
         }
         LOGGER.error(fileis + "这个路径文件没有找到,请查询");
         return null;
