@@ -178,7 +178,7 @@ public final class PoiPublicUtil {
             }
             return sheetIndexPicMap;
         } else {
-            return null;
+            return sheetIndexPicMap;
         }
     }
 
