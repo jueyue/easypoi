@@ -415,7 +415,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                                          MergedRegionHelper mergedRegionHelper) throws Exception {
         //所有的cell创建一遍
         for (int i = 0; i < rowspan; i++) {
-            for (int j = 0, max = columnIndex + colspan; j < max; j++) {
+            for (int j = columnIndex, max = columnIndex + colspan; j < max; j++) {
                 if (row.getCell(j) == null)
                     row.createCell(j);
             }
@@ -432,7 +432,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             for (int i = 0; i < colspan && i < columns.size(); i++) {
                 boolean isNumber = false;
                 params = columns.get(colspan * k + i);
-                ci += i;
                 tempCreateCellSet.add(row.getRowNum() + "_" + (ci));
                 if (params == null) {
                     continue;
@@ -440,6 +439,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 if (StringUtils.isEmpty(params.getName())
                     && StringUtils.isEmpty(params.getConstValue())) {
                     row.getCell(ci).setCellStyle(columns.get(i).getCellStyle());
+                    ci = ci + columns.get(i).getColspan();
                     continue;
                 }
                 String val = null;
@@ -459,7 +459,11 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     row.getCell(ci).setCellValue(Double.parseDouble(val));
                     row.getCell(ci).setCellType(Cell.CELL_TYPE_NUMERIC);
                 } else {
-                    row.getCell(ci).setCellValue(val);
+                    try {
+                        row.getCell(ci).setCellValue(val);
+                    } catch (Exception e) {
+                        LOGGER.error(e.getMessage(),e);
+                    }
                 }
                 row.getCell(ci).setCellStyle(columns.get(i).getCellStyle());
                 //如果合并单元格,就把这个单元格的样式和之前的保持一致
@@ -472,7 +476,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                             row.getRowNum() + params.getRowspan() - 1, ci,
                             ci + params.getColspan() - 1));
                 }
-                ci = ci - i + columns.get(i).getColspan() - 1;
+                ci = ci + columns.get(i).getColspan();
             }
             row = row.getSheet().getRow(row.getRowNum() + 1);
         }
@@ -516,7 +520,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             int startIndex = cell.getColumnIndex();
             Row row = cell.getRow();
             while (true) {
-                index += columns.get(columns.size() - 1).getColspan();
+                index += 1;
                 cell = row.getCell(index);
                 //可能是合并的单元格
                 if (cell == null) {
@@ -562,6 +566,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         for (int i = 0; i < columns.size(); i++) {
             colspan += columns.get(i).getColspan();
         }
+        colspan = colspan/rowspan;
         return new Object[] { rowspan, colspan, columns };
     }
 

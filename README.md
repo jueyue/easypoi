@@ -98,6 +98,8 @@ EasyPoi 文档
 
 [EasyPoi-多行模板输出(New)](http://blog.afterturn.cn/?p=40)
 
+[EasyPoi-校验集成](http://blog.afterturn.cn/?p=65)
+
 
 --------------------------
 EasyPoi 模板 表达式支持
