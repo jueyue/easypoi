@@ -462,7 +462,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     try {
                         row.getCell(ci).setCellValue(val);
                     } catch (Exception e) {
-                        LOGGER.error(e.getMessage(),e);
+                        LOGGER.error(e.getMessage(), e);
                     }
                 }
                 row.getCell(ci).setCellStyle(columns.get(i).getCellStyle());
@@ -520,7 +520,14 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             int startIndex = cell.getColumnIndex();
             Row row = cell.getRow();
             while (true) {
-                index += 1;
+                int colSpan = columns.get(columns.size() - 1) != null
+                    ? columns.get(columns.size() - 1).getColspan() : 1;
+                index += columns.get(columns.size() - 1).getColspan();
+                for (int i = 1; i < colSpan; i++) {
+                    //添加跳过的数据
+                    columns.add(null);
+                    continue;
+                }
                 cell = row.getCell(index);
                 //可能是合并的单元格
                 if (cell == null) {
@@ -564,9 +571,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         }
         colspan = 0;
         for (int i = 0; i < columns.size(); i++) {
-            colspan += columns.get(i).getColspan();
+            colspan += columns.get(i) != null ? columns.get(i).getColspan() : 0;
         }
-        colspan = colspan/rowspan;
+        colspan = colspan / rowspan;
         return new Object[] { rowspan, colspan, columns };
     }
 

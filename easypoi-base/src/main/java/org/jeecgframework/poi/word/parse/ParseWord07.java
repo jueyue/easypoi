@@ -119,7 +119,7 @@ public class ParseWord07 {
             text = text.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
                 .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
             String[] keys = text.replaceAll("\\s{1,}", " ").trim().split(" ");
-            return (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
+            return PoiPublicUtil.getParamsValue(keys[0], map);
         }
         return null;
     }

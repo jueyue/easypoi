@@ -72,7 +72,6 @@ public class ExcelToHtmlServer {
 
     public String printPage() {
         try {
-            System.out.println("--来了一次请求--");
             ensureOut();
             if (completeHTML) {
                 out.format("<!DOCTYPE HTML>%n");

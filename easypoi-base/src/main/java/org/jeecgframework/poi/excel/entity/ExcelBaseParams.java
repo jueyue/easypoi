@@ -22,6 +22,7 @@ import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
  * @author JueYue
  * @date 2014年6月20日 下午1:56:52
  */
+@SuppressWarnings("rawtypes")
 public class ExcelBaseParams {
 
     /**
