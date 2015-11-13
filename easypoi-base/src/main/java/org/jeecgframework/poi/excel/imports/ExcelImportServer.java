@@ -27,12 +27,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.POIXMLDocument;
@@ -62,6 +56,7 @@ import org.jeecgframework.poi.exception.excel.enums.ExcelImportEnum;
 import org.jeecgframework.poi.handler.inter.IExcelModel;
 import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.util.PoiReflectorUtil;
+import org.jeecgframework.poi.util.PoiValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,13 +70,6 @@ import org.slf4j.LoggerFactory;
 public class ExcelImportServer extends ImportBaseService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ExcelImportServer.class);
-
-    private final static Validator validator;
-
-    static {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
 
     private CellValueServer cellValueServer;
 
@@ -207,6 +195,7 @@ public class ExcelImportServer extends ImportBaseService {
             rows.next();
         }
         Map<Integer, String> titlemap = getTitleMap(rows, params, excelCollection);
+        checkIsValidTemplate(titlemap, excelParams, params,excelCollection);
         Row row = null;
         Object object = null;
         String picId;
@@ -270,14 +259,13 @@ public class ExcelImportServer extends ImportBaseService {
         boolean isAdd = true;
         Cell cell = null;
         if (params.isNeedVerfiy()) {
-            Set<ConstraintViolation<Object>> set = validator.validate(object);
-            if (set.size() > 0) {
+            String errorMsg = PoiValidationUtil.validation(object);
+            if (StringUtils.isNotEmpty(errorMsg)) {
                 cell = row.createCell(row.getLastCellNum());
-                String errMsg = getValidateErrMsg(set);
-                cell.setCellValue(errMsg);
+                cell.setCellValue(errorMsg);
                 if (object instanceof IExcelModel) {
                     IExcelModel model = (IExcelModel) object;
-                    model.setErrorMsg(errMsg);
+                    model.setErrorMsg(errorMsg);
                 } else {
                     isAdd = false;
                 }
@@ -302,14 +290,6 @@ public class ExcelImportServer extends ImportBaseService {
         if (cell != null)
             cell.setCellStyle(errorCellStyle);
         return isAdd;
-    }
-
-    private String getValidateErrMsg(Set<ConstraintViolation<Object>> set) {
-        StringBuilder builder = new StringBuilder();
-        for (ConstraintViolation<Object> constraintViolation : set) {
-            builder.append(constraintViolation.getMessage()).append(",");
-        }
-        return builder.substring(0, builder.length() - 1).toString();
     }
 
     /**
@@ -426,6 +406,41 @@ public class ExcelImportServer extends ImportBaseService {
             saveThisExcel(params, pojoClass, isXSSFWorkbook, book);
         }
         return new ExcelImportResult(result, verfiyFail, book);
+    }
+
+    /**
+     * 检查是不是合法的模板
+     * @param titlemap
+     * @param excelParams
+     * @param params
+     * @param excelCollection 
+     */
+    private void checkIsValidTemplate(Map<Integer, String> titlemap, Map<String, ExcelImportEntity> excelParams, ImportParams params, List<ExcelCollectionParams> excelCollection) {
+       
+        if(params.getImportFields() != null){
+            for (int i = 0 ,le = params.getImportFields().length; i < le; i++) {
+                if(!titlemap.containsValue(params.getImportFields()[i])){
+                  throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);    
+                }
+            }
+        } else {
+          Collection<ExcelImportEntity> collection = excelParams.values();  
+          for (ExcelImportEntity excelImportEntity : collection) {
+              if(excelImportEntity.isImportField() && !titlemap.containsValue(excelImportEntity.getName())){
+                  throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);    
+              }
+          }
+          
+          for (int i = 0, le = excelCollection.size(); i < le; i++) {
+              ExcelCollectionParams collectionparams = excelCollection.get(i);
+              collection = collectionparams.getExcelParams().values();
+              for (ExcelImportEntity excelImportEntity : collection) {
+                  if(excelImportEntity.isImportField() && !titlemap.containsValue(collectionparams.getExcelName()+"_"+excelImportEntity.getName())){
+                      throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);    
+                  }
+              }
+          }
+        }
     }
 
     /**

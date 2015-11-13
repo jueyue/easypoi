@@ -26,7 +26,7 @@ public class ExcelImportException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private ExcelImportEnum   type;
+    private ExcelImportEnum type;
 
     public ExcelImportException() {
         super();
@@ -48,6 +48,10 @@ public class ExcelImportException extends RuntimeException {
     public ExcelImportException(String message, ExcelImportEnum type) {
         super(message);
         this.type = type;
+    }
+
+    public ExcelImportException(String message, Throwable cause) {
+        super(message, cause);
     }
 
     public ExcelImportEnum getType() {

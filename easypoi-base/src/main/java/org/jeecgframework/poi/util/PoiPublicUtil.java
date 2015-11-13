@@ -31,6 +31,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
@@ -431,6 +432,27 @@ public final class PoiPublicUtil {
             temp = bigDecimal.toPlainString();
         }
         return temp;
+    }
+    
+    /**
+     * 统一 key的获取规则
+     * @param key
+     * @param targetId
+     * @return
+     */
+    public static String getValueByTargetId(String key, String targetId, String defalut){
+        if (StringUtils.isEmpty(targetId) || key.indexOf("_") < 0) {
+            return key;
+        }
+        String[] arr = key.split(",");
+        String[] tempArr;
+        for (String str : arr) {
+            tempArr = str.split("_");
+            if (targetId.equals(tempArr[1])) {
+                return tempArr[0];
+            }
+        }
+        return defalut;
     }
 
 }

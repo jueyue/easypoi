@@ -44,6 +44,7 @@ import org.jeecgframework.poi.util.PoiReflectorUtil;
  * @author JueYue
  * @date 2014年8月9日 下午11:01:32
  */
+@SuppressWarnings("rawtypes")
 public class ExportBase {
 
     protected IExcelDataHandler dataHanlder;
@@ -123,8 +124,8 @@ public class ExportBase {
                 getAllExcelField(exclusions, StringUtils.isNotEmpty(excel.id()) ? excel.id()
                     : targetId, PoiPublicUtil.getClassFields(clz), list, clz, null);
                 excelEntity = new ExcelExportEntity();
-                excelEntity.setName(getExcelName(excel.name(), targetId));
-                excelEntity.setOrderNum(getCellOrder(excel.orderNum(), targetId));
+                excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId,null));
+                excelEntity.setOrderNum(Integer.valueOf(PoiPublicUtil.getValueByTargetId(excel.orderNum(), targetId,"0")));
                 excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 excelEntity.setList(list);
                 excelParams.add(excelEntity);
@@ -143,28 +144,6 @@ public class ExportBase {
     }
 
     /**
-     * 获取这个字段的顺序
-     * 
-     * @param orderNum
-     * @param targetId
-     * @return
-     */
-    public int getCellOrder(String orderNum, String targetId) {
-        if (isInteger(orderNum) || targetId == null) {
-            return Integer.valueOf(orderNum);
-        }
-        String[] arr = orderNum.split(",");
-        String[] temp;
-        for (String str : arr) {
-            temp = str.split("_");
-            if (targetId.equals(temp[1])) {
-                return Integer.valueOf(temp[0]);
-            }
-        }
-        return 0;
-    }
-
-    /**
      * 获取填如这个cell的值,提供一些附加功能
      * 
      * @param entity
@@ -172,6 +151,7 @@ public class ExportBase {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public Object getCellValue(ExcelExportEntity entity, Object obj) throws Exception {
         Object value;
         if (obj instanceof Map) {
@@ -224,14 +204,14 @@ public class ExportBase {
      */
     private void getExcelField(String targetId, Field field, ExcelExportEntity excelEntity,
                                Excel excel, Class<?> pojoClass) throws Exception {
-        excelEntity.setName(getExcelName(excel.name(), targetId));
+        excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null));
         excelEntity.setWidth(excel.width());
         excelEntity.setHeight(excel.height());
         excelEntity.setNeedMerge(excel.needMerge());
         excelEntity.setMergeVertical(excel.mergeVertical());
         excelEntity.setMergeRely(excel.mergeRely());
         excelEntity.setReplace(excel.replace());
-        excelEntity.setOrderNum(getCellOrder(excel.orderNum(), targetId));
+        excelEntity.setOrderNum(Integer.valueOf(PoiPublicUtil.getValueByTargetId(excel.orderNum(), targetId, "0")));
         excelEntity.setWrap(excel.isWrap());
         excelEntity.setExportImageType(excel.imageType());
         excelEntity.setSuffix(excel.suffix());
@@ -243,25 +223,6 @@ public class ExportBase {
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
     }
 
-    /**
-     * 判断在这个单元格显示的名称
-     * 
-     * @param exportName
-     * @param targetId
-     * @return
-     */
-    public String getExcelName(String exportName, String targetId) {
-        if (exportName.indexOf(",") < 0) {
-            return exportName;
-        }
-        String[] arr = exportName.split(",");
-        for (String str : arr) {
-            if (str.indexOf(targetId) != -1) {
-                return str.split("_")[0];
-            }
-        }
-        return null;
-    }
 
     /**
      * 多个反射获取值

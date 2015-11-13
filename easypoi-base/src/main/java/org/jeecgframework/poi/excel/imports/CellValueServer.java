@@ -242,7 +242,8 @@ public class CellValueServer {
      */
     private Object getValueByType(String xclass, Object result, ExcelImportEntity entity) {
         try {
-            if(result == null){
+            //过滤空和空字符串,如果基本类型null会在上层抛出,这里就不处理了
+            if(result == null || StringUtils.isBlank(result.toString())){
                 return null;
             }
             if ("class java.util.Date".equals(xclass)) {

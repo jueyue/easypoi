@@ -43,6 +43,10 @@ public class ExcelImportEntity extends ExcelBaseEntity {
      * 后缀
      */
     private String                  suffix;
+    /**
+     * 导入校验字段
+     */
+    private boolean                 importField;
 
     private List<ExcelImportEntity> list;
 
@@ -92,6 +96,14 @@ public class ExcelImportEntity extends ExcelBaseEntity {
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+    public boolean isImportField() {
+        return importField;
+    }
+
+    public void setImportField(boolean importField) {
+        this.importField = importField;
     }
 
 }

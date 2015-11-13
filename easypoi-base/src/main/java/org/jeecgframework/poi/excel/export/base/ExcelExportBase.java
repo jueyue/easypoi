@@ -57,6 +57,7 @@ import org.slf4j.LoggerFactory;
  * @author JueYue
  * @date 2014年6月17日 下午6:15:13
  */
+@SuppressWarnings("unchecked")
 public abstract class ExcelExportBase extends ExportBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportBase.class);
