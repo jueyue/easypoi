@@ -71,6 +71,10 @@ public class ImportParams extends ExcelBaseParams {
      * 最后的无效行数
      */
     private int                 lastOfInvalidRow = 0;
+    /**
+     * 导入时校验数据模板,是不是正确的Excel
+     */
+    private String[]            importFields;
 
     public int getHeadRows() {
         return headRows;
@@ -158,6 +162,14 @@ public class ImportParams extends ExcelBaseParams {
 
     public void setNeedVerfiy(boolean needVerfiy) {
         this.needVerfiy = needVerfiy;
+    }
+
+    public String[] getImportFields() {
+        return importFields;
+    }
+
+    public void setImportFields(String[] importFields) {
+        this.importFields = importFields;
     }
 
 }

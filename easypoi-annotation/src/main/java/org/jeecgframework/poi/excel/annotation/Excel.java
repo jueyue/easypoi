@@ -129,4 +129,12 @@ public @interface Excel {
      * @return
      */
     public boolean isHyperlink() default false;
+    
+    /**
+     *  导入时会校验这个字段,看看这个字段是不是导入的Excel中有,如果没有说明是错误的Excel
+     *  本意是想用true的,想想还是false比较好
+     *  可以使用a_id,b_id来确实是否使用
+     * @return
+     */
+    public String isImportField() default "false";
 }

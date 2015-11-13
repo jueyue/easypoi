@@ -522,9 +522,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             while (true) {
                 int colSpan = columns.get(columns.size() - 1) != null
                     ? columns.get(columns.size() - 1).getColspan() : 1;
-                index += columns.get(columns.size() - 1).getColspan();
+                index += colSpan;
                 for (int i = 1; i < colSpan; i++) {
-                    //添加跳过的数据
+                    //添加合并的单元格,这些单元可能不是空,但是没有值,所以也需要跳过
                     columns.add(null);
                     continue;
                 }

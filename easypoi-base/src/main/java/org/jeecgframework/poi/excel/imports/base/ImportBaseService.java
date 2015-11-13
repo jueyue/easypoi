@@ -34,6 +34,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
+import org.jeecgframework.poi.excel.annotation.ExcelEntity;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelCollectionParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelImportEntity;
@@ -69,6 +70,8 @@ public class ImportBaseService {
         excelEntity.setReplace(excel.replace());
         excelEntity.setDatabaseFormat(excel.databaseFormat());
         excelEntity.setSuffix(excel.suffix());
+        excelEntity.setImportField(Boolean
+            .valueOf(PoiPublicUtil.getValueByTargetId(excel.isImportField(), targetId, "false")));
         getExcelField(targetId, field, excelEntity, excel, pojoClass);
         if (getMethods != null) {
             List<Method> newMethods = new ArrayList<Method>();
@@ -103,15 +106,18 @@ public class ImportBaseService {
             }
             if (PoiPublicUtil.isCollection(field.getType())) {
                 // 集合对象设置属性
+                ExcelCollection excel = field.getAnnotation(ExcelCollection.class);
                 ExcelCollectionParams collection = new ExcelCollectionParams();
                 collection.setName(field.getName());
                 Map<String, ExcelImportEntity> temp = new HashMap<String, ExcelImportEntity>();
                 ParameterizedType pt = (ParameterizedType) field.getGenericType();
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
                 collection.setType(clz);
-                getExcelFieldList(targetId, PoiPublicUtil.getClassFields(clz), clz, temp, null);
+                getExcelFieldList(StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
+                    PoiPublicUtil.getClassFields(clz), clz, temp, null);
                 collection.setExcelParams(temp);
-                collection.setExcelName(field.getAnnotation(ExcelCollection.class).name());
+                collection.setExcelName(PoiPublicUtil.getValueByTargetId(
+                    field.getAnnotation(ExcelCollection.class).name(), targetId, null));
                 additionalCollectionName(collection);
                 excelCollection.add(collection);
             } else if (PoiPublicUtil.isJavaClass(field)) {
@@ -121,9 +127,12 @@ public class ImportBaseService {
                 if (getMethods != null) {
                     newMethods.addAll(getMethods);
                 }
+                //
                 newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
-                getAllExcelField(targetId, PoiPublicUtil.getClassFields(field.getType()),
-                    excelParams, excelCollection, field.getType(), newMethods);
+                ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
+                getAllExcelField(StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
+                    PoiPublicUtil.getClassFields(field.getType()), excelParams, excelCollection,
+                    field.getType(), newMethods);
             }
         }
     }
@@ -144,7 +153,7 @@ public class ImportBaseService {
 
     public void getExcelField(String targetId, Field field, ExcelImportEntity excelEntity,
                               Excel excel, Class<?> pojoClass) throws Exception {
-        excelEntity.setName(getExcelName(excel.name(), targetId));
+        excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null));
         String fieldname = field.getName();
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(fieldname));
         if (StringUtils.isNotEmpty(excel.importFormat())) {
@@ -155,8 +164,8 @@ public class ImportBaseService {
     }
 
     public void getExcelFieldList(String targetId, Field[] fields, Class<?> pojoClass,
-                                  Map<String, ExcelImportEntity> temp, List<Method> getMethods)
-                                                                                               throws Exception {
+                                  Map<String, ExcelImportEntity> temp,
+                                  List<Method> getMethods) throws Exception {
         ExcelImportEntity excelEntity = null;
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
@@ -170,32 +179,13 @@ public class ImportBaseService {
                 if (getMethods != null) {
                     newMethods.addAll(getMethods);
                 }
-                newMethods
-                    .add(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));
-                getExcelFieldList(targetId, PoiPublicUtil.getClassFields(field.getType()),
-                    field.getType(), temp, newMethods);
+                ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
+                newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));
+                getExcelFieldList(StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
+                    PoiPublicUtil.getClassFields(field.getType()), field.getType(), temp,
+                    newMethods);
             }
         }
-    }
-
-    /**
-     * 判断在这个单元格显示的名称
-     * 
-     * @param exportName
-     * @param targetId
-     * @return
-     */
-    public String getExcelName(String exportName, String targetId) {
-        if (exportName.indexOf("_") < 0) {
-            return exportName;
-        }
-        String[] arr = exportName.split(",");
-        for (String str : arr) {
-            if (str.indexOf(targetId) != -1) {
-                return str.split("_")[0];
-            }
-        }
-        return null;
     }
 
     public Object getFieldBySomeMethod(List<Method> list, Object t) throws Exception {
@@ -215,8 +205,8 @@ public class ImportBaseService {
             savefile.mkdirs();
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyMMddHHmmss");
-        FileOutputStream fos = new FileOutputStream(path + "/" + format.format(new Date()) + "_"
-                                                    + Math.round(Math.random() * 100000)
+        FileOutputStream fos = new FileOutputStream(
+            path + "/" + format.format(new Date()) + "_" + Math.round(Math.random() * 100000)
                                                     + (isXSSFWorkbook == true ? ".xlsx" : ".xls"));
         book.write(fos);
         IOUtils.closeQuietly(fos);
@@ -245,8 +235,8 @@ public class ImportBaseService {
      * @param setMethods
      * @param object
      */
-    public void setFieldBySomeMethod(List<Method> setMethods, Object object, Object value)
-                                                                                          throws Exception {
+    public void setFieldBySomeMethod(List<Method> setMethods, Object object,
+                                     Object value) throws Exception {
         Object t = getFieldBySomeMethod(setMethods, object);
         setMethods.get(setMethods.size() - 1).invoke(t, value);
     }

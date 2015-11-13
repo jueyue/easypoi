@@ -17,15 +17,16 @@ package org.jeecgframework.poi.excel;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.poi.util.IOUtils;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.result.ExcelImportResult;
 import org.jeecgframework.poi.excel.imports.ExcelImportServer;
 import org.jeecgframework.poi.excel.imports.sax.SaxReadExcel;
 import org.jeecgframework.poi.excel.imports.sax.parse.ISaxRowRead;
+import org.jeecgframework.poi.exception.excel.ExcelImportException;
 import org.jeecgframework.poi.handler.inter.IExcelReadRowHanlder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,20 +57,17 @@ public class ExcelImportUtil {
      */
     public static <T> List<T> importExcel(File file, Class<?> pojoClass, ImportParams params) {
         FileInputStream in = null;
-        List<T> result = null;
         try {
             in = new FileInputStream(file);
-            result = new ExcelImportServer().importExcelByIs(in, pojoClass, params).getList();
+            return new ExcelImportServer().importExcelByIs(in, pojoClass, params).getList();
+        } catch (ExcelImportException e) {
+            throw new ExcelImportException(e.getType(), e);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            throw new ExcelImportException(e.getMessage(), e);
         } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
+            IOUtils.closeQuietly(in);
         }
-        return result;
     }
 
     /**
@@ -116,16 +114,14 @@ public class ExcelImportUtil {
         try {
             in = new FileInputStream(file);
             return new ExcelImportServer().importExcelByIs(in, pojoClass, params);
+        } catch (ExcelImportException e) {
+            throw new ExcelImportException(e.getType(), e);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            throw new ExcelImportException(e.getMessage(), e);
         } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
+            IOUtils.closeQuietly(in);
         }
-        return null;
     }
 
     /**
