@@ -18,7 +18,6 @@ package org.jeecgframework.poi.word.parse;
 import static org.jeecgframework.poi.util.PoiElUtil.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -222,8 +221,10 @@ public class ParseWord07 {
             } else if (listobj instanceof ExcelListEntity) {
                 table.removeRow(i);// 删除这一行
                 new ExcelEntityParse().parseNextRowAndAddRow(table, i, (ExcelListEntity) listobj);
+                i = i + ((ExcelListEntity) listobj).getList().size() - 1;//删除之后要往上挪一行,然后加上跳过新建的行数
             } else {
                 ExcelMapParse.parseNextRowAndAddRow(table, i, (List) listobj);
+                i = i + ((List) listobj).size() - 1;//删除之后要往上挪一行,然后加上跳过新建的行数
             }
         }
     }
