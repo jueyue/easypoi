@@ -57,7 +57,7 @@ public class ExcelEntityParse extends ExportBase {
     private int createCells(int index, Object t, List<ExcelExportEntity> excelParams,
                             XWPFTable table, short rowHeight) throws Exception {
         ExcelExportEntity entity;
-        XWPFTableRow row = table.createRow();
+        XWPFTableRow row = table.insertNewTableRow(index);
         row.setHeight(rowHeight);
         int maxHeight = 1, cellNum = 0;
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {

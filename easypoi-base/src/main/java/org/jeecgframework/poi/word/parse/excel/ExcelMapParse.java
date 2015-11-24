@@ -75,7 +75,7 @@ public final class ExcelMapParse {
         int cellIndex = 0;// 创建完成对象一行好像多了一个cell
         Map<String, Object> tempMap = Maps.newHashMap();
         for (Object obj : list) {
-            currentRow = isCreate ? table.createRow() : table.getRow(index++);
+            currentRow = isCreate ? table.insertNewTableRow(index++) : table.getRow(index++);
             tempMap.put("t", obj);
             for (cellIndex = 0; cellIndex < currentRow.getTableCells().size(); cellIndex++) {
                 String val = eval(params[cellIndex], tempMap).toString();
