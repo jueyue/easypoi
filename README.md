@@ -56,17 +56,17 @@ https://oss.sonatype.org/content/repositories/snapshots/
 		 <dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.1.5</version>
+			<version>2.1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.1.5</version>
+			<version>2.1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.1.5</version>
+			<version>2.1.6</version>
 		</dependency>
 ```
 	
@@ -142,6 +142,15 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用
 --------------------------
 版本修改
 --------------------------
+
+ - 2.1.6 校验规则不向下兼容,升级请自行考虑
+ 	- 其实不想升的,不过有必要的bug要修复,所以就先生上来吧
+ 	- 升级交易为hibernate校验,hibernate的maven自己配置可选
+ 	- WORD的Excel遍历 的Row,改为Insert Row
+ 	- 修复了font的数组越界
+ 	- 修复targetId的数组越界
+ 	- 修复多行模板导出的bug
+ 	- 增加了验证Excel的功能
 
  - 2.1.5 bug修复,建议升级
  	- fix指定sheetNum导入的bug

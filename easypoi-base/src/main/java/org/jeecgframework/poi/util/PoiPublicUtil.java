@@ -448,6 +448,9 @@ public final class PoiPublicUtil {
         String[] tempArr;
         for (String str : arr) {
             tempArr = str.split("_");
+            if(tempArr == null || tempArr.length < 2){
+                return defalut;
+            }
             if (targetId.equals(tempArr[1])) {
                 return tempArr[0];
             }
