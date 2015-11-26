@@ -416,8 +416,11 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         //所有的cell创建一遍
         for (int i = 0; i < rowspan; i++) {
             for (int j = columnIndex, max = columnIndex + colspan; j < max; j++) {
-                if (row.getCell(j) == null)
+                if (row.getCell(j) == null){
                     row.createCell(j);
+                    row.getCell(j).setCellStyle(row.getRowNum() % 2 == 0 ? getStyles(false, null) : getStyles(true, null));
+                }
+                    
             }
             if (i < rowspan - 1) {
                 row = row.getSheet().getRow(row.getRowNum() + 1);

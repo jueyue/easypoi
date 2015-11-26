@@ -11,7 +11,7 @@ EasyPoi Excel和 Word简易工具类
 
 [测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
-!!!2.1.6-SNAPSHOT 版本开始和之前的版本校验不兼用,使用hibernate的校验,删除了之前的注解,请注意
+!!!2.1.6 版本开始和之前的版本校验不兼用,使用hibernate的校验,删除了之前的注解,请注意
 	
 ---------------------------
 EasyPoi的主要特点
@@ -122,7 +122,7 @@ EasyPoi 模板 表达式支持
 --------------------------
 pom说明
 --------------------------
-word和sax读取的时候才使用,就不是必须的了,请手动引用
+word和sax读取的时候才使用,就不是必须的了,请手动引用,hibernate的校验也是可选的
 ```xml
 			<!-- sax 读取时候用到的 -->
 			<dependency>
@@ -135,6 +135,13 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-scratchpad</artifactId>
 				<version>${poi.version}</version>
+				<optional>true</optional>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>5.1.3.Final</version>
 				<optional>true</optional>
 			</dependency>
 ```
