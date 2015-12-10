@@ -25,6 +25,8 @@ import org.jeecgframework.poi.exception.excel.ExcelExportException;
  * @date 2015年4月25日 下午12:13:21
  */
 public final class PoiElUtil {
+    
+    
 
     public static final String LENGTH             = "le:";
     public static final String FOREACH            = "fe:";
@@ -218,10 +220,6 @@ public final class PoiElUtil {
         }
         return text.substring(text.indexOf(prefix + LEFT_BRACKET) + 1 + prefix.length(), position)
             .trim();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getKey(IF_DELETE, "测试 " + IF_DELETE + " (小明)"));
     }
 
     /**
