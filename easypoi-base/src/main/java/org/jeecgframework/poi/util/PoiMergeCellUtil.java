@@ -185,11 +185,10 @@ public final class PoiMergeCellUtil {
      * @return
      */
     private static String getCellNotNullText(Cell cell, int index, int rowNum) {
-        String temp = cell.getRow().getCell(index).getStringCellValue();
-        while (StringUtils.isEmpty(temp)) {
-            temp = cell.getRow().getSheet().getRow(--rowNum).getCell(index).getStringCellValue();
+        if(cell.getRow().getCell(index) != null && StringUtils.isNotEmpty(cell.getRow().getCell(index).getStringCellValue())){
+            return cell.getRow().getCell(index).getStringCellValue();
         }
-        return temp;
+         return getCellNotNullText(cell.getRow().getSheet().getRow(--rowNum).getCell(index),index,rowNum);
     }
 
 }
