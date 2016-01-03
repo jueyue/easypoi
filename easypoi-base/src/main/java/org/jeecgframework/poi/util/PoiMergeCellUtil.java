@@ -166,8 +166,7 @@ public final class PoiMergeCellUtil {
         // 存在依赖关系
         if (mergeEntity.getText().equals(text)) {
             for (int i = 0; i < delys.length; i++) {
-                if (!getCellNotNullText(cell, delys[i], rowNum).equals(
-                    mergeEntity.getRelyList().get(i))) {
+                if (mergeEntity.getRelyList().get(i) ==null || !mergeEntity.getRelyList().get(i).equals(getCellNotNullText(cell, delys[i], rowNum))) {
                     return false;
                 }
             }
@@ -185,6 +184,9 @@ public final class PoiMergeCellUtil {
      * @return
      */
     private static String getCellNotNullText(Cell cell, int index, int rowNum) {
+        if(cell == null || cell.getRow() == null){
+            return null;
+        }
         if(cell.getRow().getCell(index) != null && StringUtils.isNotEmpty(cell.getRow().getCell(index).getStringCellValue())){
             return cell.getRow().getCell(index).getStringCellValue();
         }
