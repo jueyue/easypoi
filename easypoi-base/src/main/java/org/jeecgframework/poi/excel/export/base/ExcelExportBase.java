@@ -93,10 +93,12 @@ public abstract class ExcelExportBase extends ExportBase {
             if (entity.getList() != null) {
                 Collection<?> list = getListCellValue(entity, t);
                 int listC = 0;
-                for (Object obj : list) {
-                    createListCells(patriarch, index + listC, cellNum, obj, entity.getList(), sheet,
-                        workbook);
-                    listC++;
+                if(list!=null&&list.size()>0){
+	                for (Object obj : list) {
+	                    createListCells(patriarch, index + listC, cellNum, obj, entity.getList(), sheet,
+	                        workbook);
+	                    listC++;
+	                }
                 }
                 cellNum += entity.getList().size();
                 if (list != null && list.size() > maxHeight) {
@@ -197,8 +199,7 @@ public abstract class ExcelExportBase extends ExportBase {
     }
 
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
-        if (excelExportEntity.getName().equals("序号")
-            && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
+        if (excelExportEntity.getName().equals("序号")&&excelExportEntity.getFormat()!=null&&excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
             createStringCell(row, 0, currentIndex + "",
                 index % 2 == 0 ? getStyles(false, null) : getStyles(true, null), null);
             currentIndex = currentIndex + 1;
