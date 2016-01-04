@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -34,7 +33,6 @@ import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
-import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
@@ -75,7 +73,8 @@ public class ExcelExportServer extends ExcelExportBase {
      * @param workbook
      * @param feildWidth
      */
-    public int createHeaderRow(ExportParams entity, Sheet sheet, Workbook workbook, int feildWidth) {
+    public int createHeaderRow(ExportParams entity, Sheet sheet, Workbook workbook,
+                               int feildWidth) {
         Row row = sheet.createRow(0);
         row.setHeight(entity.getTitleHeight());
         createStringCell(row, 0, entity.getTitle(),
@@ -105,32 +104,13 @@ public class ExcelExportServer extends ExcelExportBase {
                             Collection<?> dataSet) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Excel export start ,class is {}", pojoClass);
-            LOGGER.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
-                : "07");
+            LOGGER.debug("Excel version is {}",
+                entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
         }
         if (workbook == null || entity == null || pojoClass == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
-        super.type = entity.getType();
-        if (type.equals(ExcelType.XSSF)) {
-            MAX_NUM = 1000000;
-        }
-        Sheet sheet = null;
         try {
-            sheet = workbook.createSheet(entity.getSheetName());
-        } catch (Exception e) {
-            // 重复遍历,出现了重名现象,创建非指定的名称Sheet
-            sheet = workbook.createSheet();
-        }
-        try {
-            dataHanlder = entity.getDataHanlder();
-            if (dataHanlder != null && dataHanlder.getNeedHandlerFields() != null) {
-                needHanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
-            }
-            // 创建表格样式
-            setExcelExportStyler((IExcelExportStyler) entity.getStyle()
-                .getConstructor(Workbook.class).newInstance(workbook));
-            Drawing patriarch = sheet.createDrawingPatriarch();
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
                 excelParams.add(indexExcelEntity(entity));
@@ -139,42 +119,10 @@ public class ExcelExportServer extends ExcelExportBase {
             Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             String targetId = etarget == null ? null : etarget.value();
-            getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass, null);
-            sortAllParams(excelParams);
-            int index = entity.isCreateHeadRows() ? createHeaderAndTitle(entity, sheet, workbook,
-                excelParams) : 0;
-            int titleHeight = index;
-            setCellWith(excelParams, sheet);
-            short rowHeight = getRowHeight(excelParams);
-            setCurrentIndex(1);
-            Iterator<?> its = dataSet.iterator();
-            List<Object> tempList = new ArrayList<Object>();
-            while (its.hasNext()) {
-                Object t = its.next();
-                index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight);
-                tempList.add(t);
-                if (index >= MAX_NUM)
-                    break;
-            }
-            mergeCells(sheet, excelParams, titleHeight);
-
-            if (entity.getFreezeCol() != 0) {
-                sheet.createFreezePane(entity.getFreezeCol(), 0, entity.getFreezeCol(), 0);
-            }
-
-            its = dataSet.iterator();
-            for (int i = 0, le = tempList.size(); i < le; i++) {
-                its.next();
-                its.remove();
-            }
-            // 创建合计信息
-            addStatisticsRow(getExcelExportStyler().getStyles(true, null), sheet);
-
-            // 发现还有剩余list 继续循环创建Sheet
-            if (dataSet.size() > 0) {
-                createSheet(workbook, entity, pojoClass, dataSet);
-            }
-
+            getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
+                null);
+            //获取所有参数后,后面的逻辑判断就一致了
+            createSheetForMap(workbook, entity, excelParams, dataSet);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             LOGGER.error(e.getMessage(), e);
@@ -183,11 +131,10 @@ public class ExcelExportServer extends ExcelExportBase {
     }
 
     public void createSheetForMap(Workbook workbook, ExportParams entity,
-                                  List<ExcelExportEntity> entityList,
-                                  Collection<? extends Map<?, ?>> dataSet) {
+                                  List<ExcelExportEntity> entityList, Collection<?> dataSet) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Excel version is {}", entity.getType().equals(ExcelType.HSSF) ? "03"
-                : "07");
+            LOGGER.debug("Excel version is {}",
+                entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
         }
         if (workbook == null || entity == null || entityList == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
@@ -218,8 +165,8 @@ public class ExcelExportServer extends ExcelExportBase {
             }
             excelParams.addAll(entityList);
             sortAllParams(excelParams);
-            int index = entity.isCreateHeadRows() ? createHeaderAndTitle(entity, sheet, workbook,
-                excelParams) : 0;
+            int index = entity.isCreateHeadRows()
+                ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
             int titleHeight = index;
             setCellWith(excelParams, sheet);
             short rowHeight = getRowHeight(excelParams);
@@ -247,6 +194,9 @@ public class ExcelExportServer extends ExcelExportBase {
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {
                 createSheetForMap(workbook, entity, entityList, dataSet);
+            } else {
+                // 创建合计信息
+                addStatisticsRow(getExcelExportStyler().getStyles(true, null), sheet);
             }
 
         } catch (Exception e) {
@@ -281,10 +231,8 @@ public class ExcelExportServer extends ExcelExportBase {
             if (entity.getList() != null) {
                 List<ExcelExportEntity> sTitel = entity.getList();
                 if (StringUtils.isNotBlank(entity.getName())) {
-                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex
-                                                                                        + sTitel
-                                                                                            .size()
-                                                                                        - 1));
+                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex,
+                        cellIndex + sTitel.size() - 1));
                 }
                 for (int j = 0, size = sTitel.size(); j < size; j++) {
                     createStringCell(rows == 2 ? listRow : row, cellIndex, sTitel.get(j).getName(),

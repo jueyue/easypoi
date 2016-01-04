@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class PdfExportServer extends ExportBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PdfExportServer.class);
 
-    private Document document;
+    private Document            document;
 
     public PdfExportServer(OutputStream outStream) {
         try {
@@ -61,7 +62,14 @@ public class PdfExportServer extends ExportBase {
         }
     }
 
-    public Document createPdf(ExportParams entity, Class<?> pojoClass, Collection<?> dataSet) {
+    /**
+     * 创建Pdf的表格数据
+     * @param entity
+     * @param pojoClass
+     * @param dataSet
+     * @return
+     */
+    public Document createTable(ExportParams entity, Class<?> pojoClass, Collection<?> dataSet) {
         try {
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
@@ -74,9 +82,20 @@ public class PdfExportServer extends ExportBase {
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
                 null);
             sortAllParams(excelParams);
-            int index = entity.isCreateHeadRows() ? createHeaderAndTitle(entity, excelParams) : 0;
-            int titleHeight = index;
-            //setCellWith(excelParams, sheet);
+            //设置各个列的宽度
+            float[] widths = getCellWidths(excelParams);
+            PdfPTable table = new PdfPTable(widths.length);
+            table.setTotalWidth(widths);
+            //table.setLockedWidth(true);
+            //设置表头
+            createHeaderAndTitle(entity, table, excelParams);
+            short rowHeight = getRowHeight(excelParams);
+            Iterator<?> its = dataSet.iterator();
+            while (its.hasNext()) {
+                Object t = its.next();
+                createCells(table, t, excelParams, rowHeight);
+            }
+            document.add(table);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
@@ -85,17 +104,60 @@ public class PdfExportServer extends ExportBase {
         return document;
     }
 
-    private int createHeaderAndTitle(ExportParams entity,
-                                     List<ExcelExportEntity> excelParams) throws DocumentException {
-        PdfPTable table = new PdfPTable(excelParams.size());
+    private void createCells(PdfPTable table, Object t, List<ExcelExportEntity> excelParams,
+                             short rowHeight) throws Exception {
+        ExcelExportEntity entity;
+        int maxHeight = 1, cellNum = 0;
+        //int indexKey = createIndexCell(row, index, excelParams.get(0));
+        //cellNum += indexKey;
+        for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
+            entity = excelParams.get(k);
+            if (entity.getList() != null) {
+                Collection<?> list = getListCellValue(entity, t);
+                int listC = 0;
+                for (Object obj : list) {
+                    //createListCells(patriarch, index + listC, cellNum, obj, entity.getList(), sheet,
+                    //   workbook);
+                    listC++;
+                }
+                cellNum += entity.getList().size();
+                if (list != null && list.size() > maxHeight) {
+                    maxHeight = list.size();
+                }
+            } else {
+                Object value = getCellValue(entity, t);
+                if (entity.getType() == 1) {
+                    table.addCell(value == null ? "" : value.toString());
+                } else {
+                }
+            }
+        }
+    }
+
+    private float[] getCellWidths(List<ExcelExportEntity> excelParams) {
+        List<Float> widths = new ArrayList<Float>();
+        for (int i = 0; i < excelParams.size(); i++) {
+            if (excelParams.get(i).getList() != null) {
+                List<ExcelExportEntity> list = excelParams.get(i).getList();
+                for (int j = 0; j < list.size(); j++) {
+                    widths.add((float) (20 * list.get(j).getWidth()));
+                }
+            } else {
+                widths.add((float) (20 * excelParams.get(i).getWidth()));
+            }
+        }
+        float[] widthArr = new float[widths.size()];
+        for (int i = 0; i < widthArr.length; i++) {
+            widthArr[i] = widths.get(i);
+        }
+        return widthArr;
+    }
+
+    private void createHeaderAndTitle(ExportParams entity, PdfPTable table,
+                                      List<ExcelExportEntity> excelParams) throws DocumentException {
         for (int i = 0; i < excelParams.size(); i++) {
             table.addCell(new Phrase(excelParams.get(i).getName(), getFont()));
         }
-        for (int i = 0; i < excelParams.size(); i++) {
-            table.addCell(new Phrase("test", getFont()));
-        }
-        document.add(table);
-        return 0;
     }
 
     private Font getFont() {
