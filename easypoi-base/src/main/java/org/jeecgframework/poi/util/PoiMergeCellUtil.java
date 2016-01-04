@@ -163,7 +163,7 @@ public final class PoiMergeCellUtil {
         if (delys == null || delys.length == 0) {
             return mergeEntity.getText().equals(text);
         }
-        // 存在依赖关系
+        // 存在依赖关系 测试
         if (mergeEntity.getText().equals(text)) {
             for (int i = 0; i < delys.length; i++) {
                 if (mergeEntity.getRelyList().get(i) ==null || !mergeEntity.getRelyList().get(i).equals(getCellNotNullText(cell, delys[i], rowNum))) {

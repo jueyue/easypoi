@@ -1,0 +1,31 @@
+apply plugin : "java"
+apply plugin : 'eclipse'
+
+allprojects  {
+  apply plugin: 'maven'
+
+  group = 'org.jeecg'
+version = '2.1.7-SNAPSHOT'
+}
+
+subprojects {
+  apply plugin: 'java'
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+  [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+  task packageSources(type: Jar) {
+classifier = 'sources'
+from sourceSets.main.allSource
+
+}
+artifacts.archives packageSources
+  repositories {
+    mavenLocal()
+    
+    maven { url 'http://maven.oschina.net/content/groups/public/' }
+  }
+
+  
+  
+  
+}
