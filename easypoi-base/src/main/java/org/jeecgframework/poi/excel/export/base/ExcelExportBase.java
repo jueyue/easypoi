@@ -44,6 +44,7 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.vo.BaseEntityTypeConstants;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.util.PoiMergeCellUtil;
@@ -106,7 +107,7 @@ public abstract class ExcelExportBase extends ExportBase {
                 }
             } else {
                 Object value = getCellValue(entity, t);
-                if (entity.getType() == 1) {
+                if (entity.getType() == BaseEntityTypeConstants.StringType) {
                     createStringCell(row, cellNum++, value == null ? "" : value.toString(),
                         index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                         entity);
@@ -116,7 +117,19 @@ public abstract class ExcelExportBase extends ExportBase {
                                 row.getSheet().getWorkbook().getCreationHelper(), t,
                                 entity.getName(), value));
                     }
-                } else {
+                }
+                else if(entity.getType() == BaseEntityTypeConstants.DoubleType)
+                {
+                	createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
+                            index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
+                            entity);
+                        if (entity.isHyperlink()) {
+                            row.getCell(cellNum - 1)
+                                .setHyperlink(dataHanlder.getHyperlink(
+                                    row.getSheet().getWorkbook().getCreationHelper(), t,
+                                    entity.getName(), value));
+                        }
+                }else {
                     createImageCell(patriarch, entity, row, cellNum++,
                         value == null ? "" : value.toString(), t);
                 }
@@ -227,7 +240,7 @@ public abstract class ExcelExportBase extends ExportBase {
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);
             Object value = getCellValue(entity, obj);
-            if (entity.getType() == 1) {
+            if (entity.getType() == BaseEntityTypeConstants.StringType) {
                 createStringCell(row, cellNum++, value == null ? "" : value.toString(),
                     row.getRowNum() % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                     entity);
@@ -237,7 +250,19 @@ public abstract class ExcelExportBase extends ExportBase {
                             row.getSheet().getWorkbook().getCreationHelper(), obj, entity.getName(),
                             value));
                 }
-            } else {
+            }
+            else if(entity.getType() == BaseEntityTypeConstants.DoubleType)
+            {
+            	createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
+                        index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
+                        entity);
+                    if (entity.isHyperlink()) {
+                        row.getCell(cellNum - 1)
+                            .setHyperlink(dataHanlder.getHyperlink(
+                                row.getSheet().getWorkbook().getCreationHelper(),obj,
+                                entity.getName(), value));
+                    }
+            }else {
                 createImageCell(patriarch, entity, row, cellNum++,
                     value == null ? "" : value.toString(), obj);
             }
@@ -273,7 +298,32 @@ public abstract class ExcelExportBase extends ExportBase {
         }
         addStatisticsData(index, text, entity);
     }
-
+    
+    /**
+     * 创建数字类型的Cell
+     * 
+     * @param row
+     * @param index
+     * @param text
+     * @param style
+     * @param entity
+     */
+    public void createDoubleCell(Row row, int index, String text, CellStyle style,
+    		ExcelExportEntity entity) {
+        Cell cell = row.createCell(index);
+        if(text!=null&&text.length()>0){
+        	cell.setCellValue(Double.parseDouble(text));
+        }else{
+        	cell.setCellValue(-1);
+        }
+        cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+        if (style != null) {
+            cell.setCellStyle(style);
+        }
+        addStatisticsData(index, text, entity);
+    }
+    
+    
     /**
      * 创建统计行
      * @param styles 

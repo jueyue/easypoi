@@ -86,7 +86,14 @@ public class ExportParams extends ExcelBaseParams {
      * 是否创建表头
      */
     private boolean   isCreateHeadRows  = true;
-
+    /**
+     * 是否动态获取数据
+     */
+    private boolean  isDynamicData	=	false;
+    /**
+     * 是否追加图形
+     */
+    private boolean	 isAppendGraph	=	true;
     public ExportParams() {
 
     }
@@ -219,5 +226,25 @@ public class ExportParams extends ExcelBaseParams {
     public void setCreateHeadRows(boolean isCreateHeadRows) {
         this.isCreateHeadRows = isCreateHeadRows;
     }
+
+	public boolean isDynamicData()
+	{
+		return isDynamicData;
+	}
+
+	public void setDynamicData(boolean isDynamicData)
+	{
+		this.isDynamicData = isDynamicData;
+	}
+
+	public boolean isAppendGraph()
+	{
+		return isAppendGraph;
+	}
+
+	public void setAppendGraph(boolean isAppendGraph)
+	{
+		this.isAppendGraph = isAppendGraph;
+	}
 
 }
