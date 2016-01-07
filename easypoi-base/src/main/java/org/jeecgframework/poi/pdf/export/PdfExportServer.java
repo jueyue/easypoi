@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
@@ -34,10 +34,14 @@ import org.slf4j.LoggerFactory;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -54,7 +58,7 @@ public class PdfExportServer extends ExportBase {
 
     public PdfExportServer(OutputStream outStream) {
         try {
-            document = new Document();
+            document = new Document(PageSize.A4, 36, 36, 24, 36);
             PdfWriter.getInstance(document, outStream);
             document.open();
         } catch (Exception e) {
@@ -69,7 +73,7 @@ public class PdfExportServer extends ExportBase {
      * @param dataSet
      * @return
      */
-    public Document createTable(ExportParams entity, Class<?> pojoClass, Collection<?> dataSet) {
+    public Document createPdf(ExportParams entity, Class<?> pojoClass, Collection<?> dataSet) {
         try {
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
@@ -81,6 +85,19 @@ public class PdfExportServer extends ExportBase {
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
                 null);
+            createPdfByExportEntity(entity, excelParams, dataSet);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            document.close();
+        }
+        return document;
+    }
+
+    public Document createPdfByExportEntity(ExportParams entity,
+                                            List<ExcelExportEntity> excelParams,
+                                            Collection<?> dataSet) {
+        try {
             sortAllParams(excelParams);
             //设置各个列的宽度
             float[] widths = getCellWidths(excelParams);
@@ -96,10 +113,10 @@ public class PdfExportServer extends ExportBase {
                 createCells(table, t, excelParams, rowHeight);
             }
             document.add(table);
+        } catch (DocumentException e) {
+            LOGGER.error(e.getMessage(), e);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-        } finally {
-            document.close();
         }
         return document;
     }
@@ -108,7 +125,6 @@ public class PdfExportServer extends ExportBase {
                              short rowHeight) throws Exception {
         ExcelExportEntity entity;
         int maxHeight = 1, cellNum = 0;
-        //int indexKey = createIndexCell(row, index, excelParams.get(0));
         //cellNum += indexKey;
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);
@@ -127,8 +143,10 @@ public class PdfExportServer extends ExportBase {
             } else {
                 Object value = getCellValue(entity, t);
                 if (entity.getType() == 1) {
-                    table.addCell(value == null ? "" : value.toString());
+                    createStringCell(table, value == null ? "" : value.toString(),
+                        (int) (entity.getHeight() * 2.5));
                 } else {
+
                 }
             }
         }
@@ -155,9 +173,114 @@ public class PdfExportServer extends ExportBase {
 
     private void createHeaderAndTitle(ExportParams entity, PdfPTable table,
                                       List<ExcelExportEntity> excelParams) throws DocumentException {
-        for (int i = 0; i < excelParams.size(); i++) {
-            table.addCell(new Phrase(excelParams.get(i).getName(), getFont()));
+        int feildWidth = getFieldLength(excelParams);
+        if (entity.getTitle() != null) {
+            createHeaderRow(entity, table, feildWidth);
         }
+        createTitleRow(entity, table, excelParams);
+    }
+
+    /**
+     * 创建表头
+     * 
+     * @param title
+     * @param index
+     */
+    private int createTitleRow(ExportParams title, PdfPTable table,
+                               List<ExcelExportEntity> excelParams) {
+        int rows = getRowNums(excelParams);
+        int cellIndex = 0;
+        PdfPCell iCell = null;
+        int currentRows = table.getLastCompletedRowIndex(),
+                filedLength = getFieldLength(excelParams);
+        //先创建空白的Cell 然后去循环
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j <= filedLength; j++) {
+                createStringCell(table, "", 25);
+            }
+        }
+        PdfPRow listRow = null;
+        if (rows == 2) {
+            listRow = table.getRow(currentRows + 2);
+        }
+
+        PdfPRow row = table.getRow(currentRows + 1);
+
+        for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++)
+
+        {
+            ExcelExportEntity entity = excelParams.get(i);
+            if (StringUtils.isNotBlank(entity.getName())) {
+                iCell = setStringCell(row.getCells()[cellIndex], entity.getName(),
+                    (int) entity.getHeight());
+            }
+            if (entity.getList() != null) {
+                List<ExcelExportEntity> sTitel = entity.getList();
+                if (StringUtils.isNotBlank(entity.getName())) {
+                    iCell.setColspan(sTitel.size());
+                }
+                for (int j = 0, size = sTitel.size(); j < size; j++) {
+                    setStringCell(
+                        rows == 2 ? listRow.getCells()[cellIndex] : row.getCells()[cellIndex],
+                        sTitel.get(j).getName(), (int) sTitel.get(j).getHeight());
+                    cellIndex++;
+                }
+                cellIndex--;
+            } else if (rows == 2) {
+                iCell.setRowspan(2);
+                //把合并后的边框去掉
+                iCell.setBorderWidthBottom(0);
+                listRow.getCells()[cellIndex].setBorderWidthTop(0);
+            }
+            cellIndex++;
+        }
+        return rows;
+
+    }
+
+    private void createHeaderRow(ExportParams entity, PdfPTable table, int feildLength) {
+
+        createStringCell(table, entity.getTitle(), entity.getTitleHeight() / 20, feildLength + 1,
+            1);
+        if (entity.getSecondTitle() != null) {
+            PdfPCell iCell = new PdfPCell(new Phrase(entity.getSecondTitle(), getFont()));
+            iCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            iCell.setVerticalAlignment(Element.ALIGN_CENTER);
+            iCell.setFixedHeight(entity.getSecondTitleHeight() / 20);
+            iCell.setColspan(feildLength + 1);
+            table.addCell(iCell);
+        }
+    }
+
+    private PdfPCell createStringCell(PdfPTable table, String value, int height, int colspan,
+                                      int rowspan) {
+        PdfPCell iCell = new PdfPCell(new Phrase(value, getFont()));
+        iCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        iCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        iCell.setFixedHeight(height);
+        if (colspan > 1) {
+            iCell.setColspan(colspan);
+        }
+        if (rowspan > 1) {
+            iCell.setRowspan(rowspan);
+        }
+        table.addCell(iCell);
+        return iCell;
+    }
+
+    private PdfPCell createStringCell(PdfPTable table, String value, int height) {
+        PdfPCell iCell = new PdfPCell(new Phrase(value, getFont()));
+        iCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        iCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        iCell.setFixedHeight(height);
+        table.addCell(iCell);
+        return iCell;
+    }
+
+    private PdfPCell setStringCell(PdfPCell iCell, String value, int height) {
+        iCell.setPhrase(new Phrase(value, getFont()));
+        iCell.setFixedHeight(height);
+        return iCell;
     }
 
     private Font getFont() {
@@ -174,12 +297,6 @@ public class PdfExportServer extends ExportBase {
         }
         Font font = new Font(FontFamily.UNDEFINED);
         return font;
-    }
-
-    public Document createPdfForMap(ExportParams entity, List<ExcelExportEntity> entityList,
-                                    Collection<? extends Map<?, ?>> dataSet) {
-
-        return document;
     }
 
 }

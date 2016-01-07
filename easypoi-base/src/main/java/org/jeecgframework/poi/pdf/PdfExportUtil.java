@@ -46,7 +46,7 @@ public class PdfExportUtil {
      */
     public static Document exportPdf(ExportParams entity, Class<?> pojoClass, Collection<?> dataSet,
                                      OutputStream outStream) {
-        return new PdfExportServer(outStream).createTable(entity, pojoClass, dataSet);
+        return new PdfExportServer(outStream).createPdf(entity, pojoClass, dataSet);
     }
 
     /**
@@ -62,7 +62,7 @@ public class PdfExportUtil {
                                      Collection<? extends Map<?, ?>> dataSet,
                                      OutputStream outStream) {
 
-        return new PdfExportServer(outStream).createPdfForMap(entity, entityList, dataSet);
+        return new PdfExportServer(outStream).createPdfByExportEntity(entity, entityList, dataSet);
     }
 
 }
