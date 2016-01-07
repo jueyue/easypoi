@@ -313,20 +313,6 @@ public abstract class ExcelExportBase extends ExportBase {
     }
 
     /**
-     * 获取导出报表的字段总长度
-     * 
-     * @param excelParams
-     * @return
-     */
-    public int getFieldWidth(List<ExcelExportEntity> excelParams) {
-        int length = -1;// 从0开始计算单元格的
-        for (ExcelExportEntity entity : excelParams) {
-            length += entity.getList() != null ? entity.getList().size() : 1;
-        }
-        return length;
-    }
-
-    /**
      * 获取图片类型,设置图片插入类型
      * 
      * @param value

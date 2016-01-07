@@ -56,7 +56,7 @@ public class ExcelExportServer extends ExcelExportBase {
 
     private int createHeaderAndTitle(ExportParams entity, Sheet sheet, Workbook workbook,
                                      List<ExcelExportEntity> excelParams) {
-        int rows = 0, feildWidth = getFieldWidth(excelParams);
+        int rows = 0, feildWidth = getFieldLength(excelParams);
         if (entity.getTitle() != null) {
             rows += createHeaderRow(entity, sheet, workbook, feildWidth);
         }
@@ -248,22 +248,6 @@ public class ExcelExportServer extends ExcelExportBase {
         }
         return rows;
 
-    }
-
-    /**
-     * 判断表头是只有一行还是两行
-     * 
-     * @param excelParams
-     * @return
-     */
-    private int getRowNums(List<ExcelExportEntity> excelParams) {
-        for (int i = 0; i < excelParams.size(); i++) {
-            if (excelParams.get(i).getList() != null
-                && StringUtils.isNotBlank(excelParams.get(i).getName())) {
-                return 2;
-            }
-        }
-        return 1;
     }
 
 }

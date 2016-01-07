@@ -62,8 +62,8 @@ public class ExportBase {
      * @throws Exception
      */
     private ExcelExportEntity createExcelExportEntity(Field field, String targetId,
-                                                      Class<?> pojoClass, List<Method> getMethods)
-                                                                                                  throws Exception {
+                                                      Class<?> pojoClass,
+                                                      List<Method> getMethods) throws Exception {
         Excel excel = field.getAnnotation(Excel.class);
         ExcelExportEntity excelEntity = new ExcelExportEntity();
         excelEntity.setType(excel.type());
@@ -121,12 +121,15 @@ public class ExportBase {
                 ParameterizedType pt = (ParameterizedType) field.getGenericType();
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
                 List<ExcelExportEntity> list = new ArrayList<ExcelExportEntity>();
-                getAllExcelField(exclusions, StringUtils.isNotEmpty(excel.id()) ? excel.id()
-                    : targetId, PoiPublicUtil.getClassFields(clz), list, clz, null);
+                getAllExcelField(exclusions,
+                    StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
+                    PoiPublicUtil.getClassFields(clz), list, clz, null);
                 excelEntity = new ExcelExportEntity();
-                excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId,null));
-                excelEntity.setOrderNum(Integer.valueOf(PoiPublicUtil.getValueByTargetId(excel.orderNum(), targetId,"0")));
-                excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
+                excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null));
+                excelEntity.setOrderNum(Integer
+                    .valueOf(PoiPublicUtil.getValueByTargetId(excel.orderNum(), targetId, "0")));
+                excelEntity
+                    .setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 excelEntity.setList(list);
                 excelParams.add(excelEntity);
             } else {
@@ -136,9 +139,10 @@ public class ExportBase {
                 }
                 newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
-                getAllExcelField(exclusions, StringUtils.isNotEmpty(excel.id()) ? excel.id()
-                    : targetId, PoiPublicUtil.getClassFields(field.getType()), excelParams,
-                    field.getType(), newMethods);
+                getAllExcelField(exclusions,
+                    StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
+                    PoiPublicUtil.getClassFields(field.getType()), excelParams, field.getType(),
+                    newMethods);
             }
         }
     }
@@ -211,18 +215,18 @@ public class ExportBase {
         excelEntity.setMergeVertical(excel.mergeVertical());
         excelEntity.setMergeRely(excel.mergeRely());
         excelEntity.setReplace(excel.replace());
-        excelEntity.setOrderNum(Integer.valueOf(PoiPublicUtil.getValueByTargetId(excel.orderNum(), targetId, "0")));
+        excelEntity.setOrderNum(
+            Integer.valueOf(PoiPublicUtil.getValueByTargetId(excel.orderNum(), targetId, "0")));
         excelEntity.setWrap(excel.isWrap());
         excelEntity.setExportImageType(excel.imageType());
         excelEntity.setSuffix(excel.suffix());
         excelEntity.setDatabaseFormat(excel.databaseFormat());
-        excelEntity.setFormat(StringUtils.isNotEmpty(excel.exportFormat()) ? excel.exportFormat()
-            : excel.format());
+        excelEntity.setFormat(
+            StringUtils.isNotEmpty(excel.exportFormat()) ? excel.exportFormat() : excel.format());
         excelEntity.setStatistics(excel.isStatistics());
         excelEntity.setHyperlink(excel.isHyperlink());
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
     }
-
 
     /**
      * 多个反射获取值
@@ -252,12 +256,12 @@ public class ExportBase {
     public short getRowHeight(List<ExcelExportEntity> excelParams) {
         double maxHeight = 0;
         for (int i = 0; i < excelParams.size(); i++) {
-            maxHeight = maxHeight > excelParams.get(i).getHeight() ? maxHeight : excelParams.get(i)
-                .getHeight();
+            maxHeight = maxHeight > excelParams.get(i).getHeight() ? maxHeight
+                : excelParams.get(i).getHeight();
             if (excelParams.get(i).getList() != null) {
                 for (int j = 0; j < excelParams.get(i).getList().size(); j++) {
-                    maxHeight = maxHeight > excelParams.get(i).getList().get(j).getHeight() ? maxHeight
-                        : excelParams.get(i).getList().get(j).getHeight();
+                    maxHeight = maxHeight > excelParams.get(i).getList().get(j).getHeight()
+                        ? maxHeight : excelParams.get(i).getList().get(j).getHeight();
                 }
             }
         }
@@ -299,7 +303,7 @@ public class ExportBase {
             }
         }
     }
-    
+
     /**
      * 添加Index列
      * @param entity
@@ -312,6 +316,36 @@ public class ExportBase {
         exportEntity.setWidth(10);
         exportEntity.setFormat(PoiBaseConstants.IS_ADD_INDEX);
         return exportEntity;
+    }
+
+    /**
+     * 获取导出报表的字段总长度
+     * 
+     * @param excelParams
+     * @return
+     */
+    public int getFieldLength(List<ExcelExportEntity> excelParams) {
+        int length = -1;// 从0开始计算单元格的
+        for (ExcelExportEntity entity : excelParams) {
+            length += entity.getList() != null ? entity.getList().size() : 1;
+        }
+        return length;
+    }
+
+    /**
+     * 判断表头是只有一行还是两行
+     * 
+     * @param excelParams
+     * @return
+     */
+    public int getRowNums(List<ExcelExportEntity> excelParams) {
+        for (int i = 0; i < excelParams.size(); i++) {
+            if (excelParams.get(i).getList() != null
+                && StringUtils.isNotBlank(excelParams.get(i).getName())) {
+                return 2;
+            }
+        }
+        return 1;
     }
 
 }
