@@ -15,18 +15,12 @@
  */
 package org.jeecgframework.poi.excel.export.base;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
@@ -42,6 +36,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.jeecgframework.poi.cache.ImageCache;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
@@ -170,22 +165,9 @@ public abstract class ExcelExportBase extends ExportBase {
             return;
         }
         if (entity.getExportImageType() == 1) {
-            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-            BufferedImage bufferImg;
-            try {
-                String path = PoiPublicUtil.getWebRootPath(imagePath);
-                path = path.replace("WEB-INF/classes/", "");
-                path = path.replace("file:/", "");
-                bufferImg = ImageIO.read(new File(path));
-                ImageIO.write(bufferImg,
-                    imagePath.substring(imagePath.indexOf(".") + 1, imagePath.length()),
-                    byteArrayOut);
-                byte[] value = byteArrayOut.toByteArray();
-                patriarch.createPicture(anchor,
-                    row.getSheet().getWorkbook().addPicture(value, getImageType(value)));
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
+            byte[] value = ImageCache.getImage(imagePath);
+            patriarch.createPicture(anchor,
+                row.getSheet().getWorkbook().addPicture(value, getImageType(value)));
         } else {
             byte[] value = (byte[]) (entity.getMethods() != null
                 ? getFieldBySomeMethod(entity.getMethods(), obj)

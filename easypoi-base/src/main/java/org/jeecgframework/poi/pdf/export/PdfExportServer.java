@@ -15,14 +15,17 @@
  */
 package org.jeecgframework.poi.pdf.export;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jeecgframework.poi.cache.ImageCache;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.export.base.ExportBase;
@@ -33,9 +36,11 @@ import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -144,7 +149,8 @@ public class PdfExportServer extends ExportBase {
                     createStringCell(table, value == null ? "" : value.toString(), entity,
                         rowHeight, 1, maxHeight);
                 } else {
-
+                    createImageCell(table, value == null ? "" : value.toString(), entity, rowHeight,
+                        1, maxHeight);
                 }
             }
         }
@@ -167,7 +173,8 @@ public class PdfExportServer extends ExportBase {
             if (entity.getType() == 1) {
                 createStringCell(table, value == null ? "" : value.toString(), entity, rowHeight);
             } else {
-
+                createImageCell(table, value == null ? "" : value.toString(), entity, rowHeight, 1,
+                    1);
             }
         }
     }
@@ -297,6 +304,27 @@ public class PdfExportServer extends ExportBase {
         iCell.setFixedHeight((int) (rowHeight * 2.5));
         table.addCell(iCell);
         return iCell;
+    }
+
+    private PdfPCell createImageCell(PdfPTable table, String text, ExcelExportEntity entity,
+                                     int rowHeight, int rowSpan, int colSpan) {
+
+        try {
+            Image image = Image.getInstance(ImageCache.getImage(text));
+            PdfPCell iCell = new PdfPCell(image);
+            styler.setCellStyler(iCell, entity, text);
+            iCell.setFixedHeight((int) (rowHeight * 2.5));
+            table.addCell(iCell);
+            return iCell;
+        } catch (BadElementException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (MalformedURLException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return new PdfPCell();
+
     }
 
 }
