@@ -479,7 +479,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                             row.getRowNum() + params.getRowspan() - 1, ci,
                             ci + params.getColspan() - 1));
                 }
-                ci = ci + columns.get(i).getColspan();
+                ci = ci + params.getColspan();
             }
             row = row.getSheet().getRow(row.getRowNum() + 1);
         }
