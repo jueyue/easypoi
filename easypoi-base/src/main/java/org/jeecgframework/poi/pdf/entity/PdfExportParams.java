@@ -63,6 +63,10 @@ public class PdfExportParams extends ExcelBaseParams {
 
     }
 
+    public PdfExportParams(String title) {
+        this.title = title;
+    }
+
     public PdfExportParams(String title, String secondTitle) {
         this.title = title;
         this.secondTitle = secondTitle;

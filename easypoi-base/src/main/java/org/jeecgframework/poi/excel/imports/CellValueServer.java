@@ -173,7 +173,7 @@ public class CellValueServer {
      * @param cell
      * @param titleString
      */
-    public Object getValue(IExcelDataHandler dataHanlder, Object object, Cell cell,
+    public Object getValue(IExcelDataHandler<?> dataHanlder, Object object, Cell cell,
                            Map<String, ExcelImportEntity> excelParams,
                            String titleString) throws Exception {
         ExcelImportEntity entity = excelParams.get(titleString);
@@ -202,7 +202,7 @@ public class CellValueServer {
      * @param titleString
      * @return
      */
-    public Object getValue(IExcelDataHandler dataHanlder, Object object,
+    public Object getValue(IExcelDataHandler<?> dataHanlder, Object object,
                            SaxReadCellEntity cellEntity, Map<String, ExcelImportEntity> excelParams,
                            String titleString) {
         ExcelImportEntity entity = excelParams.get(titleString);
@@ -304,6 +304,7 @@ public class CellValueServer {
      * @param titleString
      * @return
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private Object hanlderValue(IExcelDataHandler dataHanlder, Object object, Object result,
                                 String titleString) {
         if (dataHanlder == null || dataHanlder.getNeedHandlerFields() == null

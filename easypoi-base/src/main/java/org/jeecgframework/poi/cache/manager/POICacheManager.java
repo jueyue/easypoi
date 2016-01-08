@@ -38,16 +38,17 @@ import com.google.common.cache.LoadingCache;
  */
 public final class POICacheManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(POICacheManager.class);
+    private static final Logger                 LOGGER           = LoggerFactory
+        .getLogger(POICacheManager.class);
 
     private static LoadingCache<String, byte[]> loadingCache;
 
-    private static IFileLoader fileLoder;
+    private static IFileLoader                  fileLoder;
 
-    private static ThreadLocal<IFileLoader> LOCAL_FILELOADER = new ThreadLocal<IFileLoader>();
+    private static ThreadLocal<IFileLoader>     LOCAL_FILELOADER = new ThreadLocal<IFileLoader>();
 
     static {
-        loadingCache = CacheBuilder.newBuilder().expireAfterWrite(7, TimeUnit.DAYS).maximumSize(50)
+        loadingCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).maximumSize(50)
             .build(new CacheLoader<String, byte[]>() {
                 @Override
                 public byte[] load(String url) throws Exception {
