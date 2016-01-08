@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.pdf.entity.PdfExportParams;
 import org.jeecgframework.poi.pdf.export.PdfExportServer;
 
 import com.itextpdf.text.Document;
@@ -44,9 +44,9 @@ public class PdfExportUtil {
      * @param dataSet
      *            PDF对象数据List
      */
-    public static Document exportPdf(ExportParams entity, Class<?> pojoClass, Collection<?> dataSet,
-                                     OutputStream outStream) {
-        return new PdfExportServer(outStream).createPdf(entity, pojoClass, dataSet);
+    public static Document exportPdf(PdfExportParams entity, Class<?> pojoClass,
+                                     Collection<?> dataSet, OutputStream outStream) {
+        return new PdfExportServer(outStream, entity).createPdf(entity, pojoClass, dataSet);
     }
 
     /**
@@ -58,11 +58,12 @@ public class PdfExportUtil {
      * @param dataSet
      *            PDF对象数据List
      */
-    public static Document exportPdf(ExportParams entity, List<ExcelExportEntity> entityList,
+    public static Document exportPdf(PdfExportParams entity, List<ExcelExportEntity> entityList,
                                      Collection<? extends Map<?, ?>> dataSet,
                                      OutputStream outStream) {
 
-        return new PdfExportServer(outStream).createPdfByExportEntity(entity, entityList, dataSet);
+        return new PdfExportServer(outStream, entity).createPdfByExportEntity(entity, entityList,
+            dataSet);
     }
 
 }
