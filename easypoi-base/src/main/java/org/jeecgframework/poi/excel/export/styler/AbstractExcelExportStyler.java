@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.params.ExcelForEachParams;
 
 /**
  * 抽象接口提供两个公共方法
@@ -64,6 +65,11 @@ public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
     }
 
     public CellStyle stringSeptailStyle(Workbook workbook, boolean isWarp) {
+        return null;
+    }
+
+    @Override
+    public CellStyle getTemplateStyles(boolean isSingle, ExcelForEachParams excelForEachParams) {
         return null;
     }
 
