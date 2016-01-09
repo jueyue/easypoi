@@ -55,17 +55,18 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("unchecked")
 public abstract class ExcelExportBase extends ExportBase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportBase.class);
+    private static final Logger        LOGGER        = LoggerFactory
+        .getLogger(ExcelExportBase.class);
 
-    private int currentIndex = 0;
+    private int                        currentIndex  = 0;
 
-    protected ExcelType type = ExcelType.HSSF;
+    protected ExcelType                type          = ExcelType.HSSF;
 
-    private Map<Integer, Double> statistics = new HashMap<Integer, Double>();
+    private Map<Integer, Double>       statistics    = new HashMap<Integer, Double>();
 
     private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("######0.00");
 
-    private IExcelExportStyler excelExportStyler;
+    protected IExcelExportStyler       excelExportStyler;
 
     /**
      * 创建 最主要的 Cells
@@ -88,12 +89,12 @@ public abstract class ExcelExportBase extends ExportBase {
             if (entity.getList() != null) {
                 Collection<?> list = getListCellValue(entity, t);
                 int listC = 0;
-                if(list!=null&&list.size()>0){
-	                for (Object obj : list) {
-	                    createListCells(patriarch, index + listC, cellNum, obj, entity.getList(), sheet,
-	                        workbook);
-	                    listC++;
-	                }
+                if (list != null && list.size() > 0) {
+                    for (Object obj : list) {
+                        createListCells(patriarch, index + listC, cellNum, obj, entity.getList(),
+                            sheet, workbook);
+                        listC++;
+                    }
                 }
                 cellNum += entity.getList().size();
                 if (list != null && list.size() > maxHeight) {
@@ -181,7 +182,8 @@ public abstract class ExcelExportBase extends ExportBase {
     }
 
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
-        if (excelExportEntity.getName().equals("序号")&&excelExportEntity.getFormat()!=null&&excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
+        if (excelExportEntity.getName().equals("序号") && excelExportEntity.getFormat() != null
+            && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
             createStringCell(row, 0, currentIndex + "",
                 index % 2 == 0 ? getStyles(false, null) : getStyles(true, null), null);
             currentIndex = currentIndex + 1;

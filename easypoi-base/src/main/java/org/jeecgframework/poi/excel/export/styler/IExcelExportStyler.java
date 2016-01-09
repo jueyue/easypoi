@@ -17,6 +17,7 @@ package org.jeecgframework.poi.excel.export.styler;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.entity.params.ExcelForEachParams;
 
 /**
  * Excel导出样式接口
@@ -46,5 +47,13 @@ public interface IExcelExportStyler {
      * @return
      */
     public CellStyle getStyles(boolean noneStyler, ExcelExportEntity entity);
+
+    /**
+     * 模板使用的样式设置
+     * @param isSingle
+     * @param excelForEachParams
+     * @return
+     */
+    public CellStyle getTemplateStyles(boolean isSingle, ExcelForEachParams excelForEachParams);
 
 }

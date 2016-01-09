@@ -128,7 +128,7 @@ public final class PoiFunctionUtil {
             return isGt(second, first);
         } else if ("==".endsWith(operator)) {
             if (first != null && second != null) {
-                return first.equals(second);
+                return eq(first, second);
             }
             return first == second;
         } else if ("!=".endsWith(operator)) {
@@ -139,6 +139,27 @@ public final class PoiFunctionUtil {
         } else {
             throw new ExcelExportException("占不支持改操作符");
         }
+    }
+
+    /**
+     * 判断两个对象是不是相等
+     * @param first
+     * @param second
+     * @return
+     */
+    private static boolean eq(Object first, Object second) {
+        //要求两个对象当中至少一个对象不是字符串才进行数字类型判断
+        if (!(first instanceof String) || !(second instanceof String)) {
+            try {
+                double f = Double.parseDouble(first.toString());
+                double s = Double.parseDouble(second.toString());
+                return f == s;
+            } catch (NumberFormatException e) {
+                //可能存在的错误,忽略继续进行
+            }
+
+        }
+        return first.equals(second);
     }
 
     /**
@@ -158,5 +179,5 @@ public final class PoiFunctionUtil {
         double two = Double.valueOf(second.toString());
         return one > two;
     }
-
+    
 }

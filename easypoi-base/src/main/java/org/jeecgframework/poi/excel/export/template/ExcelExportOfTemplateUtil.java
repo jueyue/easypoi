@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -62,7 +63,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportOfTemplateUtil.class);
+    private static final Logger  LOGGER            = LoggerFactory
+        .getLogger(ExcelExportOfTemplateUtil.class);
 
     /**
      * 缓存TEMP 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
@@ -416,11 +418,16 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         //所有的cell创建一遍
         for (int i = 0; i < rowspan; i++) {
             for (int j = columnIndex, max = columnIndex + colspan; j < max; j++) {
-                if (row.getCell(j) == null){
+                if (row.getCell(j) == null) {
                     row.createCell(j);
-                    row.getCell(j).setCellStyle(row.getRowNum() % 2 == 0 ? getStyles(false, null) : getStyles(true, null));
+                    CellStyle style = row.getRowNum() % 2 == 0
+                        ? getStyles(false, columns.get(columnIndex - j))
+                        : getStyles(true, columns.get(columnIndex - j));
+                    //返回的styler不为空时才使用,否则使用Excel设置的,更加推荐Excel设置的样式
+                    if (style != null)
+                        row.getCell(j).setCellStyle(style);
                 }
-                    
+
             }
             if (i < rowspan - 1) {
                 row = row.getSheet().getRow(row.getRowNum() + 1);
@@ -486,6 +493,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     }
 
+    private CellStyle getStyles(boolean isSingle, ExcelForEachParams excelForEachParams) {
+        return excelExportStyler.getTemplateStyles(isSingle, excelForEachParams);
+    }
+
     /**
      * 设置合并单元格的样式
      * @param row
@@ -543,8 +554,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     cellStringString = cell.getStringCellValue();
                     if (StringUtils.isBlank(cellStringString) && colspan + startIndex <= index) {
                         throw new ExcelExportException("for each 当中存在空字符串,请检查模板");
-                    } else
-                        if (StringUtils.isBlank(cellStringString) && colspan + startIndex > index) {
+                    } else if (StringUtils.isBlank(cellStringString)
+                               && colspan + startIndex > index) {
                         //读取是判断,跳过,数据为空,但是不是第一次读这一列,所以可以跳过
                         columns.add(new ExcelForEachParams(null, cell.getCellStyle(), (short) 0));
                         continue;
