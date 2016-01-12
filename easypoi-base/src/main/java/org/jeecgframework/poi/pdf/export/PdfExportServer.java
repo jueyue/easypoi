@@ -108,6 +108,7 @@ public class PdfExportServer extends ExportBase {
             for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
                 if (excelParams.get(k).getList() != null) {
                     isListData = true;
+                    break;
                 }
             }
             //设置各个列的宽度

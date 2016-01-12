@@ -162,21 +162,19 @@ public abstract class ExcelExportBase extends ExportBase {
                 row.getRowNum() + 1);
         }
 
-        if (StringUtils.isEmpty(imagePath)) {
-            return;
-        }
+        byte[] value = null;
         if (entity.getExportImageType() == 1) {
-            byte[] value = ImageCache.getImage(imagePath);
-            patriarch.createPicture(anchor,
-                row.getSheet().getWorkbook().addPicture(value, getImageType(value)));
+            if (StringUtils.isNotEmpty(imagePath)) {
+                value = ImageCache.getImage(imagePath);
+            }
         } else {
-            byte[] value = (byte[]) (entity.getMethods() != null
+            value = (byte[]) (entity.getMethods() != null
                 ? getFieldBySomeMethod(entity.getMethods(), obj)
                 : entity.getMethod().invoke(obj, new Object[] {}));
-            if (value != null) {
-                patriarch.createPicture(anchor,
-                    row.getSheet().getWorkbook().addPicture(value, getImageType(value)));
-            }
+        }
+        if (value != null) {
+            patriarch.createPicture(anchor,
+                row.getSheet().getWorkbook().addPicture(value, getImageType(value)));
         }
 
     }
