@@ -117,7 +117,7 @@ public final class PoiElUtil {
      * @throws Exception
      */
     private static Boolean isTrue(String[] keys, Map<String, Object> map) throws Exception {
-        if (keys.length == 0) {
+        if (keys.length == 1) {
             String constant = null;
             if ((constant = isConstant(keys[0])) != null) {
                 return Boolean.valueOf(constant);
