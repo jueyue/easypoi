@@ -8,6 +8,8 @@ EasyPoi Excel和 Word简易工具类
 	作者博客：http://blog.afterturn.cn/
 	作者邮箱： qrb.jueyue@gmail.com
 	QQ群:  364192721
+	
+	开发者:魔幻之翼 xf.key@163.com
 
 [测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
