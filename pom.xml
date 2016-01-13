@@ -39,7 +39,7 @@
 
 	<properties>
 		<sub.version>2.1.7-SNAPSHOT</sub.version>
-		<poi.version>3.9</poi.version>
+		<poi.version>3.10-FINAL</poi.version>
 		<xerces.version>2.9.1</xerces.version>
 		<guava.version>16.0.1</guava.version>
 		<commons-lang.version>3.2.1</commons-lang.version>

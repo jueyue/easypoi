@@ -18,6 +18,8 @@ package org.jeecgframework.poi.excel.entity.params;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.jeecgframework.poi.excel.entity.vo.BaseEntityTypeConstants;
+
 /**
  * Excel 导入导出基础对象类
  * @author JueYue
@@ -31,7 +33,7 @@ public class ExcelBaseEntity {
     /**
      * 对应type
      */
-    private int          type = 1;
+    private int          type = BaseEntityTypeConstants.StringType;
     /**
      * 数据库格式
      */
