@@ -20,9 +20,11 @@ import static org.jeecgframework.poi.util.PoiElUtil.*;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.jeecgframework.poi.util.PoiPublicUtil;
 
 import com.google.common.collect.Maps;
 
@@ -79,12 +81,13 @@ public final class ExcelMapParse {
             tempMap.put("t", obj);
             for (cellIndex = 0; cellIndex < currentRow.getTableCells().size(); cellIndex++) {
                 String val = eval(params[cellIndex], tempMap).toString();
-                currentRow.getTableCells().get(cellIndex).setText(val);
+                currentRow.getTableCells().get(cellIndex).setText("");
+                PoiPublicUtil.setWordText(currentRow.getTableCells().get(cellIndex).addParagraph().createRun(),val);
             }
 
             for (; cellIndex < params.length; cellIndex++) {
                 String val = eval(params[cellIndex], tempMap).toString();
-                currentRow.createCell().setText(val);
+                PoiPublicUtil.setWordText(currentRow.createCell().addParagraph().createRun(),val);
             }
         }
 

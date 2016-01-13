@@ -183,8 +183,9 @@ public class ExcelEntityParse extends ExportBase {
     private void setCellValue(XWPFTableRow row, Object value, int cellNum) {
         if (row.getCell(cellNum++) != null) {
             row.getCell(cellNum - 1).setText(value == null ? "" : value.toString());
+            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),value == null ? "" : value.toString());
         } else {
-            row.createCell().setText(value == null ? "" : value.toString());
+            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),value == null ? "" : value.toString());
         }
     }
 

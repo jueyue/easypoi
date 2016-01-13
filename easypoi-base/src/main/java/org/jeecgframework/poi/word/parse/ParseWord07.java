@@ -94,7 +94,7 @@ public class ParseWord07 {
             addAnImage((WordImageEntity) obj, currentRun);
         } else {
             currentText = obj.toString();
-            currentRun.setText(currentText, 0);
+            PoiPublicUtil.setWordText(currentRun, currentText);
         }
         for (int k = 0; k < runIndex.size(); k++) {
             paragraph.getRuns().get(runIndex.get(k)).setText("", 0);

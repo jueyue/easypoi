@@ -47,6 +47,7 @@ import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import org.jeecgframework.poi.excel.annotation.ExcelEntity;
@@ -457,5 +458,23 @@ public final class PoiPublicUtil {
         }
         return defalut;
     }
+    
+    
+    /**
+     * 支持换行操作
+     * @param currentRun
+     * @param currentText
+     */
+    public static void setWordText(XWPFRun currentRun, String currentText) {
+        if(StringUtils.isNotBlank(currentText)){
+            String[] tempArr = currentText.split("\r\n");
+            for (int i = 0, le = tempArr.length - 1; i < le; i++) {
+                currentRun.setText(tempArr[i], i);
+                currentRun.addBreak();
+            }
+            currentRun.setText(tempArr[tempArr.length - 1], tempArr.length - 1);
+        }
+    }
+
 
 }
