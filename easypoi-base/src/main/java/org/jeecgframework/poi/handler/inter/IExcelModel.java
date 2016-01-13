@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 package org.jeecgframework.poi.handler.inter;
+
 /**
  * Excel标记类
  * @author JueYue
  * @date 2015年10月31日 下午9:31:47
  */
 public interface IExcelModel {
-    
+
     /**
      * 获取错误数据
      * @return
      */
     public String getErrorMsg();
+
     /**
      *  设置错误信息
      * @param errorMsg

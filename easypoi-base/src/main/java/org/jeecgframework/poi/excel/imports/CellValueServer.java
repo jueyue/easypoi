@@ -48,9 +48,9 @@ import org.slf4j.LoggerFactory;
  */
 public class CellValueServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CellValueServer.class);
+    private static final Logger LOGGER      = LoggerFactory.getLogger(CellValueServer.class);
 
-    private List<String> hanlderList = null;
+    private List<String>        hanlderList = null;
 
     /**
      * 获取单元格内的值
@@ -243,7 +243,7 @@ public class CellValueServer {
     private Object getValueByType(String xclass, Object result, ExcelImportEntity entity) {
         try {
             //过滤空和空字符串,如果基本类型null会在上层抛出,这里就不处理了
-            if(result == null || StringUtils.isBlank(result.toString())){
+            if (result == null || StringUtils.isBlank(result.toString())) {
                 return null;
             }
             if ("class java.util.Date".equals(xclass)) {

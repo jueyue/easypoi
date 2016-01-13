@@ -26,7 +26,7 @@ public class ExcelImportException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private ExcelImportEnum type;
+    private ExcelImportEnum   type;
 
     public ExcelImportException() {
         super();

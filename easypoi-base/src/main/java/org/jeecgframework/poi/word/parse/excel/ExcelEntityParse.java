@@ -100,8 +100,8 @@ public class ExcelEntityParse extends ExportBase {
      * @param styles
      */
     public void createListCells(int index, int cellNum, Object obj,
-                                List<ExcelExportEntity> excelParams, XWPFTable table)
-                                                                                     throws Exception {
+                                List<ExcelExportEntity> excelParams,
+                                XWPFTable table) throws Exception {
         ExcelExportEntity entity;
         XWPFTableRow row;
         if (table.getRow(index) == null) {
@@ -183,9 +183,11 @@ public class ExcelEntityParse extends ExportBase {
     private void setCellValue(XWPFTableRow row, Object value, int cellNum) {
         if (row.getCell(cellNum++) != null) {
             row.getCell(cellNum - 1).setText(value == null ? "" : value.toString());
-            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),value == null ? "" : value.toString());
+            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),
+                value == null ? "" : value.toString());
         } else {
-            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),value == null ? "" : value.toString());
+            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),
+                value == null ? "" : value.toString());
         }
     }
 

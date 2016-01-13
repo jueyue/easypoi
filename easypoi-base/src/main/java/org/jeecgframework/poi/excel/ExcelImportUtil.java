@@ -94,8 +94,8 @@ public class ExcelImportUtil {
      * @throws Exception
      */
     public static <T> ExcelImportResult<T> importExcelVerify(InputStream inputstream,
-                                                             Class<?> pojoClass, ImportParams params)
-                                                                                                     throws Exception {
+                                                             Class<?> pojoClass,
+                                                             ImportParams params) throws Exception {
         return new ExcelImportServer().importExcelByIs(inputstream, pojoClass, params);
     }
 

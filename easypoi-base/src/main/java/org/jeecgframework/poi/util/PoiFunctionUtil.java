@@ -179,5 +179,5 @@ public final class PoiFunctionUtil {
         double two = Double.valueOf(second.toString());
         return one > two;
     }
-    
+
 }

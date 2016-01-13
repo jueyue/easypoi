@@ -82,12 +82,13 @@ public final class ExcelMapParse {
             for (cellIndex = 0; cellIndex < currentRow.getTableCells().size(); cellIndex++) {
                 String val = eval(params[cellIndex], tempMap).toString();
                 currentRow.getTableCells().get(cellIndex).setText("");
-                PoiPublicUtil.setWordText(currentRow.getTableCells().get(cellIndex).addParagraph().createRun(),val);
+                PoiPublicUtil.setWordText(
+                    currentRow.getTableCells().get(cellIndex).addParagraph().createRun(), val);
             }
 
             for (; cellIndex < params.length; cellIndex++) {
                 String val = eval(params[cellIndex], tempMap).toString();
-                PoiPublicUtil.setWordText(currentRow.createCell().addParagraph().createRun(),val);
+                PoiPublicUtil.setWordText(currentRow.createCell().addParagraph().createRun(), val);
             }
         }
 

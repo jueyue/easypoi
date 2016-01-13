@@ -26,12 +26,12 @@ public interface ISaxRowRead {
      * @return
      */
     public <T> List<T> getList();
+
     /**
      * 解析数据
      * @param index
      * @param datas
      */
     public void parse(int index, List<SaxReadCellEntity> datas);
-
 
 }

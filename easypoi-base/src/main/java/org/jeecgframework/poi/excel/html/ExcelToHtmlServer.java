@@ -35,31 +35,32 @@ import org.slf4j.LoggerFactory;
  */
 public class ExcelToHtmlServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelToHtmlServer.class);
+    private static final Logger           LOGGER         = LoggerFactory
+        .getLogger(ExcelToHtmlServer.class);
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
+    private static final SimpleDateFormat DATE_FORMAT    = new SimpleDateFormat("yyyy_MM_dd");
 
-    private String today;
+    private String                        today;
 
-    private Workbook wb;
-    private int      sheetNum;
-    private int      cssRandom;
+    private Workbook                      wb;
+    private int                           sheetNum;
+    private int                           cssRandom;
 
     /*是不是完成界面*/
-    private boolean             completeHTML;
-    private Formatter           out;
+    private boolean                       completeHTML;
+    private Formatter                     out;
     /*已经完成范围处理*/
-    private boolean             gotBounds;
-    private int                 firstColumn;
-    private int                 endColumn;
-    private String              imageCachePath;
-    private static final String COL_HEAD_CLASS = "colHeader";
+    private boolean                       gotBounds;
+    private int                           firstColumn;
+    private int                           endColumn;
+    private String                        imageCachePath;
+    private static final String           COL_HEAD_CLASS = "colHeader";
     //private static final String ROW_HEAD_CLASS = "rowHeader";
 
-    private static final String DEFAULTS_CLASS = "excelDefaults";
+    private static final String           DEFAULTS_CLASS = "excelDefaults";
 
     //图片缓存
-    private Map<String, PictureData> pictures = new HashMap<String, PictureData>();
+    private Map<String, PictureData>      pictures       = new HashMap<String, PictureData>();
 
     public ExcelToHtmlServer(ExcelToHtmlParams params) {
         this.wb = params.getWb();

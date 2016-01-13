@@ -24,8 +24,8 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author JueYue
  * @date 2015年1月9日 下午5:36:08
  */
-public class ExcelExportStylerDefaultImpl extends AbstractExcelExportStyler implements
-                                                                           IExcelExportStyler {
+public class ExcelExportStylerDefaultImpl extends AbstractExcelExportStyler
+                                          implements IExcelExportStyler {
 
     public ExcelExportStylerDefaultImpl(Workbook workbook) {
         super.createStyles(workbook);

@@ -47,19 +47,12 @@ public class StylerHelper {
 
     private static final String             DEFAULTS_CLASS     = "excelDefaults";
 
-    private static final Map<Short, String> ALIGN              = PoiPublicUtil
-                                                                   .mapFor(ALIGN_LEFT, "left",
-                                                                       ALIGN_CENTER, "center",
-                                                                       ALIGN_RIGHT, "right",
-                                                                       ALIGN_FILL, "left",
-                                                                       ALIGN_JUSTIFY, "left",
-                                                                       ALIGN_CENTER_SELECTION,
-                                                                       "center");
+    private static final Map<Short, String> ALIGN              = PoiPublicUtil.mapFor(ALIGN_LEFT,
+        "left", ALIGN_CENTER, "center", ALIGN_RIGHT, "right", ALIGN_FILL, "left", ALIGN_JUSTIFY,
+        "left", ALIGN_CENTER_SELECTION, "center");
 
-    private static final Map<Short, String> VERTICAL_ALIGN     = PoiPublicUtil.mapFor(
-                                                                   VERTICAL_BOTTOM, "bottom",
-                                                                   VERTICAL_CENTER, "middle",
-                                                                   VERTICAL_TOP, "top");
+    private static final Map<Short, String> VERTICAL_ALIGN     = PoiPublicUtil
+        .mapFor(VERTICAL_BOTTOM, "bottom", VERTICAL_CENTER, "middle", VERTICAL_TOP, "top");
 
     private Formatter                       out;
 
@@ -80,8 +73,8 @@ public class StylerHelper {
         else if (wb instanceof XSSFWorkbook)
             helper = new XSSFHtmlHelper((XSSFWorkbook) wb);
         else
-            throw new IllegalArgumentException("unknown workbook type: "
-                                               + wb.getClass().getSimpleName());
+            throw new IllegalArgumentException(
+                "unknown workbook type: " + wb.getClass().getSimpleName());
         printInlineStyle(wb);
     }
 
@@ -127,8 +120,8 @@ public class StylerHelper {
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb);
         try {
-            in = new BufferedReader(new InputStreamReader(
-                StylerHelper.class.getResourceAsStream("excelStyle.css")));
+            in = new BufferedReader(
+                new InputStreamReader(StylerHelper.class.getResourceAsStream("excelStyle.css")));
             String line;
             while ((line = in.readLine()) != null) {
                 formatter.format("%s%n", line);

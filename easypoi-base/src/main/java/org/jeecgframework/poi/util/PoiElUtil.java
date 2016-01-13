@@ -25,8 +25,6 @@ import org.jeecgframework.poi.exception.excel.ExcelExportException;
  * @date 2015年4月25日 下午12:13:21
  */
 public final class PoiElUtil {
-    
-    
 
     public static final String LENGTH             = "le:";
     public static final String FOREACH            = "fe:";
@@ -41,7 +39,7 @@ public final class PoiElUtil {
     public static final String IF_DELETE          = "!if:";
     public static final String EMPTY              = "";
     public static final String CONST              = "'";
-    public static final String NULL              = "&NULL&";
+    public static final String NULL               = "&NULL&";
     public static final String LEFT_BRACKET       = "(";
     public static final String RIGHT_BRACKET      = ")";
 

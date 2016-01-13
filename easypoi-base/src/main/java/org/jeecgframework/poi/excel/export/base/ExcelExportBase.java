@@ -113,19 +113,17 @@ public abstract class ExcelExportBase extends ExportBase {
                                 row.getSheet().getWorkbook().getCreationHelper(), t,
                                 entity.getName(), value));
                     }
-                }
-                else if(entity.getType() == BaseEntityTypeConstants.DoubleType)
-                {
-                	createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
-                            index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
-                            entity);
-                        if (entity.isHyperlink()) {
-                            row.getCell(cellNum - 1)
-                                .setHyperlink(dataHanlder.getHyperlink(
-                                    row.getSheet().getWorkbook().getCreationHelper(), t,
-                                    entity.getName(), value));
-                        }
-                }else {
+                } else if (entity.getType() == BaseEntityTypeConstants.DoubleType) {
+                    createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
+                        index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
+                        entity);
+                    if (entity.isHyperlink()) {
+                        row.getCell(cellNum - 1)
+                            .setHyperlink(dataHanlder.getHyperlink(
+                                row.getSheet().getWorkbook().getCreationHelper(), t,
+                                entity.getName(), value));
+                    }
+                } else {
                     createImageCell(patriarch, entity, row, cellNum++,
                         value == null ? "" : value.toString(), t);
                 }
@@ -232,19 +230,16 @@ public abstract class ExcelExportBase extends ExportBase {
                             row.getSheet().getWorkbook().getCreationHelper(), obj, entity.getName(),
                             value));
                 }
-            }
-            else if(entity.getType() == BaseEntityTypeConstants.DoubleType)
-            {
-            	createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
-                        index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
-                        entity);
-                    if (entity.isHyperlink()) {
-                        row.getCell(cellNum - 1)
-                            .setHyperlink(dataHanlder.getHyperlink(
-                                row.getSheet().getWorkbook().getCreationHelper(),obj,
-                                entity.getName(), value));
-                    }
-            }else {
+            } else if (entity.getType() == BaseEntityTypeConstants.DoubleType) {
+                createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
+                    index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity), entity);
+                if (entity.isHyperlink()) {
+                    row.getCell(cellNum - 1)
+                        .setHyperlink(dataHanlder.getHyperlink(
+                            row.getSheet().getWorkbook().getCreationHelper(), obj, entity.getName(),
+                            value));
+                }
+            } else {
                 createImageCell(patriarch, entity, row, cellNum++,
                     value == null ? "" : value.toString(), obj);
             }
@@ -280,7 +275,7 @@ public abstract class ExcelExportBase extends ExportBase {
         }
         addStatisticsData(index, text, entity);
     }
-    
+
     /**
      * 创建数字类型的Cell
      * 
@@ -291,12 +286,12 @@ public abstract class ExcelExportBase extends ExportBase {
      * @param entity
      */
     public void createDoubleCell(Row row, int index, String text, CellStyle style,
-    		ExcelExportEntity entity) {
+                                 ExcelExportEntity entity) {
         Cell cell = row.createCell(index);
-        if(text!=null&&text.length()>0){
-        	cell.setCellValue(Double.parseDouble(text));
-        }else{
-        	cell.setCellValue(-1);
+        if (text != null && text.length() > 0) {
+            cell.setCellValue(Double.parseDouble(text));
+        } else {
+            cell.setCellValue(-1);
         }
         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         if (style != null) {
@@ -304,8 +299,7 @@ public abstract class ExcelExportBase extends ExportBase {
         }
         addStatisticsData(index, text, entity);
     }
-    
-    
+
     /**
      * 创建统计行
      * @param styles 

@@ -59,8 +59,8 @@ public class SheetHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String name, Attributes attributes)
-                                                                                              throws SAXException {
+    public void startElement(String uri, String localName, String name,
+                             Attributes attributes) throws SAXException {
         // 置空  
         lastContents = "";
         // c => 单元格  
