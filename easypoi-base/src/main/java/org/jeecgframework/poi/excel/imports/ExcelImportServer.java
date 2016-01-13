@@ -69,15 +69,15 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings({ "rawtypes", "unchecked", "hiding" })
 public class ExcelImportServer extends ImportBaseService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ExcelImportServer.class);
+    private final static Logger LOGGER     = LoggerFactory.getLogger(ExcelImportServer.class);
 
-    private CellValueServer cellValueServer;
+    private CellValueServer     cellValueServer;
 
-    private boolean   verfiyFail = false;
+    private boolean             verfiyFail = false;
     /**
      * 异常数据styler
      */
-    private CellStyle errorCellStyle;
+    private CellStyle           errorCellStyle;
 
     public ExcelImportServer() {
         this.cellValueServer = new CellValueServer();
@@ -195,7 +195,7 @@ public class ExcelImportServer extends ImportBaseService {
             rows.next();
         }
         Map<Integer, String> titlemap = getTitleMap(rows, params, excelCollection);
-        checkIsValidTemplate(titlemap, excelParams, params,excelCollection);
+        checkIsValidTemplate(titlemap, excelParams, params, excelCollection);
         Row row = null;
         Object object = null;
         String picId;
@@ -415,31 +415,36 @@ public class ExcelImportServer extends ImportBaseService {
      * @param params
      * @param excelCollection 
      */
-    private void checkIsValidTemplate(Map<Integer, String> titlemap, Map<String, ExcelImportEntity> excelParams, ImportParams params, List<ExcelCollectionParams> excelCollection) {
-       
-        if(params.getImportFields() != null){
-            for (int i = 0 ,le = params.getImportFields().length; i < le; i++) {
-                if(!titlemap.containsValue(params.getImportFields()[i])){
-                  throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);    
+    private void checkIsValidTemplate(Map<Integer, String> titlemap,
+                                      Map<String, ExcelImportEntity> excelParams,
+                                      ImportParams params,
+                                      List<ExcelCollectionParams> excelCollection) {
+
+        if (params.getImportFields() != null) {
+            for (int i = 0, le = params.getImportFields().length; i < le; i++) {
+                if (!titlemap.containsValue(params.getImportFields()[i])) {
+                    throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
                 }
             }
         } else {
-          Collection<ExcelImportEntity> collection = excelParams.values();  
-          for (ExcelImportEntity excelImportEntity : collection) {
-              if(excelImportEntity.isImportField() && !titlemap.containsValue(excelImportEntity.getName())){
-                  throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);    
-              }
-          }
-          
-          for (int i = 0, le = excelCollection.size(); i < le; i++) {
-              ExcelCollectionParams collectionparams = excelCollection.get(i);
-              collection = collectionparams.getExcelParams().values();
-              for (ExcelImportEntity excelImportEntity : collection) {
-                  if(excelImportEntity.isImportField() && !titlemap.containsValue(collectionparams.getExcelName()+"_"+excelImportEntity.getName())){
-                      throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);    
-                  }
-              }
-          }
+            Collection<ExcelImportEntity> collection = excelParams.values();
+            for (ExcelImportEntity excelImportEntity : collection) {
+                if (excelImportEntity.isImportField()
+                    && !titlemap.containsValue(excelImportEntity.getName())) {
+                    throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
+                }
+            }
+
+            for (int i = 0, le = excelCollection.size(); i < le; i++) {
+                ExcelCollectionParams collectionparams = excelCollection.get(i);
+                collection = collectionparams.getExcelParams().values();
+                for (ExcelImportEntity excelImportEntity : collection) {
+                    if (excelImportEntity.isImportField() && !titlemap.containsValue(
+                        collectionparams.getExcelName() + "_" + excelImportEntity.getName())) {
+                        throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
+                    }
+                }
+            }
         }
     }
 

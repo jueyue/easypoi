@@ -12,11 +12,14 @@ import java.util.List;
  * @see com.dawnpro.core.export.excel.model.ExcelGraph
  * 
  */
-public interface ExcelGraph
-{
-	public ExcelGraphElement getCategory();
-	public List<ExcelGraphElement> getValueList();
-	public Integer getGraphType();
-	public List<ExcelTitleCell> getTitleCell();
-	public List<String> getTitle();
+public interface ExcelGraph {
+    public ExcelGraphElement getCategory();
+
+    public List<ExcelGraphElement> getValueList();
+
+    public Integer getGraphType();
+
+    public List<ExcelTitleCell> getTitleCell();
+
+    public List<String> getTitle();
 }

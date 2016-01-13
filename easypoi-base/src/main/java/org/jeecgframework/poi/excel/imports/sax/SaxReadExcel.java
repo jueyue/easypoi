@@ -82,8 +82,8 @@ public class SaxReadExcel {
         }
     }
 
-    private XMLReader fetchSheetParser(SharedStringsTable sst, ISaxRowRead rowRead)
-                                                                                   throws SAXException {
+    private XMLReader fetchSheetParser(SharedStringsTable sst,
+                                       ISaxRowRead rowRead) throws SAXException {
         XMLReader parser = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
         ContentHandler handler = new SheetHandler(sst, rowRead);
         parser.setContentHandler(handler);

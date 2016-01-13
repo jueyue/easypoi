@@ -37,8 +37,8 @@ public class CellValueHelper {
             is07 = true;
             cacheFontInfo(wb);
         } else
-            throw new IllegalArgumentException("unknown workbook type: "
-                                               + wb.getClass().getSimpleName());
+            throw new IllegalArgumentException(
+                "unknown workbook type: " + wb.getClass().getSimpleName());
     }
 
     /**
@@ -91,11 +91,11 @@ public class CellValueHelper {
             sb.append("'>");
             currentIndex = rich.getIndexOfFormattingRun(i);
             if (i < nums - 1) {
-                sb.append(XmlEscapers.xmlContentEscaper().escape(
-                    text.substring(currentIndex, rich.getIndexOfFormattingRun(i + 1))));
+                sb.append(XmlEscapers.xmlContentEscaper()
+                    .escape(text.substring(currentIndex, rich.getIndexOfFormattingRun(i + 1))));
             } else {
-                sb.append(XmlEscapers.xmlContentEscaper().escape(
-                    text.substring(currentIndex, text.length())));
+                sb.append(XmlEscapers.xmlContentEscaper()
+                    .escape(text.substring(currentIndex, text.length())));
             }
             sb.append("</span>");
         }
@@ -122,10 +122,10 @@ public class CellValueHelper {
             } catch (Exception e) {
             }
             sb.append(">");
-            currentIndex = rich.getIndexOfFormattingRun(i) == -1 ? text.length() : rich
-                .getIndexOfFormattingRun(i);
-            sb.append(XmlEscapers.xmlContentEscaper().escape(
-                text.substring(lastIndex, currentIndex)));
+            currentIndex = rich.getIndexOfFormattingRun(i) == -1 ? text.length()
+                : rich.getIndexOfFormattingRun(i);
+            sb.append(
+                XmlEscapers.xmlContentEscaper().escape(text.substring(lastIndex, currentIndex)));
             sb.append("</span>");
             lastIndex = currentIndex;
         }
@@ -133,8 +133,8 @@ public class CellValueHelper {
     }
 
     private String getFontIndex(XSSFFont font) {
-        return fontCache.get(font.getBoldweight() + "_" + font.getItalic() + "_"
-                             + font.getFontName() + "_" + font.getFontHeightInPoints() + "_"
-                             + font.getColor());
+        return fontCache
+            .get(font.getBoldweight() + "_" + font.getItalic() + "_" + font.getFontName() + "_"
+                 + font.getFontHeightInPoints() + "_" + font.getColor());
     }
 }

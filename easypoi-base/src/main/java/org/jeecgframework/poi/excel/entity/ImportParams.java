@@ -57,7 +57,7 @@ public class ImportParams extends ExcelBaseParams {
     /**
      * 是否需要校验上传的Excel,默认为false
      */
-    private boolean             needVerfiy         = false;
+    private boolean             needVerfiy       = false;
     /**
      * 保存上传的Excel目录,默认是 如 TestEntity这个类保存路径就是
      * upload/excelUpload/Test/yyyyMMddHHmss_***** 保存名称上传时间_五位随机数

@@ -100,9 +100,11 @@ public final class PoiPublicUtil {
                 }
                 if (isCollection(field.getType())) {
                     ExcelCollection collection = field.getAnnotation(ExcelCollection.class);
-                    PoiReflectorUtil.fromCache(clazz).setValue(obj , field.getName(), collection.type().newInstance());
+                    PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(),
+                        collection.type().newInstance());
                 } else if (!isJavaClass(field)) {
-                    PoiReflectorUtil.fromCache(clazz).setValue(obj , field.getName(), createObject(field.getType(), targetId));
+                    PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(),
+                        createObject(field.getType(), targetId));
                 }
             }
 
@@ -163,7 +165,8 @@ public final class PoiPublicUtil {
      *            工作簿对象
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
-    public static Map<String, PictureData> getSheetPictrues03(HSSFSheet sheet, HSSFWorkbook workbook) {
+    public static Map<String, PictureData> getSheetPictrues03(HSSFSheet sheet,
+                                                              HSSFWorkbook workbook) {
         Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
         List<HSSFPictureData> pictures = workbook.getAllPictures();
         if (!pictures.isEmpty()) {
@@ -193,7 +196,8 @@ public final class PoiPublicUtil {
      *            工作簿对象
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
-    public static Map<String, PictureData> getSheetPictrues07(XSSFSheet sheet, XSSFWorkbook workbook) {
+    public static Map<String, PictureData> getSheetPictrues07(XSSFSheet sheet,
+                                                              XSSFWorkbook workbook) {
         Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
         for (POIXMLDocumentPart dr : sheet.getRelations()) {
             if (dr instanceof XSSFDrawing) {
@@ -266,23 +270,20 @@ public final class PoiPublicUtil {
         boolean boo = true;
         if (field.getAnnotation(ExcelIgnore.class) != null) {
             boo = true;
-        } else if (boo
-                   && field.getAnnotation(ExcelCollection.class) != null
+        } else if (boo && field.getAnnotation(ExcelCollection.class) != null
                    && isUseInThis(field.getAnnotation(ExcelCollection.class).name(), targetId)
-                   && (exclusionsList == null || !exclusionsList.contains(field.getAnnotation(
-                       ExcelCollection.class).name()))) {
+                   && (exclusionsList == null || !exclusionsList
+                       .contains(field.getAnnotation(ExcelCollection.class).name()))) {
             boo = false;
-        } else if (boo
-                   && field.getAnnotation(Excel.class) != null
+        } else if (boo && field.getAnnotation(Excel.class) != null
                    && isUseInThis(field.getAnnotation(Excel.class).name(), targetId)
-                   && (exclusionsList == null || !exclusionsList.contains(field.getAnnotation(
-                       Excel.class).name()))) {
+                   && (exclusionsList == null
+                       || !exclusionsList.contains(field.getAnnotation(Excel.class).name()))) {
             boo = false;
-        } else if (boo
-                   && field.getAnnotation(ExcelEntity.class) != null
+        } else if (boo && field.getAnnotation(ExcelEntity.class) != null
                    && isUseInThis(field.getAnnotation(ExcelEntity.class).name(), targetId)
-                   && (exclusionsList == null || !exclusionsList.contains(field.getAnnotation(
-                       ExcelEntity.class).name()))) {
+                   && (exclusionsList == null || !exclusionsList
+                       .contains(field.getAnnotation(ExcelEntity.class).name()))) {
             boo = false;
         }
         return boo;
@@ -331,15 +332,12 @@ public final class PoiPublicUtil {
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
             BufferedImage bufferImg;
             String path = Thread.currentThread().getContextClassLoader().getResource("").toURI()
-                .getPath()
-                          + entity.getUrl();
+                .getPath() + entity.getUrl();
             path = path.replace("WEB-INF/classes/", "");
             path = path.replace("file:/", "");
             bufferImg = ImageIO.read(new File(path));
-            ImageIO.write(
-                bufferImg,
-                entity.getUrl().substring(entity.getUrl().indexOf(".") + 1,
-                    entity.getUrl().length()), byteArrayOut);
+            ImageIO.write(bufferImg, entity.getUrl().substring(entity.getUrl().indexOf(".") + 1,
+                entity.getUrl().length()), byteArrayOut);
             result[0] = byteArrayOut.toByteArray();
             type = entity.getUrl().split("/.")[entity.getUrl().split("/.").length - 1];
         } else {
@@ -376,11 +374,12 @@ public final class PoiPublicUtil {
      * @date 2013-11-16
      * @return
      */
-    public static Object getRealValue(String currentText, Map<String, Object> map) throws Exception {
+    public static Object getRealValue(String currentText,
+                                      Map<String, Object> map) throws Exception {
         String params = "";
         while (currentText.indexOf(START_STR) != -1) {
-            params = currentText
-                .substring(currentText.indexOf(START_STR) + 2, currentText.indexOf(END_STR));
+            params = currentText.substring(currentText.indexOf(START_STR) + 2,
+                currentText.indexOf(END_STR));
             Object obj = PoiElUtil.eval(params.trim(), map);
             //判断图片或者是集合
 
@@ -404,8 +403,8 @@ public final class PoiPublicUtil {
      * @throws Exception
      */
     @SuppressWarnings("rawtypes")
-    public static Object getValueDoWhile(Object object, String[] paramsArr, int index)
-                                                                                      throws Exception {
+    public static Object getValueDoWhile(Object object, String[] paramsArr,
+                                         int index) throws Exception {
         if (object == null) {
             return "";
         }
@@ -415,10 +414,11 @@ public final class PoiPublicUtil {
         if (object instanceof Map) {
             object = ((Map) object).get(paramsArr[index]);
         } else {
-            object =  PoiReflectorUtil.fromCache(object.getClass()).getValue(object, paramsArr[index]);
+            object = PoiReflectorUtil.fromCache(object.getClass()).getValue(object,
+                paramsArr[index]);
         }
-        return (index == paramsArr.length - 1) ? (object == null ? "" : object) : getValueDoWhile(
-            object, paramsArr, ++index);
+        return (index == paramsArr.length - 1) ? (object == null ? "" : object)
+            : getValueDoWhile(object, paramsArr, ++index);
     }
 
     /**
@@ -434,14 +434,14 @@ public final class PoiPublicUtil {
         }
         return temp;
     }
-    
+
     /**
      * 统一 key的获取规则
      * @param key
      * @param targetId
      * @return
      */
-    public static String getValueByTargetId(String key, String targetId, String defalut){
+    public static String getValueByTargetId(String key, String targetId, String defalut) {
         if (StringUtils.isEmpty(targetId) || key.indexOf("_") < 0) {
             return key;
         }
@@ -449,7 +449,7 @@ public final class PoiPublicUtil {
         String[] tempArr;
         for (String str : arr) {
             tempArr = str.split("_");
-            if(tempArr == null || tempArr.length < 2){
+            if (tempArr == null || tempArr.length < 2) {
                 return defalut;
             }
             if (targetId.equals(tempArr[1])) {
@@ -458,15 +458,14 @@ public final class PoiPublicUtil {
         }
         return defalut;
     }
-    
-    
+
     /**
      * 支持换行操作
      * @param currentRun
      * @param currentText
      */
     public static void setWordText(XWPFRun currentRun, String currentText) {
-        if(StringUtils.isNotBlank(currentText)){
+        if (StringUtils.isNotBlank(currentText)) {
             String[] tempArr = currentText.split("\r\n");
             for (int i = 0, le = tempArr.length - 1; i < le; i++) {
                 currentRun.setText(tempArr[i], i);
@@ -475,6 +474,5 @@ public final class PoiPublicUtil {
             currentRun.setText(tempArr[tempArr.length - 1], tempArr.length - 1);
         }
     }
-
 
 }

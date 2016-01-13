@@ -10,9 +10,8 @@ package org.jeecgframework.poi.excel.entity.vo;
  * @see org.jeecgframework.poi.excel.entity.vo.BaseEntityTypeConstants
  * 
  */
-public interface BaseEntityTypeConstants
-{
-	public final static Integer StringType =1;
-	public final static Integer DoubleType =10;
-	public final static Integer ImageType = 3;
+public interface BaseEntityTypeConstants {
+    public final static Integer StringType = 1;
+    public final static Integer DoubleType = 10;
+    public final static Integer ImageType  = 3;
 }

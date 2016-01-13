@@ -46,8 +46,8 @@ public class MergedRegionHelper {
                 endCol = (endCol + 1) * 26 + (strArr[1].charAt(1) - 65);
             }
             int endRol = Integer.valueOf(strArr[1].substring(strArr[1].charAt(1) >= 65 ? 2 : 1));
-            mergedCache.put(startRol + "_" + startCol, new Integer[] { endRol - startRol + 1,
-                    endCol - startCol + 1 });
+            mergedCache.put(startRol + "_" + startCol,
+                new Integer[] { endRol - startRol + 1, endCol - startCol + 1 });
             for (int i = startRol; i <= endRol; i++) {
                 for (int j = startCol; j <= endCol; j++) {
                     notNeedCread.add(i + "_" + j);

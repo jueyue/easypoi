@@ -39,12 +39,12 @@ public class WordCache {
             MyXWPFDocument doc = new MyXWPFDocument(is);
             return doc;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 is.close();
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(),e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return null;

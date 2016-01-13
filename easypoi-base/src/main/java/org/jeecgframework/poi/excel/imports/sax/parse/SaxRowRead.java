@@ -49,7 +49,7 @@ import com.google.common.collect.Lists;
 public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
 
     private static final Logger            LOGGER          = LoggerFactory
-                                                               .getLogger(SaxRowRead.class);
+        .getLogger(SaxRowRead.class);
     /** 需要返回的数据 **/
     private List                           list;
     /** 导出的对象 **/
@@ -129,8 +129,9 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
      */
     private void addListData(List<SaxReadCellEntity> datas) throws Exception {
         // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
-        if ((datas.get(params.getKeyIndex()) == null || StringUtils.isEmpty(String.valueOf(datas
-            .get(params.getKeyIndex()).getValue()))) && object != null) {
+        if ((datas.get(params.getKeyIndex()) == null
+             || StringUtils.isEmpty(String.valueOf(datas.get(params.getKeyIndex()).getValue())))
+            && object != null) {
             for (ExcelCollectionParams param : excelCollection) {
                 addListContinue(object, param, datas, titlemap, targetId, params);
             }
@@ -171,7 +172,8 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private void addListContinue(Object object, ExcelCollectionParams param,
                                  List<SaxReadCellEntity> datas, Map<Integer, String> titlemap,
                                  String targetId, ImportParams params) throws Exception {
-        Collection collection = (Collection) PoiReflectorUtil.fromCache(pojoClass).getValue(object, param.getName());
+        Collection collection = (Collection) PoiReflectorUtil.fromCache(pojoClass).getValue(object,
+            param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         boolean isUsed = false;// 是否需要加上这个对象
         for (int i = 0; i < datas.size(); i++) {
@@ -196,8 +198,8 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
      * @throws Exception 
      */
     private void saveFieldValue(ImportParams params, Object object, SaxReadCellEntity entity,
-                                Map<String, ExcelImportEntity> excelParams, String titleString)
-                                                                                               throws Exception {
+                                Map<String, ExcelImportEntity> excelParams,
+                                String titleString) throws Exception {
         Object value = cellValueServer.getValue(params.getDataHanlder(), object, entity,
             excelParams, titleString);
         setValues(excelParams.get(titleString), object, value);

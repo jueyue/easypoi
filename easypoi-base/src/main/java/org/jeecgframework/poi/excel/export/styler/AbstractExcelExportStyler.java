@@ -33,7 +33,7 @@ public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
     //间隔行
     protected CellStyle          stringSeptailStyle;
     protected CellStyle          stringSeptailWrapStyle;
-    
+
     protected Workbook           workbook;
 
     protected static final short STRING_FORMAT = (short) BuiltinFormats.getBuiltinFormat("TEXT");

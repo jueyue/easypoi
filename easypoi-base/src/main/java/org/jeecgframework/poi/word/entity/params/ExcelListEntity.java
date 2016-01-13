@@ -57,12 +57,15 @@ public class ExcelListEntity extends ExcelBaseParams {
         this.clazz = clazz;
         setDataHanlder(dataHanlder);
     }
-    public ExcelListEntity(List<?> list, Class<?> clazz, IExcelDataHandler dataHanlder, int headRows) {
+
+    public ExcelListEntity(List<?> list, Class<?> clazz, IExcelDataHandler dataHanlder,
+                           int headRows) {
         this.list = list;
         this.clazz = clazz;
         this.headRows = headRows;
         setDataHanlder(dataHanlder);
     }
+
     public ExcelListEntity(List<?> list, Class<?> clazz, int headRows) {
         this.list = list;
         this.clazz = clazz;

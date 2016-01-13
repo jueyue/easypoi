@@ -45,8 +45,7 @@ public class MyXWPFDocument extends XWPFDocument {
                                          + "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
                                          + "         <pic:nvPicPr>"
                                          + "            <pic:cNvPr id=\"%s\" name=\"Generated\"/>"
-                                         + "            <pic:cNvPicPr/>"
-                                         + "         </pic:nvPicPr>"
+                                         + "            <pic:cNvPicPr/>" + "         </pic:nvPicPr>"
                                          + "         <pic:blipFill>"
                                          + "            <a:blip r:embed=\"%s\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
                                          + "            <a:stretch>"
@@ -57,10 +56,9 @@ public class MyXWPFDocument extends XWPFDocument {
                                          + "               <a:ext cx=\"%s\" cy=\"%s\"/>"
                                          + "            </a:xfrm>"
                                          + "            <a:prstGeom prst=\"rect\">"
-                                         + "               <a:avLst/>"
-                                         + "            </a:prstGeom>" + "         </pic:spPr>"
-                                         + "      </pic:pic>" + "   </a:graphicData>"
-                                         + "</a:graphic>";
+                                         + "               <a:avLst/>" + "            </a:prstGeom>"
+                                         + "         </pic:spPr>" + "      </pic:pic>"
+                                         + "   </a:graphicData>" + "</a:graphic>";
 
     public MyXWPFDocument() {
         super();
