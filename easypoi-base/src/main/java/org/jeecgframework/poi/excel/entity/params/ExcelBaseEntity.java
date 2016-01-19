@@ -23,7 +23,7 @@ import org.jeecgframework.poi.excel.entity.vo.BaseEntityTypeConstants;
 /**
  * Excel 导入导出基础对象类
  * @author JueYue
- * @date 2014年6月20日 下午2:26:09
+ *  2014年6月20日 下午2:26:09
  */
 public class ExcelBaseEntity {
     /**

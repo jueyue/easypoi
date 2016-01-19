@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * 解析实体类对象 复用注解
  * 
  * @author JueYue
- * @date 2014年8月9日 下午10:30:57
+ *  2014年8月9日 下午10:30:57
  */
 public class ExcelEntityParse extends ExportBase {
 
@@ -96,8 +96,12 @@ public class ExcelEntityParse extends ExportBase {
 
     /**
      * 创建List之后的各个Cells
-     * 
-     * @param styles
+     * @param index
+     * @param cellNum
+     * @param obj
+     * @param excelParams
+     * @param table
+     * @throws Exception
      */
     public void createListCells(int index, int cellNum, Object obj,
                                 List<ExcelExportEntity> excelParams,
@@ -149,8 +153,8 @@ public class ExcelEntityParse extends ExportBase {
      * 解析上一行并生成更多行
      * 
      * @param table
-     * @param i
-     * @param listobj
+     * @param index
+     * @param entity
      */
     public void parseNextRowAndAddRow(XWPFTable table, int index, ExcelListEntity entity) {
         checkExcelParams(entity);

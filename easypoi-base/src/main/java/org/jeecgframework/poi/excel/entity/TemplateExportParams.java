@@ -21,7 +21,7 @@ import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerDefaultImpl;
  * 模板导出参数设置
  * 
  * @author JueYue
- * @date 2013-10-17
+ *  2013-10-17
  * @version 1.0
  */
 public class TemplateExportParams extends ExcelBaseParams {

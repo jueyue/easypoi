@@ -24,7 +24,7 @@ import org.jeecgframework.poi.word.parse.ParseWord07;
  * Word使用模板导出工具类
  * 
  * @author JueYue
- * @date 2013-11-16
+ *  2013-11-16
  * @version 1.0
  */
 public class WordExportUtil {
@@ -49,11 +49,10 @@ public class WordExportUtil {
     /**
      * 解析Word2007版本
      * 
-     * @param XWPFDocument
+     * @param document
      *            模板
      * @param map
      *            解析数据源
-     * @return
      */
     public static void exportWord07(XWPFDocument document,
                                     Map<String, Object> map) throws Exception {

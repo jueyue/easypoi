@@ -21,7 +21,7 @@ import org.jeecgframework.poi.handler.inter.IExcelVerifyHandler;
  * 导入参数设置
  * 
  * @author JueYue
- * @date 2013-9-24
+ *  2013-9-24
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")

@@ -18,7 +18,7 @@ package org.jeecgframework.poi.excel.entity.vo;
 /**
  * 模板Excel导出常量
  * @author JueYue
- * @date 2014年6月30日 下午9:26:52
+ *  2014年6月30日 下午9:26:52
  */
 public interface TemplateExcelConstants extends BasePOIConstants {
     /**

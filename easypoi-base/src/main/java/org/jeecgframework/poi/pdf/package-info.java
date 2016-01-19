@@ -16,6 +16,6 @@
 /**
  * EasyPOI的PDF模块
  * @author JueYue
- * @date 2015年10月6日 下午8:13:19
+ *  2015年10月6日 下午8:13:19
  */
 package org.jeecgframework.poi.pdf;

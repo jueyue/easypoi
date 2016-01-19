@@ -32,7 +32,7 @@ import com.google.common.cache.LoadingCache;
 /**
  * 图片缓存处理
  * @author JueYue
- * @date 2016年1月8日 下午4:16:32
+ *  2016年1月8日 下午4:16:32
  */
 public class ImageCache {
 

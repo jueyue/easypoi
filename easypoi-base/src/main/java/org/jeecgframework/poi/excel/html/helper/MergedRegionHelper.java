@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 /**
  * 合并单元格帮助类
  * @author JueYue
- * @date 2015年5月9日 下午2:13:35
+ *  2015年5月9日 下午2:13:35
  */
 public class MergedRegionHelper {
 

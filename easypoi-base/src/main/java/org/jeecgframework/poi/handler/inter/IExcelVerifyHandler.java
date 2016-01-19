@@ -21,7 +21,7 @@ import org.jeecgframework.poi.excel.entity.result.ExcelVerifyHanlderResult;
  * 导入校验接口
  * 
  * @author JueYue
- * @date 2014年6月23日 下午11:08:21
+ *  2014年6月23日 下午11:08:21
  */
 public interface IExcelVerifyHandler<T> {
 

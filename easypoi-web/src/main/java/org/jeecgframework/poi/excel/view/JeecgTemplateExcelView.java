@@ -34,7 +34,7 @@ import org.springframework.stereotype.Controller;
  * Excel模板视图
  * 
  * @author JueYue
- * @date 2014年6月30日 下午9:15:49
+ *  2014年6月30日 下午9:15:49
  */
 @SuppressWarnings("unchecked")
 @Controller(TemplateExcelConstants.JEECG_TEMPLATE_EXCEL_VIEW)

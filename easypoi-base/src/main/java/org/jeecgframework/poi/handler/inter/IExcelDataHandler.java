@@ -24,7 +24,7 @@ import org.apache.poi.ss.usermodel.Hyperlink;
  * Excel 导入导出 数据处理接口
  * 
  * @author JueYue
- * @date 2014年6月19日 下午11:59:45
+ *  2014年6月19日 下午11:59:45
  */
 public interface IExcelDataHandler<T> {
 
@@ -76,9 +76,9 @@ public interface IExcelDataHandler<T> {
     public void setMapValue(Map<String, Object> map, String originKey, Object value);
 
     /**
-     * 获取这个字段的 {@Hyperlink},07版本需要,03版本不需要
-     * @param wb
-     * @param obj 
+     * 获取这个字段的 Hyperlink ,07版本需要,03版本不需要
+     * @param creationHelper
+     * @param obj
      * @param name
      * @param value
      * @return

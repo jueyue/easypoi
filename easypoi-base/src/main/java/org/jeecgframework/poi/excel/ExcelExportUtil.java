@@ -35,7 +35,7 @@ import org.jeecgframework.poi.excel.export.template.ExcelExportOfTemplateUtil;
  * 
  * @author JueYue
  * @version 1.0
- * @date 2013-10-17
+ *  2013-10-17
  */
 public class ExcelExportUtil {
 
@@ -68,8 +68,8 @@ public class ExcelExportUtil {
      * 根据Map创建对应的Excel
      * @param entity
      *            表格标题属性
-     * @param pojoClass
-     *            Excel对象Class
+     * @param entityList
+     *            Map对象列表
      * @param dataSet
      *            Excel对象数据List
      */

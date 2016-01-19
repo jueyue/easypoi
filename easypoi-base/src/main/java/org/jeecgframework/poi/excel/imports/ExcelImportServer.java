@@ -64,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * Excel 导入服务
  * 
  * @author JueYue
- * @date 2014年6月26日 下午9:20:51
+ *  2014年6月26日 下午9:20:51
  */
 @SuppressWarnings({ "rawtypes", "unchecked", "hiding" })
 public class ExcelImportServer extends ImportBaseService {
@@ -125,8 +125,8 @@ public class ExcelImportServer extends ImportBaseService {
     /**
      * 获取key的值,针对不同类型获取不同的值
      * 
-     * @Author JueYue
-     * @date 2013-11-21
+     * @author JueYue
+     *  2013-11-21
      * @param cell
      * @return
      */
