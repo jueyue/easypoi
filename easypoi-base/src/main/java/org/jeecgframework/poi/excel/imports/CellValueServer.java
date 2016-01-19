@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * 判断类型处理数据 1.判断Excel中的类型 2.根据replace替换值 3.handler处理数据 4.判断返回类型转化数据返回
  * 
  * @author JueYue
- *   2014年6月26日 下午10:42:28
+ * @date 2014年6月26日 下午10:42:28
  */
 public class CellValueServer {
 
@@ -139,7 +139,7 @@ public class CellValueServer {
      * 获取日期类型数据
      * 
      * @Author JueYue
-     *   2013年11月26日
+     * @date 2013年11月26日
      * @param entity
      * @param value
      * @return

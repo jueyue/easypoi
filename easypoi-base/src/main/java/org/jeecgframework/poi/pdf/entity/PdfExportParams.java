@@ -21,7 +21,7 @@ import org.jeecgframework.poi.pdf.styler.IPdfExportStyler;
 /**
  * PDF 导出参数设置
  * @author JueYue
- *   2016年1月8日 下午1:52:06
+ * @date 2016年1月8日 下午1:52:06
  */
 public class PdfExportParams extends ExcelBaseParams {
 

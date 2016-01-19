@@ -20,7 +20,7 @@ import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
 /**
  * 基础参数
  * @author JueYue
- *   2014年6月20日 下午1:56:52
+ * @date 2014年6月20日 下午1:56:52
  */
 @SuppressWarnings("rawtypes")
 public class ExcelBaseParams {

@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 /**
  * Excel到HTML的参数
  * @author JueYue
- *   2015年8月7日 下午1:45:46
+ * @date 2015年8月7日 下午1:45:46
  */
 public class ExcelToHtmlParams {
     /**

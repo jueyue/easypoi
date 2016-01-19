@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * Excel导出服务
  * 
  * @author JueYue
- *   2014年6月17日 下午5:30:54
+ * @date 2014年6月17日 下午5:30:54
  */
 public class ExcelExportServer extends ExcelExportBase {
 

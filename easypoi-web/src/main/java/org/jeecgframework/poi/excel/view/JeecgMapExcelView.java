@@ -35,7 +35,7 @@ import org.springframework.stereotype.Controller;
  * Map 对象接口
  * 
  * @author JueYue
- *   2014年11月25日 下午3:26:32
+ * @date 2014年11月25日 下午3:26:32
  */
 @SuppressWarnings("unchecked")
 @Controller(MapExcelConstants.JEECG_MAP_EXCEL_VIEW)

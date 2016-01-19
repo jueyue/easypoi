@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * 导入返回类
  * 
  * @author JueYue
- *   2014年6月29日 下午5:12:10
+ * @date 2014年6月29日 下午5:12:10
  */
 public class ExcelImportResult<T> {
 

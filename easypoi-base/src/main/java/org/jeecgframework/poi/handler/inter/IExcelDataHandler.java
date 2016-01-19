@@ -24,7 +24,7 @@ import org.apache.poi.ss.usermodel.Hyperlink;
  * Excel 导入导出 数据处理接口
  * 
  * @author JueYue
- *   2014年6月19日 下午11:59:45
+ * @date 2014年6月19日 下午11:59:45
  */
 public interface IExcelDataHandler<T> {
 

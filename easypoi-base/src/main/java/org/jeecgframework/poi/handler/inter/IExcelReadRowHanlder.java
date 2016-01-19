@@ -18,7 +18,7 @@ package org.jeecgframework.poi.handler.inter;
 /**
  * 接口自定义处理类
  * @author JueYue
- *   2015年1月16日 下午8:06:26
+ * @date 2015年1月16日 下午8:06:26
  * @param <T>
  */
 public interface IExcelReadRowHanlder<T> {

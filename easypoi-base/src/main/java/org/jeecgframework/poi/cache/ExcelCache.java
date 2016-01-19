@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * Excel类型的缓存
  * 
  * @author JueYue
- *   2014年2月11日
+ * @date 2014年2月11日
  * @version 1.0
  */
 public final class ExcelCache {

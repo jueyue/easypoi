@@ -30,7 +30,7 @@ import com.itextpdf.text.Document;
  * PDF 导出工具类
  *  
  * @author JueYue
- *   2015年10月6日 下午8:14:01
+ * @date 2015年10月6日 下午8:14:01
  * @version 1.0
  */
 public class PdfExportUtil {

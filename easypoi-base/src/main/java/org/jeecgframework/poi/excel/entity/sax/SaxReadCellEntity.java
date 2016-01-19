@@ -20,7 +20,7 @@ import org.jeecgframework.poi.excel.entity.enmus.CellValueType;
 /**
  * Cell 对象
  * @author JueYue
- *   2014年12月29日 下午10:12:57
+ * @date 2014年12月29日 下午10:12:57
  */
 public class SaxReadCellEntity {
     /**

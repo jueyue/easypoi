@@ -18,7 +18,7 @@ package org.jeecgframework.poi.excel.entity.vo;
 /**
  * 基础POI常量
  * @author JueYue
- *   2014年6月30日 下午9:23:37
+ * @date 2014年6月30日 下午9:23:37
  */
 interface BasePOIConstants {
 

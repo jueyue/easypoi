@@ -32,8 +32,8 @@ import com.google.common.cache.LoadingCache;
  * 缓存管理
  * 
  * @author JueYue
- *   2014年2月10日
- *   2015年10月17日
+ * @date 2014年2月10日
+ * @date 2015年10月17日
  * @version 1.1
  */
 public final class POICacheManager {

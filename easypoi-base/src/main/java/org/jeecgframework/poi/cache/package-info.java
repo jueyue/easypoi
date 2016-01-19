@@ -5,7 +5,7 @@
  */
 /**
  * @author JueYue
- *   2014年2月10日
+ * @date 2014年2月10日
  * @version 1.0
  */
 package org.jeecgframework.poi.cache;
