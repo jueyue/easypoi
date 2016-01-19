@@ -21,7 +21,7 @@ import org.jeecgframework.poi.exception.word.enmus.WordExportEnum;
  * word导出异常
  * 
  * @author JueYue
- * @date 2014年8月9日 下午10:32:51
+ *   2014年8月9日 下午10:32:51
  */
 public class WordExportException extends RuntimeException {
 

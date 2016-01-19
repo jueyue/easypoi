@@ -18,7 +18,7 @@ package org.jeecgframework.poi.handler.inter;
 /**
  * Excel标记类
  * @author JueYue
- * @date 2015年10月31日 下午9:31:47
+ *   2015年10月31日 下午9:31:47
  */
 public interface IExcelModel {
 

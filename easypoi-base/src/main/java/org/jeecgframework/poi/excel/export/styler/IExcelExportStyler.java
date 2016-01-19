@@ -22,7 +22,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelForEachParams;
 /**
  * Excel导出样式接口
  * @author JueYue
- * @date 2015年1月9日 下午5:32:30
+ *   2015年1月9日 下午5:32:30
  */
 public interface IExcelExportStyler {
 

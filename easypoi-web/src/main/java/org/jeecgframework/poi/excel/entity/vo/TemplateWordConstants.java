@@ -18,7 +18,7 @@ package org.jeecgframework.poi.excel.entity.vo;
 /**
  * Word 导出模板常量
  * @author JueYue
- * @date 2014年7月24日 下午11:26:46
+ *   2014年7月24日 下午11:26:46
  */
 public interface TemplateWordConstants extends BasePOIConstants {
     /**

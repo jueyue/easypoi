@@ -33,7 +33,7 @@ import org.springframework.stereotype.Controller;
 /**
  * PDF 导出 View
  * @author JueYue
- * @date 2016年1月19日 上午10:43:02
+ *   2016年1月19日 上午10:43:02
  */
 @Controller(PDFTemplateConstants.PDF_TEMPLATE_VIEW)
 public class PDFTemplateView extends PoiBaseView {

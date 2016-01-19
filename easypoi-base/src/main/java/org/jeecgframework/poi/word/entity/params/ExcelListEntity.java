@@ -24,7 +24,7 @@ import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
  * Excel 导出对象
  * 
  * @author JueYue
- * @date 2014年8月9日 下午10:21:13
+ *   2014年8月9日 下午10:21:13
  */
 public class ExcelListEntity extends ExcelBaseParams {
 
