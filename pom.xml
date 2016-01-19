@@ -150,6 +150,7 @@
 				<groupId>com.itextpdf</groupId>
 				<artifactId>itext-asian</artifactId>
 				<version>5.2.0</version>
+				<optional>true</optional>
 			</dependency>
 
 			<dependency>
