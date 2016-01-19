@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeecgframework.poi.excel.view;
+package org.jeecgframework.poi.excel.entity.vo;
 
-/**
- * 基础抽象Excel View
- * @author JueYue
- * @date 2015年2月28日 下午1:41:05
- */
-public abstract class MiniAbstractExcelView extends PoiBaseView {
+public interface PDFTemplateConstants extends BasePOIConstants {
 
-    private static final String   CONTENT_TYPE = "application/vnd.ms-excel";
-
-    protected static final String HSSF         = ".xls";
-    protected static final String XSSF         = ".xlsx";
-
-    public MiniAbstractExcelView() {
-        setContentType(CONTENT_TYPE);
-    }
+    /**
+     * PDF
+     */
+    public final static String PDF_TEMPLATE_VIEW = "pdfTemplateView";
+    /**
+     * Entity List
+     */
+    public final static String ENTITY_LIST       = "EntityList";
+    /**
+     * 数据列表
+     */
+    public final static String DATA_LIST          = "dataList";
 
 }
