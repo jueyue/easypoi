@@ -16,11 +16,16 @@ import com.google.common.collect.Lists;
  * 
  */
 public class ExcelGraphDefined implements ExcelGraph {
+    
     private ExcelGraphElement      category;
-    public List<ExcelGraphElement> valueList = Lists.newArrayList();
-    public List<ExcelTitleCell>    titleCell = Lists.newArrayList();
+    
+    private List<ExcelGraphElement> valueList = Lists.newArrayList();
+    
+    private List<ExcelTitleCell>    titleCell = Lists.newArrayList();
+    
     private Integer                graphType = ExcelGraphType.LINE_CHART;
-    public List<String>            title     = Lists.newArrayList();
+    
+    private List<String>            title     = Lists.newArrayList();
 
     public ExcelGraphElement getCategory() {
         return category;

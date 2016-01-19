@@ -10,7 +10,9 @@ package org.jeecgframework.poi.excel.graph.entity;
  * 
  */
 public class ExcelTitleCell {
+    
     private Integer row;
+    
     private Integer col;
 
     public ExcelTitleCell() {

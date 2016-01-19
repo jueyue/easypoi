@@ -12,10 +12,15 @@ import org.jeecgframework.poi.excel.graph.constant.ExcelGraphElementType;
  * 
  */
 public class ExcelGraphElement {
+    
     private Integer startRowNum;
+    
     private Integer endRowNum;
+    
     private Integer startColNum;
+    
     private Integer endColNum;
+    
     private Integer elementType = ExcelGraphElementType.STRING_TYPE;
 
     public Integer getStartRowNum() {
