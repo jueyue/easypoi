@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * Excel 导入工具
  * 
  * @author JueYue
- * @date 2013-9-24
+ *  2013-9-24
  * @version 1.0
  */
 @SuppressWarnings({ "unchecked" })
@@ -53,7 +53,6 @@ public class ExcelImportUtil {
      * @param pojoClass
      * @param params
      * @return
-     * @throws Exception
      */
     public static <T> List<T> importExcel(File file, Class<?> pojoClass, ImportParams params) {
         FileInputStream in = null;
@@ -73,7 +72,7 @@ public class ExcelImportUtil {
     /**
      * Excel 导入 数据源IO流,不返回校验结果 导入 字段类型 Integer,Long,Double,Date,String,Boolean
      * 
-     * @param file
+     * @param inputstream
      * @param pojoClass
      * @param params
      * @return
@@ -87,7 +86,7 @@ public class ExcelImportUtil {
     /**
      * Excel 导入 数据源IO流,返回校验结果 字段类型 Integer,Long,Double,Date,String,Boolean
      * 
-     * @param file
+     * @param inputstream
      * @param pojoClass
      * @param params
      * @return
@@ -106,7 +105,6 @@ public class ExcelImportUtil {
      * @param pojoClass
      * @param params
      * @return
-     * @throws Exception
      */
     public static <T> ExcelImportResult<T> importExcelVerify(File file, Class<?> pojoClass,
                                                              ImportParams params) {
@@ -132,7 +130,6 @@ public class ExcelImportUtil {
      * @param pojoClass
      * @param params
      * @return
-     * @throws Exception
      */
     public static <T> List<T> importExcelBySax(InputStream inputstream, Class<?> pojoClass,
                                                ImportParams params) {
@@ -143,10 +140,10 @@ public class ExcelImportUtil {
      * Excel 通过SAX解析方法,适合大数据导入,不支持图片
      * 导入 数据源本地文件,不返回校验结果 导入 字 段类型 Integer,Long,Double,Date,String,Boolean
      * 
-     * @param file
-     * @param rowRead
-     * @return
-     * @throws Exception
+     * @param inputstream
+     * @param pojoClass
+     * @param params
+     * @param hanlder
      */
     @SuppressWarnings("rawtypes")
     public static void importExcelBySax(InputStream inputstream, Class<?> pojoClass,
@@ -158,10 +155,9 @@ public class ExcelImportUtil {
      * Excel 通过SAX解析方法,适合大数据导入,不支持图片
      * 导入 数据源IO流,不返回校验结果 导入 字段类型 Integer,Long,Double,Date,String,Boolean
      * 
-     * @param file
+     * @param inputstream
      * @param rowRead
      * @return
-     * @throws Exception
      */
     public static <T> List<T> importExcelBySax(InputStream inputstream, ISaxRowRead rowRead) {
         return new SaxReadExcel().readExcel(inputstream, null, null, rowRead, null);

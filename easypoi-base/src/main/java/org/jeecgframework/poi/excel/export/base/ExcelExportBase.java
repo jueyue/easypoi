@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * 提供POI基础操作服务
  * 
  * @author JueYue
- * @date 2014年6月17日 下午6:15:13
+ *  2014年6月17日 下午6:15:13
  */
 @SuppressWarnings("unchecked")
 public abstract class ExcelExportBase extends ExportBase {
@@ -71,9 +71,14 @@ public abstract class ExcelExportBase extends ExportBase {
 
     /**
      * 创建 最主要的 Cells
-     * 
-     * @param styles
+     * @param patriarch
+     * @param index
+     * @param t
+     * @param excelParams
+     * @param sheet
+     * @param workbook
      * @param rowHeight
+     * @return
      * @throws Exception
      */
     public int createCells(Drawing patriarch, int index, Object t,
@@ -203,8 +208,14 @@ public abstract class ExcelExportBase extends ExportBase {
 
     /**
      * 创建List之后的各个Cells
-     * 
-     * @param styles
+     * @param patriarch
+     * @param index
+     * @param cellNum
+     * @param obj
+     * @param excelParams
+     * @param sheet
+     * @param workbook
+     * @throws Exception
      */
     public void createListCells(Drawing patriarch, int index, int cellNum, Object obj,
                                 List<ExcelExportEntity> excelParams, Sheet sheet,
@@ -343,8 +354,8 @@ public abstract class ExcelExportBase extends ExportBase {
      * 
      * @param value
      * @return
-     * @Author JueYue
-     * @date 2013年11月25日
+     * @author JueYue
+     *  2013年11月25日
      */
     public int getImageType(byte[] value) {
         String type = PoiPublicUtil.getFileExtendName(value);
@@ -393,7 +404,7 @@ public abstract class ExcelExportBase extends ExportBase {
      * 
      * @param sheet
      * @param excelParams
-     * @param styles 
+     * @param titleHeight 
      */
     public void mergeCells(Sheet sheet, List<ExcelExportEntity> excelParams, int titleHeight) {
         Map<Integer, int[]> mergeMap = getMergeDataMap(excelParams);

@@ -22,7 +22,7 @@ import org.jeecgframework.poi.exception.excel.ExcelExportException;
 /**
  * EasyPoi的el 表达式支持工具类
  * @author JueYue
- * @date 2015年4月25日 下午12:13:21
+ *  2015年4月25日 下午12:13:21
  */
 public final class PoiElUtil {
 
@@ -48,7 +48,7 @@ public final class PoiElUtil {
 
     /**
      * 解析字符串,支持 le,fd,fn,!if,三目
-     * @param obj
+     * @param text
      * @param map
      * @return
      * @throws Exception 
@@ -65,7 +65,7 @@ public final class PoiElUtil {
 
     /**
      * 解析字符串,支持 le,fd,fn,!if,三目
-     * @param obj
+     * @param text
      * @param map
      * @return
      * @throws Exception 

@@ -30,7 +30,7 @@ import com.itextpdf.text.Document;
  * PDF 导出工具类
  *  
  * @author JueYue
- * @date 2015年10月6日 下午8:14:01
+ *  2015年10月6日 下午8:14:01
  * @version 1.0
  */
 public class PdfExportUtil {
@@ -53,7 +53,7 @@ public class PdfExportUtil {
      * 根据Map创建对应的PDF
      * @param entity
      *            表格标题属性
-     * @param pojoClass
+     * @param entityList
      *            PDF对象Class
      * @param dataSet
      *            PDF对象数据List

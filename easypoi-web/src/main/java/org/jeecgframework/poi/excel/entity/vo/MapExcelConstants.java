@@ -17,7 +17,7 @@ package org.jeecgframework.poi.excel.entity.vo;
 
 /**
  * 正常导出Excel
- * @Author JueYue on 14-3-8.
+ * @author JueYue on 14-3-8.
  * 静态常量
  */
 public interface MapExcelConstants extends BasePOIConstants {

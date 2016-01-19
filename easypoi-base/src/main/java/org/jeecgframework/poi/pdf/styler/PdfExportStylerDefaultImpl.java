@@ -33,7 +33,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 /**
  * 默认的PDFstyler 实现
  * @author JueYue
- * @date 2016年1月8日 下午2:06:26
+ *  2016年1月8日 下午2:06:26
  */
 public class PdfExportStylerDefaultImpl implements IPdfExportStyler {
 

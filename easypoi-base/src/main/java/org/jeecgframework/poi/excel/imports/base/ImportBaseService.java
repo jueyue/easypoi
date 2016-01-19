@@ -44,7 +44,7 @@ import org.jeecgframework.poi.util.PoiReflectorUtil;
 /**
  * 导入基础和,普通方法和Sax共用
  * @author JueYue
- * @date 2015年1月9日 下午10:25:53
+ *  2015年1月9日 下午10:25:53
  */
 public class ImportBaseService {
 
@@ -85,13 +85,12 @@ public class ImportBaseService {
 
     /**
      * 获取需要导出的全部字段
-     * 
-     * 
-     * @param exclusions
      * @param targetId
-     *            目标ID
      * @param fields
+     * @param excelParams
      * @param excelCollection
+     * @param pojoClass
+     * @param getMethods
      * @throws Exception
      */
     public void getAllExcelField(String targetId, Field[] fields,

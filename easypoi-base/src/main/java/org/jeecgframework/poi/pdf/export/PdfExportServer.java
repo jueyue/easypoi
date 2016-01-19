@@ -50,7 +50,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 /**
  * PDF导出服务,基于Excel基础的导出
  * @author JueYue
- * @date 2015年10月6日 下午8:21:08
+ *  2015年10月6日 下午8:21:08
  */
 public class PdfExportServer extends ExportBase {
 

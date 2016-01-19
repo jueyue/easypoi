@@ -24,7 +24,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelForEachParams;
 /**
  * 抽象接口提供两个公共方法
  * @author JueYue
- * @date 2015年1月9日 下午5:48:55
+ *  2015年1月9日 下午5:48:55
  */
 public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
     //单行

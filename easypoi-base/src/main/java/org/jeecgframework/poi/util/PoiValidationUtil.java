@@ -25,7 +25,7 @@ import javax.validation.ValidatorFactory;
 /**
  * HIBERNATE 校验工具类
  * @author JueYue
- * @date 2015年11月11日 下午10:04:07
+ *  2015年11月11日 下午10:04:07
  */
 public class PoiValidationUtil {
 

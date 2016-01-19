@@ -42,7 +42,7 @@ public class ExcelChartBuildService {
     /**
      * 
      * @param workbook
-     * @param graph
+     * @param graphList
      * @param build 通过实时数据行来重新计算图形定义
      * @param append
      */

@@ -25,7 +25,7 @@ import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
  * 数据处理默认实现,返回空
  * 
  * @author JueYue
- * @date 2014年6月20日 上午12:11:52
+ *  2014年6月20日 上午12:11:52
  */
 public abstract class ExcelDataHandlerDefaultImpl<T> implements IExcelDataHandler<T> {
     /**

@@ -32,7 +32,7 @@ import org.jeecgframework.poi.excel.export.ExcelExportServer;
 import org.springframework.stereotype.Controller;
 
 /**
- * @Author JueYue on 14-3-8. Excel 生成解析器,减少用户操作
+ * @author JueYue on 14-3-8. Excel 生成解析器,减少用户操作
  */
 @SuppressWarnings("unchecked")
 @Controller(NormalExcelConstants.JEECG_EXCEL_VIEW)

@@ -24,7 +24,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 /**
  * PDF导出样式设置
  * @author JueYue
- * @date 2016年1月7日 下午11:16:51
+ *  2016年1月7日 下午11:16:51
  */
 public interface IPdfExportStyler {
 

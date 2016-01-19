@@ -32,7 +32,7 @@ public class PoiSheetUtility extends Object {
      * Note, this method will not update any formula references.
      * 
      * @param sheet
-     * @param column
+     * @param columnToDelete
      */
     public static void deleteColumn(Sheet sheet, int columnToDelete) {
         int maxColumn = 0;
