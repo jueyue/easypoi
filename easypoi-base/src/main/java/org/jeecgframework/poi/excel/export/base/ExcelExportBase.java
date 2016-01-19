@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * 提供POI基础操作服务
  * 
  * @author JueYue
- *   2014年6月17日 下午6:15:13
+ * @date 2014年6月17日 下午6:15:13
  */
 @SuppressWarnings("unchecked")
 public abstract class ExcelExportBase extends ExportBase {
@@ -344,7 +344,7 @@ public abstract class ExcelExportBase extends ExportBase {
      * @param value
      * @return
      * @Author JueYue
-     *   2013年11月25日
+     * @date 2013年11月25日
      */
     public int getImageType(byte[] value) {
         String type = PoiPublicUtil.getFileExtendName(value);

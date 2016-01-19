@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * Excel 导出根据模板导出
  * 
  * @author JueYue
- *   2013-10-17
+ * @date 2013-10-17
  * @version 1.0
  */
 public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
@@ -207,7 +207,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * @param teplateParams
      * @throws Exception
      * @Author JueYue
-     *   2013-11-11
+     * @date 2013-11-11
      */
     private Workbook getCloneWorkBook() throws Exception {
         return ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),

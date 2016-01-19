@@ -21,7 +21,7 @@ import java.util.Map;
  * Excel 对于的 Collection
  * 
  * @author JueYue
- *   2013-9-26
+ * @date 2013-9-26
  * @version 1.0
  */
 public class ExcelCollectionParams {

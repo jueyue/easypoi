@@ -19,7 +19,7 @@ package org.jeecgframework.poi.exception.word.enmus;
  * 导出异常枚举
  * 
  * @author JueYue
- *   2014年8月9日 下午10:34:58
+ * @date 2014年8月9日 下午10:34:58
  */
 public enum WordExportEnum {
 

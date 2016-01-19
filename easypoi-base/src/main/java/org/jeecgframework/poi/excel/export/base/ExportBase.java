@@ -42,7 +42,7 @@ import org.jeecgframework.poi.util.PoiReflectorUtil;
  * 导出基础处理,不设计POI,只设计对象,保证复用性
  * 
  * @author JueYue
- *   2014年8月9日 下午11:01:32
+ * @date 2014年8月9日 下午11:01:32
  */
 @SuppressWarnings("rawtypes")
 public class ExportBase {

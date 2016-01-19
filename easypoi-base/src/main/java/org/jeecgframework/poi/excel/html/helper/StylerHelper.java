@@ -39,7 +39,7 @@ import org.jeecgframework.poi.util.PoiPublicUtil;
 /**
  * 样式帮助类
  * @author JueYue
- *   2015年5月9日 下午4:04:24
+ * @date 2015年5月9日 下午4:04:24
  */
 public class StylerHelper {
 

@@ -18,7 +18,7 @@ package org.jeecgframework.poi.excel.view;
 /**
  * 基础抽象Excel View
  * @author JueYue
- *   2015年2月28日 下午1:41:05
+ * @date 2015年2月28日 下午1:41:05
  */
 public abstract class MiniAbstractExcelView extends PoiBaseView {
 
