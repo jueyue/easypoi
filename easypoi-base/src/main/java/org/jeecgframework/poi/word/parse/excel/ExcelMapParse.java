@@ -31,7 +31,7 @@ import com.google.common.collect.Maps;
 /**
  * 处理和生成Map 类型的数据变成表格
  * @author JueYue
- * @date 2014年8月9日 下午10:28:46
+ *   2014年8月9日 下午10:28:46
  */
 public final class ExcelMapParse {
 
@@ -39,7 +39,7 @@ public final class ExcelMapParse {
      * 解析参数行,获取参数列表
      * 
      * @Author JueYue
-     * @date 2013-11-18
+     *   2013-11-18
      * @param currentRow
      * @return
      */
@@ -59,7 +59,7 @@ public final class ExcelMapParse {
      * 解析下一行,并且生成更多的行
      * 
      * @Author JueYue
-     * @date 2013-11-18
+     *   2013-11-18
      * @param table
      * @param listobj2
      */

@@ -30,7 +30,7 @@ import org.springframework.stereotype.Controller;
  * Word模板视图
  * 
  * @author JueYue
- * @date 2014年6月30日 下午9:15:49
+ *   2014年6月30日 下午9:15:49
  */
 @SuppressWarnings("unchecked")
 @Controller(TemplateWordConstants.JEECG_TEMPLATE_WORD_VIEW)

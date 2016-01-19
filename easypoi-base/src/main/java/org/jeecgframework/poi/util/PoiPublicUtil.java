@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
 /**
  * EASYPOI 的公共基础类
  * @author JueYue
- * @date 2015年4月5日 上午12:59:22
+ *   2015年4月5日 上午12:59:22
  */
 public final class PoiPublicUtil {
 
@@ -320,7 +320,7 @@ public final class PoiPublicUtil {
     /**
      * 返回流和图片类型
      *@Author JueYue
-     *@date   2013-11-20
+     *    2013-11-20
      *@param entity
      *@return  (byte[]) isAndType[0],(Integer)isAndType[1]
      * @throws Exception 
@@ -371,7 +371,7 @@ public final class PoiPublicUtil {
      * 解析数据
      * 
      * @Author JueYue
-     * @date 2013-11-16
+     *   2013-11-16
      * @return
      */
     public static Object getRealValue(String currentText,

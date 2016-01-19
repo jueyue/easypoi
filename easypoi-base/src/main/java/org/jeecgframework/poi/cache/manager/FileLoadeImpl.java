@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 文件加载类,根据路径加载指定文件
  * @author JueYue
- * @date 2014年2月10日
+ *   2014年2月10日
  * @version 1.0
  */
 public class FileLoadeImpl implements IFileLoader {

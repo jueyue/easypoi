@@ -22,7 +22,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 /**
  * 样式的默认实现
  * @author JueYue
- * @date 2015年1月9日 下午5:36:08
+ *   2015年1月9日 下午5:36:08
  */
 public class ExcelExportStylerDefaultImpl extends AbstractExcelExportStyler
                                           implements IExcelExportStyler {

@@ -19,7 +19,7 @@ package org.jeecgframework.poi.cache.manager;
  * 缓存读取
  * @author JueYue
  *         默认实现是FileLoader
- * @date 2015年10月17日 下午7:12:01
+ *   2015年10月17日 下午7:12:01
  */
 public interface IFileLoader {
     /**

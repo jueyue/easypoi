@@ -27,7 +27,7 @@ import org.jeecgframework.poi.exception.excel.ExcelExportException;
  * if else,length,for each,fromatNumber,formatDate
  * 满足模板的 el 表达式支持
  * @author JueYue
- * @date 2015年4月24日 下午8:04:02
+ *   2015年4月24日 下午8:04:02
  */
 public final class PoiFunctionUtil {
 

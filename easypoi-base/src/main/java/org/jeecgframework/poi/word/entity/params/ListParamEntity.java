@@ -19,7 +19,7 @@ package org.jeecgframework.poi.word.entity.params;
  * Excel 对象导出结构
  * 
  * @author JueYue
- * @date 2014年7月26日 下午11:14:48
+ *   2014年7月26日 下午11:14:48
  */
 public class ListParamEntity {
     // 唯一值,在遍历中重复使用

@@ -19,7 +19,7 @@ package org.jeecgframework.poi.word.entity;
  * word导出,图片设置和图片信息
  * 
  * @author JueYue
- * @date 2013-11-17
+ *   2013-11-17
  * @version 1.0
  */
 public class WordImageEntity {
