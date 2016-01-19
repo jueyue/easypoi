@@ -13,7 +13,7 @@ EasyPoi Excel和 Word简易工具类
 
 [测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
-!!!2.1.6 版本开始和之前的版本校验不兼用,使用hibernate的校验,删除了之前的注解,请注意
+!!!2.1.6 版本开始和之前的版本校验不兼用,使用JSR303的校验,删除了之前的注解,请注意
 	
 ---------------------------
 EasyPoi的主要特点
@@ -124,7 +124,7 @@ EasyPoi 模板 表达式支持
 --------------------------
 pom说明
 --------------------------
-word和sax读取的时候才使用,就不是必须的了,请手动引用,hibernate的校验也是可选的
+word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303的校验也是可选的,PDF的jar也是可选的
 ```xml
 			<!-- sax 读取时候用到的 -->
 			<dependency>
@@ -140,10 +140,32 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,hiberna
 				<optional>true</optional>
 			</dependency>
 			
+			<!-- 校验,下面两个实现 -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
 				<version>5.1.3.Final</version>
+				<optional>true</optional>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.bval</groupId>
+				<artifactId>org.apache.bval.bundle</artifactId>
+				<version>1.1.0</version>
+			</dependency>
+			
+			<!-- PDF -->
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>itextpdf</artifactId>
+				<version>5.5.6</version>
+				<optional>true</optional>
+			</dependency>
+
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>itext-asian</artifactId>
+				<version>5.2.0</version>
 				<optional>true</optional>
 			</dependency>
 ```
