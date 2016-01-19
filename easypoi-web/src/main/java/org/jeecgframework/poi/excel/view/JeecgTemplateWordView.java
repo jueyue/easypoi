@@ -25,7 +25,6 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jeecgframework.poi.excel.entity.vo.TemplateWordConstants;
 import org.jeecgframework.poi.word.WordExportUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.servlet.view.AbstractView;
 
 /**
  * Word模板视图
@@ -35,17 +34,12 @@ import org.springframework.web.servlet.view.AbstractView;
  */
 @SuppressWarnings("unchecked")
 @Controller(TemplateWordConstants.JEECG_TEMPLATE_WORD_VIEW)
-public class JeecgTemplateWordView extends AbstractView {
+public class JeecgTemplateWordView extends PoiBaseView {
 
     private static final String CONTENT_TYPE = "application/msword";
 
     public JeecgTemplateWordView() {
         setContentType(CONTENT_TYPE);
-    }
-
-    public boolean isIE(HttpServletRequest request) {
-        return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request
-            .getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true : false;
     }
 
     @Override

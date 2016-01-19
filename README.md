@@ -58,17 +58,17 @@ https://oss.sonatype.org/content/repositories/snapshots/
 		 <dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.1.6</version>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.1.6</version>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.1.6</version>
+			<version>2.3.0</version>
 		</dependency>
 ```
 	
@@ -173,7 +173,17 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 --------------------------
 版本修改
 --------------------------
-
+ - 2.3.0 修复bug,推荐更新
+ 	- 提供的PDF基础的Excel导出支持
+ 	- 提供了Excel Charts的导出支持
+ 	- 升级了ＰＯＩ
+ 	- 提供了Word换行支持
+ 	- 图片提供统一缓存
+ 	- 增加Cell取值工具，自动分辨合并单元格和独立单元格
+ 	- 修复合并单元格,获取cell改为递归,之前判断有问题
+ 	- 修改了下,el表达式的==判断,给fe加上了样式自定义方法
+ 	- 修复if(),单字段的判断
+ 	- 修复其他一些bug
  - 2.1.6 校验规则不向下兼容,升级请自行考虑
  	- 其实不想升的,不过有必要的bug要修复,所以就先生上来吧
  	- 升级交易为hibernate校验,hibernate的maven自己配置可选
@@ -364,17 +374,14 @@ EasyPoi导出实例
 
 8.Excel导入校验,过滤不符合规则的数据,追加错误信息到Excel,提供常用的校验规则,已经通用的校验接口
 ```Java
-	/**
-     * Email校验
-     */
     @Excel(name = "Email", width = 25)
-    @ExcelVerify(isEmail = true, notNull = true)
-    private String email;
+    @Max(value = 15,message = "max 最大值不能超过15")
+    private int email;
     /**
-     * 手机号校验
+     * 手机号
      */
     @Excel(name = "Mobile", width = 20)
-    @ExcelVerify(isMobile = true, notNull = true)
+    @NotNull
     private String mobile;
     
     ExcelImportResult<ExcelVerifyEntity> result = ExcelImportUtil.importExcelVerify(new File(

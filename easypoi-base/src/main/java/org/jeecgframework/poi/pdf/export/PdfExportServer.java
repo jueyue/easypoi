@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.IOUtils;
 import org.jeecgframework.poi.cache.ImageCache;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
@@ -95,7 +96,11 @@ public class PdfExportServer extends ExportBase {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
-            document.close();
+            try {
+                document.close();
+            } catch (Exception e) {
+                //可能之前已经关闭过了
+            }
         }
         return document;
     }
@@ -129,6 +134,8 @@ public class PdfExportServer extends ExportBase {
             LOGGER.error(e.getMessage(), e);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+        } finally {
+            document.close();
         }
         return document;
     }
