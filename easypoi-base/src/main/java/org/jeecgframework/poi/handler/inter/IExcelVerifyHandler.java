@@ -26,7 +26,7 @@ import org.jeecgframework.poi.excel.entity.result.ExcelVerifyHanlderResult;
 public interface IExcelVerifyHandler<T> {
 
     /**
-     * 导出处理方法
+     * 导入校验方法
      * 
      * @param obj
      *            当前对象

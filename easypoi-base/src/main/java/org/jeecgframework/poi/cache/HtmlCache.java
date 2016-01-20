@@ -36,5 +36,9 @@ public class HtmlCache {
         }
 
     }
+    
+    public static void setLoadingCache(LoadingCache<ExcelToHtmlParams, String> loadingCache) {
+        HtmlCache.loadingCache = loadingCache;
+    }
 
 }

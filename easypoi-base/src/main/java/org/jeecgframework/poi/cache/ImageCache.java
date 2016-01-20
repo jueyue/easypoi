@@ -67,4 +67,8 @@ public class ImageCache {
         }
 
     }
+    
+    public static void setLoadingCache(LoadingCache<String, byte[]> loadingCache) {
+        ImageCache.loadingCache = loadingCache;
+    }
 }
