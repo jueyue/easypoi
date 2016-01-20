@@ -14,7 +14,7 @@ EasyPoi Excel和 Word简易工具类
 [测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
 !!!2.1.6 版本开始和之前的版本校验不兼用,使用JSR303的校验,删除了之前的注解,请注意
-	
+!!! 2.3.0 模板导出有问题,请使用2.3.0.1修复版本
 ---------------------------
 EasyPoi的主要特点
 --------------------------
@@ -58,17 +58,17 @@ https://oss.sonatype.org/content/repositories/snapshots/
 		 <dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.3.0</version>
+			<version>2.3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.3.0</version>
+			<version>2.3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.3.0</version>
+			<version>2.3.0.1</version>
 		</dependency>
 ```
 	
@@ -173,7 +173,7 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 --------------------------
 版本修改
 --------------------------
- - 2.3.0 修复bug,推荐更新
+ - 2.3.0.1 修复bug,推荐更新
  	- 提供的PDF基础的Excel导出支持
  	- 提供了Excel Charts的导出支持
  	- 升级了ＰＯＩ
