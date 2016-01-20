@@ -78,7 +78,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
      * 
-     * @param teplateParams
+     * @param sheet
      * @param pojoClass
      * @param dataSet
      * @param workbook
@@ -124,7 +124,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     /**
      * 下移数据
-     * @param its
+     * @param dataSet
      * @param excelParams
      * @return
      */
@@ -204,10 +204,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     /**
      * 克隆excel防止操作原对象,workbook无法克隆,只能对excel进行克隆
      * 
-     * @param teplateParams
      * @throws Exception
-     * @author JueYue
-     *  2013-11-11
      */
     private Workbook getCloneWorkBook() throws Exception {
         return ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),
@@ -218,7 +215,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     /**
      * 获取表头数据,设置表头的序号
      * 
-     * @param teplateParams
      * @param sheet
      * @return
      */
@@ -349,7 +345,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * 利用foreach循环输出数据
      * @param cell 
      * @param map
-     * @param oldString
+     * @param name
      * @throws Exception 
      */
     private void addListDataToExcel(Cell cell, Map<String, Object> map,
@@ -417,12 +413,15 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                                          MergedRegionHelper mergedRegionHelper) throws Exception {
         //所有的cell创建一遍
         for (int i = 0; i < rowspan; i++) {
+            int size = columns.size();//判断是不是超出设置了
             for (int j = columnIndex, max = columnIndex + colspan; j < max; j++) {
                 if (row.getCell(j) == null) {
                     row.createCell(j);
                     CellStyle style = row.getRowNum() % 2 == 0
-                        ? getStyles(false, columns.get(columnIndex - j))
-                        : getStyles(true, columns.get(columnIndex - j));
+                        ? getStyles(false,
+                            size >= j - columnIndex ? null : columns.get(j - columnIndex))
+                        : getStyles(true,
+                            size >= j - columnIndex ? null : columns.get(j - columnIndex));
                     //返回的styler不为空时才使用,否则使用Excel设置的,更加推荐Excel设置的样式
                     if (style != null)
                         row.getCell(j).setCellStyle(style);
@@ -501,7 +500,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * 设置合并单元格的样式
      * @param row
      * @param ci
-     * @param excelForEachParams
+     * @param params
      */
     private void setMergedRegionStyle(Row row, int ci, ExcelForEachParams params) {
         //第一行数据
@@ -593,7 +592,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     /**
      * 获取模板参数
-     * @param string
+     * @param name
      * @param cell
      * @param mergedRegionHelper 
      * @return
@@ -628,7 +627,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * 
      * @param excelParams
      * @param titlemap
-     * @return
      */
     private void sortAndFilterExportField(List<ExcelExportEntity> excelParams,
                                           Map<String, Integer> titlemap) {

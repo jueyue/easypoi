@@ -152,7 +152,7 @@ public class ExcelExportServer extends ExcelExportBase {
         }
         try {
             dataHanlder = entity.getDataHanlder();
-            if (dataHanlder != null) {
+            if (dataHanlder != null && dataHanlder.getNeedHandlerFields() != null) {
                 needHanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
             }
             // 创建表格样式

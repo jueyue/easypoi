@@ -242,7 +242,7 @@ public class ExcelToHtmlServer {
      * 获取图片最大宽度
      * @param colIndex 
      * @param sheet 
-     * @param span 
+     * @param rowAndColSpan 
      * @return
      */
     private int getImageMaxWidth(Integer[] rowAndColSpan, int colIndex, Sheet sheet) {

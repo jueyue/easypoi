@@ -52,7 +52,6 @@ public class ExcelBaseEntity {
     private Method       method;
     /**
      * 这个是不是超链接,如果是需要实现接口返回对象
-     * @return
      */
     private boolean      hyperlink;
 

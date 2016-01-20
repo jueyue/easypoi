@@ -56,7 +56,7 @@ public class CellValueServer {
      * 获取单元格内的值
      * 
      * @param cell
-     * @param colInfo
+     * @param entity
      * @return
      */
     private Object getCellValue(String xclass, Cell cell, ExcelImportEntity entity) {

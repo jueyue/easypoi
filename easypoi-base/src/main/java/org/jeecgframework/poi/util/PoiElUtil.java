@@ -132,7 +132,7 @@ public final class PoiElUtil {
 
     /**
      * 判断是不是常量
-     * @param string
+     * @param param
      * @return
      */
     private static String isConstant(String param) {

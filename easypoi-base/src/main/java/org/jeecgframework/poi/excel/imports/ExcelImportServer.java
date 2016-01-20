@@ -86,7 +86,6 @@ public class ExcelImportServer extends ImportBaseService {
     /***
      * 向List里面继续添加元素
      * 
-     * @param exclusions
      * @param object
      * @param param
      * @param row
