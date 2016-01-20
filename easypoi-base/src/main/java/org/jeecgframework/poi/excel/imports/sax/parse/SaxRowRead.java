@@ -157,16 +157,15 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
 
     }
 
-    /***
+    /**
      * 向List里面继续添加元素
-     * 
-     * @param exclusions
      * @param object
      * @param param
      * @param datas
      * @param titlemap
      * @param targetId
      * @param params
+     * @throws Exception
      */
     private void addListContinue(Object object, ExcelCollectionParams param,
                                  List<SaxReadCellEntity> datas, Map<Integer, String> titlemap,

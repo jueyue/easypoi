@@ -66,10 +66,10 @@ public class ParseWord07 {
         Object[] isAndType = PoiPublicUtil.getIsAndType(obj);
         String picId;
         try {
-            picId = currentRun.getParagraph().getDocument().addPictureData((byte[]) isAndType[0],
+            picId = currentRun.getDocument().addPictureData((byte[]) isAndType[0],
                 (Integer) isAndType[1]);
-            ((MyXWPFDocument) currentRun.getParagraph().getDocument()).createPicture(currentRun,
-                picId, currentRun.getParagraph().getDocument()
+            ((MyXWPFDocument) currentRun.getDocument()).createPicture(currentRun,
+                picId, currentRun.getDocument()
                     .getNextPicNameNumber((Integer) isAndType[1]),
                 obj.getWidth(), obj.getHeight());
 

@@ -123,6 +123,7 @@ public class ExcelExportUtil {
      *            模板集合
      * @return
      */
+    @Deprecated
     public static Workbook exportExcel(TemplateExportParams params, Class<?> pojoClass,
                                        Collection<?> dataSet, Map<String, Object> map) {
         return new ExcelExportOfTemplateUtil().createExcleByTemplate(params, pojoClass, dataSet,

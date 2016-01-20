@@ -169,7 +169,7 @@ public class PdfExportServer extends ExportBase {
      * @param table
      * @param obj 
      * @param rowHeight 
-     * @param list
+     * @param excelParams
      * @throws Exception 
      */
     private void createListCells(PdfPTable table, Object obj, List<ExcelExportEntity> excelParams,
@@ -247,7 +247,7 @@ public class PdfExportServer extends ExportBase {
      * 创建表头
      * 
      * @param title
-     * @param index
+     * @param table
      */
     private int createTitleRow(PdfExportParams title, PdfPTable table,
                                List<ExcelExportEntity> excelParams) {
