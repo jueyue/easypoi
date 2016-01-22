@@ -48,6 +48,7 @@ public class JeecgTemplateExcelView extends MiniAbstractExcelView {
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
         String codedFileName = "临时文件";
+        @SuppressWarnings("deprecation")
         Workbook workbook = ExcelExportUtil.exportExcel(
             (TemplateExportParams) model.get(TemplateExcelConstants.PARAMS),
             (Class<?>) model.get(TemplateExcelConstants.CLASS),

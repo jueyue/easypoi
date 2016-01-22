@@ -268,18 +268,6 @@ public class ExportBase {
         return (short) (maxHeight * 50);
     }
 
-    /**
-     * 判断字符串是否是整数
-     */
-    public boolean isInteger(String value) {
-        try {
-            Integer.parseInt(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
     private Object replaceValue(String[] replace, String value) {
         String[] temp;
         for (String str : replace) {
