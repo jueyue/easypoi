@@ -42,6 +42,7 @@ import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
@@ -268,6 +269,7 @@ public class ExcelImportServer extends ImportBaseService {
                 } else {
                     isAdd = false;
                 }
+                verfiyFail = true;
             }
         }
         if (params.getVerifyHanlder() != null) {
@@ -284,6 +286,7 @@ public class ExcelImportServer extends ImportBaseService {
                 } else {
                     isAdd = false;
                 }
+                verfiyFail = true;
             }
         }
         if (cell != null)
@@ -430,6 +433,7 @@ public class ExcelImportServer extends ImportBaseService {
             for (ExcelImportEntity excelImportEntity : collection) {
                 if (excelImportEntity.isImportField()
                     && !titlemap.containsValue(excelImportEntity.getName())) {
+                    LOGGER.error(excelImportEntity.getName() + "必须有,但是没找到");
                     throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
                 }
             }
@@ -503,8 +507,11 @@ public class ExcelImportServer extends ImportBaseService {
             }
             savefile = new File(path + "/" + fileName);
             FileOutputStream fos = new FileOutputStream(savefile);
-            fos.write(data);
-            fos.close();
+            try {
+                fos.write(data);
+            } finally {
+                IOUtils.closeQuietly(fos);
+            }
             setValues(excelParams.get(titleString), object,
                 getSaveUrl(excelParams.get(titleString), object) + "/" + fileName);
         } else {
