@@ -66,6 +66,8 @@ public class TemplateExportParams extends ExcelBaseParams {
      * FOR EACH 用到的局部变量
      */
     private String    tempParams      = "t";
+    
+    private boolean  colForEach      = false;
 
     /**
      * 默认构造器
@@ -194,5 +196,13 @@ public class TemplateExportParams extends ExcelBaseParams {
     public void setTempParams(String tempParams) {
         this.tempParams = tempParams;
     }
+
+	public boolean isColForEach() {
+		return colForEach;
+	}
+
+	public void setColForEach(boolean colForEach) {
+		this.colForEach = colForEach;
+	}
 
 }
