@@ -74,6 +74,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * 模板参数,全局都用到
      */
     private TemplateExportParams teplateParams;
+    /**
+     * 单元格合并信息
+     */
+    private MergedRegionHelper   mergedRegionHelper;
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
@@ -184,7 +188,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     wb.setSheetName(i, params.getSheetName()[i]);
                 }
                 tempCreateCellSet.clear();
-                parseTemplate(wb.getSheetAt(i), map);
+                parseTemplate(wb.getSheetAt(i), map,params.isColForEach());
             }
             if (dataSet != null) {
                 // step 4. 正常的数据填充
@@ -239,8 +243,11 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     }
 
-    private void parseTemplate(Sheet sheet, Map<String, Object> map) throws Exception {
+    private void parseTemplate(Sheet sheet, Map<String, Object> map, boolean colForeach) throws Exception {
         deleteCell(sheet, map);
+        if(colForeach){
+        	colForeach(sheet, map);
+        }
         Row row = null;
         int index = 0;
         while (index <= sheet.getLastRowNum()) {
@@ -258,6 +265,69 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     }
 
     /**
+     * 先进行列的循环,因为涉及很多数据
+     * @param sheet
+     * @param map
+     */
+    private void colForeach(Sheet sheet, Map<String, Object> map) throws Exception {
+    	Row row = null;
+        Cell cell = null;
+        int index = 0;
+        mergedRegionHelper = new MergedRegionHelper(sheet);
+        while (index <= sheet.getLastRowNum()) {
+            row = sheet.getRow(index++);
+            if (row == null) {
+                continue;
+            }
+            for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+                cell = row.getCell(i);
+                if (row.getCell(i) != null && (cell.getCellType() == Cell.CELL_TYPE_STRING
+                                               || cell.getCellType() == Cell.CELL_TYPE_NUMERIC)) {
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    String text = cell.getStringCellValue();
+                    if (text.contains(FOREACH_COL) || text.contains(FOREACH_COL_VALUE)) {
+                    	foreachCol(cell,map,text);
+                    }
+                }
+            }
+        }
+	}
+    
+    /**
+     * 循环列表
+     * @param cell
+     * @param map
+     * @param name
+     * @throws Exception
+     */
+    private void foreachCol(Cell cell, Map<String, Object> map,
+                                    String name) throws Exception {
+    	 boolean isCreate = name.contains(FOREACH_COL_VALUE);
+         name = name.replace(FOREACH_COL_VALUE, EMPTY).replace(FOREACH_COL, EMPTY).replace(START_STR, EMPTY);
+         String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
+         Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
+         Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
+             mergedRegionHelper);
+         if (datas == null) {
+             return;
+         }
+         Iterator<?> its = datas.iterator();
+         int rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
+         @SuppressWarnings("unchecked")
+         List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
+         while (its.hasNext()) {
+             Object t = its.next();
+             setForEeachRowCellValue(true, cell.getRow(), cell.getColumnIndex(), t, columns, map, rowspan,
+                 colspan, mergedRegionHelper);
+             cell = cell.getRow().getCell(cell.getColumnIndex()+colspan);
+         }
+         if(isCreate) {
+        	 cell = cell.getRow().getCell(cell.getColumnIndex()-1);
+        	 cell.setCellValue(cell.getStringCellValue()+END_STR);
+         }
+    }
+
+	/**
      * 先判断删除,省得影响效率
      * @param sheet
      * @param map
@@ -331,7 +401,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         }
         //判断foreach 这种方法
         if (oldString != null && oldString.contains(FOREACH)) {
-            addListDataToExcel(cell, map, oldString.trim());
+           addListDataToExcel(cell, map, oldString.trim());
         }
 
     }
@@ -356,7 +426,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
         String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
         Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
-        MergedRegionHelper mergedRegionHelper = new MergedRegionHelper(cell.getSheet());
         Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
             mergedRegionHelper);
         if (datas == null) {
@@ -668,7 +737,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     wb.setSheetName(i, params.getSheetName()[i]);
                 }
                 tempCreateCellSet.clear();
-                parseTemplate(wb.getSheetAt(i), map.get(i));
+                parseTemplate(wb.getSheetAt(i), map.get(i),params.isColForEach());
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
