@@ -170,7 +170,7 @@ public class ExcelImportServer extends ImportBaseService {
             url = object.getClass().getName()
                 .split("\\.")[object.getClass().getName().split("\\.").length - 1];
             return excelImportEntity.getSaveUrl() + "/"
-                   + url.substring(0, url.lastIndexOf("Entity"));
+                   + url;
         }
         return excelImportEntity.getSaveUrl();
     }
@@ -495,6 +495,9 @@ public class ExcelImportServer extends ImportBaseService {
             return;
         }
         PictureData image = pictures.get(picId);
+        if(image == null) {
+        	return;
+        }
         byte[] data = image.getData();
         String fileName = "pic" + Math.round(Math.random() * 100000000000L);
         fileName += "." + PoiPublicUtil.getFileExtendName(data);
