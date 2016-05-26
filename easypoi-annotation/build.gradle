@@ -1,2 +1,7 @@
-apply plugin: "java"
+apply plugin : "java"
+apply plugin : 'eclipse'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 description = ''
