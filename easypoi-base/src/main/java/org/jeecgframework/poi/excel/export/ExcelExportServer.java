@@ -112,9 +112,13 @@ public class ExcelExportServer extends ExcelExportBase {
         }
         try {
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
-            if (entity.isAddIndex()) {
-                excelParams.add(indexExcelEntity(entity));
-            }
+            /**
+             * createSheetMap 中也会判断index字段，会导致重复添加，出现null 情况
+             * 这里的代码注释掉  @date 2016-05-27 by xfworld
+             */
+//            if (entity.isAddIndex()) {
+//                excelParams.add(indexExcelEntity(entity));
+//            }
             // 得到所有字段
             Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);

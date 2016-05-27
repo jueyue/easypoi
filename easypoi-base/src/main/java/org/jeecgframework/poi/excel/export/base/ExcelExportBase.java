@@ -107,7 +107,8 @@ public abstract class ExcelExportBase extends ExportBase {
                     maxHeight = list.size();
                 }
             } else {
-                Object value = getCellValue(entity, t);
+            	Object	value = getCellValue(entity, t);
+               
                 if (entity.getType() == BaseEntityTypeConstants.StringType) {
                     createStringCell(row, cellNum++, value == null ? "" : value.toString(),
                         index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
