@@ -143,6 +143,9 @@ public class ExcelExportServer extends ExcelExportBase {
         if (type.equals(ExcelType.XSSF)) {
             MAX_NUM = 1000000;
         }
+        if( entity.getMaxNum() >0) {
+        	MAX_NUM = entity.getMaxNum();
+        }
         Sheet sheet = null;
         try {
             sheet = workbook.createSheet(entity.getSheetName());

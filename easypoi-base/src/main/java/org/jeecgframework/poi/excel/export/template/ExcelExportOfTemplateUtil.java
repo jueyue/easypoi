@@ -245,6 +245,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     private void parseTemplate(Sheet sheet, Map<String, Object> map, boolean colForeach) throws Exception {
         deleteCell(sheet, map);
+        mergedRegionHelper = new MergedRegionHelper(sheet);
         if(colForeach){
         	colForeach(sheet, map);
         }
@@ -273,7 +274,6 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
     	Row row = null;
         Cell cell = null;
         int index = 0;
-        mergedRegionHelper = new MergedRegionHelper(sheet);
         while (index <= sheet.getLastRowNum()) {
             row = sheet.getRow(index++);
             if (row == null) {
@@ -445,8 +445,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             rowIndex += rowspan - 1;
         }
         if (isShift && datas.size() * rowspan > 1) {
-            cell.getRow().getSheet().shiftRows(cell.getRowIndex() + 1,
-                cell.getRow().getSheet().getLastRowNum(), datas.size() * rowspan - 1, true, true);
+            cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
+                cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan , true, true);
+           /* cell.getRow().getSheet().shiftRows(cell.getRowIndex() + 1,
+                cell.getRow().getSheet().getLastRowNum(), datas.size() * rowspan - 1, true, true);*/
         }
         while (its.hasNext()) {
             Object t = its.next();
