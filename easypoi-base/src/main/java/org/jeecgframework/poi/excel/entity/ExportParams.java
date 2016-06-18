@@ -94,6 +94,11 @@ public class ExportParams extends ExcelBaseParams {
      * 是否追加图形
      */
     private boolean   isAppendGraph     = true;
+    /**
+     * 单sheet最大值
+     * 03版本默认6W行,07默认100W
+     */
+    private int       maxNum            = 0;
 
     public ExportParams() {
 
@@ -243,5 +248,13 @@ public class ExportParams extends ExcelBaseParams {
     public void setAppendGraph(boolean isAppendGraph) {
         this.isAppendGraph = isAppendGraph;
     }
+
+	public int getMaxNum() {
+		return maxNum;
+	}
+
+	public void setMaxNum(int maxNum) {
+		this.maxNum = maxNum;
+	}
 
 }

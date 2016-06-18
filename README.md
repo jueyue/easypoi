@@ -13,10 +13,11 @@ EasyPoi Excel和 Word简易工具类
 
 [测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
+[开发文档请查看DOC下面的EasyPoi教程](http://git.oschina.net/jueyue/easypoi/blob/master/doc/EasyPoi%E6%95%99%E7%A8%8B.docx?dir=0&filepath=doc%2FEasyPoi%E6%95%99%E7%A8%8B.docx&oid=133ebde5641f128420023dbdc2533ab4b53c7792&sha=4c8d94c80544811e2e358518bad6c689a63c13e9)
 !!!2.1.6 版本开始和之前的版本校验不兼用,使用JSR303的校验,删除了之前的注解,请注意
 !!! 2.3.0 模板导出有问题,请使用2.3.0.1修复版本
 
-	开发文档请查看DOC下面的EasyPoi教程
+	
 ---------------------------
 EasyPoi的主要特点
 --------------------------
