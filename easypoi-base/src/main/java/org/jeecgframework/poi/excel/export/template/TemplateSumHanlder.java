@@ -1,8 +1,13 @@
 package org.jeecgframework.poi.excel.export.template;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -19,12 +24,16 @@ import static org.jeecgframework.poi.util.PoiElUtil.*;
  */
 public class TemplateSumHanlder {
 
-    private List<TemplateSumEntity> sumList = new ArrayList<TemplateSumEntity>();
+    private Map<String, TemplateSumEntity> sumMap = new HashMap<String, TemplateSumEntity>();
+
+    public TemplateSumHanlder(Sheet sheet) {
+        getAllSumCell(sheet);
+    }
 
     /**
      * 统计计算所有的统计单元格
      */
-    public void getAllSumCell(Sheet sheet) {
+    private void getAllSumCell(Sheet sheet) {
         Row row = null;
         int index = 0;
         while (index <= sheet.getLastRowNum()) {
@@ -49,8 +58,12 @@ public class TemplateSumHanlder {
             entity.setSumKey(getSumKey(cellValue, index++));
             entity.setCol(cell.getColumnIndex());
             entity.setRow(cell.getRowIndex());
-            sumList.add(entity);
+            sumMap.put(entity.getSumKey(), entity);
         }
+    }
+
+    public boolean isSumKey(String key) {
+        return sumMap.containsKey(key);
     }
 
     /**
@@ -61,19 +74,34 @@ public class TemplateSumHanlder {
      * @return
      */
     private String getSumKey(String cellValue, int index) {
-        return cellValue.substring(index + 4, cellValue.indexOf(")", index));
+        return cellValue.substring(index + 5, cellValue.indexOf(")", index));
     }
-    
-    public void addListSizeToSumEntity(){
-        
+
+    public void addValueOfKey(String key, String val) {
+        if (StringUtils.isNoneEmpty(key))
+            sumMap.get(key).setValue(sumMap.get(key).getValue() + Double.valueOf(val));
     }
-    
+
+    public List<TemplateSumEntity> getDataList() {
+        return new ArrayList<TemplateSumEntity>(sumMap.values());
+    }
+
+    public void addListSizeToSumEntity() {
+
+    }
+
     /**
      * 
      * @param rowIndex
+     * @param size 
      */
-    public void findForeachList(int rowIndex){
-        
+    public void shiftRows(int rowIndex, int size) {
+        for (TemplateSumEntity entity : getDataList()) {
+            if (entity.getRow() > rowIndex) {
+                entity.setRow(entity.getRow() + size);
+            }
+        }
+
     }
 
     private static int indexOfIgnoreCase(String str, String searchStr, int startPos) {
@@ -123,7 +151,7 @@ public class TemplateSumHanlder {
         /**
          * 最后值
          */
-        private Object value;
+        private double value;
 
         public String getCellValue() {
             return cellValue;
@@ -157,11 +185,11 @@ public class TemplateSumHanlder {
             this.row = row;
         }
 
-        public Object getValue() {
+        public double getValue() {
             return value;
         }
 
-        public void setValue(Object value) {
+        public void setValue(double value) {
             this.value = value;
         }
 
