@@ -235,8 +235,27 @@ public final class PoiElUtil {
 		text = text.substring(text.indexOf("?") + 1, text.length()).trim();
 		text = innerEval(text, map).toString();
 		String[] keys = text.split(":");
-		Object first = eval(keys[0].trim(), map);
-		Object second = eval(keys[1].trim(), map);
+		Object first = null, second = null;
+		if(keys.length > 2){
+		    if(keys[0].trim().contains("?")){
+		        String trinocular = keys[0];
+		        for (int i = 1; i < keys.length-1; i++) {
+		            trinocular +=  ":" + keys[i];
+                }
+		        first = eval(trinocular, map);
+		        second = eval(keys[keys.length-1].trim(), map);
+		    } else {
+		        first = eval(keys[0].trim(), map);
+		        String trinocular = keys[1];
+                for (int i = 2; i < keys.length; i++) {
+                    trinocular +=  ":" + keys[i];
+                }
+		        second = eval(trinocular, map); 
+		    }
+		}else{
+		    first = eval(keys[0].trim(), map);
+	        second = eval(keys[1].trim(), map);
+		}
 		return isTrue(testText.split(" "), map) ? first : second;
 	}
 
