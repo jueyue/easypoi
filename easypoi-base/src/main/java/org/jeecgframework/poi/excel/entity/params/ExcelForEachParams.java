@@ -39,6 +39,8 @@ public class ExcelForEachParams implements Serializable {
      * 行合并
      */
     private int               rowspan          = 1;
+    
+    private boolean           needSum;         
 
     public ExcelForEachParams() {
 
@@ -49,6 +51,14 @@ public class ExcelForEachParams implements Serializable {
         this.cellStyle = cellStyle;
         this.height = height;
     }
+    
+    public ExcelForEachParams(String name, CellStyle cellStyle, short height,boolean needSum) {
+        this.name = name;
+        this.cellStyle = cellStyle;
+        this.height = height;
+        this.needSum = needSum;
+    }
+
 
     public String getName() {
         return name;
@@ -96,6 +106,14 @@ public class ExcelForEachParams implements Serializable {
 
     public void setRowspan(int rowspan) {
         this.rowspan = rowspan;
+    }
+
+    public boolean isNeedSum() {
+        return needSum;
+    }
+
+    public void setNeedSum(boolean needSum) {
+        this.needSum = needSum;
     }
 
 }

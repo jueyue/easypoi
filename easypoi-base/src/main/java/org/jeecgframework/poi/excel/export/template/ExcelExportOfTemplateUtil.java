@@ -43,6 +43,7 @@ import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.params.ExcelForEachParams;
 import org.jeecgframework.poi.excel.export.base.ExcelExportBase;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
+import org.jeecgframework.poi.excel.export.template.TemplateSumHanlder.TemplateSumEntity;
 import org.jeecgframework.poi.excel.html.helper.MergedRegionHelper;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
@@ -78,6 +79,8 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * 单元格合并信息
      */
     private MergedRegionHelper   mergedRegionHelper;
+
+    private TemplateSumHanlder   templateSumHanlder;
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
@@ -188,7 +191,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     wb.setSheetName(i, params.getSheetName()[i]);
                 }
                 tempCreateCellSet.clear();
-                parseTemplate(wb.getSheetAt(i), map,params.isColForEach());
+                parseTemplate(wb.getSheetAt(i), map, params.isColForEach());
             }
             if (dataSet != null) {
                 // step 4. 正常的数据填充
@@ -243,11 +246,13 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
 
     }
 
-    private void parseTemplate(Sheet sheet, Map<String, Object> map, boolean colForeach) throws Exception {
+    private void parseTemplate(Sheet sheet, Map<String, Object> map,
+                               boolean colForeach) throws Exception {
         deleteCell(sheet, map);
         mergedRegionHelper = new MergedRegionHelper(sheet);
-        if(colForeach){
-        	colForeach(sheet, map);
+        templateSumHanlder = new TemplateSumHanlder(sheet);
+        if (colForeach) {
+            colForeach(sheet, map);
         }
         Row row = null;
         int index = 0;
@@ -263,6 +268,17 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 }
             }
         }
+
+        //修改需要处理的统计值
+        hanlderSumCell(sheet);
+    }
+
+    private void hanlderSumCell(Sheet sheet) {
+        for (TemplateSumEntity sumEntity : templateSumHanlder.getDataList()) {
+            Cell cell = sheet.getRow(sumEntity.getRow()).getCell(sumEntity.getCol());
+            cell.setCellValue(cell.getStringCellValue()
+                .replace("sum:(" + sumEntity.getSumKey() + ")", sumEntity.getValue() + ""));
+        }
     }
 
     /**
@@ -271,7 +287,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * @param map
      */
     private void colForeach(Sheet sheet, Map<String, Object> map) throws Exception {
-    	Row row = null;
+        Row row = null;
         Cell cell = null;
         int index = 0;
         while (index <= sheet.getLastRowNum()) {
@@ -286,13 +302,13 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     String text = cell.getStringCellValue();
                     if (text.contains(FOREACH_COL) || text.contains(FOREACH_COL_VALUE)) {
-                    	foreachCol(cell,map,text);
+                        foreachCol(cell, map, text);
                     }
                 }
             }
         }
-	}
-    
+    }
+
     /**
      * 循环列表
      * @param cell
@@ -300,34 +316,34 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
      * @param name
      * @throws Exception
      */
-    private void foreachCol(Cell cell, Map<String, Object> map,
-                                    String name) throws Exception {
-    	 boolean isCreate = name.contains(FOREACH_COL_VALUE);
-         name = name.replace(FOREACH_COL_VALUE, EMPTY).replace(FOREACH_COL, EMPTY).replace(START_STR, EMPTY);
-         String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
-         Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
-         Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
-             mergedRegionHelper);
-         if (datas == null) {
-             return;
-         }
-         Iterator<?> its = datas.iterator();
-         int rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
-         @SuppressWarnings("unchecked")
-         List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
-         while (its.hasNext()) {
-             Object t = its.next();
-             setForEeachRowCellValue(true, cell.getRow(), cell.getColumnIndex(), t, columns, map, rowspan,
-                 colspan, mergedRegionHelper);
-             cell = cell.getRow().getCell(cell.getColumnIndex()+colspan);
-         }
-         if(isCreate) {
-        	 cell = cell.getRow().getCell(cell.getColumnIndex()-1);
-        	 cell.setCellValue(cell.getStringCellValue()+END_STR);
-         }
+    private void foreachCol(Cell cell, Map<String, Object> map, String name) throws Exception {
+        boolean isCreate = name.contains(FOREACH_COL_VALUE);
+        name = name.replace(FOREACH_COL_VALUE, EMPTY).replace(FOREACH_COL, EMPTY).replace(START_STR,
+            EMPTY);
+        String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
+        Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
+        Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
+            mergedRegionHelper);
+        if (datas == null) {
+            return;
+        }
+        Iterator<?> its = datas.iterator();
+        int rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
+        @SuppressWarnings("unchecked")
+        List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
+        while (its.hasNext()) {
+            Object t = its.next();
+            setForEeachRowCellValue(true, cell.getRow(), cell.getColumnIndex(), t, columns, map,
+                rowspan, colspan, mergedRegionHelper);
+            cell = cell.getRow().getCell(cell.getColumnIndex() + colspan);
+        }
+        if (isCreate) {
+            cell = cell.getRow().getCell(cell.getColumnIndex() - 1);
+            cell.setCellValue(cell.getStringCellValue() + END_STR);
+        }
     }
 
-	/**
+    /**
      * 先判断删除,省得影响效率
      * @param sheet
      * @param map
@@ -401,7 +417,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         }
         //判断foreach 这种方法
         if (oldString != null && oldString.contains(FOREACH)) {
-           addListDataToExcel(cell, map, oldString.trim());
+            addListDataToExcel(cell, map, oldString.trim());
         }
 
     }
@@ -446,9 +462,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         }
         if (isShift && datas.size() * rowspan > 1) {
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
-                cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan , true, true);
-           /* cell.getRow().getSheet().shiftRows(cell.getRowIndex() + 1,
+                cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
+            /* cell.getRow().getSheet().shiftRows(cell.getRowIndex() + 1,
                 cell.getRow().getSheet().getLastRowNum(), datas.size() * rowspan - 1, true, true);*/
+            templateSumHanlder.shiftRows(cell.getRowIndex(),(datas.size() - 1) * rowspan);
         }
         while (its.hasNext()) {
             Object t = its.next();
@@ -546,6 +563,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     }
                 }
                 row.getCell(ci).setCellStyle(columns.get(i).getCellStyle());
+                //判断这个属性是不是需要统计
+                if (params.isNeedSum()) {
+                    templateSumHanlder.addValueOfKey(params.getName(), val);
+                }
                 //如果合并单元格,就把这个单元格的样式和之前的保持一致
                 setMergedRegionStyle(row, ci, columns.get(i));
                 //合并对应单元格
@@ -690,6 +711,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             params.setRowspan(colAndrow[0]);
             params.setColspan(colAndrow[1]);
         }
+        params.setNeedSum(templateSumHanlder.isSumKey(params.getName()));
         return params;
     }
 
@@ -739,7 +761,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                     wb.setSheetName(i, params.getSheetName()[i]);
                 }
                 tempCreateCellSet.clear();
-                parseTemplate(wb.getSheetAt(i), map.get(i),params.isColForEach());
+                parseTemplate(wb.getSheetAt(i), map.get(i), params.isColForEach());
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
