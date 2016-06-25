@@ -38,6 +38,7 @@ public final class PoiElUtil {
 	public static final String	NUMBER_SYMBOL		= "n:";
 	public static final String	FORMAT_DATE			= "fd:";
 	public static final String	FORMAT_NUMBER		= "fn:";
+	public static final String	SUM		            = "sum:";
 	public static final String	IF_DELETE			= "!if:";
 	public static final String	EMPTY				= "";
 	public static final String	CONST				= "'";
