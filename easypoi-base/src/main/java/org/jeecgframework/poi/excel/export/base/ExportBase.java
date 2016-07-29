@@ -115,6 +115,7 @@ public class ExportBase {
             }
             // 首先判断Excel 可能一下特殊数据用户回自定义处理
             if (field.getAnnotation(Excel.class) != null) {
+                
                 Excel excel = field.getAnnotation(Excel.class);
                 String name=PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null);
                 if(StringUtils.isNotBlank(name)){

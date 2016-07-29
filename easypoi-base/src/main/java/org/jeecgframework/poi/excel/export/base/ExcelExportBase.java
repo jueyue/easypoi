@@ -364,6 +364,7 @@ public abstract class ExcelExportBase extends ExportBase {
         } else if (type.equalsIgnoreCase("PNG")) {
             return Workbook.PICTURE_TYPE_PNG;
         }
+        
         return Workbook.PICTURE_TYPE_JPEG;
     }
 
