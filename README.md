@@ -61,17 +61,17 @@ https://oss.sonatype.org/content/repositories/snapshots/
 		 <dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.3.0.2</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.3.0.2</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.3.0.2</version>
+			<version>2.3.1</version>
 		</dependency>
 ```
 	
@@ -176,6 +176,11 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 --------------------------
 版本修改
 --------------------------
+- 2.3.1 修复bug,推荐更新
+ 	- 支持三目运算嵌套
+ 	- 提供大量导出功能,分批插入数据
+ 	- 勉强支持模板统计了
+ 	- 把最大值设置成参数
  - 2.3.0.1 修复bug,推荐更新
  	- 提供的PDF基础的Excel导出支持
  	- 提供了Excel Charts的导出支持
