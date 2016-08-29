@@ -38,8 +38,6 @@ import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.exception.excel.ExcelExportException;
 import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
 import org.jeecgframework.poi.util.PoiPublicUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Excel导出服务
@@ -49,12 +47,10 @@ import org.slf4j.LoggerFactory;
  */
 public class ExcelExportServer extends ExcelExportBase {
 
-    private final static Logger LOGGER  = LoggerFactory.getLogger(ExcelExportServer.class);
-
     // 最大行数,超过自动多Sheet
     private int                 MAX_NUM = 60000;
 
-    private int createHeaderAndTitle(ExportParams entity, Sheet sheet, Workbook workbook,
+    protected int createHeaderAndTitle(ExportParams entity, Sheet sheet, Workbook workbook,
                                      List<ExcelExportEntity> excelParams) {
         int rows = 0, feildWidth = getFieldLength(excelParams);
         if (entity.getTitle() != null) {
@@ -156,7 +152,7 @@ public class ExcelExportServer extends ExcelExportBase {
         insertDataToSheet(workbook, entity, entityList, dataSet,sheet);
     }
 
-    private void insertDataToSheet(Workbook workbook, ExportParams entity,
+    protected void insertDataToSheet(Workbook workbook, ExportParams entity,
                                    List<ExcelExportEntity> entityList, Collection<?> dataSet,
                                    Sheet sheet) {
         try {

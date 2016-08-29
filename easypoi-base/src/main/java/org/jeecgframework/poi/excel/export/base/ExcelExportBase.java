@@ -44,8 +44,6 @@ import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.excel.export.styler.IExcelExportStyler;
 import org.jeecgframework.poi.util.PoiMergeCellUtil;
 import org.jeecgframework.poi.util.PoiPublicUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 提供POI基础操作服务
@@ -55,9 +53,6 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("unchecked")
 public abstract class ExcelExportBase extends ExportBase {
-
-    private static final Logger        LOGGER        = LoggerFactory
-        .getLogger(ExcelExportBase.class);
 
     private int                        currentIndex  = 0;
 
