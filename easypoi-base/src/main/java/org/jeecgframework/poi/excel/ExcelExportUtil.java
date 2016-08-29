@@ -55,7 +55,7 @@ public class ExcelExportUtil {
         Workbook workbook;
         if (ExcelType.HSSF.equals(entity.getType())) {
             workbook = new HSSFWorkbook();
-        } else if (dataSet.size() < 1000) {
+        } else if (dataSet.size() < 10000) {
             workbook = new XSSFWorkbook();
         } else {
             workbook = new SXSSFWorkbook();
@@ -78,7 +78,7 @@ public class ExcelExportUtil {
         Workbook workbook;
         if (ExcelType.HSSF.equals(entity.getType())) {
             workbook = new HSSFWorkbook();
-        } else if (dataSet.size() < 1000) {
+        } else if (dataSet.size() < 10000) {
             workbook = new XSSFWorkbook();
         } else {
             workbook = new SXSSFWorkbook();

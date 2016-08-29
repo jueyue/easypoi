@@ -153,6 +153,12 @@ public class ExcelExportServer extends ExcelExportBase {
             // 重复遍历,出现了重名现象,创建非指定的名称Sheet
             sheet = workbook.createSheet();
         }
+        insertDataToSheet(workbook, entity, entityList, dataSet,sheet);
+    }
+
+    private void insertDataToSheet(Workbook workbook, ExportParams entity,
+                                   List<ExcelExportEntity> entityList, Collection<?> dataSet,
+                                   Sheet sheet) {
         try {
             dataHanlder = entity.getDataHanlder();
             if (dataHanlder != null && dataHanlder.getNeedHandlerFields() != null) {
