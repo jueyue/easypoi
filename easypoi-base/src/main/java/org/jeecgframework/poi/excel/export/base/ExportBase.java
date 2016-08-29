@@ -37,6 +37,8 @@ import org.jeecgframework.poi.excel.entity.vo.PoiBaseConstants;
 import org.jeecgframework.poi.handler.inter.IExcelDataHandler;
 import org.jeecgframework.poi.util.PoiPublicUtil;
 import org.jeecgframework.poi.util.PoiReflectorUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 导出基础处理,不设计POI,只设计对象,保证复用性
@@ -46,6 +48,9 @@ import org.jeecgframework.poi.util.PoiReflectorUtil;
  */
 @SuppressWarnings("rawtypes")
 public class ExportBase {
+    
+    protected static final Logger        LOGGER        = LoggerFactory
+            .getLogger(ExportBase.class);
 
     protected IExcelDataHandler dataHanlder;
 
