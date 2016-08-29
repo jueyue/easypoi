@@ -23,7 +23,7 @@ import org.jeecgframework.poi.util.PoiPublicUtil;
 /**
  * 提供批次插入服务
  * @author JueYue
- * @date 2016年8月29日
+ * 2016年8月29日
  */
 public class ExcelBatchExportServer extends ExcelExportServer {
 

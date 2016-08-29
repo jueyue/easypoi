@@ -2,10 +2,8 @@ package org.jeecgframework.poi.excel.export.template;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,7 +18,7 @@ import static org.jeecgframework.poi.util.PoiElUtil.*;
  * 2.遍历时统计数据
  * 3.遍历后设置数据
  * @author JueYue
- * @date 2016年6月19日
+ * 2016年6月19日
  */
 public class TemplateSumHanlder {
 
@@ -129,7 +127,6 @@ public class TemplateSumHanlder {
     /**
      * 统计对象
      * @author JueYue
-     * @date 2016年6月19日
      */
     protected class TemplateSumEntity {
         /**

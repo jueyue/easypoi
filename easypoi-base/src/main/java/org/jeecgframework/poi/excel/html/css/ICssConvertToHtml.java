@@ -19,7 +19,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
 
 /**
- * CSS <--> Cell Style 转换类 
+ * CSS Cell Style 转换类 
  * @author JueYue
  * 2016年3月20日 下午4:53:04
  */
@@ -27,7 +27,7 @@ public interface ICssConvertToHtml {
 	/**
 	 * 把Excel单元格样式转换成HTML样式
 	 * @param cell
-	 * @return
+	 * 
 	 */
 	public void convertToHtml(Cell cell, CellStyleEntity style);
 
