@@ -406,3 +406,7 @@ EasyPoi导出实例
 	List<Map<String,Object>> list = ExcelImportUtil.importExcel(new File(
 			"d:/tt.xls"), Map.class, params);
 ```	
+10.大数据量Excel导出
+	exportBigExcel 的方法 ,最后可以关闭closeExportBigExcel 也可以不关闭
+	
+
