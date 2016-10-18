@@ -70,6 +70,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
                 null);
+            sortAllParams(excelParams);
             try {
                 sheet = workbook.createSheet(entity.getSheetName());
             } catch (Exception e) {
@@ -87,6 +88,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
             sheet = workbook.createSheet();
             index = 0;
         }
+        
         Iterator<?> its = dataSet.iterator();
         while (its.hasNext()) {
             Object t = its.next();
@@ -147,6 +149,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
         mergeCells(sheet, excelParams, titleHeight);
         // 创建合计信息
         addStatisticsRow(getExcelExportStyler().getStyles(true, null), sheet);
+        THREAD_LOCAL.remove();
 
     }
 
