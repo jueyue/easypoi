@@ -15,21 +15,45 @@
  */
 package org.jeecgframework.poi.excel.view;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jeecgframework.poi.excel.entity.vo.BigExcelConstants;
+import org.jeecgframework.poi.excel.entity.vo.MapExcelConstants;
+import org.jeecgframework.poi.excel.entity.vo.MapExcelGraphConstants;
+import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.vo.TemplateExcelConstants;
 import org.springframework.web.servlet.view.AbstractView;
 
 /**
  *  提供一些通用结构
  */
 public abstract class PoiBaseView extends AbstractView {
-    
-    
-    protected boolean isIE(HttpServletRequest request) {
+
+    protected static boolean isIE(HttpServletRequest request) {
         return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0
                 || request.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0
                 || request.getHeader("USER-AGENT").toLowerCase().indexOf("edge") > 0) ? true
                     : false;
+    }
+
+    public static void render(Map<String, Object> model, HttpServletRequest request,
+                              HttpServletResponse response, String viewName) throws Exception {
+        PoiBaseView view = null;
+        if (BigExcelConstants.BIG_EXCEL_VIEW.equals(viewName)) {
+            view = new BigExcelExportView();
+        } else if (MapExcelConstants.JEECG_MAP_EXCEL_VIEW.equals(viewName)) {
+            view = new JeecgMapExcelView();
+        } else if (NormalExcelConstants.JEECG_EXCEL_VIEW.equals(viewName)) {
+            view = new JeecgSingleExcelView();
+        } else if (TemplateExcelConstants.JEECG_TEMPLATE_EXCEL_VIEW.equals(viewName)) {
+            view = new JeecgTemplateExcelView();
+        } else if (MapExcelGraphConstants.MAP_GRAPH_EXCEL_VIEW.equals(viewName)) {
+            view = new MapGraphExcelView();
+        }
+        view.renderMergedOutputModel(model, request, response);
     }
 
 }
