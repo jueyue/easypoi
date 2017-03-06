@@ -9,9 +9,8 @@ package org.jeecgframework.poi.excel.graph.constant;
  * @version 1.0
  * 定义元素类型
  */
-public interface ExcelGraphElementType {
-    
-    public static final Integer STRING_TYPE  = 1;
-    
-    public static final Integer NUMERIC_TYPE = 2;
+public interface ExcelGraphElementType
+{
+	public static final Integer StringType=1;
+	public static final Integer NumericType=2;
 }

@@ -7,3 +7,4 @@ deploy.bat
 
 /pom_bak.xml
 /deploy_sing.bat
+/build/
