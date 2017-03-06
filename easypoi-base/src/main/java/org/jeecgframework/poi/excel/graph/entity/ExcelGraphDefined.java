@@ -15,56 +15,56 @@ import com.google.common.collect.Lists;
  * @version 1.0
  * 
  */
-public class ExcelGraphDefined implements ExcelGraph {
-    
-    private ExcelGraphElement      category;
-    
-    private List<ExcelGraphElement> valueList = Lists.newArrayList();
-    
-    private List<ExcelTitleCell>    titleCell = Lists.newArrayList();
-    
-    private Integer                graphType = ExcelGraphType.LINE_CHART;
-    
-    private List<String>            title     = Lists.newArrayList();
+public class ExcelGraphDefined implements ExcelGraph
+{
+	private ExcelGraphElement category;
+	public List<ExcelGraphElement> valueList=Lists.newArrayList();
+	public List<ExcelTitleCell> titleCell=Lists.newArrayList();
+	private Integer graphType=ExcelGraphType.LineChart;
+	public List<String> title=Lists.newArrayList();
+	
+	public ExcelGraphElement getCategory()
+	{
+		return category;
+	}
+	public void setCategory(ExcelGraphElement category)
+	{
+		this.category = category;
+	}
+	public List<ExcelGraphElement> getValueList()
+	{
+		return valueList;
+	}
+	public void setValueList(List<ExcelGraphElement> valueList)
+	{
+		this.valueList = valueList;
+	}
 
-    public ExcelGraphElement getCategory() {
-        return category;
-    }
-
-    public void setCategory(ExcelGraphElement category) {
-        this.category = category;
-    }
-
-    public List<ExcelGraphElement> getValueList() {
-        return valueList;
-    }
-
-    public void setValueList(List<ExcelGraphElement> valueList) {
-        this.valueList = valueList;
-    }
-
-    public Integer getGraphType() {
-        return graphType;
-    }
-
-    public void setGraphType(Integer graphType) {
-        this.graphType = graphType;
-    }
-
-    public List<ExcelTitleCell> getTitleCell() {
-        return titleCell;
-    }
-
-    public void setTitleCell(List<ExcelTitleCell> titleCell) {
-        this.titleCell = titleCell;
-    }
-
-    public List<String> getTitle() {
-        return title;
-    }
-
-    public void setTitle(List<String> title) {
-        this.title = title;
-    }
-
+	public Integer getGraphType()
+	{
+		return graphType;
+	}
+	public void setGraphType(Integer graphType)
+	{
+		this.graphType = graphType;
+	}
+	public List<ExcelTitleCell> getTitleCell()
+	{
+		return titleCell;
+	}
+	public void setTitleCell(List<ExcelTitleCell> titleCell)
+	{
+		this.titleCell = titleCell;
+	}
+	public List<String> getTitle()
+	{
+		return title;
+	}
+	public void setTitle(List<String> title)
+	{
+		this.title = title;
+	}
+	
+	
+	
 }
