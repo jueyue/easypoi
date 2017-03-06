@@ -191,7 +191,7 @@ public abstract class ExcelExportBase extends ExportBase {
     }
 
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
-        if (excelExportEntity.getName().equals("序号") && excelExportEntity.getFormat() != null
+        if (excelExportEntity.getName()!=null&&excelExportEntity.getName().equals("序号") && excelExportEntity.getFormat() != null
             && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
             createStringCell(row, 0, currentIndex + "",
                 index % 2 == 0 ? getStyles(false, null) : getStyles(true, null), null);
@@ -359,6 +359,7 @@ public abstract class ExcelExportBase extends ExportBase {
         } else if (type.equalsIgnoreCase("PNG")) {
             return Workbook.PICTURE_TYPE_PNG;
         }
+        
         return Workbook.PICTURE_TYPE_JPEG;
     }
 
