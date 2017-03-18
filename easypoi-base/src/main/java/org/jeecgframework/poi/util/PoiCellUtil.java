@@ -100,7 +100,6 @@ public class PoiCellUtil {
      * @return  
      */
     public static String getCellValue(Cell cell) {
-
         if (cell == null)
             return "";
 
@@ -120,8 +119,10 @@ public class PoiCellUtil {
 
             return String.valueOf(cell.getNumericCellValue());
 
+        } else {
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            return cell.getStringCellValue();
         }
-
-        return "";
     }
+
 }

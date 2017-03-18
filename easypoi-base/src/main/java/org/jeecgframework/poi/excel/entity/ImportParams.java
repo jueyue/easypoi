@@ -72,6 +72,10 @@ public class ImportParams extends ExcelBaseParams {
      */
     private int                 lastOfInvalidRow = 0;
     /**
+     * 手动控制读取的行数
+     */
+    private int                 readRows = 0;
+    /**
      * 导入时校验数据模板,是不是正确的Excel
      */
     private String[]            importFields;
@@ -170,6 +174,14 @@ public class ImportParams extends ExcelBaseParams {
 
     public void setImportFields(String[] importFields) {
         this.importFields = importFields;
+    }
+
+    public int getReadRows() {
+        return readRows;
+    }
+
+    public void setReadRows(int readRows) {
+        this.readRows = readRows;
     }
 
 }
