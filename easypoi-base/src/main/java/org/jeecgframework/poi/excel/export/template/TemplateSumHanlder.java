@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.jeecgframework.poi.util.PoiCellUtil;
 
 import static org.jeecgframework.poi.util.PoiElUtil.*;
 
@@ -40,7 +41,7 @@ public class TemplateSumHanlder {
                 continue;
             }
             for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
-                if (row.getCell(i) != null && row.getCell(i).getStringCellValue().contains(SUM)) {
+                if (row.getCell(i) != null && PoiCellUtil.getCellValue(row.getCell(i)).contains(SUM)) {
                     addSumCellToList(row.getCell(i));
                 }
             }
