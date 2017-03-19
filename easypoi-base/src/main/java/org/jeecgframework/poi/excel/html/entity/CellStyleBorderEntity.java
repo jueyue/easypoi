@@ -15,6 +15,8 @@
  */
 package org.jeecgframework.poi.excel.html.entity;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 /**
  * 边框样式
  * @author JueYue
@@ -22,84 +24,92 @@ package org.jeecgframework.poi.excel.html.entity;
  */
 public class CellStyleBorderEntity {
 
-	private short	borderLeft;
-	
-	private short	borderRight;
-	
-	private short	borderTop;
-	
-	private short	borderBottom;
-	
-	private short	borderLeftColor;
-	
-	private short	borderRightColor;
-	
-	private short	borderTopColor;
-	
-	private short	borderBottomColor;
+    private short borderLeft;
 
-	public short getBorderLeft() {
-		return borderLeft;
-	}
+    private short borderRight;
 
-	public void setBorderLeft(short borderLeft) {
-		this.borderLeft = borderLeft;
-	}
+    private short borderTop;
 
-	public short getBorderRight() {
-		return borderRight;
-	}
+    private short borderBottom;
 
-	public void setBorderRight(short borderRight) {
-		this.borderRight = borderRight;
-	}
+    private short borderLeftColor;
 
-	public short getBorderTop() {
-		return borderTop;
-	}
+    private short borderRightColor;
 
-	public void setBorderTop(short borderTop) {
-		this.borderTop = borderTop;
-	}
+    private short borderTopColor;
 
-	public short getBorderBottom() {
-		return borderBottom;
-	}
+    private short borderBottomColor;
 
-	public void setBorderBottom(short borderBottom) {
-		this.borderBottom = borderBottom;
-	}
+    public short getBorderLeft() {
+        return borderLeft;
+    }
 
-	public short getBorderLeftColor() {
-		return borderLeftColor;
-	}
+    public void setBorderLeft(short borderLeft) {
+        this.borderLeft = borderLeft;
+    }
 
-	public void setBorderLeftColor(short borderLeftColor) {
-		this.borderLeftColor = borderLeftColor;
-	}
+    public short getBorderRight() {
+        return borderRight;
+    }
 
-	public short getBorderRightColor() {
-		return borderRightColor;
-	}
+    public void setBorderRight(short borderRight) {
+        this.borderRight = borderRight;
+    }
 
-	public void setBorderRightColor(short borderRightColor) {
-		this.borderRightColor = borderRightColor;
-	}
+    public short getBorderTop() {
+        return borderTop;
+    }
 
-	public short getBorderTopColor() {
-		return borderTopColor;
-	}
+    public void setBorderTop(short borderTop) {
+        this.borderTop = borderTop;
+    }
 
-	public void setBorderTopColor(short borderTopColor) {
-		this.borderTopColor = borderTopColor;
-	}
+    public short getBorderBottom() {
+        return borderBottom;
+    }
 
-	public short getBorderBottomColor() {
-		return borderBottomColor;
-	}
+    public void setBorderBottom(short borderBottom) {
+        this.borderBottom = borderBottom;
+    }
 
-	public void setBorderBottomColor(short borderBottomColor) {
-		this.borderBottomColor = borderBottomColor;
-	}
+    public short getBorderLeftColor() {
+        return borderLeftColor;
+    }
+
+    public void setBorderLeftColor(short borderLeftColor) {
+        this.borderLeftColor = borderLeftColor;
+    }
+
+    public short getBorderRightColor() {
+        return borderRightColor;
+    }
+
+    public void setBorderRightColor(short borderRightColor) {
+        this.borderRightColor = borderRightColor;
+    }
+
+    public short getBorderTopColor() {
+        return borderTopColor;
+    }
+
+    public void setBorderTopColor(short borderTopColor) {
+        this.borderTopColor = borderTopColor;
+    }
+
+    public short getBorderBottomColor() {
+        return borderBottomColor;
+    }
+
+    public void setBorderBottomColor(short borderBottomColor) {
+        this.borderBottomColor = borderBottomColor;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(borderBottom).append(borderBottomColor).append(borderLeft)
+            .append(borderLeftColor).append(borderRight).append(borderRightColor).append(borderTop)
+            .append(borderTopColor).toString();
+
+    }
 
 }
