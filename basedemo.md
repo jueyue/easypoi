@@ -207,4 +207,18 @@ EasyPoi导出实例
             LOGGER.error(e.getMessage(), e);
         }
     }
+	// Demo
+	@RequestMapping(params = "exportXls")
+	public void exportXls(CourseEntity course,HttpServletRequest request,HttpServletResponse response
+			, DataGrid dataGrid,ModelMap map) {
+        CriteriaQuery cq = new CriteriaQuery(CourseEntity.class, dataGrid);
+        org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, course, request.getParameterMap());
+        List<CourseEntity> courses = this.courseService.getListByCriteriaQuery(cq,false);
+        map.put(NormalExcelConstants.FILE_NAME,"用户信息");
+        map.put(NormalExcelConstants.CLASS,CourseEntity.class);
+        map.put(NormalExcelConstants.PARAMS,new ExportParams("课程列表", "导出人:Jeecg",
+                "导出信息"));
+        map.put(NormalExcelConstants.DATA_LIST,courses);
+        PoiBaseView.render(map,request,response,NormalExcelConstants.JEECG_EXCEL_VIEW);
+	}
 ```	
