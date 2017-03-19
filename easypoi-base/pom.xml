@@ -52,6 +52,13 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- 处理Excel -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- google 工具类 -->
 		<dependency>
 			<groupId>com.google.guava</groupId>

@@ -16,6 +16,7 @@
 package org.jeecgframework.poi.excel.html.css;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
 
 /**
@@ -24,11 +25,11 @@ import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
  * 2016年3月20日 下午4:53:04
  */
 public interface ICssConvertToExcel {
-	/**
-	 * 把HTML样式转换成Cell样式
-	 * @param cell
-	 * @param style
-	 */
-	public void convertToExcel(Cell cell, CellStyleEntity style);
+    /**
+     * 把HTML样式转换成Cell样式
+     * @param cell
+     * @param style
+     */
+    public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style);
 
 }

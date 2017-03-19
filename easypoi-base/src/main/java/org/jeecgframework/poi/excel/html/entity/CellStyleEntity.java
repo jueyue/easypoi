@@ -24,11 +24,11 @@ public class CellStyleEntity {
 	/**
 	 * 宽
 	 */
-	private double					width;
+	private String					width;
 	/**
 	 * 高
 	 */
-	private double					height;
+	private String					height;
 	/**
 	 * 边框
 	 */
@@ -46,19 +46,19 @@ public class CellStyleEntity {
 	 */
 	private String					vetical;
 
-	public double getWidth() {
+	public String getWidth() {
 		return width;
 	}
 
-	public void setWidth(double width) {
+	public void setWidth(String width) {
 		this.width = width;
 	}
 
-	public double getHeight() {
+	public String getHeight() {
 		return height;
 	}
 
-	public void setHeight(double height) {
+    public void setHeight(String height) {
 		this.height = height;
 	}
 
