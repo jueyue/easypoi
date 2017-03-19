@@ -29,26 +29,24 @@ import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
  */
 public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtml {
 
-	@Override
-	public void convertToHtml(Cell cell, CellStyleEntity style) {
-	}
+    @Override
+    public String convertToHtml(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
 
-	@Override
-	public void convertToExcel(Cell cell, CellStyleEntity style) {
-		CellStyle cellStyle = cell.getCellStyle();
-		if (cellStyle == null) {
-			return;
-		}
-		CellStyleBorderEntity border = new CellStyleBorderEntity();
-		border.setBorderBottom(cellStyle.getBorderBottom());
-		border.setBorderBottomColor(cellStyle.getBottomBorderColor());
-		border.setBorderLeft(cellStyle.getBorderLeft());
-		border.setBorderLeftColor(cellStyle.getLeftBorderColor());
-		border.setBorderRight(cellStyle.getBorderRight());
-		border.setBorderRightColor(cellStyle.getRightBorderColor());
-		border.setBorderTop(cellStyle.getBorderTop());
-		border.setBorderTopColor(cellStyle.getTopBorderColor());
-		style.setBorder(border);
-	}
+        return null;
+    }
+
+    @Override
+    public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
+        CellStyleBorderEntity border = new CellStyleBorderEntity();
+        border.setBorderBottom(cellStyle.getBorderBottom());
+        border.setBorderBottomColor(cellStyle.getBottomBorderColor());
+        border.setBorderLeft(cellStyle.getBorderLeft());
+        border.setBorderLeftColor(cellStyle.getLeftBorderColor());
+        border.setBorderRight(cellStyle.getBorderRight());
+        border.setBorderRightColor(cellStyle.getRightBorderColor());
+        border.setBorderTop(cellStyle.getBorderTop());
+        border.setBorderTopColor(cellStyle.getTopBorderColor());
+        style.setBorder(border);
+    }
 
 }

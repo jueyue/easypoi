@@ -15,10 +15,14 @@
  */
 package org.jeecgframework.poi.excel.html.css.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToExcel;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToHtml;
 import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
+import org.jeecgframework.poi.util.PoiCssUtils;
 
 /**
  * 列宽转换实现类
@@ -27,13 +31,25 @@ import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
  */
 public class WidthCssConverImpl implements ICssConvertToExcel, ICssConvertToHtml {
 
-	@Override
-	public void convertToHtml(Cell cell, CellStyleEntity style) {
-		style.setWidth(cell.getRow().getSheet().getColumnWidth(cell.getColumnIndex()));
-	}
+    @Override
+    public String convertToHtml(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
 
-	@Override
-	public void convertToExcel(Cell cell, CellStyleEntity style) {
-	}
+        return null;
+    }
+
+    @Override
+    public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
+        if (StringUtils.isNoneBlank(style.getWidth())) {
+            int width = (int) Math.round(PoiCssUtils.getInt(style.getWidth()) * 2048 / 8.43F);
+            Sheet sheet = cell.getSheet();
+            int colIndex = cell.getColumnIndex();
+            if (width > sheet.getColumnWidth(colIndex)) {
+                if (width > 255 * 256) {
+                    width = 255 * 256;
+                }
+                sheet.setColumnWidth(colIndex, width);
+            }
+        }
+    }
 
 }

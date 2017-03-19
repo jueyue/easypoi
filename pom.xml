@@ -159,6 +159,13 @@
 				<version>1.1.0.Final</version>
 			</dependency>
 
+			<!-- 读取Excel -->
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>1.8.3</version>
+			</dependency>
+
 			<!-- 模块版本 -->
 			<dependency>
 				<groupId>org.jeecg</groupId>

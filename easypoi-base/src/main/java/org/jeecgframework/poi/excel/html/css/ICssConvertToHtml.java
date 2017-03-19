@@ -16,6 +16,7 @@
 package org.jeecgframework.poi.excel.html.css;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
 
 /**
@@ -29,6 +30,6 @@ public interface ICssConvertToHtml {
 	 * @param cell
 	 * 
 	 */
-	public void convertToHtml(Cell cell, CellStyleEntity style);
+    public String convertToHtml(Cell cell, CellStyle cellStyle, CellStyleEntity style);
 
 }
