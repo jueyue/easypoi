@@ -31,12 +31,6 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
 
     @Override
     public String convertToHtml(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
-
-        return null;
-    }
-
-    @Override
-    public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
         CellStyleBorderEntity border = new CellStyleBorderEntity();
         border.setBorderBottom(cellStyle.getBorderBottom());
         border.setBorderBottomColor(cellStyle.getBottomBorderColor());
@@ -47,6 +41,11 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
         border.setBorderTop(cellStyle.getBorderTop());
         border.setBorderTopColor(cellStyle.getTopBorderColor());
         style.setBorder(border);
+        return null;
+    }
+
+    @Override
+    public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
     }
 
 }

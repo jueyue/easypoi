@@ -15,83 +15,91 @@
  */
 package org.jeecgframework.poi.excel.html.entity;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 /**
  * Cell 具有的样式
  * @author JueYue
  * 2016年3月20日 下午4:56:51
  */
 public class CellStyleEntity {
-	/**
-	 * 宽
-	 */
-	private String					width;
-	/**
-	 * 高
-	 */
-	private String					height;
-	/**
-	 * 边框
-	 */
-	private CellStyleBorderEntity	border;
-	/**
-	 * 背景
-	 */
-	private String					background;
-	/**
-	 * 水平位置
-	 */
-	private String					align;
-	/**
-	 * 垂直位置
-	 */
-	private String					vetical;
+    /**
+     * 宽
+     */
+    private String                width;
+    /**
+     * 高
+     */
+    private String                height;
+    /**
+     * 边框
+     */
+    private CellStyleBorderEntity border;
+    /**
+     * 背景
+     */
+    private String                background;
+    /**
+     * 水平位置
+     */
+    private String                align;
+    /**
+     * 垂直位置
+     */
+    private String                vetical;
 
-	public String getWidth() {
-		return width;
-	}
+    public String getWidth() {
+        return width;
+    }
 
-	public void setWidth(String width) {
-		this.width = width;
-	}
+    public void setWidth(String width) {
+        this.width = width;
+    }
 
-	public String getHeight() {
-		return height;
-	}
+    public String getHeight() {
+        return height;
+    }
 
     public void setHeight(String height) {
-		this.height = height;
-	}
+        this.height = height;
+    }
 
-	public CellStyleBorderEntity getBorder() {
-		return border;
-	}
+    public CellStyleBorderEntity getBorder() {
+        return border;
+    }
 
-	public void setBorder(CellStyleBorderEntity border) {
-		this.border = border;
-	}
+    public void setBorder(CellStyleBorderEntity border) {
+        this.border = border;
+    }
 
-	public String getBackground() {
-		return background;
-	}
+    public String getBackground() {
+        return background;
+    }
 
-	public void setBackground(String background) {
-		this.background = background;
-	}
+    public void setBackground(String background) {
+        this.background = background;
+    }
 
-	public String getAlign() {
-		return align;
-	}
+    public String getAlign() {
+        return align;
+    }
 
-	public void setAlign(String align) {
-		this.align = align;
-	}
+    public void setAlign(String align) {
+        this.align = align;
+    }
 
-	public String getVetical() {
-		return vetical;
-	}
+    public String getVetical() {
+        return vetical;
+    }
 
-	public void setVetical(String vetical) {
-		this.vetical = vetical;
-	}
+    public void setVetical(String vetical) {
+        this.vetical = vetical;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(align).append(background).append(border).append(height)
+            .append(vetical).append(width).toString();
+    }
 
 }

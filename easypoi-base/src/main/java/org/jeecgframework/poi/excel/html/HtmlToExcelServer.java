@@ -45,7 +45,7 @@ public class HtmlToExcelServer {
         .getLogger(HtmlToExcelServer.class);
 
     //样式
-    private final List<ICssConvertToExcel> STYLE_APPLIERS = new LinkedList<ICssConvertToExcel>();
+    private static final List<ICssConvertToExcel> STYLE_APPLIERS = new LinkedList<ICssConvertToExcel>();
     {
         STYLE_APPLIERS.add(new AlignCssConvertImpl());
         STYLE_APPLIERS.add(new BackgroundCssConvertImpl());
@@ -54,7 +54,7 @@ public class HtmlToExcelServer {
     }
 
     //Cell 高宽
-    private final List<ICssConvertToExcel> SHEET_APPLIERS = new LinkedList<ICssConvertToExcel>();
+    private static final List<ICssConvertToExcel> SHEET_APPLIERS = new LinkedList<ICssConvertToExcel>();
     {
         SHEET_APPLIERS.add(new WidthCssConverImpl());
         SHEET_APPLIERS.add(new HeightCssConverImpl());
