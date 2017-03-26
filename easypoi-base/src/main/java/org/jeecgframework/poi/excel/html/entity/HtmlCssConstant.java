@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
+ * Copyright 2013-2017 JueYue (qrb.jueyue@gmail.com)
  *   
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ public interface HtmlCssConstant {
     public final String FONT_WEIGHT      = "font-weight";
     public final String FONT_SIZE        = "font-size";
     public final String FONT_FAMILY      = "font-family";
+    public final String TEXT_DECORATION  = "text-decoration";
+    public final String UNDERLINE        = "underline";
     public final String ITALIC           = "italic";
     public final String BOLD             = "bold";
     public final String NORMAL           = "normal";

@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToExcel;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToHtml;
-import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
+import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
 
 public class BackgroundCssConvertImpl implements ICssConvertToExcel, ICssConvertToHtml {
 

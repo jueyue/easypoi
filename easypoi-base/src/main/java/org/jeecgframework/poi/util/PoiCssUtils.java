@@ -132,26 +132,17 @@ public class PoiCssUtils {
 
     /**
      * parse color
-     * @param workBook work book
      * @param color string color
-     * @return HSSFColor 
+     * @return int 
      */
-    public static HSSFColor parseColor(HSSFWorkbook workBook, String color) {
-        HSSFColor poiColor = null;
+    public static int parseColor(String color) {
         if (StringUtils.isNotBlank(color)) {
             Color awtColor = Color.decode(color);
             if (awtColor != null) {
-                int r = awtColor.getRed();
-                int g = awtColor.getGreen();
-                int b = awtColor.getBlue();
-                HSSFPalette palette = workBook.getCustomPalette();
-                poiColor = palette.findColor((byte) r, (byte) g, (byte) b);
-                if (poiColor == null) {
-                    poiColor = palette.findSimilarColor(r, g, b);
-                }
+                return awtColor.getRGB();
             }
         }
-        return poiColor;
+        return 0;
     }
 
     // --

@@ -32,8 +32,9 @@ import org.jeecgframework.poi.excel.html.css.impl.BorderCssConverImpl;
 import org.jeecgframework.poi.excel.html.css.impl.HeightCssConverImpl;
 import org.jeecgframework.poi.excel.html.css.impl.TextCssConvertImpl;
 import org.jeecgframework.poi.excel.html.css.impl.WidthCssConverImpl;
-import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
+import org.jeecgframework.poi.excel.html.entity.ExcelCssConstant;
 import org.jeecgframework.poi.excel.html.entity.HtmlCssConstant;
+import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
 
 /**
  * 读取Table数据生成Excel
@@ -130,7 +131,7 @@ public class HtmlToExcelServer {
         Map<String, Sheet> sheets = new HashMap<String, Sheet>();
         Map<String, Integer> maxrowMap = new HashMap<String, Integer>();
         for (Element table : els) {
-            String sheetName = table.attr("sheet");
+            String sheetName = table.attr(ExcelCssConstant.SHEET_NAME);
 
             if (StringUtils.isBlank(sheetName)) {
                 LOGGER.error("table必须存在name属性!");

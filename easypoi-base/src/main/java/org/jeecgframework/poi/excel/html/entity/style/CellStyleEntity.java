@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeecgframework.poi.excel.html.entity;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+package org.jeecgframework.poi.excel.html.entity.style;
 
 /**
  * Cell 具有的样式
@@ -47,6 +45,10 @@ public class CellStyleEntity {
      * 垂直位置
      */
     private String                vetical;
+    /**
+     * 字体设置
+     */
+    private CssStyleFontEnity     font;
 
     public String getWidth() {
         return width;
@@ -96,10 +98,18 @@ public class CellStyleEntity {
         this.vetical = vetical;
     }
 
+    public CssStyleFontEnity getFont() {
+        return font;
+    }
+
+    public void setFont(CssStyleFontEnity font) {
+        this.font = font;
+    }
+
     @Override
     public String toString() {
         return new StringBuilder().append(align).append(background).append(border).append(height)
-            .append(vetical).append(width).toString();
+            .append(vetical).append(width).append(font).toString();
     }
 
 }
