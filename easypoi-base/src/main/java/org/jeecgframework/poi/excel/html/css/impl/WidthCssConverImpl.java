@@ -21,7 +21,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToExcel;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToHtml;
-import org.jeecgframework.poi.excel.html.entity.CellStyleEntity;
+import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
 import org.jeecgframework.poi.util.PoiCssUtils;
 
 /**

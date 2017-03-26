@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
+ * Copyright 2013-2017 JueYue (qrb.jueyue@gmail.com)
  *   
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeecgframework.poi.excel.html.css;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
+package org.jeecgframework.poi.excel.html.entity;
 
 /**
- * CSS Cell Style 转换类 
+ * Excel 自定义处理的自定义Html标签
  * @author JueYue
- * 2016年3月20日 下午4:53:04
+ * 2017年3月26日
  */
-public interface ICssConvertToExcel {
-    /**
-     * 把HTML样式转换成Cell样式
-     * @param cell
-     * @param style
-     */
-    public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style);
+public interface ExcelCssConstant {
+
+    public final String SHEET_NAME = "sheetName";
 
 }

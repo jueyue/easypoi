@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeecgframework.poi.excel.html.entity;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+package org.jeecgframework.poi.excel.html.entity.style;
 
 /**
  * 边框样式
