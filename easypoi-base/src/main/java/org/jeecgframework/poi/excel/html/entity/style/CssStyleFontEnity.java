@@ -35,7 +35,7 @@ public class CssStyleFontEnity {
     private int    size;
     private String family;
     private String decoration;
-    private int    color;
+    private String color;
 
     public String getStyle() {
         return style;
@@ -69,11 +69,11 @@ public class CssStyleFontEnity {
         this.family = family;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 

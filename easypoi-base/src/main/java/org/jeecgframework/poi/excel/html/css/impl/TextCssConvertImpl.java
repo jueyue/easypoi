@@ -10,9 +10,13 @@ import org.apache.poi.hssf.util.HSSFColor.BLACK;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToExcel;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToHtml;
 import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
+import org.jeecgframework.poi.util.PoiCssUtils;
 
 public class TextCssConvertImpl implements ICssConvertToExcel, ICssConvertToHtml {
 
@@ -42,14 +46,32 @@ public class TextCssConvertImpl implements ICssConvertToExcel, ICssConvertToHtml
         if (StringUtils.isNotBlank(fontFamily)) {
             font.setFontName(fontFamily);
         }
-        int color = style.getFont().getColor();
-        if (color != 0 && color != BLACK.index) {
-            font.setColor((short) color);
+        String color = style.getFont().getColor();
+        if (StringUtils.isNoneEmpty(color)) {
+            if (font instanceof HSSFFont) {
+                setFoutForHSSF(font, cell.getSheet().getWorkbook(), color);
+            } else if (font instanceof XSSFFont) {
+                setFoutForXSSF(font, color);
+            }
         }
         if (UNDERLINE.equals(style.getFont().getDecoration())) {
             font.setUnderline(Font.U_SINGLE);
         }
         cellStyle.setFont(font);
+    }
+
+    private void setFoutForXSSF(Font font, String colorStr) {
+        XSSFColor color = PoiCssUtils.parseColor(colorStr);
+        ((XSSFFont)font).setColor(color);
+    }
+
+    private void setFoutForHSSF(Font font, Workbook workbook, String colorStr) {
+        HSSFColor color = PoiCssUtils.parseColor((HSSFWorkbook) workbook, colorStr);
+        if (color != null) {
+            if (color.getIndex() != BLACK.index) {
+                font.setColor(color.getIndex());
+            }
+        }
     }
 
 }
