@@ -44,7 +44,38 @@ public class CssParseServer {
 
         parseFontAttr(mapStyle);
 
+        getBackground(mapStyle);
         return mapToCellStyleEntity(mapStyle);
+    }
+
+    private CellStyleEntity mapToCellStyleEntity(Map<String, String> mapStyle) {
+        CellStyleEntity entity = new CellStyleEntity();
+        entity.setAlign(mapStyle.get(TEXT_ALIGN));
+        entity.setVetical(mapStyle.get(VETICAL_ALIGN));
+        entity.setBackground(getBackground(mapStyle));
+        entity.setHeight(mapStyle.get(HEIGHT));
+        entity.setWidth(mapStyle.get(WIDTH));
+        entity.setFont(getCssStyleFontEnity(mapStyle));
+        entity.setBackground(mapStyle.get(BACKGROUND_COLOR));
+        // TODO 这里较为复杂,后期处理
+        /*CellStyleBorderEntity border = new CellStyleBorderEntity();
+        entity.setBorder(border);
+        border.setBorderBottom(borderBottom);*/
+        return entity;
+    }
+
+    private CssStyleFontEnity getCssStyleFontEnity(Map<String, String> style) {
+        CssStyleFontEnity font = new CssStyleFontEnity();
+        font.setStyle(style.get(FONT_STYLE));
+        int fontSize = PoiCssUtils.getInt(style.get(FONT_SIZE));
+        if (fontSize > 0) {
+            font.setSize(fontSize);
+        }
+        font.setWeight(style.get(FONT_WEIGHT));
+        font.setFamily(style.get(FONT_FAMILY));
+        font.setDecoration(style.get(TEXT_DECORATION));
+        font.setColor(style.get(COLOR));
+        return font;
     }
 
     private void parseFontAttr(Map<String, String> mapRtn) {
@@ -152,56 +183,26 @@ public class CssParseServer {
         }
     }
 
-    private CellStyleEntity mapToCellStyleEntity(Map<String, String> mapStyle) {
-        CellStyleEntity entity = new CellStyleEntity();
-        entity.setAlign(mapStyle.get(TEXT_ALIGN));
-        entity.setVetical(mapStyle.get(VETICAL_ALIGN));
-        entity.setBackground(getBackground(mapStyle));
-        entity.setHeight(mapStyle.get(HEIGHT));
-        entity.setWidth(mapStyle.get(WIDTH));
-        entity.setFont(getCssStyleFontEnity(mapStyle));
-        // TODO 这里较为复杂,后期处理
-        /*CellStyleBorderEntity border = new CellStyleBorderEntity();
-        entity.setBorder(border);
-        border.setBorderBottom(borderBottom);*/
-        return entity;
-    }
-
-    private CssStyleFontEnity getCssStyleFontEnity(Map<String, String> style) {
-        CssStyleFontEnity font = new CssStyleFontEnity();
-        font.setStyle(style.get(FONT_STYLE));
-        int fontSize = PoiCssUtils.getInt(style.get(FONT_SIZE));
-        if (fontSize > 0) {
-            font.setSize(fontSize);
-        }
-        font.setWeight(style.get(FONT_WEIGHT));
-        font.setFamily(style.get(FONT_FAMILY));
-        font.setDecoration(style.get(TEXT_DECORATION));
-        font.setColor(PoiCssUtils.parseColor(style.get(COLOR)));
-        return font;
-    }
-
     private String getBackground(Map<String, String> style) {
-        Map<String, String> mapRtn = new HashMap<String, String>();
         String bg = style.get(BACKGROUND);
         String bgColor = null;
         if (StringUtils.isNotBlank(bg)) {
             for (String bgAttr : bg.split("(?<=\\)|\\w|%)\\s+(?=\\w)")) {
                 if ((bgColor = PoiCssUtils.processColor(bgAttr)) != null) {
-                    mapRtn.put(BACKGROUND_COLOR, bgColor);
+                    style.put(BACKGROUND_COLOR, bgColor);
                     break;
                 }
             }
         }
         bg = style.get(BACKGROUND_COLOR);
         if (StringUtils.isNotBlank(bg) && (bgColor = PoiCssUtils.processColor(bg)) != null) {
-            mapRtn.put(BACKGROUND_COLOR, bgColor);
+            style.put(BACKGROUND_COLOR, bgColor);
 
         }
         if (bgColor != null) {
-            bgColor = mapRtn.get(BACKGROUND_COLOR);
-            if (!"#ffffff".equals(bgColor)) {
-                return mapRtn.get(BACKGROUND_COLOR);
+            bgColor = style.get(BACKGROUND_COLOR);
+            if ("#ffffff".equals(bgColor)) {
+                style.remove(BACKGROUND_COLOR);
             }
         }
         return null;

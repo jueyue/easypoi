@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import org.slf4j.LoggerFactory;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -132,17 +133,37 @@ public class PoiCssUtils {
 
     /**
      * parse color
+     * @param workBook work book
      * @param color string color
-     * @return int 
+     * @return HSSFColor 
      */
-    public static int parseColor(String color) {
+    public static HSSFColor parseColor(HSSFWorkbook workBook, String color) {
+        HSSFColor poiColor = null;
         if (StringUtils.isNotBlank(color)) {
             Color awtColor = Color.decode(color);
             if (awtColor != null) {
-                return awtColor.getRGB();
+                int r = awtColor.getRed();
+                int g = awtColor.getGreen();
+                int b = awtColor.getBlue();
+                HSSFPalette palette = workBook.getCustomPalette();
+                poiColor = palette.findColor((byte) r, (byte) g, (byte) b);
+                if (poiColor == null) {
+                    poiColor = palette.findSimilarColor(r, g, b);
+                }
             }
         }
-        return 0;
+        return poiColor;
+    }
+
+    public static XSSFColor parseColor(String color) {
+        XSSFColor poiColor = null;
+        if (StringUtils.isNotBlank(color)) {
+            Color awtColor = Color.decode(color);
+            if (awtColor != null) {
+                poiColor = new XSSFColor(awtColor); 
+            }
+        }
+        return poiColor;
     }
 
     // --
@@ -156,7 +177,7 @@ public class PoiCssUtils {
         return String.format("#%02x%02x%02x", r, g, b);
     }
 
-    private static int calcColorValue(String color) {
+    public static int calcColorValue(String color) {
         int rtn = 0;
         // matches 64 or 64%
         Matcher m = Pattern.compile("^(\\d*\\.?\\d+)\\s*(%)?$").matcher(color);
@@ -170,4 +191,5 @@ public class PoiCssUtils {
         }
         return rtn;
     }
+
 }
