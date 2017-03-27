@@ -46,5 +46,11 @@ public interface HtmlCssConstant {
     public final String VETICAL_ALIGN    = "vertical-align";
     public final String BACKGROUND       = "background";
     public final String BACKGROUND_COLOR = "background-color";
+    public final String NONE             = "none";
+    public final String HIDDEN           = "hidden";
+    public final String SOLID            = "solid";
+    public final String DOUBLE           = "double";
+    public final String DOTTED           = "dotted";
+    public final String DASHED           = "dashed";
 
 }

@@ -22,91 +22,133 @@ package org.jeecgframework.poi.excel.html.entity.style;
  */
 public class CellStyleBorderEntity {
 
-    private short borderLeft;
+    private String borderLeftColor;
 
-    private short borderRight;
+    private String borderRightColor;
 
-    private short borderTop;
+    private String borderTopColor;
 
-    private short borderBottom;
+    private String borderBottomColor;
 
-    private short borderLeftColor;
+    private String borderLeftStyle;
 
-    private short borderRightColor;
+    private String borderRightStyle;
 
-    private short borderTopColor;
+    private String borderTopStyle;
 
-    private short borderBottomColor;
+    private String borderBottomStyle;
 
-    public short getBorderLeft() {
-        return borderLeft;
-    }
+    private String borderLeftWidth;
 
-    public void setBorderLeft(short borderLeft) {
-        this.borderLeft = borderLeft;
-    }
+    private String borderRightWidth;
 
-    public short getBorderRight() {
-        return borderRight;
-    }
+    private String borderTopWidth;
 
-    public void setBorderRight(short borderRight) {
-        this.borderRight = borderRight;
-    }
+    private String borderBottomWidth;
 
-    public short getBorderTop() {
-        return borderTop;
-    }
-
-    public void setBorderTop(short borderTop) {
-        this.borderTop = borderTop;
-    }
-
-    public short getBorderBottom() {
-        return borderBottom;
-    }
-
-    public void setBorderBottom(short borderBottom) {
-        this.borderBottom = borderBottom;
-    }
-
-    public short getBorderLeftColor() {
+    public String getBorderLeftColor() {
         return borderLeftColor;
     }
 
-    public void setBorderLeftColor(short borderLeftColor) {
+    public void setBorderLeftColor(String borderLeftColor) {
         this.borderLeftColor = borderLeftColor;
     }
 
-    public short getBorderRightColor() {
+    public String getBorderRightColor() {
         return borderRightColor;
     }
 
-    public void setBorderRightColor(short borderRightColor) {
+    public void setBorderRightColor(String borderRightColor) {
         this.borderRightColor = borderRightColor;
     }
 
-    public short getBorderTopColor() {
+    public String getBorderTopColor() {
         return borderTopColor;
     }
 
-    public void setBorderTopColor(short borderTopColor) {
+    public void setBorderTopColor(String borderTopColor) {
         this.borderTopColor = borderTopColor;
     }
 
-    public short getBorderBottomColor() {
+    public String getBorderBottomColor() {
         return borderBottomColor;
     }
 
-    public void setBorderBottomColor(short borderBottomColor) {
+    public void setBorderBottomColor(String borderBottomColor) {
         this.borderBottomColor = borderBottomColor;
+    }
+
+    public String getBorderLeftStyle() {
+        return borderLeftStyle;
+    }
+
+    public void setBorderLeftStyle(String borderLeftStyle) {
+        this.borderLeftStyle = borderLeftStyle;
+    }
+
+    public String getBorderRightStyle() {
+        return borderRightStyle;
+    }
+
+    public void setBorderRightStyle(String borderRightStyle) {
+        this.borderRightStyle = borderRightStyle;
+    }
+
+    public String getBorderTopStyle() {
+        return borderTopStyle;
+    }
+
+    public void setBorderTopStyle(String borderTopStyle) {
+        this.borderTopStyle = borderTopStyle;
+    }
+
+    public String getBorderBottomStyle() {
+        return borderBottomStyle;
+    }
+
+    public void setBorderBottomStyle(String borderBottomStyle) {
+        this.borderBottomStyle = borderBottomStyle;
+    }
+
+    public String getBorderLeftWidth() {
+        return borderLeftWidth;
+    }
+
+    public void setBorderLeftWidth(String borderLeftWidth) {
+        this.borderLeftWidth = borderLeftWidth;
+    }
+
+    public String getBorderRightWidth() {
+        return borderRightWidth;
+    }
+
+    public void setBorderRightWidth(String borderRightWidth) {
+        this.borderRightWidth = borderRightWidth;
+    }
+
+    public String getBorderTopWidth() {
+        return borderTopWidth;
+    }
+
+    public void setBorderTopWidth(String borderTopWidth) {
+        this.borderTopWidth = borderTopWidth;
+    }
+
+    public String getBorderBottomWidth() {
+        return borderBottomWidth;
+    }
+
+    public void setBorderBottomWidth(String borderBottomWidth) {
+        this.borderBottomWidth = borderBottomWidth;
     }
 
     @Override
     public String toString() {
-        return new StringBuilder().append(borderBottom).append(borderBottomColor).append(borderLeft)
-            .append(borderLeftColor).append(borderRight).append(borderRightColor).append(borderTop)
-            .append(borderTopColor).toString();
+        return new StringBuilder().append(borderLeftColor).append(borderRightColor)
+            .append(borderTopColor).append(borderBottomColor).append(borderLeftStyle)
+            .append(borderRightStyle).append(borderTopStyle).append(borderBottomStyle)
+            .append(borderLeftWidth).append(borderRightWidth).append(borderTopWidth)
+            .append(borderBottomWidth).toString();
 
     }
 

@@ -15,12 +15,25 @@
  */
 package org.jeecgframework.poi.excel.html.css.impl;
 
+import static org.jeecgframework.poi.excel.html.entity.HtmlCssConstant.*;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToExcel;
 import org.jeecgframework.poi.excel.html.css.ICssConvertToHtml;
 import org.jeecgframework.poi.excel.html.entity.style.CellStyleBorderEntity;
 import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
+import org.jeecgframework.poi.util.PoiCssUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 边框转换实现类
@@ -29,23 +42,104 @@ import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
  */
 public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtml {
 
+    private static Logger log = LoggerFactory.getLogger(BorderCssConverImpl.class);
+
     @Override
     public String convertToHtml(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
-        CellStyleBorderEntity border = new CellStyleBorderEntity();
-        border.setBorderBottom(cellStyle.getBorderBottom());
-        border.setBorderBottomColor(cellStyle.getBottomBorderColor());
-        border.setBorderLeft(cellStyle.getBorderLeft());
-        border.setBorderLeftColor(cellStyle.getLeftBorderColor());
-        border.setBorderRight(cellStyle.getBorderRight());
-        border.setBorderRightColor(cellStyle.getRightBorderColor());
-        border.setBorderTop(cellStyle.getBorderTop());
-        border.setBorderTopColor(cellStyle.getTopBorderColor());
-        style.setBorder(border);
         return null;
     }
 
     @Override
     public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style) {
+        if (style == null || style.getBorder() == null) {
+            return;
+        }
+        CellStyleBorderEntity border = style.getBorder();
+        for (String pos : new String[] { TOP, RIGHT, BOTTOM, LEFT }) {
+            String posName = StringUtils.capitalize(pos.toLowerCase());
+            // color
+            String colorAttr = null;
+            try {
+                colorAttr = (String) MethodUtils.invokeMethod(border,
+                    "getBorder" + posName + "Color");
+            } catch (Exception e) {
+                log.error("Set Border Style Error Caused.", e);
+            }
+            if (StringUtils.isNotEmpty(colorAttr)) {
+                if (cell instanceof HSSFCell) {
+                    HSSFColor poiColor = PoiCssUtils
+                        .parseColor((HSSFWorkbook) cell.getSheet().getWorkbook(), colorAttr);
+                    if (poiColor != null) {
+                        try {
+                            MethodUtils.invokeMethod(cellStyle, "set" + posName + "BorderColor",
+                                poiColor.getIndex());
+                        } catch (Exception e) {
+                            log.error("Set Border Color Error Caused.", e);
+                        }
+                    }
+                }
+                if (cell instanceof XSSFCell) {
+                    XSSFColor poiColor = PoiCssUtils.parseColor(colorAttr);
+                    if (poiColor != null) {
+                        try {
+                            MethodUtils.invokeMethod(cellStyle, "set" + posName + "BorderColor",
+                                poiColor);
+                        } catch (Exception e) {
+                            log.error("Set Border Color Error Caused.", e);
+                        }
+                    }
+                }
+            }
+            // width
+            int width = 0;
+            try {
+                String widthStr = (String) MethodUtils.invokeMethod(border,
+                    "getBorder" + posName + "Width");
+                if (PoiCssUtils.isNum(widthStr)) {
+                    width = Integer.parseInt(widthStr);
+                }
+            } catch (Exception e) {
+                log.error("Set Border Style Error Caused.", e);
+            }
+            String styleValue = null;
+            try {
+                styleValue = (String) MethodUtils.invokeMethod(border,
+                    "getBorder" + posName + "Style");
+            } catch (Exception e) {
+                log.error("Set Border Style Error Caused.", e);
+            }
+            short shortValue = -1;
+            // empty or solid
+            if (StringUtils.isBlank(styleValue) || "solid".equals(styleValue)) {
+                if (width > 2) {
+                    shortValue = CellStyle.BORDER_THICK;
+                } else if (width > 1) {
+                    shortValue = CellStyle.BORDER_MEDIUM;
+                } else {
+                    shortValue = CellStyle.BORDER_THIN;
+                }
+            } else if (ArrayUtils.contains(new String[] { NONE, HIDDEN }, styleValue)) {
+                shortValue = CellStyle.BORDER_NONE;
+            } else if (DOUBLE.equals(styleValue)) {
+                shortValue = CellStyle.BORDER_DOUBLE;
+            } else if (DOTTED.equals(styleValue)) {
+                shortValue = CellStyle.BORDER_DOTTED;
+            } else if (DASHED.equals(styleValue)) {
+                if (width > 1) {
+                    shortValue = CellStyle.BORDER_MEDIUM_DASHED;
+                } else {
+                    shortValue = CellStyle.BORDER_DASHED;
+                }
+            }
+            // border style
+            if (shortValue != -1) {
+                try {
+                    MethodUtils.invokeMethod(cellStyle, "setBorder" + posName, shortValue);
+                } catch (Exception e) {
+                    log.error("Set Border Style Error Caused.", e);
+                }
+            }
+        }
     }
 
 }
