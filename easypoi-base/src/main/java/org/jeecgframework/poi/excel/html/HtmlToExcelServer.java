@@ -42,7 +42,7 @@ import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
  * 2017年3月19日
  */
 public class HtmlToExcelServer {
-    private final Logger                   LOGGER         = LoggerFactory
+    private final Logger                          LOGGER         = LoggerFactory
         .getLogger(HtmlToExcelServer.class);
 
     //样式
@@ -78,11 +78,24 @@ public class HtmlToExcelServer {
             rowIndex = maxRow;
         }
         LOGGER.debug("Interate Table Rows.");
+        String freezeCol = null;
+        int freezeColIndex = -1;
         for (Element row : table.select("tr")) {
             LOGGER.debug("Parse Table Row [{}]. Row Index [{}].", row, rowIndex);
+            String freezeRow = row.attr(ExcelCssConstant.FREEZE_ROW);
+            if ("true".equals(freezeRow)) {
+                sheet.createFreezePane(0, rowIndex + 1, 0, rowIndex + 1);
+            }
             int colIndex = 0;
             LOGGER.debug("Interate Cols.");
             for (Element td : row.select("td, th")) {
+                freezeCol = td.attr(ExcelCssConstant.FREEZE_COL);
+                if ("true".equals(freezeCol)) {
+                    if (colIndex > freezeColIndex) {
+                        freezeColIndex = colIndex;
+                    }
+                }
+
                 // skip occupied cell
                 while (cellsOccupied.get(rowIndex + "_" + colIndex) != null) {
                     LOGGER.debug("Cell [{}][{}] Has Been Occupied, Skip.", rowIndex, colIndex);
@@ -123,6 +136,9 @@ public class HtmlToExcelServer {
                 }
             }
             ++rowIndex;
+        }
+        if (freezeColIndex != -1) {
+            sheet.createFreezePane(freezeColIndex + 1, 0, freezeColIndex + 1, 0);
         }
     }
 
