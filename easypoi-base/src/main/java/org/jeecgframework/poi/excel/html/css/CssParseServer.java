@@ -3,12 +3,15 @@ package org.jeecgframework.poi.excel.html.css;
 import static org.jeecgframework.poi.excel.html.entity.HtmlCssConstant.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jeecgframework.poi.excel.html.entity.style.CellStyleBorderEntity;
 import org.jeecgframework.poi.excel.html.entity.style.CellStyleEntity;
 import org.jeecgframework.poi.excel.html.entity.style.CssStyleFontEnity;
 import org.jeecgframework.poi.util.PoiCssUtils;
@@ -22,7 +25,25 @@ import org.slf4j.LoggerFactory;
  */
 public class CssParseServer {
 
-    private static final Logger log = LoggerFactory.getLogger(CssParseServer.class);
+    private static final Logger      log           = LoggerFactory.getLogger(CssParseServer.class);
+
+    @SuppressWarnings("serial")
+    private final static Set<String> BORDER_STYLES = new HashSet<String>() {
+                                                       {
+                                                           // Specifies no border   
+                                                           add(NONE);
+                                                           // The same as "none", except in border conflict resolution for table elements
+                                                           add(HIDDEN);
+                                                           // Specifies a dotted border     
+                                                           add(DOTTED);
+                                                           // Specifies a dashed border     
+                                                           add(DASHED);
+                                                           // Specifies a solid border  
+                                                           add(SOLID);
+                                                           // Specifies a double border     
+                                                           add(DOUBLE);
+                                                       }
+                                                   };
 
     public CellStyleEntity parseStyle(String style) {
         Map<String, String> mapStyle = new HashMap<String, String>();
@@ -44,7 +65,10 @@ public class CssParseServer {
 
         parseFontAttr(mapStyle);
 
-        getBackground(mapStyle);
+        parseBackground(mapStyle);
+
+        parseBorder(mapStyle);
+
         return mapToCellStyleEntity(mapStyle);
     }
 
@@ -52,16 +76,32 @@ public class CssParseServer {
         CellStyleEntity entity = new CellStyleEntity();
         entity.setAlign(mapStyle.get(TEXT_ALIGN));
         entity.setVetical(mapStyle.get(VETICAL_ALIGN));
-        entity.setBackground(getBackground(mapStyle));
+        entity.setBackground(parseBackground(mapStyle));
         entity.setHeight(mapStyle.get(HEIGHT));
         entity.setWidth(mapStyle.get(WIDTH));
         entity.setFont(getCssStyleFontEnity(mapStyle));
         entity.setBackground(mapStyle.get(BACKGROUND_COLOR));
-        // TODO 这里较为复杂,后期处理
-        /*CellStyleBorderEntity border = new CellStyleBorderEntity();
-        entity.setBorder(border);
-        border.setBorderBottom(borderBottom);*/
+        entity.setBorder(getCssStyleBorderEntity(mapStyle));
         return entity;
+    }
+
+    private CellStyleBorderEntity getCssStyleBorderEntity(Map<String, String> mapStyle) {
+        CellStyleBorderEntity border = new CellStyleBorderEntity();
+        border.setBorderTopColor(mapStyle.get(BORDER + "-" + TOP + "-" + COLOR));
+        border.setBorderBottomColor(mapStyle.get(BORDER + "-" + BOTTOM + "-" + COLOR));
+        border.setBorderLeftColor(mapStyle.get(BORDER + "-" + LEFT + "-" + COLOR));
+        border.setBorderRightColor(mapStyle.get(BORDER + "-" + RIGHT + "-" + COLOR));
+        
+        border.setBorderTopWidth(mapStyle.get(BORDER + "-" + TOP + "-" + WIDTH));
+        border.setBorderBottomWidth(mapStyle.get(BORDER + "-" + BOTTOM + "-" + WIDTH));
+        border.setBorderLeftWidth(mapStyle.get(BORDER + "-" + LEFT + "-" + WIDTH));
+        border.setBorderRightWidth(mapStyle.get(BORDER + "-" + RIGHT + "-" + WIDTH));
+        
+        border.setBorderTopStyle(mapStyle.get(BORDER + "-" + TOP + "-" + STYLE));
+        border.setBorderBottomStyle(mapStyle.get(BORDER + "-" + BOTTOM + "-" + STYLE));
+        border.setBorderLeftStyle(mapStyle.get(BORDER + "-" + LEFT + "-" + STYLE));
+        border.setBorderRightStyle(mapStyle.get(BORDER + "-" + RIGHT + "-" + STYLE));
+        return border;
     }
 
     private CssStyleFontEnity getCssStyleFontEnity(Map<String, String> style) {
@@ -76,6 +116,57 @@ public class CssParseServer {
         font.setDecoration(style.get(TEXT_DECORATION));
         font.setColor(style.get(COLOR));
         return font;
+    }
+
+    public void parseBorder(Map<String, String> style) {
+        for (String pos : new String[] { null, TOP, RIGHT, BOTTOM, LEFT }) {
+            // border[-attr]
+            if (pos == null) {
+                setBorderAttr(style, pos, style.get(BORDER));
+                setBorderAttr(style, pos, style.get(BORDER + "-" + COLOR));
+                setBorderAttr(style, pos, style.get(BORDER + "-" + WIDTH));
+                setBorderAttr(style, pos, style.get(BORDER + "-" + STYLE));
+            }
+            // border-pos[-attr]
+            else {
+                setBorderAttr(style, pos, style.get(BORDER + "-" + pos));
+                for (String attr : new String[] { COLOR, WIDTH, STYLE }) {
+                    String attrName = BORDER + "-" + pos + "-" + attr;
+                    String attrValue = style.get(attrName);
+                    if (StringUtils.isNotBlank(attrValue)) {
+                        style.put(attrName, attrValue);
+                    }
+                }
+            }
+        }
+    }
+
+    private void setBorderAttr(Map<String, String> mapBorder, String pos, String value) {
+        if (StringUtils.isNotBlank(value)) {
+            String borderColor = null;
+            for (String borderAttr : value.split("\\s+")) {
+                if ((borderColor = PoiCssUtils.processColor(borderAttr)) != null) {
+                    setBorderAttr(mapBorder, pos, COLOR, borderColor);
+                } else if (PoiCssUtils.isNum(borderAttr)) {
+                    setBorderAttr(mapBorder, pos, WIDTH, borderAttr);
+                } else if (BORDER_STYLES.contains(borderAttr)) {
+                    setBorderAttr(mapBorder, pos, STYLE, borderAttr);
+                } else {
+                    log.info("Border Attr [{}] Is Not Suppoted.", borderAttr);
+                }
+            }
+        }
+    }
+
+    private void setBorderAttr(Map<String, String> mapBorder, String pos, String attr,
+                               String value) {
+        if (StringUtils.isNotBlank(pos)) {
+            mapBorder.put(BORDER + "-" + pos + "-" + attr, value);
+        } else {
+            for (String name : new String[] { TOP, RIGHT, BOTTOM, LEFT }) {
+                mapBorder.put(BORDER + "-" + name + "-" + attr, value);
+            }
+        }
     }
 
     private void parseFontAttr(Map<String, String> mapRtn) {
@@ -183,7 +274,7 @@ public class CssParseServer {
         }
     }
 
-    private String getBackground(Map<String, String> style) {
+    private String parseBackground(Map<String, String> style) {
         String bg = style.get(BACKGROUND);
         String bgColor = null;
         if (StringUtils.isNotBlank(bg)) {
