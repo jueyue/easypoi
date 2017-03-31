@@ -212,7 +212,8 @@ public class ExcelChartBuildService
 		{
 			int len=title.size();
 			for(int i=0;i<len;i++){
-				data.addSerie(categoryChart, chartValueList.get(i)).setTitle(title.get(i));
+			    //TODO 更新版本
+				//data.addSerie(categoryChart, chartValueList.get(i)).setTitle(title.get(i));
 			}
 		}	
 		else
@@ -221,9 +222,9 @@ public class ExcelChartBuildService
 			for(ChartDataSource<Number> source:chartValueList){
 				String _title=title.get(i);
 				if(StringUtils.isNotBlank(_title)){
-					data.addSerie(categoryChart, source).setTitle(_title);
+					//data.addSerie(categoryChart, source).setTitle(_title);
 				}else{
-					data.addSerie(categoryChart, source);
+					//data.addSerie(categoryChart, source);
 				}
 			}
 		}
