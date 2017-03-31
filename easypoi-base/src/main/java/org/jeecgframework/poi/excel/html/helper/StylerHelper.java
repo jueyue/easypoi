@@ -264,7 +264,7 @@ public class StylerHelper {
             if (color == null || xSSFColor.isAuto())
                 return;
 
-            byte[] rgb = xSSFColor.getRgb();
+            byte[] rgb = xSSFColor.getRGB();
             if (rgb == null) {
                 return;
             }
