@@ -43,6 +43,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
         entity.setType(ExcelType.XSSF);
         workbook = new SXSSFWorkbook();
         this.entity = entity;
+        super.type = entity.getType();
         createSheet(workbook, entity, pojoClass);
         if (entity.getMaxNum() == 0) {
             entity.setMaxNum(1000000);
