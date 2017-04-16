@@ -15,20 +15,26 @@
  */
 package org.jeecgframework.poi.excel;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.html.HtmlToExcelServer;
+import org.jeecgframework.poi.exception.excel.ExcelExportException;
+import org.jeecgframework.poi.exception.excel.enums.ExcelExportEnum;
 
 /**
  * 基于Excel和Html的互换
  * @author JueYue
  * 2017年3月27日
  */
-public class HtmlExportUtil {
+public final class HtmlToExcelUtil {
 
-    private HtmlExportUtil() {
+    private HtmlToExcelUtil() {
 
     }
 
@@ -41,6 +47,14 @@ public class HtmlExportUtil {
         }
         new HtmlToExcelServer().createSheet(html, workbook);
         return workbook;
+    }
+
+    public static Workbook htmlToExcel(InputStream is, ExcelType type) {
+        try {
+            return htmlToExcel(new String(IOUtils.toByteArray(is)), type);
+        } catch (IOException e) {
+            throw new ExcelExportException(ExcelExportEnum.HTML_ERROR, e);
+        }
     }
 
 }
