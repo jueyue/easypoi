@@ -82,7 +82,7 @@ public class MyXWPFDocument extends XWPFDocument {
         try {
             xmlToken = XmlToken.Factory.parse(picXml);
         } catch (XmlException xe) {
-            LOGGER.error(xe.getMessage(), xe.fillInStackTrace());
+            LOGGER.error(xe.getMessage(), xe);
         }
         inline.set(xmlToken);
 
@@ -111,7 +111,7 @@ public class MyXWPFDocument extends XWPFDocument {
         try {
             xmlToken = XmlToken.Factory.parse(picXml);
         } catch (XmlException xe) {
-            LOGGER.error(xe.getMessage(), xe.fillInStackTrace());
+            LOGGER.error(xe.getMessage(), xe);
         }
         inline.set(xmlToken);
 
