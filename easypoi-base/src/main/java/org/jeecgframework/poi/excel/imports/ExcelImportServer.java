@@ -33,6 +33,7 @@ import org.apache.poi.POIXMLDocument;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.DocumentFactoryHelper;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
@@ -369,7 +370,7 @@ public class ExcelImportServer extends ImportBaseService {
         if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
             book = new HSSFWorkbook(inputstream);
             isXSSFWorkbook = false;
-        } else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
+        } else if (DocumentFactoryHelper.hasOOXMLHeader(inputstream)) {
             book = new XSSFWorkbook(OPCPackage.open(inputstream));
         }
         createErrorCellStyle(book);
