@@ -106,7 +106,7 @@ public class ExcelImportServer extends ImportBaseService {
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         String picId;
         boolean isUsed = false;// 是否需要加上这个对象
-        for (int i = row.getFirstCellNum(); i < param.getExcelParams().size(); i++) {
+        for (int i = row.getFirstCellNum(); i < titlemap.size(); i++) {
             Cell cell = row.getCell(i);
             String titleString = (String) titlemap.get(i);
             if (param.getExcelParams().containsKey(titleString)) {
