@@ -9,3 +9,5 @@ deploy.bat
 /deploy_sing.bat
 /build/
 /bin/
+.idea/
+*.iml
