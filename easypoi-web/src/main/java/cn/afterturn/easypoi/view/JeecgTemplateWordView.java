@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.stereotype.Controller;
 
-import cn.aftertrun.easypoi.word.WordExportUtil;
 import cn.afterturn.easypoi.entity.vo.TemplateWordConstants;
+import cn.afterturn.easypoi.word.WordExportUtil;
 
 /**
  * Word模板视图
