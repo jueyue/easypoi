@@ -26,7 +26,7 @@ basedemo.md
 
 [测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
-!!! 3.0.1 版本开始全新包名和GROUPID cn.afterturn
+**!!! 3.0.1 版本开始全新包名和GROUPID cn.afterturn**
 
 ---------------------------
 EasyPoi的主要特点
