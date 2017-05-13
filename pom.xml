@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jeecg</groupId>
+	<groupId>cn.afterturn</groupId>
 	<artifactId>easypoi</artifactId>
-	<version>2.4.0</version>
+	<version>3.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>easypoi</name>
 	<modules>
@@ -38,7 +38,7 @@
 	</developers>
 
 	<properties>
-		<sub.version>2.4.0</sub.version>
+		<sub.version>3.0.1-SNAPSHOT</sub.version>
 		<poi.version>3.15</poi.version>
 		<xerces.version>2.9.1</xerces.version>
 		<guava.version>16.0.1</guava.version>
@@ -168,12 +168,12 @@
 
 			<!-- 模块版本 -->
 			<dependency>
-				<groupId>org.jeecg</groupId>
+				<groupId>cn.afterturn</groupId>
 				<artifactId>easypoi-base</artifactId>
 				<version>${sub.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.jeecg</groupId>
+				<groupId>cn.afterturn</groupId>
 				<artifactId>easypoi-annotation</artifactId>
 				<version>${sub.version}</version>
 			</dependency>
