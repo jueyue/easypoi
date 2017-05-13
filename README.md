@@ -26,6 +26,8 @@ basedemo.md
 
 [测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
+!!! 3.0.1 版本开始全新包名和GROUPID cn.afterturn
+
 ---------------------------
 EasyPoi的主要特点
 --------------------------
@@ -69,17 +71,17 @@ https://oss.sonatype.org/content/repositories/snapshots/
 		 <dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.3.1</version>
+			<version>2.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.3.1</version>
+			<version>2.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jeecg</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.3.1</version>
+			<version>2.4.0</version>
 		</dependency>
 ```
 	
