@@ -66,22 +66,22 @@ maven
 --------------------------
 maven库应该都可以了
 SNAPSHOT 版本
-https://oss.sonatype.org/content/repositories/snapshots/
+https://oss.sonatype.org/content/groups/public/
 ```xml
 		 <dependency>
-			<groupId>org.jeecg</groupId>
+			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>2.4.0</version>
+			<version>3.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jeecg</groupId>
+			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>2.4.0</version>
+			<version>3.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jeecg</groupId>
+			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>2.4.0</version>
+			<version>3.0.1-SNAPSHOT</version>
 		</dependency>
 ```
 	
