@@ -70,6 +70,8 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
      */
     private boolean                 isStatistics;
 
+    private String                   numFormat;
+
     private List<ExcelExportEntity> list;
 
     public ExcelExportEntity() {
@@ -185,6 +187,14 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
 
     public void setStatistics(boolean isStatistics) {
         this.isStatistics = isStatistics;
+    }
+
+    public String getNumFormat() {
+        return numFormat;
+    }
+
+    public void setNumFormat(String numFormat) {
+        this.numFormat = numFormat;
     }
 
     @Override

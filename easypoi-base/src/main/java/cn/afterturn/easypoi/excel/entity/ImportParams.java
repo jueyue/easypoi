@@ -38,10 +38,13 @@ public class ImportParams extends ExcelBaseParams {
      * 字段真正值和列标题之间的距离 默认0
      */
     private int                 startRows        = 0;
+
     /**
      * 主键设置,如何这个cell没有值,就跳过 或者认为这个是list的下面的值
+     * 大家不理解，去掉这个
      */
-    private Integer             keyIndex         = 0;
+
+    private Integer             keyIndex         = null;
     /**
      * 开始读取的sheet位置,默认为0
      */
@@ -84,10 +87,6 @@ public class ImportParams extends ExcelBaseParams {
         return headRows;
     }
 
-    public Integer getKeyIndex() {
-        return keyIndex;
-    }
-
     public String getSaveUrl() {
         return saveUrl;
     }
@@ -116,6 +115,7 @@ public class ImportParams extends ExcelBaseParams {
         this.headRows = headRows;
     }
 
+    @Deprecated
     public void setKeyIndex(Integer keyIndex) {
         this.keyIndex = keyIndex;
     }
@@ -183,5 +183,10 @@ public class ImportParams extends ExcelBaseParams {
     public void setReadRows(int readRows) {
         this.readRows = readRows;
     }
+
+    public Integer getKeyIndex() {
+        return keyIndex;
+    }
+
 
 }
