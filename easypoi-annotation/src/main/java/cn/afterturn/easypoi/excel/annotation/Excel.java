@@ -43,6 +43,10 @@ public @interface Excel {
      * 时间格式,相当于同时设置了exportFormat 和 importFormat
      */
     public String format() default "";
+    /**
+     * 数字格式化,参数是Pattern,使用的对象是DecimalFormat
+     */
+    public String numFormat() default "";
 
     /**
      * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符

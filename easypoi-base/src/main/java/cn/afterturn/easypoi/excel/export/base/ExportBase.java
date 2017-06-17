@@ -18,6 +18,7 @@ package cn.afterturn.easypoi.excel.export.base;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +44,7 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 
 /**
- * 导出基础处理,不设计POI,只设计对象,保证复用性
+ * 导出基础处理,不涉及POI,只涉及对象,保证复用性
  * 
  * @author JueYue
  *  2014年8月9日 下午11:01:32
@@ -83,7 +85,7 @@ public class ExportBase {
         return excelEntity;
     }
 
-    private Object formatValue(Object value, ExcelExportEntity entity) throws Exception {
+    private Object dateFormatValue(Object value, ExcelExportEntity entity) throws Exception {
         Date temp = null;
         if (value instanceof String) {
             SimpleDateFormat format = new SimpleDateFormat(entity.getDatabaseFormat());
@@ -96,6 +98,20 @@ public class ExportBase {
             value = format.format(temp);
         }
         return value;
+    }
+
+
+    private Object numFormatValue(Object value, ExcelExportEntity entity) {
+        if(value == null){
+            return null;
+        }
+        if(!NumberUtils.isNumber(value.toString())){
+            LOGGER.error("data want num format ,but is not num, value is:"+value);
+            return null;
+        }
+        Double d = Double.parseDouble(value.toString());
+        DecimalFormat df = new DecimalFormat(entity.getNumFormat());
+        return df.format(d);
     }
 
     /**
@@ -176,10 +192,13 @@ public class ExportBase {
                 : entity.getMethod().invoke(obj, new Object[] {});
         }
         if (StringUtils.isNotEmpty(entity.getFormat())) {
-            value = formatValue(value, entity);
+            value = dateFormatValue(value, entity);
         }
         if (entity.getReplace() != null && entity.getReplace().length > 0) {
             value = replaceValue(entity.getReplace(), String.valueOf(value));
+        }
+        if (StringUtils.isNotEmpty(entity.getNumFormat())) {
+            value = numFormatValue(value, entity);
         }
         if (needHanlderList != null && needHanlderList.contains(entity.getName())) {
             value = dataHanlder.exportHandler(obj, entity.getName(), value);
@@ -189,6 +208,7 @@ public class ExportBase {
         }
         return value == null ? "" : value.toString();
     }
+
 
     /**
      * 获取集合的值
@@ -237,6 +257,7 @@ public class ExportBase {
         excelEntity.setStatistics(excel.isStatistics());
         excelEntity.setHyperlink(excel.isHyperlink());
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
+        excelEntity.setNumFormat(excel.numFormat());
     }
 
     /**
