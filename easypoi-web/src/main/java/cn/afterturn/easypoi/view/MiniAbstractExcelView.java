@@ -22,7 +22,7 @@ package cn.afterturn.easypoi.view;
  */
 public abstract class MiniAbstractExcelView extends PoiBaseView {
 
-    private static final String   CONTENT_TYPE = "application/vnd.ms-excel";
+    private static final String   CONTENT_TYPE = "text/html;application/vnd.ms-excel";
 
     protected static final String HSSF         = ".xls";
     protected static final String XSSF         = ".xlsx";
