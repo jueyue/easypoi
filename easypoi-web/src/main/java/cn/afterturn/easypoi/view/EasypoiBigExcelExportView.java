@@ -15,7 +15,7 @@
  */
 package cn.afterturn.easypoi.view;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,22 +27,18 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Controller;
 
-import cn.afterturn.easypoi.entity.vo.MapExcelConstants;
+import cn.afterturn.easypoi.entity.vo.BigExcelConstants;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
 
 /**
- * Map 对象接口
- * 
- * @author JueYue
- *  2014年11月25日 下午3:26:32
+ * @author JueYue on 14-3-8. Excel 生成解析器,减少用户操作
  */
-@SuppressWarnings("unchecked")
-@Controller(MapExcelConstants.JEECG_MAP_EXCEL_VIEW)
-public class JeecgMapExcelView extends MiniAbstractExcelView {
+@Controller(BigExcelConstants.EASYPOI_BIG_EXCEL_VIEW)
+public class EasypoiBigExcelExportView extends MiniAbstractExcelView {
 
-    public JeecgMapExcelView() {
+    public EasypoiBigExcelExportView() {
         super();
     }
 
@@ -50,12 +46,23 @@ public class JeecgMapExcelView extends MiniAbstractExcelView {
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
         String codedFileName = "临时文件";
-        Workbook workbook = ExcelExportUtil.exportExcel(
-            (ExportParams) model.get(MapExcelConstants.PARAMS),
-            (List<ExcelExportEntity>) model.get(MapExcelConstants.ENTITY_LIST),
-            (Collection<? extends Map<?, ?>>) model.get(MapExcelConstants.MAP_LIST));
-        if (model.containsKey(MapExcelConstants.FILE_NAME)) {
-            codedFileName = (String) model.get(MapExcelConstants.FILE_NAME);
+        Workbook workbook = ExcelExportUtil.exportBigExcel(
+            (ExportParams) model.get(BigExcelConstants.PARAMS),
+            (Class<?>) model.get(BigExcelConstants.CLASS), Collections.EMPTY_LIST);
+        IExcelExportServer server = (IExcelExportServer) model.get(BigExcelConstants.DATA_INTER);
+        int page = 1;
+        List<Object> list = server
+            .selectListForExcelExport(model.get(BigExcelConstants.DATA_PARAMS), page++);
+        while (list != null && list.size() > 0) {
+            workbook = ExcelExportUtil.exportBigExcel(
+                (ExportParams) model.get(BigExcelConstants.PARAMS),
+                (Class<?>) model.get(BigExcelConstants.CLASS), list);
+            list = server.selectListForExcelExport(model.get(BigExcelConstants.DATA_PARAMS),
+                page++);
+        }
+        ExcelExportUtil.closeExportBigExcel();
+        if (model.containsKey(BigExcelConstants.FILE_NAME)) {
+            codedFileName = (String) model.get(BigExcelConstants.FILE_NAME);
         }
         if (workbook instanceof HSSFWorkbook) {
             codedFileName += HSSF;
@@ -72,5 +79,4 @@ public class JeecgMapExcelView extends MiniAbstractExcelView {
         workbook.write(out);
         out.flush();
     }
-
 }

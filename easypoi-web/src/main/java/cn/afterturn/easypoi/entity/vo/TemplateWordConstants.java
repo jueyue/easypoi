@@ -24,7 +24,7 @@ public interface TemplateWordConstants extends BasePOIConstants {
     /**
      * 模板导出
      */
-    public final static String JEECG_TEMPLATE_WORD_VIEW = "jeecgTemplateWordView";
+    public final static String EASYPOI_TEMPLATE_WORD_VIEW = "easypoiTemplateWordView";
     /**
      * 数据列表
      */

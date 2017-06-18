@@ -24,7 +24,7 @@ public interface BigExcelConstants extends BasePOIConstants {
     /**
      * 单Sheet导出
      */
-    public final static String BIG_EXCEL_VIEW = "bigExcelView";
+    public final static String EASYPOI_BIG_EXCEL_VIEW = "easypoiBigExcelView";
     /**
      * 查询参数
      */

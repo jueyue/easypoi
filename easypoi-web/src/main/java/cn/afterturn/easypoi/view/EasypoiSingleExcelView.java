@@ -15,7 +15,7 @@
  */
 package cn.afterturn.easypoi.view;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,18 +27,19 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Controller;
 
-import cn.afterturn.easypoi.entity.vo.BigExcelConstants;
+import cn.afterturn.easypoi.entity.vo.NormalExcelConstants;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
+import cn.afterturn.easypoi.excel.export.ExcelExportServer;
 
 /**
  * @author JueYue on 14-3-8. Excel 生成解析器,减少用户操作
  */
-@Controller(BigExcelConstants.BIG_EXCEL_VIEW)
-public class BigExcelExportView extends MiniAbstractExcelView {
+@SuppressWarnings("unchecked")
+@Controller(NormalExcelConstants.EASYPOI_EXCEL_VIEW)
+public class EasypoiSingleExcelView extends MiniAbstractExcelView {
 
-    public BigExcelExportView() {
+    public EasypoiSingleExcelView() {
         super();
     }
 
@@ -46,23 +47,31 @@ public class BigExcelExportView extends MiniAbstractExcelView {
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
         String codedFileName = "临时文件";
-        Workbook workbook = ExcelExportUtil.exportBigExcel(
-            (ExportParams) model.get(BigExcelConstants.PARAMS),
-            (Class<?>) model.get(BigExcelConstants.CLASS), Collections.EMPTY_LIST);
-        IExcelExportServer server = (IExcelExportServer) model.get(BigExcelConstants.DATA_INTER);
-        int page = 1;
-        List<Object> list = server
-            .selectListForExcelExport(model.get(BigExcelConstants.DATA_PARAMS), page++);
-        while (list != null && list.size() > 0) {
-            workbook = ExcelExportUtil.exportBigExcel(
-                (ExportParams) model.get(BigExcelConstants.PARAMS),
-                (Class<?>) model.get(BigExcelConstants.CLASS), list);
-            list = server.selectListForExcelExport(model.get(BigExcelConstants.DATA_PARAMS),
-                page++);
+        Workbook workbook = null;
+        if (model.containsKey(NormalExcelConstants.MAP_LIST)) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) model
+                .get(NormalExcelConstants.MAP_LIST);
+            if (list.size() == 0) {
+                throw new RuntimeException("MAP_LIST IS NULL");
+            }
+            workbook = ExcelExportUtil.exportExcel(
+                (ExportParams) list.get(0).get(NormalExcelConstants.PARAMS), (Class<?>) list.get(0)
+                    .get(NormalExcelConstants.CLASS),
+                (Collection<?>) list.get(0).get(NormalExcelConstants.DATA_LIST));
+            for (int i = 1; i < list.size(); i++) {
+                new ExcelExportServer().createSheet(workbook,
+                    (ExportParams) list.get(i).get(NormalExcelConstants.PARAMS), (Class<?>) list
+                        .get(i).get(NormalExcelConstants.CLASS),
+                    (Collection<?>) list.get(i).get(NormalExcelConstants.DATA_LIST));
+            }
+        } else {
+            workbook = ExcelExportUtil.exportExcel(
+                (ExportParams) model.get(NormalExcelConstants.PARAMS),
+                (Class<?>) model.get(NormalExcelConstants.CLASS),
+                (Collection<?>) model.get(NormalExcelConstants.DATA_LIST));
         }
-        ExcelExportUtil.closeExportBigExcel();
-        if (model.containsKey(BigExcelConstants.FILE_NAME)) {
-            codedFileName = (String) model.get(BigExcelConstants.FILE_NAME);
+        if (model.containsKey(NormalExcelConstants.FILE_NAME)) {
+            codedFileName = (String) model.get(NormalExcelConstants.FILE_NAME);
         }
         if (workbook instanceof HSSFWorkbook) {
             codedFileName += HSSF;
