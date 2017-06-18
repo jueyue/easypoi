@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
@@ -37,15 +38,20 @@ public class FileLoadeImpl implements IFileLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileLoadeImpl.class);
 
     public byte[] getFile(String url) {
-        FileInputStream fileis = null;
+        InputStream fileis = null;
         ByteArrayOutputStream baos = null;
         try {
             //先用绝对路径查询,再查询相对路径
             try {
                 fileis = new FileInputStream(url);
             } catch (FileNotFoundException e) {
-                String path = PoiPublicUtil.getWebRootPath(url);
-                fileis = new FileInputStream(path);
+                //获取项目文件
+                fileis = ClassLoader.getSystemResourceAsStream(url);
+                if (fileis == null) {
+                    //最好再拿想对文件路径
+                    String path = PoiPublicUtil.getWebRootPath(url);
+                    fileis = new FileInputStream(path);
+                }
             }
             baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
