@@ -36,10 +36,10 @@ import cn.afterturn.easypoi.pdf.entity.PdfExportParams;
  * @author JueYue
  *  2016年1月19日 上午10:43:02
  */
-@Controller(PDFTemplateConstants.PDF_TEMPLATE_VIEW)
-public class PDFTemplateView extends PoiBaseView {
+@Controller(PDFTemplateConstants.EASYPOI_PDF_TEMPLATE_VIEW)
+public class EasypoiPDFTemplateView extends PoiBaseView {
 
-    public PDFTemplateView() {
+    public EasypoiPDFTemplateView() {
         setContentType("application/pdf");
     }
 

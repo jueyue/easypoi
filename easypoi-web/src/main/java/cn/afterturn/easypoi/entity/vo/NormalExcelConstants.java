@@ -24,7 +24,7 @@ public interface NormalExcelConstants extends BasePOIConstants {
     /**
      * 单Sheet导出
      */
-    public final static String JEECG_EXCEL_VIEW = "jeecgExcelView";
+    public final static String EASYPOI_EXCEL_VIEW = "easypoiExcelView";
     /**
      * 数据列表
      */

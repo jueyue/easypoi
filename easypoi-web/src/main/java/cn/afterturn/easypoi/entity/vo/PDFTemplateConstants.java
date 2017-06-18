@@ -20,7 +20,7 @@ public interface PDFTemplateConstants extends BasePOIConstants {
     /**
      * PDF
      */
-    public final static String PDF_TEMPLATE_VIEW = "pdfTemplateView";
+    public final static String EASYPOI_PDF_TEMPLATE_VIEW = "easypoiPdfTemplateView";
     /**
      * Entity List
      */

@@ -24,7 +24,7 @@ public interface MapExcelConstants extends BasePOIConstants {
     /**
      * 单Sheet导出
      */
-    public final static String JEECG_MAP_EXCEL_VIEW = "jeecgMapExcelView";
+    public final static String EASYPOI_MAP_EXCEL_VIEW = "easypoiMapExcelView";
     /**
      * Entity List
      */

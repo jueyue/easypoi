@@ -47,14 +47,14 @@ public abstract class PoiBaseView extends AbstractView {
     public static void render(Map<String, Object> model, HttpServletRequest request,
                               HttpServletResponse response, String viewName) {
         PoiBaseView view = null;
-        if (BigExcelConstants.BIG_EXCEL_VIEW.equals(viewName)) {
-            view = new BigExcelExportView();
-        } else if (MapExcelConstants.JEECG_MAP_EXCEL_VIEW.equals(viewName)) {
-            view = new JeecgMapExcelView();
-        } else if (NormalExcelConstants.JEECG_EXCEL_VIEW.equals(viewName)) {
-            view = new JeecgSingleExcelView();
-        } else if (TemplateExcelConstants.JEECG_TEMPLATE_EXCEL_VIEW.equals(viewName)) {
-            view = new JeecgTemplateExcelView();
+        if (BigExcelConstants.EASYPOI_BIG_EXCEL_VIEW.equals(viewName)) {
+            view = new EasypoiBigExcelExportView();
+        } else if (MapExcelConstants.EASYPOI_MAP_EXCEL_VIEW.equals(viewName)) {
+            view = new EasypoiMapExcelView();
+        } else if (NormalExcelConstants.EASYPOI_EXCEL_VIEW.equals(viewName)) {
+            view = new EasypoiSingleExcelView();
+        } else if (TemplateExcelConstants.EASYPOI_TEMPLATE_EXCEL_VIEW.equals(viewName)) {
+            view = new EasypoiTemplateExcelView();
         } else if (MapExcelGraphConstants.MAP_GRAPH_EXCEL_VIEW.equals(viewName)) {
             view = new MapGraphExcelView();
         }
