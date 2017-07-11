@@ -1,0 +1,12 @@
+@ExcelCollection
+===
+
+一对多的集合注解,用以标记集合是否被数据以及集合的整体排序
+
+属性 | 类型 | 默认值 | 功能 | 
+---|---|---|---|
+id | String | null | 定义ID | 
+name | String | null | 定义集合列名,支持nanm_id | 
+orderNum | int | 0 | 排序,支持name_id | 
+type |  Class<?> | ArrayList.class | 导入时创建对象使用 | 
+
