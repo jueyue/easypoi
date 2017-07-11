@@ -43,11 +43,11 @@ public interface IExcelExportStyler {
 
     /**
      * 获取样式方法
-     * @param noneStyler
+     * @param parity
      * @param entity
      * @return
      */
-    public CellStyle getStyles(boolean noneStyler, ExcelExportEntity entity);
+    public CellStyle getStyles(boolean parity, ExcelExportEntity entity);
 
     /**
      * 模板使用的样式设置
