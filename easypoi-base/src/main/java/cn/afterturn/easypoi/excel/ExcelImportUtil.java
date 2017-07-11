@@ -85,7 +85,8 @@ public class ExcelImportUtil {
     }
 
     /**
-     * Excel 导入 数据源IO流,返回校验结果 字段类型 Integer,Long,Double,Date,String,Boolean
+     * Excel 导入 数据源IO流 字段类型 Integer,Long,Double,Date,String,Boolean
+     * 支持校验,支持Key-Value
      * 
      * @param inputstream
      * @param pojoClass
@@ -93,21 +94,21 @@ public class ExcelImportUtil {
      * @return
      * @throws Exception
      */
-    public static <T> ExcelImportResult<T> importExcelVerify(InputStream inputstream,
+    public static <T> ExcelImportResult<T> importExcelMore(InputStream inputstream,
                                                              Class<?> pojoClass,
                                                              ImportParams params) throws Exception {
         return new ExcelImportServer().importExcelByIs(inputstream, pojoClass, params);
     }
 
     /**
-     * Excel 导入 数据源本地文件,返回校验结果 字段类型 Integer,Long,Double,Date,String,Boolean
-     * 
+     * Excel 导入 数据源本地文件 字段类型 Integer,Long,Double,Date,String,Boolean
+     * 支持校验,支持Key-Value
      * @param file
      * @param pojoClass
      * @param params
      * @return
      */
-    public static <T> ExcelImportResult<T> importExcelVerify(File file, Class<?> pojoClass,
+    public static <T> ExcelImportResult<T> importExcelMore(File file, Class<?> pojoClass,
                                                              ImportParams params) {
         FileInputStream in = null;
         try {

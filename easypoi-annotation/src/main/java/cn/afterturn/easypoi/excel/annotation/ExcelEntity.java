@@ -22,7 +22,6 @@ import java.lang.annotation.Target;
 
 /**
  * 标记是不是导出excel 标记为实体类
- * 
  * @author JueYue
  * 
  */
@@ -40,4 +39,5 @@ public @interface ExcelEntity {
      * 导出排序跟定义了annotation的字段的顺序有关 可以使用a_id,b_id来确实是否使用
      */
     public String name() default "";
+
 }

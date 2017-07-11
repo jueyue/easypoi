@@ -33,4 +33,15 @@ public @interface ExcelTarget {
      * 定义excel导出ID 来限定导出字段
      */
     public String value();
+
+    /**
+     * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
+     * 全局设置,优先使用
+     */
+    public double height() default 10;
+    /**
+     * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
+     * 全局设置,优先使用
+     */
+    public short fontSize() default 11;
 }

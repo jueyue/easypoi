@@ -27,7 +27,7 @@ public final class PoiMergeCellUtil {
 
     /**
      * 纵向合并相同内容的单元格
-     * 
+     *
      * @param sheet
      * @param startRow 开始行
      * @param columns 需要处理的列
@@ -45,7 +45,7 @@ public final class PoiMergeCellUtil {
 
     /**
      * 纵向合并相同内容的单元格
-     * 
+     *
      * @param sheet
      * @param mergeMap key--列,value--依赖的列,没有传空
      * @param startRow 开始行
@@ -56,7 +56,7 @@ public final class PoiMergeCellUtil {
 
     /**
      * 纵向合并相同内容的单元格
-     * 
+     *
      * @param sheet
      * @param mergeMap key--列,value--依赖的列,没有传空
      * @param startRow 开始行
@@ -94,8 +94,10 @@ public final class PoiMergeCellUtil {
         }
         if (mergeDataMap.size() > 0) {
             for (Integer index : mergeDataMap.keySet()) {
-                sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
-                    mergeDataMap.get(index).getEndRow(), index, index));
+                if(mergeDataMap.get(index).getEndRow() >  mergeDataMap.get(index).getStartRow()) {
+                    sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
+                            mergeDataMap.get(index).getEndRow(), index, index));
+                }
             }
         }
 
@@ -103,7 +105,7 @@ public final class PoiMergeCellUtil {
 
     /**
      * 处理合并单元格
-     * 
+     *
      * @param index
      * @param rowNum
      * @param text
@@ -119,8 +121,10 @@ public final class PoiMergeCellUtil {
             if (checkIsEqualByCellContents(mergeDataMap.get(index), text, cell, delys, rowNum)) {
                 mergeDataMap.get(index).setEndRow(rowNum);
             } else {
-                sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
-                    mergeDataMap.get(index).getEndRow(), index, index));
+                if(mergeDataMap.get(index).getEndRow() >  mergeDataMap.get(index).getStartRow()){
+                    sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
+                            mergeDataMap.get(index).getEndRow(), index, index));
+                }
                 mergeDataMap.put(index, createMergeEntity(text, rowNum, cell, delys));
             }
         } else {
@@ -130,7 +134,7 @@ public final class PoiMergeCellUtil {
 
     /**
      * 字符为空的情况下判断
-     * 
+     *
      * @param index
      * @param mergeDataMap
      * @param sheet
@@ -139,8 +143,12 @@ public final class PoiMergeCellUtil {
                                             Sheet sheet) {
         if (mergeDataMap.containsKey(index)
             && mergeDataMap.get(index).getEndRow() != mergeDataMap.get(index).getStartRow()) {
-            sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
-                mergeDataMap.get(index).getEndRow(), index, index));
+            try {
+                sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
+                    mergeDataMap.get(index).getEndRow(), index, index));
+            } catch (Exception e) {
+
+            }
             mergeDataMap.remove(index);
         }
     }
@@ -179,7 +187,7 @@ public final class PoiMergeCellUtil {
 
     /**
      * 获取一个单元格的值,确保这个单元格必须有值,不然向上查询
-     * 
+     *
      * @param cell
      * @param index
      * @param rowNum

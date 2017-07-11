@@ -16,6 +16,7 @@
 package cn.afterturn.easypoi.excel.entity.result;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -41,6 +42,8 @@ public class ExcelImportResult<T> {
      * 数据源
      */
     private Workbook workbook;
+
+    private Map<String,Object> map;
 
     public ExcelImportResult() {
 
@@ -76,4 +79,11 @@ public class ExcelImportResult<T> {
         this.workbook = workbook;
     }
 
+    public Map<String, Object> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, Object> map) {
+        this.map = map;
+    }
 }
