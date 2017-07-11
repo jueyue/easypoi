@@ -1,0 +1,11 @@
+@ExcelTarget
+===
+
+限定一个到处实体的注解,以及一些通用设置,作用于最外面的实体
+
+属性 | 类型 | 默认值 | 功能 | 
+---|---|---|---|
+value | String | null | 定义ID | 
+height | double | 10 | 设置行高 | 
+fontSize | short | 11 | 设置文字大小 | 
+
