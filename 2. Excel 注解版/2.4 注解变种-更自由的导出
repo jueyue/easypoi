@@ -1,0 +1,131 @@
+2.4 注解变种-更自由的导出
+===
+
+这天老师又把路飞喊道的办公室,要求路飞导出班级学生的整体信息
+```java
+    @Excel(name = "学生姓名", height = 20, width = 30, isImportField = "true_st")
+    private String        name;
+    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生", isImportField = "true_st")
+    private int           sex;
+    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd", isImportField = "true_st", width = 20)
+    private Date          birthday;
+    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
+    private Date registrationDate;
+```
+路飞飞快的用到上面的学到的知识搞定了,这这时有一个老师把路飞叫去,说想要导出一个不要出生日期的Excel,感觉用户需求很无奈,路飞又造两个一个bean,把这个注解去掉了,来导出
+```java
+    @Excel(name = "学生姓名", height = 20, width = 30, isImportField = "true_st")
+    private String        name;
+    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生", isImportField = "true_st")
+    private int           sex;
+    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
+    private Date registrationDate;
+```
+虽然解决了老师的需求,但这个并不是一个完美的解决方案,下面介绍一个更自由的解决方案
+
+
+注解的导出,规定我们必须把model写好,并且注解写好,每次导出的Excel都是固定的,无法动态控制导出的列,虽然可以通过id来处理一个案例,但是自由度远远不够,这里介绍个变种支持,基本支持注解所有的功能
+
+基于List<ExcelExportEntity> 的导出,ExcelExportEntity是注解经过处理翻译成的实体类,两者几乎是一对的,所以如果我们要动态自定义导出列,我们只要动态拼装ExcelExportEntity就可以了
+下面我们看下这个类
+```java
+/**
+     * 如果是MAP导出,这个是map的key
+     */
+    private Object                  key;
+
+    private double                  width           = 10;
+
+    private double                  height          = 10;
+
+    /**
+     * 图片的类型,1是文件,2是数据库
+     */
+    private int                     exportImageType = 0;
+
+    /**
+     * 排序顺序
+     */
+    private int                     orderNum        = 0;
+
+    /**
+     * 是否支持换行
+     */
+    private boolean                 isWrap;
+
+    /**
+     * 是否需要合并
+     */
+    private boolean                 needMerge;
+    /**
+     * 单元格纵向合并
+     */
+    private boolean                 mergeVertical;
+    /**
+     * 合并依赖
+     */
+    private int[]                   mergeRely;
+    /**
+     * 后缀
+     */
+    private String                  suffix;
+    /**
+     * 统计
+     */
+    private boolean                 isStatistics;
+
+    private String                   numFormat;
+
+    private List<ExcelExportEntity> list;
+```
+基本上是和注解对应的, **List<ExcelExportEntity> list 这个是对应的一对多的导出,相当于集合,其他基本上都是和注解保持一致**
+下面给出正常的demo
+```java
+public void test() {
+        try {
+            List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
+//构造对象等同于@Excel
+            ExcelExportEntity excelentity = new ExcelExportEntity("姓名", "name");
+            excelentity.setNeedMerge(true);
+            entity.add(excelentity);
+            entity.add(new ExcelExportEntity("性别", "sex"));
+            excelentity = new ExcelExportEntity(null, "students");
+            List<ExcelExportEntity> temp = new ArrayList<ExcelExportEntity>();
+            temp.add(new ExcelExportEntity("姓名", "name"));
+            temp.add(new ExcelExportEntity("性别", "sex"));
+//构造List等同于@ExcelCollection 
+            excelentity.setList(temp);
+            entity.add(excelentity);
+            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+//把我们构造好的bean对象放到params就可以了
+            Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("测试", "测试"), entity,
+                list);
+            FileOutputStream fos = new FileOutputStream("D:/excel/ExcelExportForMap.tt.xls");
+            workbook.write(fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+```
+
+路飞想到了这个方案,并且用上面做了测试可以完美解决所以他把之前的代码改为了(**代码有删减,基本上都是和注解对应的**)
+```java
+List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
+beanList .add(new ExcelExportEntity(new ExcelExportEntity("学生姓名", "name"));
+beanList .add(new ExcelExportEntity("学生性别", "sex"));
+beanList .add(new ExcelExportEntity("进校日期", "registrationDate"));
+if(needBirthday()){
+  beanList .add(new ExcelExportEntity("出生日期", "birthday"));
+}
+  Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("测试", "测试"), beanList ,
+                list);
+```
+用同一套代买完美了支持了老师的需求,心满意足的回宿舍了^^
+
+
+
+
+
