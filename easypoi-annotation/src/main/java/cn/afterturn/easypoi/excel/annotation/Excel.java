@@ -38,6 +38,11 @@ public @interface Excel {
      * 导出的时间格式,以这个是否为空来判断是否需要格式化日期
      */
     public String exportFormat() default "";
+    /**
+     * 导入的时间格式,以这个是否为空来判断是否需要格式化日期
+     */
+    public String importFormat() default "";
+
 
     /**
      * 时间格式,相当于同时设置了exportFormat 和 importFormat
@@ -50,18 +55,15 @@ public @interface Excel {
 
     /**
      * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
+     * 优先选择@ExcelEntity中的 height
      */
+    @Deprecated
     public double height() default 10;
 
     /**
      * 导出类型 1 从file读取 2 是从数据库中读取 默认是文件 同样导入也是一样的
      */
     public int imageType() default 1;
-
-    /**
-     * 导入的时间格式,以这个是否为空来判断是否需要格式化日期
-     */
-    public String importFormat() default "";
 
     /**
      * 文字后缀,如% 90 变成90%

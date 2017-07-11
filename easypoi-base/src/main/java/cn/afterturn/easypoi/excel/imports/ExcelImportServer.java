@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.POIXMLDocument;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -226,9 +227,13 @@ public class ExcelImportServer extends ImportBaseService {
                         collection.add(object);
                     }
                 } catch (ExcelImportException e) {
+                    LOGGER.error("excel import error , row num:{},obj:{}",readRow, ReflectionToStringBuilder.toString(object));
                     if (!e.getType().equals(ExcelImportEnum.VERIFY_ERROR)) {
                         throw new ExcelImportException(e.getType(), e);
                     }
+                } catch (Exception e) {
+                    LOGGER.error("excel import error , row num:{},obj:{}",readRow, ReflectionToStringBuilder.toString(object));
+                    throw new RuntimeException(e);
                 }
             }
             readRow++;
@@ -374,6 +379,7 @@ public class ExcelImportServer extends ImportBaseService {
         } else if (DocumentFactoryHelper.hasOOXMLHeader(inputstream)) {
             book = new XSSFWorkbook(OPCPackage.open(inputstream));
         }
+        ExcelImportResult importResult = new ExcelImportResult(result, verfiyFail, book);
         createErrorCellStyle(book);
         Map<String, PictureData> pictures;
         for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
@@ -395,11 +401,58 @@ public class ExcelImportServer extends ImportBaseService {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(" end to read excel list by pos ,endTime is {}", new Date().getTime());
             }
+            if(params.isReadSingleCell()){
+                readSingleCell(importResult, book.getSheetAt(i),params);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(" read Key-Value ,endTime is {}", new Date().getTime());
+                }
+            }
         }
         if (params.isNeedSave()) {
             saveThisExcel(params, pojoClass, isXSSFWorkbook, book);
         }
-        return new ExcelImportResult(result, verfiyFail, book);
+        importResult.setVerfiyFail(verfiyFail);
+        return importResult;
+    }
+
+    /**
+     * 按照键值对的方式取得Excel里面的数据
+     * @param result
+     * @param sheet
+     * @param params
+     */
+    private void readSingleCell(ExcelImportResult result, Sheet sheet, ImportParams params) {
+        if(result.getMap() == null){
+            result.setMap(new HashMap<String, Object>());
+        }
+        for (int i = 0; i < params.getTitleRows() + params.getHeadRows() + params.getStartRows(); i++) {
+           getSingleCellValueForRow(result,sheet.getRow(i),params);
+        }
+
+        for (int i = sheet.getLastRowNum() - params.getLastOfInvalidRow(); i < sheet.getLastRowNum(); i++) {
+            getSingleCellValueForRow(result,sheet.getRow(i),params);
+
+        }
+    }
+
+    private void getSingleCellValueForRow(ExcelImportResult result, Row row, ImportParams params) {
+        for (int j = row.getFirstCellNum(), le = row.getLastCellNum(); j < le; j++) {
+            String text = PoiCellUtil.getCellValue(row.getCell(j));
+            if(StringUtils.isNoneBlank(text) && text.endsWith(params.getKeyMark())){
+                if(result.getMap().containsKey(text)){
+                    if(result.getMap().get(text) instanceof String){
+                        List<String> list = new ArrayList<String>();
+                        list.add((String)result.getMap().get(text));
+                        result.getMap().put(text,list);
+                    }
+                    ((List)result.getMap().get(text)).add(PoiCellUtil.getCellValue(row.getCell(++j)));
+                }else{
+                    result.getMap().put(text,PoiCellUtil.getCellValue(row.getCell(++j)));
+                }
+
+            }
+
+        }
     }
 
     /**

@@ -44,7 +44,7 @@ public class ImportParams extends ExcelBaseParams {
      * 大家不理解，去掉这个
      */
 
-    private Integer             keyIndex         = null;
+    private Integer             keyIndex         = 0;
     /**
      * 开始读取的sheet位置,默认为0
      */
@@ -82,6 +82,15 @@ public class ImportParams extends ExcelBaseParams {
      * 导入时校验数据模板,是不是正确的Excel
      */
     private String[]            importFields;
+    /**
+     * Key-Value 读取标记,以这个为Key,后面一个Cell 为Value,多个改为ArrayList
+     */
+    private String              keyMark = ":";
+    /**
+     * 按照Key-Value 规则读取全局扫描Excel,但是跳过List读取范围提升性能
+     * 仅仅支持titleRows + headRows + startRows 以及 lastOfInvalidRow
+     */
+    private boolean             readSingleCell = false;
 
     public int getHeadRows() {
         return headRows;
@@ -188,5 +197,19 @@ public class ImportParams extends ExcelBaseParams {
         return keyIndex;
     }
 
+    public String getKeyMark() {
+        return keyMark;
+    }
 
+    public void setKeyMark(String keyMark) {
+        this.keyMark = keyMark;
+    }
+
+    public boolean isReadSingleCell() {
+        return readSingleCell;
+    }
+
+    public void setReadSingleCell(boolean readSingleCell) {
+        this.readSingleCell = readSingleCell;
+    }
 }
