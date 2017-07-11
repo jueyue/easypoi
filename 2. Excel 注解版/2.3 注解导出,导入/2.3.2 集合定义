@@ -1,0 +1,60 @@
+2.3.2 集合定义
+===
+
+路飞很快的完成了老师的任务,花了也就是喝杯茶的时间,就交差了,但过了一会就又被老师叫去了,让他给出一个某个班级选择选择某些课的学生以及对应的老师
+路飞又很快的想到了Easypoi,其中有一对多的导出,这不正是一对多的体现吗,然后他继续定义实体:
+一个课程对应一个老师
+一个课程对应N个学生
+课程的实体
+```java
+ @ExcelTarget("courseEntity")
+ public class CourseEntity implements java.io.Serializable {
+    /** 主键 */
+    private String        id;
+    /** 课程名称 */
+    @Excel(name = "课程名称", orderNum = "1", width = 25)
+    private String        name;
+    /** 老师主键 */
+    @ExcelEntity(id = "absent")
+    private TeacherEntity mathTeacher;
+
+    @ExcelCollection(name = "学生", orderNum = "4")
+    private List<StudentEntity> students;
+ }
+```
+教师的实体
+```java
+@ExcelTarget("teacherEntity")
+public class TeacherEntity implements java.io.Serializable {
+    private String id;
+    /** name */
+    @Excel(name = "主讲老师_major,代课老师_absent", orderNum = "1", isImportField = "true_major,true_absent")
+    private String name;
+```
+这里在课程这个实体里面就完成了一堆多的导出,达到了我们基础需求,同时使用了orderNum对我们的列进行了排序,满足老师的需求,导出代码如下
+```java
+ Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试", "测试"),
+            CourseEntity.class, list);
+```
+这样我们就完成了老师的需求,效果如图2.3.2-1
+但是课程名和代课老师没有合并,不太美观
+
+路飞又果断给课程名称和代课老师加了needMerge = true的属性,就可以完成单元格的合并
+```java
+   /** 课程名称 */
+    @Excel(name = "课程名称", orderNum = "1", width = 25,needMerge = true)
+    private String        name;
+
+   //--------------------------------
+   /** name */
+    @Excel(name = "主讲老师_major,代课老师_absent", orderNum = "1",needMerge = true, isImportField = "true_major,true_absent")
+
+```
+效果如图2.3.2-2
+到这里,路飞就完美的完成了老师的任务,快乐的去交差了
+
+
+![图2.3.2-1](https://static.oschina.net/uploads/space/2017/0622/221100_MD8y_1157922.png)
+
+![图2.3.2-2](https://static.oschina.net/uploads/space/2017/0622/222202_217m_1157922.png)
+
