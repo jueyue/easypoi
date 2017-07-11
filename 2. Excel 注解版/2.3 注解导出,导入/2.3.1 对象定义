@@ -1,0 +1,47 @@
+2.3.1 对象定义
+===
+
+注解介绍了这么多,大家基本上也了解我们的注解是如何定义Excel的了吧,下面我们来跟着路飞实战吧
+这天老师吧路飞叫到了办公室,让给给老师实现一个报表的需求,就是从教育平台把某个班级的人员导出来
+需求是,导出我们班的所有学生的姓名,性别,出生日期,进校日期
+正巧路飞刚看到Easypo,就打算用Easypoi来实现,实现方法如下:
+
+首先定义一个我们导出的对象,**_为了节省篇幅,统一忽略getter,setter_**
+```java
+
+ public class StudentEntity implements java.io.Serializable {
+    /**
+     * id
+     */
+    private String        id;
+    /**
+     * 学生姓名
+     */
+    @Excel(name = "学生姓名", height = 20, width = 30, isImportField = "true_st")
+    private String        name;
+    /**
+     * 学生性别
+     */
+    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生", isImportField = "true_st")
+    private int           sex;
+
+    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd", isImportField = "true_st", width = 20)
+    private Date          birthday;
+
+    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
+    private Date registrationDate;
+    
+ }
+```
+这里设置我们的4列分别是学生姓名,学生性别,出生日期,进校日期
+其中学生姓名定义了我们的列的行高,学生性别因为我们基本上都是存在数据库都是数字所以我们转换下,两个日期我们都是进行了格式化输出了,这样我们就完成了业务对我们Excel的样式需求,后面只有把这个学生列表输出就可以了
+生成Excel代码如下
+```java
+
+ Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("计算机一班学生","学生"),
+            StudentEntity .class, list);
+```
+这样我们就得到的一个java中的Excel,然后把这个输出就得到我们的Excel了https://static.oschina.net/uploads/space/2017/0622/212811_uh7e_1157922.png
+
+![](https://static.oschina.net/uploads/space/2017/0622/212811_uh7e_1157922.png)
+
