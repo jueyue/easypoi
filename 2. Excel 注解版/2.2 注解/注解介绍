@@ -1,0 +1,27 @@
+注解介绍
+===
+
+easypoi起因就是Excel的导入导出,最初的模板是实体和Excel的对应,model--row,filed--col 这样利用注解我们可以和容易做到excel到导入导出
+经过一段时间发展,现在注解有5个类分别是
+  - @Excel 作用到filed上面,是对Excel一列的一个描述
+  - @ExcelCollection 表示一个集合,主要针对一对多的导出,比如一个老师对应多个科目,科目就可以用集合表示
+  - @ExcelEntity 表示一个继续深入导出的实体,但他没有太多的实际意义,只是告诉系统这个对象里面同样有导出的字段
+  - @ExcelIgnore 和名字一样表示这个字段被忽略跳过这个导导出
+  - @ExcelTarget 这个是作用于最外层的对象,描述这个对象的id,以便支持一个对象可以针对不同导出做出不同处理
+
+
+注解中的ID的用法
+这个ID算是一个比较独特的例子,比如
+```java
+@ExcelTarget("teacherEntity")
+public class TeacherEntity implements java.io.Serializable {
+    /** name */
+    @Excel(name = "主讲老师_teacherEntity,代课老师_absent", orderNum = "1", mergeVertical = true,needMerge=true,isImportField = "true_major,true_absent")
+    private String name;
+```
+这里的@ExcelTarget 表示使用teacherEntity这个对象是可以针对不同字段做不同处理
+同样的ExcelEntity 和ExcelCollection 都支持这种方式
+当导出这对象时,name这一列对应的是主讲老师,而不是代课老师还有很多字段都支持这种做法
+
+
+
