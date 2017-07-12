@@ -15,15 +15,48 @@ public class ExcelToHtmlParams {
     /**
      * 是不是全界面
      */
-    private boolean  completeHTML;
+    private boolean  completeHTML = false;
     /**
      * 位置
      */
-    private int      sheetNum;
+    private int      sheetNum = 0;
+
     /**
      * 图片保存路径,/开始或者含有: 认为是绝对路径,其他是相对路径,每次img名称随机生成,按照天生成文件夹
+     * 不为空就认为现实图片
      */
-    private String   path;
+    private String   path = null;
+
+    public ExcelToHtmlParams(Workbook wb) {
+        this.wb = wb;
+    }
+
+    public ExcelToHtmlParams(Workbook wb, boolean completeHTML) {
+        this.wb = wb;
+        this.completeHTML = completeHTML;
+    }
+
+    public ExcelToHtmlParams(Workbook wb, int sheetNum) {
+        this.wb = wb;
+        this.sheetNum = sheetNum;
+    }
+
+    public ExcelToHtmlParams(Workbook wb, String path) {
+        this.wb = wb;
+        this.path = path;
+    }
+
+    public ExcelToHtmlParams(Workbook wb, int sheetNum, String path) {
+        this.wb = wb;
+        this.sheetNum = sheetNum;
+        this.path = path;
+    }
+
+    public ExcelToHtmlParams(Workbook wb, boolean completeHTML,  String path) {
+        this.wb = wb;
+        this.completeHTML = completeHTML;
+        this.path = path;
+    }
 
     public ExcelToHtmlParams(Workbook wb, boolean completeHTML, int sheetNum, String path) {
         this.wb = wb;

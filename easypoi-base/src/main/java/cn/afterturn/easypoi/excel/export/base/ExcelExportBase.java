@@ -137,7 +137,7 @@ public abstract class ExcelExportBase extends ExportBase {
             entity = excelParams.get(k);
             if (entity.getList() != null) {
                 cellNum += entity.getList().size();
-            } else if (entity.isNeedMerge()) {
+            } else if (entity.isNeedMerge() && maxHeight > 1) {
                 for (int i = index + 1; i < index + maxHeight; i++) {
                     sheet.getRow(i).createCell(cellNum);
                     sheet.getRow(i).getCell(cellNum).setCellStyle(getStyles(false, entity));

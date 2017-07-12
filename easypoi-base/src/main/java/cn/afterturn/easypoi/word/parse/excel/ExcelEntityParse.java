@@ -87,7 +87,7 @@ public class ExcelEntityParse extends ExportBase {
             entity = excelParams.get(k);
             if (entity.getList() != null) {
                 cellNum += entity.getList().size();
-            } else if (entity.isNeedMerge()) {
+            } else if (entity.isNeedMerge() && maxHeight > 1) {
                 table.setCellMargins(index, index + maxHeight - 1, cellNum, cellNum);
                 cellNum++;
             }
