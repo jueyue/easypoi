@@ -186,6 +186,10 @@ public class ExcelImportServer extends ImportBaseService {
         Object object = null;
         String picId;
         int readRow = 0;
+        //跳过无效行
+        for (int i = 0; i < params.getStartRows(); i++) {
+            rows.next();
+        }
         while (rows.hasNext()
                && (row == null
                    || sheet.getLastRowNum() - row.getRowNum() > params.getLastOfInvalidRow())) {

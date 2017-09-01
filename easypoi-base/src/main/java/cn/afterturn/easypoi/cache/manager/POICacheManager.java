@@ -58,7 +58,7 @@ public final class POICacheManager {
                 }
             });
         //设置默认实现
-        fileLoder = new FileLoadeImpl();
+        fileLoder = new FileLoaderImpl();
     }
 
     public static InputStream getFile(String id) {
