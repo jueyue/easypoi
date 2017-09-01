@@ -460,11 +460,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 rowspan, colspan, mergedRegionHelper);
             rowIndex += rowspan - 1;
         }
-        if (isShift && datas.size() * rowspan > 1) {
+        if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()) {
+            createRowNoRow(cell.getRowIndex() + rowspan,cell.getRow().getSheet().getLastRowNum(),(datas.size() - 1) * rowspan);
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
                 cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
-            /* cell.getRow().getSheet().shiftRows(cell.getRowIndex() + 1,
-                cell.getRow().getSheet().getLastRowNum(), datas.size() * rowspan - 1, true, true);*/
             templateSumHanlder.shiftRows(cell.getRowIndex(),(datas.size() - 1) * rowspan);
         }
         while (its.hasNext()) {
@@ -474,6 +473,10 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 colspan, mergedRegionHelper);
             rowIndex += rowspan;
         }
+    }
+
+    private void createRowNoRow(int startRow, int lastRowNum, int i1) {
+
     }
 
     /**
