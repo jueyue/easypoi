@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,11 +70,20 @@ public class CellValueServer {
         if ("class java.util.Date".equals(xclass) || "class java.sql.Date".equals(xclass)
             || ("class java.sql.Time").equals(xclass)
             || ("class java.sql.Timestamp").equals(xclass)) {
+            /*
             if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
                 // 日期格式
                 result = cell.getDateCellValue();
             } else {
                 cell.setCellType(Cell.CELL_TYPE_STRING);
+                result = getDateData(entity, cell.getStringCellValue());
+            }*/
+            //FIX: 单元格yyyyMMdd数字时候使用 cell.getDateCellValue() 解析出的日期错误
+            if (HSSFDateUtil.isCellDateFormatted(cell)){
+                result = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
+            }
+            else {
+                cell.setCellType(CellType.STRING);
                 result = getDateData(entity, cell.getStringCellValue());
             }
             if (("class java.sql.Date").equals(xclass)) {
