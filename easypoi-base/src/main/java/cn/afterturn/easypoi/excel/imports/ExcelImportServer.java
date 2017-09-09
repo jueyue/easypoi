@@ -197,6 +197,10 @@ public class ExcelImportServer extends ImportBaseService {
                 break;
             }
             row = rows.next();
+            // Fix 如果row为无效行时候跳出
+            if(sheet.getLastRowNum() - row.getRowNum() < params.getLastOfInvalidRow() ){
+                break;
+            }
             // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
             // keyIndex 如果为空就不处理,仍然处理这一行
             if (params.getKeyIndex() != null
