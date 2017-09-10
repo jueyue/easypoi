@@ -92,6 +92,12 @@ public class ExportBase {
             temp = format.parse(value.toString());
         } else if (value instanceof Date) {
             temp = (Date) value;
+        } else if (value instanceof java.sql.Date){
+            temp = new Date(((java.sql.Date)value).getTime());
+        } else if (value instanceof java.sql.Time){
+            temp = new Date(((java.sql.Time)value).getTime());
+        } else if (value instanceof java.sql.Timestamp){
+            temp = new Date(((java.sql.Timestamp)value).getTime());
         }
         if (temp != null) {
             SimpleDateFormat format = new SimpleDateFormat(entity.getFormat());
