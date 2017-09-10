@@ -73,17 +73,17 @@ https://oss.sonatype.org/content/groups/public/
 		 <dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.1</version>
 		</dependency>
 ```
 	
