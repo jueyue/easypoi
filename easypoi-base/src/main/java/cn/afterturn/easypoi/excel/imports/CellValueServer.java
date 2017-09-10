@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  Unless required by applicable law or agreed to in writing, software
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -45,19 +44,19 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
 /**
  * Cell 取值服务
  * 判断类型处理数据 1.判断Excel中的类型 2.根据replace替换值 3.handler处理数据 4.判断返回类型转化数据返回
- * 
+ *
  * @author JueYue
  *  2014年6月26日 下午10:42:28
  */
 public class CellValueServer {
 
-    private static final Logger LOGGER      = LoggerFactory.getLogger(CellValueServer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CellValueServer.class);
 
-    private List<String>        hanlderList = null;
+    private List<String> hanlderList = null;
 
     /**
      * 获取单元格内的值
-     * 
+     *
      * @param cell
      * @param entity
      * @return
@@ -68,8 +67,8 @@ public class CellValueServer {
         }
         Object result = null;
         if ("class java.util.Date".equals(xclass) || "class java.sql.Date".equals(xclass)
-            || ("class java.sql.Time").equals(xclass)
-            || ("class java.sql.Timestamp").equals(xclass)) {
+                || ("class java.sql.Time").equals(xclass)
+                || ("class java.sql.Timestamp").equals(xclass)) {
             /*
             if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
                 // 日期格式
@@ -79,10 +78,9 @@ public class CellValueServer {
                 result = getDateData(entity, cell.getStringCellValue());
             }*/
             //FIX: 单元格yyyyMMdd数字时候使用 cell.getDateCellValue() 解析出的日期错误
-            if (HSSFDateUtil.isCellDateFormatted(cell)){
-                result = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
-            }
-            else {
+            if (Cell.CELL_TYPE_NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
+                result = DateUtil.getJavaDate(cell.getNumericCellValue());
+            } else {
                 cell.setCellType(CellType.STRING);
                 result = getDateData(entity, cell.getStringCellValue());
             }
@@ -95,11 +93,13 @@ public class CellValueServer {
             if (("class java.sql.Timestamp").equals(xclass)) {
                 result = new Timestamp(((Date) result).getTime());
             }
+        } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
+            result = DateUtil.getJavaDate(cell.getNumericCellValue());
         } else {
             switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_STRING:
                     result = cell.getRichStringCellValue() == null ? ""
-                        : cell.getRichStringCellValue().getString();
+                            : cell.getRichStringCellValue().getString();
                     break;
                 case Cell.CELL_TYPE_NUMERIC:
                     if (DateUtil.isCellDateFormatted(cell)) {
@@ -123,7 +123,7 @@ public class CellValueServer {
                     } catch (Exception e1) {
                         try {
                             result = cell.getRichStringCellValue() == null ? ""
-                                : cell.getRichStringCellValue().getString();
+                                    : cell.getRichStringCellValue().getString();
                         } catch (Exception e2) {
                             throw new RuntimeException("获取公式类型的单元格失败", e2);
                         }
@@ -149,7 +149,7 @@ public class CellValueServer {
 
     /**
      * 获取日期类型数据
-     * 
+     *
      * @author JueYue
      *  2013年11月26日
      * @param entity
@@ -179,7 +179,7 @@ public class CellValueServer {
 
     /**
      * 获取cell的值
-     * 
+     *
      * @param object
      * @param excelParams
      * @param cell
@@ -192,7 +192,7 @@ public class CellValueServer {
         String xclass = "class java.lang.Object";
         if (!(object instanceof Map)) {
             Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
-                ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
+                    ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
             Type[] ts = setMethod.getGenericParameterTypes();
             xclass = ts[0].toString();
         }
@@ -219,7 +219,7 @@ public class CellValueServer {
                            String titleString) {
         ExcelImportEntity entity = excelParams.get(titleString);
         Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
-            ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
+                ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
         Type[] ts = setMethod.getGenericParameterTypes();
         String xclass = ts[0].toString();
         Object result = cellEntity.getValue();
@@ -231,13 +231,13 @@ public class CellValueServer {
 
     /**
      * 把后缀删除掉
-     * @param result 
-     * @param suffix 
+     * @param result
+     * @param suffix
      * @return
      */
     private Object hanlderSuffix(String suffix, Object result) {
         if (StringUtils.isNotEmpty(suffix) && result != null
-            && result.toString().endsWith(suffix)) {
+                && result.toString().endsWith(suffix)) {
             String temp = result.toString();
             return temp.substring(0, temp.length() - suffix.length());
         }
@@ -246,10 +246,10 @@ public class CellValueServer {
 
     /**
      * 根据返回类型获取返回值
-     * 
+     *
      * @param xclass
      * @param result
-     * @param entity 
+     * @param entity
      * @return
      */
     private Object getValueByType(String xclass, Object result, ExcelImportEntity entity) {
@@ -309,18 +309,18 @@ public class CellValueServer {
 
     /**
      * 调用处理接口处理值
-     * 
+     *
      * @param dataHanlder
      * @param object
      * @param result
      * @param titleString
      * @return
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Object hanlderValue(IExcelDataHandler dataHanlder, Object object, Object result,
                                 String titleString) {
         if (dataHanlder == null || dataHanlder.getNeedHandlerFields() == null
-            || dataHanlder.getNeedHandlerFields().length == 0) {
+                || dataHanlder.getNeedHandlerFields().length == 0) {
             return result;
         }
         if (hanlderList == null) {
@@ -334,7 +334,7 @@ public class CellValueServer {
 
     /**
      * 替换值
-     * 
+     *
      * @param replace
      * @param result
      * @return
