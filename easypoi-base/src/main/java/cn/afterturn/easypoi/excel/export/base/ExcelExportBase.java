@@ -298,8 +298,6 @@ public abstract class ExcelExportBase extends ExportBase {
         Cell cell = row.createCell(index);
         if (text != null && text.length() > 0) {
             cell.setCellValue(Double.parseDouble(text));
-        } else {
-            cell.setCellValue(-1);
         }
         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         if (style != null) {
