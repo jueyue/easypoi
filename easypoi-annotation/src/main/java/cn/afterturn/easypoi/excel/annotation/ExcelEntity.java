@@ -40,4 +40,16 @@ public @interface ExcelEntity {
      */
     public String name() default "";
 
+    /**
+     * 如果现实则这个Excel的表头会变成两行,同时改Excel内部数据不参与总排序,排序用下面这个来代替,内部再排序
+     * @return
+     */
+    public boolean show() default false;
+
+    /**
+     * 展示到第几个同样可以使用a_id,b_id
+     *
+     */
+    public String orderNum() default "0";
+
 }
