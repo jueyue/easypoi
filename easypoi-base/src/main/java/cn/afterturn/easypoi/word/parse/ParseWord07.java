@@ -35,9 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.afterturn.easypoi.cache.WordCache;
+import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.word.entity.MyXWPFDocument;
-import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.afterturn.easypoi.word.entity.params.ExcelListEntity;
 import cn.afterturn.easypoi.word.parse.excel.ExcelEntityParse;
 import cn.afterturn.easypoi.word.parse.excel.ExcelMapParse;
@@ -63,7 +63,7 @@ public class ParseWord07 {
      * @param currentRun
      * @throws Exception
      */
-    private void addAnImage(WordImageEntity obj, XWPFRun currentRun) throws Exception {
+    private void addAnImage(ImageEntity obj, XWPFRun currentRun) throws Exception {
         Object[] isAndType = PoiPublicUtil.getIsAndType(obj);
         String picId;
         try {
@@ -90,9 +90,9 @@ public class ParseWord07 {
     private void changeValues(XWPFParagraph paragraph, XWPFRun currentRun, String currentText,
                               List<Integer> runIndex, Map<String, Object> map) throws Exception {
         Object obj = PoiPublicUtil.getRealValue(currentText, map);
-        if (obj instanceof WordImageEntity) {// 如果是图片就设置为图片
+        if (obj instanceof ImageEntity) {// 如果是图片就设置为图片
             currentRun.setText("", 0);
-            addAnImage((WordImageEntity) obj, currentRun);
+            addAnImage((ImageEntity) obj, currentRun);
         } else {
             currentText = obj.toString();
             PoiPublicUtil.setWordText(currentRun, currentText);

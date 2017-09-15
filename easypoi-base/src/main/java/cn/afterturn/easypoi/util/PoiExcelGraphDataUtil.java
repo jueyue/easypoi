@@ -5,6 +5,7 @@ package cn.afterturn.easypoi.util;
 
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import cn.afterturn.easypoi.excel.graph.entity.ExcelGraph;
@@ -46,6 +47,18 @@ public class PoiExcelGraphDataUtil {
                 buildGraphData(dataSourceSheet, graph);
             }
         }
+    }
+
+    /**
+     * 获取画布,没有就创建一个
+     * @param sheet
+     * @return
+     */
+    public static Drawing getDrawingPatriarch(Sheet sheet){
+        if(sheet.getDrawingPatriarch() == null){
+            sheet.createDrawingPatriarch();
+        }
+        return sheet.getDrawingPatriarch();
     }
 
 }
