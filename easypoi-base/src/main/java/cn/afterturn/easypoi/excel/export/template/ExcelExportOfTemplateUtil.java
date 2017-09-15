@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.afterturn.easypoi.cache.ExcelCache;
+import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
@@ -52,6 +53,7 @@ import cn.afterturn.easypoi.excel.export.template.TemplateSumHanlder.TemplateSum
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
+import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiSheetUtility;
 
@@ -98,7 +100,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         }
         // 获取表头数据
         Map<String, Integer> titlemap = getTitleMap(sheet);
-        Drawing patriarch = sheet.createDrawingPatriarch();
+        Drawing patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
         // 得到所有字段
         Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
         ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
@@ -400,19 +402,17 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
                 isNumber = true;
                 oldString = oldString.replaceFirst(NUMBER_SYMBOL, "");
             }
-            while (oldString.indexOf(START_STR) != -1) {
-                params = oldString.substring(oldString.indexOf(START_STR) + 2,
-                    oldString.indexOf(END_STR));
-
-                oldString = oldString.replace(START_STR + params + END_STR,
-                    eval(params, map).toString());
-            }
+            Object obj = PoiPublicUtil.getRealValue(oldString, map);
             //如何是数值 类型,就按照数值类型进行设置
-            if (isNumber && StringUtils.isNotBlank(oldString)) {
-                cell.setCellValue(Double.parseDouble(oldString));
+            if (obj instanceof ImageEntity) {// 如果是图片就设置为图片
+                ImageEntity img = (ImageEntity)obj;
+                cell.setCellValue("");
+                createImageCell(cell,img.getHeight(),img.getUrl(),img.getData());
+            }else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
+                cell.setCellValue(Double.parseDouble(obj.toString()));
                 cell.setCellType(Cell.CELL_TYPE_NUMERIC);
             } else {
-                cell.setCellValue(oldString);
+                cell.setCellValue(obj.toString());
             }
         }
         //判断foreach 这种方法

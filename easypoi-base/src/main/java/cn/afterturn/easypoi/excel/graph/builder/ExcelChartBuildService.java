@@ -135,7 +135,7 @@ public class ExcelChartBuildService
 		{
 			int drawStart=0;
 			int drawEnd=20;
-			Drawing drawing = tragetSheet.createDrawingPatriarch();
+			Drawing drawing = PoiExcelGraphDataUtil.getDrawingPatriarch(tragetSheet);
 			for(int i=0;i<len;i++){
 				ExcelGraph graph=graphList.get(i);
 				ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, drawStart, 15, drawEnd);
@@ -151,13 +151,12 @@ public class ExcelChartBuildService
 	
 	/**
 	 * 构建图形对象
-	 * @param workbook
 	 * @param dataSourceSheet
 	 * @param tragetSheet
 	 * @param graph
 	 */
 	private static void buildExcelChart(Sheet dataSourceSheet,Sheet tragetSheet,ExcelGraph graph){
-		Drawing drawing = tragetSheet.createDrawingPatriarch();
+		Drawing drawing = PoiExcelGraphDataUtil.getDrawingPatriarch(tragetSheet);
 		ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 0, 15, 20);
 		buildExcelChart(drawing, anchor, dataSourceSheet, graph);
 	}

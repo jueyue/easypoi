@@ -52,11 +52,12 @@ import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cn.afterturn.easypoi.cache.ImageCache;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelCollection;
 import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
 import cn.afterturn.easypoi.excel.annotation.ExcelIgnore;
-import cn.afterturn.easypoi.word.entity.WordImageEntity;
+import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.word.entity.params.ExcelListEntity;
 
 /**
@@ -326,20 +327,11 @@ public final class PoiPublicUtil {
      *@return  (byte[]) isAndType[0],(Integer)isAndType[1]
      * @throws Exception 
      */
-    public static Object[] getIsAndType(WordImageEntity entity) throws Exception {
+    public static Object[] getIsAndType(ImageEntity entity) throws Exception {
         Object[] result = new Object[2];
         String type;
-        if (entity.getType().equals(WordImageEntity.URL)) {
-            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-            BufferedImage bufferImg;
-            String path = Thread.currentThread().getContextClassLoader().getResource("").toURI()
-                .getPath() + entity.getUrl();
-            path = path.replace("WEB-INF/classes/", "");
-            path = path.replace("file:/", "");
-            bufferImg = ImageIO.read(new File(path));
-            ImageIO.write(bufferImg, entity.getUrl().substring(entity.getUrl().indexOf(".") + 1,
-                entity.getUrl().length()), byteArrayOut);
-            result[0] = byteArrayOut.toByteArray();
+        if (entity.getType().equals(ImageEntity.URL)) {
+            result[0] = ImageCache.getImage(entity.getUrl());
             type = entity.getUrl().split("/.")[entity.getUrl().split("/.").length - 1];
         } else {
             result[0] = entity.getData();
@@ -383,8 +375,7 @@ public final class PoiPublicUtil {
                 currentText.indexOf(END_STR));
             Object obj = PoiElUtil.eval(params.trim(), map);
             //判断图片或者是集合
-
-            if (obj instanceof WordImageEntity || obj instanceof List
+            if (obj instanceof ImageEntity || obj instanceof List
                 || obj instanceof ExcelListEntity) {
                 return obj;
             } else {
@@ -409,7 +400,7 @@ public final class PoiPublicUtil {
         if (object == null) {
             return "";
         }
-        if (object instanceof WordImageEntity) {
+        if (object instanceof ImageEntity) {
             return object;
         }
         if (object instanceof Map) {

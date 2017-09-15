@@ -19,6 +19,7 @@ import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
+import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 
 /**
@@ -115,7 +116,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) entity.getStyle()
                 .getConstructor(Workbook.class).newInstance(workbook));
-            patriarch = sheet.createDrawingPatriarch();
+            patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
                 excelParams.add(indexExcelEntity(entity));
