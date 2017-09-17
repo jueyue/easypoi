@@ -5,15 +5,15 @@ EasyPoi Excel和 Word简易工具类
 就可以方便的写出Excel导出,Excel模板导出,Excel导入,Word模板导出,通过简单的注解和模板
 语言(熟悉的表达式语法),完成以前复杂的写法
 
-	作者博客：http://blog.afterturn.cn/
-	作者邮箱： qrb.jueyue@gmail.com
+	官网：http://www.afterturn.cn/
+	邮箱： qrb.jueyue@gmail.com
 	QQ群:  364192721
 	
 	开发者:魔幻之翼 xf.key@163.com
 
 **开发指南**
 
-**[http://easypoi.mydoc.io](http://easypoi.mydoc.io)**
+**[http://www.afterturn.cn/doc/easypoi.html](http://www.afterturn.cn/doc/easypoi.html)**
 
 [开发文档请查看DOC下面的EasyPoi教程](http://git.oschina.net/jueyue/easypoi/blob/master/doc/EasyPoi%E6%95%99%E7%A8%8B.docx?dir=0&filepath=doc%2FEasyPoi%E6%95%99%E7%A8%8B.docx&oid=133ebde5641f128420023dbdc2533ab4b53c7792&sha=4c8d94c80544811e2e358518bad6c689a63c13e9)
 !!!2.1.6 版本开始和之前的版本校验不兼用,使用JSR303的校验,删除了之前的注解,请注意
