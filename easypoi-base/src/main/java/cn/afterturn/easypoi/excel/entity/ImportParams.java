@@ -58,6 +58,10 @@ public class ImportParams extends ExcelBaseParams {
      */
     private boolean             needSave         = false;
     /**
+     * 校验组
+     */
+    private Class[]             verfiyGroup         = null;
+    /**
      * 是否需要校验上传的Excel,默认为false
      */
     private boolean             needVerfiy       = false;
@@ -211,5 +215,13 @@ public class ImportParams extends ExcelBaseParams {
 
     public void setReadSingleCell(boolean readSingleCell) {
         this.readSingleCell = readSingleCell;
+    }
+
+    public Class[] getVerfiyGroup() {
+        return verfiyGroup;
+    }
+
+    public void setVerfiyGroup(Class[] verfiyGroup) {
+        this.verfiyGroup = verfiyGroup;
     }
 }
