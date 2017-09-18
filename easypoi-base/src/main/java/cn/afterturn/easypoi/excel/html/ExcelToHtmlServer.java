@@ -23,6 +23,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sun.misc.BASE64Encoder;
+
 import cn.afterturn.easypoi.excel.entity.ExcelToHtmlParams;
 import cn.afterturn.easypoi.excel.html.helper.CellValueHelper;
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
@@ -217,7 +219,8 @@ public class ExcelToHtmlServer {
                         }
                     }
                     if (pictures.containsKey((rowIndex - 1) + "_" + i)) {
-                        content = "<img src='" + getImageSrc(pictures.get((rowIndex - 1) + "_" + i))
+                        content = "<img src='data:image/"+PoiPublicUtil.getFileExtendName(pictures.get((rowIndex - 1) + "_" + i).getData())
+                                  +";base64," + getImageSrc(pictures.get((rowIndex - 1) + "_" + i))
                                   + "' style='max-width:  "
                                   + getImageMaxWidth(
                                       mergedRegionHelper.getRowAndColSpan(rowIndex, i), i, sheet)
@@ -267,7 +270,11 @@ public class ExcelToHtmlServer {
             return "";
         }
         byte[] data = pictureData.getData();
-        String fileName = "pic" + Math.round(Math.random() * 100000000000L);
+        //直接输出到HTML使用BASE64Encoder
+        // 加密
+        BASE64Encoder encoder = new BASE64Encoder();
+        return encoder.encode(data);
+        /*String fileName = "pic" + Math.round(Math.random() * 100000000000L);
         fileName += "." + PoiPublicUtil.getFileExtendName(data);
         if (!imageCachePath.startsWith("/") && !imageCachePath.contains(":")) {
             imageCachePath = PoiPublicUtil.getWebRootPath(imageCachePath);
@@ -290,7 +297,7 @@ public class ExcelToHtmlServer {
                 LOGGER.error(e.getMessage(), e);
             }
         }
-        return imageCachePath + "/" + today + "/" + fileName;
+        return imageCachePath + "/" + today + "/" + fileName;*/
     }
 
     private String styleName(CellStyle style) {

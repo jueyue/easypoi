@@ -22,8 +22,9 @@ public class ExcelToHtmlParams {
     private int      sheetNum = 0;
 
     /**
-     * 图片保存路径,/开始或者含有: 认为是绝对路径,其他是相对路径,每次img名称随机生成,按照天生成文件夹
-     * 不为空就认为现实图片
+     *  -- 图片保存路径,/开始或者含有: 认为是绝对路径,其他是相对路径,每次img名称随机生成,按照天生成文件夹
+     *  -- 不生成图片了直接BASE64Encoder
+     * 不为空就认为显示图片
      */
     private String   path = null;
 
