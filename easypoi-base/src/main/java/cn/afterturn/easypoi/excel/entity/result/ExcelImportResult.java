@@ -32,6 +32,10 @@ public class ExcelImportResult<T> {
      * 结果集
      */
     private List<T>  list;
+    /**
+     * 失败数据
+     */
+    private List<T>  failList;
 
     /**
      * 是否存在校验失败
@@ -42,6 +46,10 @@ public class ExcelImportResult<T> {
      * 数据源
      */
     private Workbook workbook;
+    /**
+     * 失败的数据源
+     */
+    private Workbook failWorkbook;
 
     private Map<String,Object> map;
 
@@ -85,5 +93,21 @@ public class ExcelImportResult<T> {
 
     public void setMap(Map<String, Object> map) {
         this.map = map;
+    }
+
+    public Workbook getFailWorkbook() {
+        return failWorkbook;
+    }
+
+    public void setFailWorkbook(Workbook failWorkbook) {
+        this.failWorkbook = failWorkbook;
+    }
+
+    public List<T> getFailList() {
+        return failList;
+    }
+
+    public void setFailList(List<T> failList) {
+        this.failList = failList;
     }
 }

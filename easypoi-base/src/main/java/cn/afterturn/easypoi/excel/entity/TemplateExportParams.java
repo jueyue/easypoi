@@ -41,7 +41,7 @@ public class TemplateExportParams extends ExcelBaseParams {
     private Integer[] sheetNum        = new Integer[] { 0 };
 
     /**
-     * 这只sheetName 不填就使用原来的
+     * 设置sheetName 不填就使用原来的
      */
     private String[]  sheetName;
 

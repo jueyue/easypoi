@@ -66,14 +66,14 @@ public class ImportParams extends ExcelBaseParams {
      */
     private boolean             needVerfiy       = false;
     /**
+     * 校验处理接口
+     */
+    private IExcelVerifyHandler verifyHanlder;
+    /**
      * 保存上传的Excel目录,默认是 如 TestEntity这个类保存路径就是
      * upload/excelUpload/Test/yyyyMMddHHmss_***** 保存名称上传时间_五位随机数
      */
     private String              saveUrl          = "upload/excelUpload";
-    /**
-     * 校验处理接口
-     */
-    private IExcelVerifyHandler verifyHanlder;
     /**
      * 最后的无效行数
      */
@@ -224,4 +224,5 @@ public class ImportParams extends ExcelBaseParams {
     public void setVerfiyGroup(Class[] verfiyGroup) {
         this.verfiyGroup = verfiyGroup;
     }
+
 }

@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public final class PoiPublicUtil {
         Object obj = null;
         try {
             if (clazz.equals(Map.class)) {
-                return new HashMap<String, Object>();
+                return new LinkedHashMap<String,Object>();
             }
             obj = clazz.newInstance();
             Field[] fields = getClassFields(clazz);
