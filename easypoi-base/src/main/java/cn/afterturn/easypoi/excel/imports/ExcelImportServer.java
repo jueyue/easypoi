@@ -1,41 +1,22 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *  Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package cn.afterturn.easypoi.excel.imports;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.poi.POIXMLDocument;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.poifs.filesystem.DocumentFactoryHelper;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -44,11 +25,26 @@ import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
@@ -67,30 +63,35 @@ import cn.afterturn.easypoi.util.PoiValidationUtil;
 
 /**
  * Excel 导入服务
- * 
- * @author JueYue
- *  2014年6月26日 下午9:20:51
+ *
+ * @author JueYue 2014年6月26日 下午9:20:51
  */
-@SuppressWarnings({ "rawtypes", "unchecked", "hiding" })
+@SuppressWarnings({"rawtypes", "unchecked", "hiding"})
 public class ExcelImportServer extends ImportBaseService {
 
-    private final static Logger LOGGER     = LoggerFactory.getLogger(ExcelImportServer.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ExcelImportServer.class);
 
-    private CellValueServer     cellValueServer;
+    private CellValueServer cellValueServer;
 
-    private boolean             verfiyFail = false;
+    private boolean verfiyFail = false;
     /**
      * 异常数据styler
      */
-    private CellStyle           errorCellStyle;
+    private CellStyle errorCellStyle;
+
+    private List<Row> successRow;
+    private List<Row> failRow;
+    private List failCollection = new ArrayList();
 
     public ExcelImportServer() {
+        successRow = new ArrayList<Row>();
+        failRow = new ArrayList<Row>();
         this.cellValueServer = new CellValueServer();
     }
 
     /***
      * 向List里面继续添加元素
-     * 
+     *
      * @param object
      * @param param
      * @param row
@@ -104,7 +105,7 @@ public class ExcelImportServer extends ImportBaseService {
                                  Map<String, PictureData> pictures,
                                  ImportParams params) throws Exception {
         Collection collection = (Collection) PoiReflectorUtil.fromCache(object.getClass())
-            .getValue(object, param.getName());
+                .getValue(object, param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         String picId;
         boolean isUsed = false;// 是否需要加上这个对象
@@ -128,11 +129,8 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 获取key的值,针对不同类型获取不同的值
-     * 
-     * @author JueYue
-     *  2013-11-21
-     * @param cell
-     * @return
+     *
+     * @author JueYue 2013-11-21
      */
     private String getKeyValue(Cell cell) {
         Object obj = PoiCellUtil.getCellValue(cell);
@@ -141,21 +139,16 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 获取保存的真实路径
-     * 
-     * @param excelImportEntity
-     * @param object
-     * @return
-     * @throws Exception
      */
     private String getSaveUrl(ExcelImportEntity excelImportEntity, Object object) throws Exception {
         String url = "";
         if (excelImportEntity.getSaveUrl().equals("upload")) {
             if (excelImportEntity.getMethods() != null
-                && excelImportEntity.getMethods().size() > 0) {
+                    && excelImportEntity.getMethods().size() > 0) {
                 object = getFieldBySomeMethod(excelImportEntity.getMethods(), object);
             }
             url = object.getClass().getName()
-                .split("\\.")[object.getClass().getName().split("\\.").length - 1];
+                    .split("\\.")[object.getClass().getName().split("\\.").length - 1];
             return excelImportEntity.getSaveUrl() + "/" + url;
         }
         return excelImportEntity.getSaveUrl();
@@ -191,22 +184,22 @@ public class ExcelImportServer extends ImportBaseService {
             rows.next();
         }
         while (rows.hasNext()
-               && (row == null
-                   || sheet.getLastRowNum() - row.getRowNum() > params.getLastOfInvalidRow())) {
+                && (row == null
+                || sheet.getLastRowNum() - row.getRowNum() > params.getLastOfInvalidRow())) {
             if (params.getReadRows() > 0 && readRow > params.getReadRows()) {
                 break;
             }
             row = rows.next();
             // Fix 如果row为无效行时候跳出
-            if(sheet.getLastRowNum() - row.getRowNum() < params.getLastOfInvalidRow() ){
+            if (sheet.getLastRowNum() - row.getRowNum() < params.getLastOfInvalidRow()) {
                 break;
             }
             // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
             // keyIndex 如果为空就不处理,仍然处理这一行
             if (params.getKeyIndex() != null
-                && (row.getCell(params.getKeyIndex()) == null
+                    && (row.getCell(params.getKeyIndex()) == null
                     || StringUtils.isEmpty(getKeyValue(row.getCell(params.getKeyIndex()))))
-                && object != null) {
+                    && object != null) {
                 for (ExcelCollectionParams param : excelCollection) {
                     addListContinue(object, param, row, titlemap, targetId, pictures, params);
                 }
@@ -218,10 +211,10 @@ public class ExcelImportServer extends ImportBaseService {
                         String titleString = (String) titlemap.get(i);
                         if (excelParams.containsKey(titleString) || Map.class.equals(pojoClass)) {
                             if (excelParams.get(titleString) != null
-                                && excelParams.get(titleString).getType() == 2) {
+                                    && excelParams.get(titleString).getType() == 2) {
                                 picId = row.getRowNum() + "_" + i;
                                 saveImage(object, picId, excelParams, titleString, pictures,
-                                    params);
+                                        params);
                             } else {
                                 saveFieldValue(params, object, cell, excelParams, titleString, row);
                             }
@@ -233,14 +226,16 @@ public class ExcelImportServer extends ImportBaseService {
                     }
                     if (verifyingDataValidity(object, row, params, pojoClass)) {
                         collection.add(object);
+                    } else {
+                        failCollection.add(object);
                     }
                 } catch (ExcelImportException e) {
-                    LOGGER.error("excel import error , row num:{},obj:{}",readRow, ReflectionToStringBuilder.toString(object));
+                    LOGGER.error("excel import error , row num:{},obj:{}", readRow, ReflectionToStringBuilder.toString(object));
                     if (!e.getType().equals(ExcelImportEnum.VERIFY_ERROR)) {
                         throw new ExcelImportException(e.getType(), e);
                     }
                 } catch (Exception e) {
-                    LOGGER.error("excel import error , row num:{},obj:{}",readRow, ReflectionToStringBuilder.toString(object));
+                    LOGGER.error("excel import error , row num:{},obj:{}", readRow, ReflectionToStringBuilder.toString(object));
                     throw new RuntimeException(e);
                 }
             }
@@ -251,27 +246,21 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 校验数据合法性
-     * @param object
-     * @param row
-     * @param params
-     * @param pojoClass
-     * @return
      */
     private boolean verifyingDataValidity(Object object, Row row, ImportParams params,
                                           Class<?> pojoClass) {
         boolean isAdd = true;
         Cell cell = null;
         if (params.isNeedVerfiy()) {
-            String errorMsg = PoiValidationUtil.validation(object,params.getVerfiyGroup());
+            String errorMsg = PoiValidationUtil.validation(object, params.getVerfiyGroup());
             if (StringUtils.isNotEmpty(errorMsg)) {
                 cell = row.createCell(row.getLastCellNum());
                 cell.setCellValue(errorMsg);
                 if (object instanceof IExcelModel) {
                     IExcelModel model = (IExcelModel) object;
                     model.setErrorMsg(errorMsg);
-                } else {
-                    isAdd = false;
                 }
+                isAdd = false;
                 verfiyFail = true;
             }
         }
@@ -281,28 +270,27 @@ public class ExcelImportServer extends ImportBaseService {
                 if (cell == null)
                     cell = row.createCell(row.getLastCellNum());
                 cell.setCellValue((StringUtils.isNoneBlank(cell.getStringCellValue())
-                    ? cell.getStringCellValue() + "," : "") + result.getMsg());
+                        ? cell.getStringCellValue() + "," : "") + result.getMsg());
                 if (object instanceof IExcelModel) {
                     IExcelModel model = (IExcelModel) object;
                     model.setErrorMsg((StringUtils.isNoneBlank(model.getErrorMsg())
-                        ? model.getErrorMsg() + "," : "") + result.getMsg());
-                } else {
-                    isAdd = false;
+                            ? model.getErrorMsg() + "," : "") + result.getMsg());
                 }
+                isAdd = false;
                 verfiyFail = true;
             }
         }
-        if (cell != null)
+        if (cell != null) {
             cell.setCellStyle(errorCellStyle);
+            failRow.add(row);
+        } else {
+            successRow.add(row);
+        }
         return isAdd;
     }
 
     /**
      * 获取表格字段列名对应信息
-     * @param rows
-     * @param params
-     * @param excelCollection
-     * @return
      */
     private Map<Integer, String> getTitleMap(Iterator<Row> rows, ImportParams params,
                                              List<ExcelCollectionParams> excelCollection) {
@@ -329,8 +317,8 @@ public class ExcelImportServer extends ImportBaseService {
                         collectionParams = getCollectionParams(excelCollection, collectionName);
                         titlemap.put(i, collectionName + "_" + value);
                     } else if (StringUtils.isNotEmpty(collectionName) && collectionParams != null
-                               && collectionParams.getExcelParams()
-                                   .containsKey(collectionName + "_" + value)) {
+                            && collectionParams.getExcelParams()
+                            .containsKey(collectionName + "_" + value)) {
                         titlemap.put(i, collectionName + "_" + value);
                     } else {
                         collectionName = null;
@@ -347,9 +335,6 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 获取这个名称对应的集合信息
-     * @param excelCollection 
-     * @param collectionName
-     * @return
      */
     private ExcelCollectionParams getCollectionParams(List<ExcelCollectionParams> excelCollection,
                                                       String collectionName) {
@@ -363,12 +348,6 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * Excel 导入 field 字段类型 Integer,Long,Double,Date,String,Boolean
-     * 
-     * @param inputstream
-     * @param pojoClass
-     * @param params
-     * @return
-     * @throws Exception
      */
     public ExcelImportResult importExcelByIs(InputStream inputstream, Class<?> pojoClass,
                                              ImportParams params) throws Exception {
@@ -376,31 +355,31 @@ public class ExcelImportServer extends ImportBaseService {
             LOGGER.debug("Excel import start ,class is {}", pojoClass);
         }
         List<T> result = new ArrayList<T>();
-        Workbook book = null;
-        boolean isXSSFWorkbook = true;
-        if (!(inputstream.markSupported())) {
-            inputstream = new PushbackInputStream(inputstream, 8);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = inputstream.read(buffer)) > -1) {
+            baos.write(buffer, 0, len);
         }
-        if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
-            book = new HSSFWorkbook(inputstream);
-            isXSSFWorkbook = false;
-        } else if (DocumentFactoryHelper.hasOOXMLHeader(inputstream)) {
-            book = new XSSFWorkbook(OPCPackage.open(inputstream));
-        }
-        ExcelImportResult importResult = new ExcelImportResult(result, verfiyFail, book);
+        baos.flush();
+
+        InputStream userIs = new ByteArrayInputStream(baos.toByteArray());
+        Workbook book = WorkbookFactory.create(userIs);
+        boolean isXSSFWorkbook = !(book instanceof HSSFWorkbook);
+        ExcelImportResult importResult = new ExcelImportResult();
         createErrorCellStyle(book);
         Map<String, PictureData> pictures;
         for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
-                                                      + params.getSheetNum(); i++) {
+                + params.getSheetNum(); i++) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(" start to read excel by is ,startTime is {}", new Date().getTime());
             }
             if (isXSSFWorkbook) {
                 pictures = PoiPublicUtil.getSheetPictrues07((XSSFSheet) book.getSheetAt(i),
-                    (XSSFWorkbook) book);
+                        (XSSFWorkbook) book);
             } else {
                 pictures = PoiPublicUtil.getSheetPictrues03((HSSFSheet) book.getSheetAt(i),
-                    (HSSFWorkbook) book);
+                        (HSSFWorkbook) book);
             }
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(" end to read excel by is ,endTime is {}", new Date().getTime());
@@ -409,8 +388,8 @@ public class ExcelImportServer extends ImportBaseService {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(" end to read excel list by pos ,endTime is {}", new Date().getTime());
             }
-            if(params.isReadSingleCell()){
-                readSingleCell(importResult, book.getSheetAt(i),params);
+            if (params.isReadSingleCell()) {
+                readSingleCell(importResult, book.getSheetAt(i), params);
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(" read Key-Value ,endTime is {}", new Date().getTime());
                 }
@@ -419,26 +398,43 @@ public class ExcelImportServer extends ImportBaseService {
         if (params.isNeedSave()) {
             saveThisExcel(params, pojoClass, isXSSFWorkbook, book);
         }
+        InputStream successIs = new ByteArrayInputStream(baos.toByteArray());
+        Workbook successBook = WorkbookFactory.create(successIs);
+        importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
+        importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
+        importResult.setList(result);
+        importResult.setFailList(failCollection);
         importResult.setVerfiyFail(verfiyFail);
         return importResult;
     }
 
+    private Workbook removeSuperfluousRows(Workbook book, List<Row> successRow, ImportParams params) {
+        for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
+                + params.getSheetNum(); i++) {
+            for (int j = 0; j < successRow.size(); j++) {
+                if (successRow.get(j).getRowNum() < successRow.get(j).getSheet().getLastRowNum()) {
+                    book.getSheetAt(i).shiftRows(successRow.get(j).getRowNum() + 1, successRow.get(j).getSheet().getLastRowNum(), -1);
+                } else {
+                    book.getSheetAt(i).shiftRows(successRow.get(j).getRowNum(), successRow.get(j).getSheet().getLastRowNum(), -1);
+                }
+            }
+        }
+        return book;
+    }
+
     /**
      * 按照键值对的方式取得Excel里面的数据
-     * @param result
-     * @param sheet
-     * @param params
      */
     private void readSingleCell(ExcelImportResult result, Sheet sheet, ImportParams params) {
-        if(result.getMap() == null){
+        if (result.getMap() == null) {
             result.setMap(new HashMap<String, Object>());
         }
         for (int i = 0; i < params.getTitleRows() + params.getHeadRows() + params.getStartRows(); i++) {
-           getSingleCellValueForRow(result,sheet.getRow(i),params);
+            getSingleCellValueForRow(result, sheet.getRow(i), params);
         }
 
         for (int i = sheet.getLastRowNum() - params.getLastOfInvalidRow(); i < sheet.getLastRowNum(); i++) {
-            getSingleCellValueForRow(result,sheet.getRow(i),params);
+            getSingleCellValueForRow(result, sheet.getRow(i), params);
 
         }
     }
@@ -446,16 +442,16 @@ public class ExcelImportServer extends ImportBaseService {
     private void getSingleCellValueForRow(ExcelImportResult result, Row row, ImportParams params) {
         for (int j = row.getFirstCellNum(), le = row.getLastCellNum(); j < le; j++) {
             String text = PoiCellUtil.getCellValue(row.getCell(j));
-            if(StringUtils.isNoneBlank(text) && text.endsWith(params.getKeyMark())){
-                if(result.getMap().containsKey(text)){
-                    if(result.getMap().get(text) instanceof String){
+            if (StringUtils.isNoneBlank(text) && text.endsWith(params.getKeyMark())) {
+                if (result.getMap().containsKey(text)) {
+                    if (result.getMap().get(text) instanceof String) {
                         List<String> list = new ArrayList<String>();
-                        list.add((String)result.getMap().get(text));
-                        result.getMap().put(text,list);
+                        list.add((String) result.getMap().get(text));
+                        result.getMap().put(text, list);
                     }
-                    ((List)result.getMap().get(text)).add(PoiCellUtil.getCellValue(row.getCell(++j)));
-                }else{
-                    result.getMap().put(text,PoiCellUtil.getCellValue(row.getCell(++j)));
+                    ((List) result.getMap().get(text)).add(PoiCellUtil.getCellValue(row.getCell(++j)));
+                } else {
+                    result.getMap().put(text, PoiCellUtil.getCellValue(row.getCell(++j)));
                 }
 
             }
@@ -465,10 +461,6 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 检查是不是合法的模板
-     * @param titlemap
-     * @param excelParams
-     * @param params
-     * @param excelCollection 
      */
     private void checkIsValidTemplate(Map<Integer, String> titlemap,
                                       Map<String, ExcelImportEntity> excelParams,
@@ -485,7 +477,7 @@ public class ExcelImportServer extends ImportBaseService {
             Collection<ExcelImportEntity> collection = excelParams.values();
             for (ExcelImportEntity excelImportEntity : collection) {
                 if (excelImportEntity.isImportField()
-                    && !titlemap.containsValue(excelImportEntity.getName())) {
+                        && !titlemap.containsValue(excelImportEntity.getName())) {
                     LOGGER.error(excelImportEntity.getName() + "必须有,但是没找到");
                     throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
                 }
@@ -496,7 +488,7 @@ public class ExcelImportServer extends ImportBaseService {
                 collection = collectionparams.getExcelParams().values();
                 for (ExcelImportEntity excelImportEntity : collection) {
                     if (excelImportEntity.isImportField() && !titlemap.containsValue(
-                        collectionparams.getExcelName() + "_" + excelImportEntity.getName())) {
+                            collectionparams.getExcelName() + "_" + excelImportEntity.getName())) {
                         throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
                     }
                 }
@@ -506,20 +498,12 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 保存字段值(获取值,校验值,追加错误信息)
-     * 
-     * @param params
-     * @param object
-     * @param cell
-     * @param excelParams
-     * @param titleString
-     * @param row
-     * @throws Exception
      */
     private void saveFieldValue(ImportParams params, Object object, Cell cell,
                                 Map<String, ExcelImportEntity> excelParams, String titleString,
                                 Row row) throws Exception {
         Object value = cellValueServer.getValue(params.getDataHanlder(), object, cell, excelParams,
-            titleString);
+                titleString);
         if (object instanceof Map) {
             if (params.getDataHanlder() != null) {
                 params.getDataHanlder().setMapValue((Map) object, titleString, value);
@@ -532,7 +516,7 @@ public class ExcelImportServer extends ImportBaseService {
     }
 
     /**
-     * 
+     *
      * @param object
      * @param picId
      * @param excelParams
@@ -556,7 +540,7 @@ public class ExcelImportServer extends ImportBaseService {
         fileName += "." + PoiPublicUtil.getFileExtendName(data);
         if (excelParams.get(titleString).getSaveType() == 1) {
             String path = PoiPublicUtil
-                .getWebRootPath(getSaveUrl(excelParams.get(titleString), object));
+                    .getWebRootPath(getSaveUrl(excelParams.get(titleString), object));
             File savefile = new File(path);
             if (!savefile.exists()) {
                 savefile.mkdirs();
@@ -569,7 +553,7 @@ public class ExcelImportServer extends ImportBaseService {
                 IOUtils.closeQuietly(fos);
             }
             setValues(excelParams.get(titleString), object,
-                getSaveUrl(excelParams.get(titleString), object) + "/" + fileName);
+                    getSaveUrl(excelParams.get(titleString), object) + "/" + fileName);
         } else {
             setValues(excelParams.get(titleString), object, data);
         }
