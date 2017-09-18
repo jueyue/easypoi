@@ -262,7 +262,7 @@ public class ExcelImportServer extends ImportBaseService {
         boolean isAdd = true;
         Cell cell = null;
         if (params.isNeedVerfiy()) {
-            String errorMsg = PoiValidationUtil.validation(object);
+            String errorMsg = PoiValidationUtil.validation(object,params.getVerfiyGroup());
             if (StringUtils.isNotEmpty(errorMsg)) {
                 cell = row.createCell(row.getLastCellNum());
                 cell.setCellValue(errorMsg);

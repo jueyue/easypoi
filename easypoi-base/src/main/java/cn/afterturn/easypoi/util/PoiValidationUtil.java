@@ -36,9 +36,14 @@ public class PoiValidationUtil {
         validator = factory.getValidator();
     }
 
-    public static String validation(Object obj) {
-        Set<ConstraintViolation<Object>> set = validator.validate(obj);
-        if (set.size() > 0) {
+    public static String validation(Object obj, Class[] verfiyGroup) {
+        Set<ConstraintViolation<Object>> set = null;
+        if(verfiyGroup != null){
+            set = validator.validate(obj,verfiyGroup);
+        }else{
+            set = validator.validate(obj);
+        }
+        if (set!= null && set.size() > 0) {
             return getValidateErrMsg(set);
         }
         return null;
