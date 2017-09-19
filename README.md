@@ -107,6 +107,14 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 				<optional>true</optional>
 			</dependency>
 			
+			<!-- Word 需要使用 -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>ooxml-schemas</artifactId>
+                <version>1.3</version>
+                <optional>true</optional>
+            </dependency>
+			
 			<!-- 校验,下面两个实现 -->
 			<dependency>
 				<groupId>org.hibernate</groupId>

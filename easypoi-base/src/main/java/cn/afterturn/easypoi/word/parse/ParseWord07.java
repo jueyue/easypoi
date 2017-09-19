@@ -220,7 +220,6 @@ public class ParseWord07 {
             if (listobj == null) {
                 parseThisRow(cells, map);
             } else if (listobj instanceof ExcelListEntity) {
-                table.removeRow(i);// 删除这一行
                 new ExcelEntityParse().parseNextRowAndAddRow(table, i, (ExcelListEntity) listobj);
                 i = i + ((ExcelListEntity) listobj).getList().size() - 1;//删除之后要往上挪一行,然后加上跳过新建的行数
             } else {
