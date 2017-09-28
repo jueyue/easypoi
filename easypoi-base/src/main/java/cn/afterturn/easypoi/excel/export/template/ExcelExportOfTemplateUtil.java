@@ -337,6 +337,9 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
             Object t = its.next();
             setForEeachRowCellValue(true, cell.getRow(), cell.getColumnIndex(), t, columns, map,
                 rowspan, colspan, mergedRegionHelper);
+            if(cell.getRow().getCell(cell.getColumnIndex() + colspan) == null){
+                cell.getRow().createCell(cell.getColumnIndex() + colspan);
+            }
             cell = cell.getRow().getCell(cell.getColumnIndex() + colspan);
         }
         if (isCreate) {
