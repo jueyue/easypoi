@@ -1,6 +1,7 @@
-===========================
+
 EasyPoi Excel和 Word简易工具类
 ===========================
+
  easypoi功能如同名字easy,主打的功能就是容易,让一个没见接触过poi的人员
 就可以方便的写出Excel导出,Excel模板导出,Excel导入,Word模板导出,通过简单的注解和模板
 语言(熟悉的表达式语法),完成以前复杂的写法
@@ -19,6 +20,8 @@ EasyPoi Excel和 Word简易工具类
 !!!2.1.6 版本开始和之前的版本校验不兼用,使用JSR303的校验,删除了之前的注解,请注意
 !!! 2.3.0 模板导出有问题,请使用2.3.0.1修复版本
 
+
+[用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
 版本介绍
 history.md
@@ -144,4 +147,3 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 				<optional>true</optional>
 			</dependency>
 ```
-
