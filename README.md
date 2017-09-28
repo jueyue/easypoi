@@ -6,19 +6,18 @@ EasyPoi Excel和 Word简易工具类
 就可以方便的写出Excel导出,Excel模板导出,Excel导入,Word模板导出,通过简单的注解和模板
 语言(熟悉的表达式语法),完成以前复杂的写法
 
-	官网：http://www.afterturn.cn/
+	官网： http://www.afterturn.cn/
 	邮箱： qrb.jueyue@gmail.com
 	QQ群:  364192721
 	
 	开发者:魔幻之翼 xf.key@163.com
 
+[官网](http://www.afterturn.cn/)
+
 **开发指南**
 
 **[http://www.afterturn.cn/doc/easypoi.html](http://www.afterturn.cn/doc/easypoi.html)**
 
-[开发文档请查看DOC下面的EasyPoi教程](http://git.oschina.net/jueyue/easypoi/blob/master/doc/EasyPoi%E6%95%99%E7%A8%8B.docx?dir=0&filepath=doc%2FEasyPoi%E6%95%99%E7%A8%8B.docx&oid=133ebde5641f128420023dbdc2533ab4b53c7792&sha=4c8d94c80544811e2e358518bad6c689a63c13e9)
-!!!2.1.6 版本开始和之前的版本校验不兼用,使用JSR303的校验,删除了之前的注解,请注意
-!!! 2.3.0 模板导出有问题,请使用2.3.0.1修复版本
 
 
 [用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
@@ -29,9 +28,9 @@ history.md
 基础示例
 basedemo.md
 
-[测试项目](http://git.oschina.net/jueyue/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
+[测试项目](http://git.oschina.net/lemur/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
 
-**!!! 3.0.1 版本开始全新包名和GROUPID cn.afterturn**
+**!!! 3.0 版本开始全新包名和GROUPID cn.afterturn**
 
 ---------------------------
 EasyPoi的主要特点
@@ -70,23 +69,23 @@ EasyPoi的几个入口工具类
 maven 
 --------------------------
 maven库应该都可以了
-SNAPSHOT 版本
+SNAPSHOT 版本-很少发布
 https://oss.sonatype.org/content/groups/public/
 ```xml
 		 <dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 		</dependency>
 ```
 	
