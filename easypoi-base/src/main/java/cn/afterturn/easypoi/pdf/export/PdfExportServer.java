@@ -41,7 +41,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import cn.afterturn.easypoi.cache.ImageCache;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
-import cn.afterturn.easypoi.excel.export.base.ExportBase;
+import cn.afterturn.easypoi.excel.export.base.ExportCommonServer;
 import cn.afterturn.easypoi.pdf.entity.PdfExportParams;
 import cn.afterturn.easypoi.pdf.styler.IPdfExportStyler;
 import cn.afterturn.easypoi.pdf.styler.PdfExportStylerDefaultImpl;
@@ -52,7 +52,7 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
  * @author JueYue
  *  2015年10月6日 下午8:21:08
  */
-public class PdfExportServer extends ExportBase {
+public class PdfExportServer extends ExportCommonServer {
 
     private static final Logger LOGGER     = LoggerFactory.getLogger(PdfExportServer.class);
 
@@ -91,7 +91,7 @@ public class PdfExportServer extends ExportBase {
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
-                null);
+                null, null);
             createPdfByExportEntity(entity, excelParams, dataSet);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

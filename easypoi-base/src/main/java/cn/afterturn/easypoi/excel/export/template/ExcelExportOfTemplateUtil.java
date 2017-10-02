@@ -47,7 +47,7 @@ import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
-import cn.afterturn.easypoi.excel.export.base.ExcelExportBase;
+import cn.afterturn.easypoi.excel.export.base.ExportBaseServer;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.excel.export.template.TemplateSumHanlder.TemplateSumEntity;
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
@@ -64,7 +64,7 @@ import cn.afterturn.easypoi.util.PoiSheetUtility;
  *  2013-10-17
  * @version 1.0
  */
-public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
+public final class ExcelExportOfTemplateUtil extends ExportBaseServer {
 
     private static final Logger  LOGGER            = LoggerFactory
         .getLogger(ExcelExportOfTemplateUtil.class);
@@ -110,7 +110,7 @@ public final class ExcelExportOfTemplateUtil extends ExcelExportBase {
         }
         // 获取实体对象的导出数据
         List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
-        getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null);
+        getAllExcelField(null, targetId, fileds, excelParams, pojoClass, null, null);
         // 根据表头进行筛选排序
         sortAndFilterExportField(excelParams, titlemap);
         short rowHeight = getRowHeight(excelParams);
