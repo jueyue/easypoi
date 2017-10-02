@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  Unless required by applicable law or agreed to in writing, software
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -34,7 +34,7 @@ import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
-import cn.afterturn.easypoi.excel.export.base.ExcelExportBase;
+import cn.afterturn.easypoi.excel.export.base.ExportBaseServer;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
@@ -43,20 +43,19 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
 
 /**
  * Excel导出服务
- * 
- * @author JueYue
- *  2014年6月17日 下午5:30:54
+ *
+ * @author JueYue 2014年6月17日 下午5:30:54
  */
-public class ExcelExportServer extends ExcelExportBase {
+public class ExcelExportServer extends ExportBaseServer {
 
     // 最大行数,超过自动多Sheet
-    private int                 MAX_NUM = 60000;
+    private int MAX_NUM = 60000;
 
     protected int createHeaderAndTitle(ExportParams entity, Sheet sheet, Workbook workbook,
-                                     List<ExcelExportEntity> excelParams) {
-        int rows = 0, feildWidth = getFieldLength(excelParams);
+                                       List<ExcelExportEntity> excelParams) {
+        int rows = 0, fieldLength = getFieldLength(excelParams);
         if (entity.getTitle() != null) {
-            rows += createHeaderRow(entity, sheet, workbook, feildWidth);
+            rows += createHeaderRow(entity, sheet, workbook, fieldLength);
         }
         rows += createTitleRow(entity, sheet, workbook, rows, excelParams);
         sheet.createFreezePane(0, rows, 0, rows);
@@ -65,35 +64,30 @@ public class ExcelExportServer extends ExcelExportBase {
 
     /**
      * 创建 表头改变
-     * 
-     * @param entity
-     * @param sheet
-     * @param workbook
-     * @param feildWidth
      */
     public int createHeaderRow(ExportParams entity, Sheet sheet, Workbook workbook,
-                               int feildWidth) {
-        
+                               int fieldWidth) {
+
         Row row = sheet.createRow(0);
         row.setHeight(entity.getTitleHeight());
         createStringCell(row, 0, entity.getTitle(),
-            getExcelExportStyler().getHeaderStyle(entity.getHeaderColor()), null);
-        for (int i = 1; i <= feildWidth; i++) {
-            createStringCell(row, i, "",
                 getExcelExportStyler().getHeaderStyle(entity.getHeaderColor()), null);
+        for (int i = 1; i <= fieldWidth; i++) {
+            createStringCell(row, i, "",
+                    getExcelExportStyler().getHeaderStyle(entity.getHeaderColor()), null);
         }
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, feildWidth));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, fieldWidth));
         if (entity.getSecondTitle() != null) {
             row = sheet.createRow(1);
             row.setHeight(entity.getSecondTitleHeight());
             CellStyle style = workbook.createCellStyle();
             style.setAlignment(CellStyle.ALIGN_RIGHT);
             createStringCell(row, 0, entity.getSecondTitle(), style, null);
-            for (int i = 1; i <= feildWidth; i++) {
+            for (int i = 1; i <= fieldWidth; i++) {
                 createStringCell(row, i, "",
-                    getExcelExportStyler().getHeaderStyle(entity.getHeaderColor()), null);
+                        getExcelExportStyler().getHeaderStyle(entity.getHeaderColor()), null);
             }
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, feildWidth));
+            sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, fieldWidth));
             return 2;
         }
         return 1;
@@ -104,7 +98,7 @@ public class ExcelExportServer extends ExcelExportBase {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Excel export start ,class is {}", pojoClass);
             LOGGER.debug("Excel version is {}",
-                entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
+                    entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
         }
         if (workbook == null || entity == null || pojoClass == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
@@ -112,11 +106,11 @@ public class ExcelExportServer extends ExcelExportBase {
         try {
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             // 得到所有字段
-            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
+            Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
-                null);
+                    null, null);
             //获取所有参数后,后面的逻辑判断就一致了
             createSheetForMap(workbook, entity, excelParams, dataSet);
         } catch (Exception e) {
@@ -129,7 +123,7 @@ public class ExcelExportServer extends ExcelExportBase {
                                   List<ExcelExportEntity> entityList, Collection<?> dataSet) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Excel version is {}",
-                entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
+                    entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
         }
         if (workbook == null || entity == null || entityList == null || dataSet == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
@@ -138,8 +132,8 @@ public class ExcelExportServer extends ExcelExportBase {
         if (type.equals(ExcelType.XSSF)) {
             MAX_NUM = 1000000;
         }
-        if( entity.getMaxNum() >0) {
-        	MAX_NUM = entity.getMaxNum();
+        if (entity.getMaxNum() > 0) {
+            MAX_NUM = entity.getMaxNum();
         }
         Sheet sheet = null;
         try {
@@ -148,12 +142,12 @@ public class ExcelExportServer extends ExcelExportBase {
             // 重复遍历,出现了重名现象,创建非指定的名称Sheet
             sheet = workbook.createSheet();
         }
-        insertDataToSheet(workbook, entity, entityList, dataSet,sheet);
+        insertDataToSheet(workbook, entity, entityList, dataSet, sheet);
     }
 
     protected void insertDataToSheet(Workbook workbook, ExportParams entity,
-                                   List<ExcelExportEntity> entityList, Collection<?> dataSet,
-                                   Sheet sheet) {
+                                     List<ExcelExportEntity> entityList, Collection<?> dataSet,
+                                     Sheet sheet) {
         try {
             dataHanlder = entity.getDataHanlder();
             if (dataHanlder != null && dataHanlder.getNeedHandlerFields() != null) {
@@ -161,7 +155,7 @@ public class ExcelExportServer extends ExcelExportBase {
             }
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) entity.getStyle()
-                .getConstructor(Workbook.class).newInstance(workbook));
+                    .getConstructor(Workbook.class).newInstance(workbook));
             Drawing patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
@@ -170,10 +164,10 @@ public class ExcelExportServer extends ExcelExportBase {
             excelParams.addAll(entityList);
             sortAllParams(excelParams);
             int index = entity.isCreateHeadRows()
-                ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
+                    ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
             int titleHeight = index;
             setCellWith(excelParams, sheet);
-            short rowHeight = getRowHeight(excelParams);
+            short rowHeight = entity.getHeight() > 0? entity.getHeight() : getRowHeight(excelParams);
             setCurrentIndex(1);
             Iterator<?> its = dataSet.iterator();
             List<Object> tempList = new ArrayList<Object>();
@@ -195,6 +189,10 @@ public class ExcelExportServer extends ExcelExportBase {
                 its.next();
                 its.remove();
             }
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("List data more than max ,data size is {}",
+                        dataSet.size());
+            }
             // 发现还有剩余list 继续循环创建Sheet
             if (dataSet.size() > 0) {
                 createSheetForMap(workbook, entity, entityList, dataSet);
@@ -211,9 +209,6 @@ public class ExcelExportServer extends ExcelExportBase {
 
     /**
      * 创建表头
-     * 
-     * @param title
-     * @param index
      */
     private int createTitleRow(ExportParams title, Sheet sheet, Workbook workbook, int index,
                                List<ExcelExportEntity> excelParams) {
@@ -226,29 +221,40 @@ public class ExcelExportServer extends ExcelExportBase {
             listRow.setHeight((short) 450);
         }
         int cellIndex = 0;
+        int groupCellLength = 0;
         CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
         for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
             ExcelExportEntity entity = excelParams.get(i);
-            if (StringUtils.isNotBlank(entity.getName())) {
+            if (StringUtils.isNotBlank(entity.getGroupName())) {
+                createStringCell(row, cellIndex, entity.getGroupName(), titleStyle, entity);
+                createStringCell(listRow, cellIndex, entity.getName(), titleStyle, entity);
+                groupCellLength++;
+            } else if (StringUtils.isNotBlank(entity.getName())) {
+                if(groupCellLength > 0){
+                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex - groupCellLength));
+                    groupCellLength = 0;
+                }
                 createStringCell(row, cellIndex, entity.getName(), titleStyle, entity);
             }
             if (entity.getList() != null) {
                 List<ExcelExportEntity> sTitel = entity.getList();
                 if (StringUtils.isNotBlank(entity.getName())) {
-                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex,
-                        cellIndex + sTitel.size() - 1));
+                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex + sTitel.size() - 1));
                 }
                 for (int j = 0, size = sTitel.size(); j < size; j++) {
                     createStringCell(rows == 2 ? listRow : row, cellIndex, sTitel.get(j).getName(),
-                        titleStyle, entity);
+                            titleStyle, entity);
                     cellIndex++;
                 }
                 cellIndex--;
-            } else if (rows == 2) {
+            } else if (rows == 2 && StringUtils.isBlank(entity.getGroupName())) {
                 createStringCell(listRow, cellIndex, "", titleStyle, entity);
                 sheet.addMergedRegion(new CellRangeAddress(index, index + 1, cellIndex, cellIndex));
             }
             cellIndex++;
+        }
+        if(groupCellLength > 0){
+            sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
         }
         return rows;
 

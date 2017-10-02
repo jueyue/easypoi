@@ -55,7 +55,7 @@ public @interface Excel {
 
     /**
      * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
-     * 优先选择@ExcelEntity中的 height
+     * 优先选择@ExportParams中的 height
      */
     @Deprecated
     public double height() default 10;
@@ -90,6 +90,13 @@ public @interface Excel {
      * 导出排序跟定义了annotation的字段的顺序有关 可以使用a_id,b_id来确实是否使用
      */
     public String name();
+
+    /**
+     * 导出时，表头双行显示,聚合,排序以最小的值参与总体排序再内部排序
+     * 导出排序跟定义了annotation的字段的顺序有关 可以使用a_id,b_id来确实是否使用
+     * 优先弱与 @ExcelEntity 的name和show属性
+     */
+    public String groupName() default "";
 
     /**
      * 是否需要纵向合并单元格(用于含有list中,单个的单元格,合并list创建的多个row)

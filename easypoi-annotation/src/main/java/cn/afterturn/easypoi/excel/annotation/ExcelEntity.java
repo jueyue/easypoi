@@ -42,14 +42,9 @@ public @interface ExcelEntity {
 
     /**
      * 如果等于true,name必须有值, Excel的表头会变成两行,同时改Excel内部数据不参与总排序,排序用下面这个来代替,内部再排序
+     * 排序取当中最小值排序
      * @return
      */
     public boolean show() default false;
-
-    /**
-     * 展示到第几个同样可以使用a_id,b_id
-     *
-     */
-    public String orderNum() default "0";
 
 }

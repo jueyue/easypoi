@@ -101,6 +101,12 @@ public class ExportParams extends ExcelBaseParams {
      */
     private int       maxNum            = 0;
 
+    /**
+     * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
+     * 全局设置,优先使用
+     */
+    public short     height              = 0;
+
     public ExportParams() {
 
     }
@@ -257,5 +263,13 @@ public class ExportParams extends ExcelBaseParams {
 	public void setMaxNum(int maxNum) {
 		this.maxNum = maxNum;
 	}
+
+    public short getHeight() {
+        return (short) (height * 50);
+    }
+
+    public void setHeight(short height) {
+        this.height = height;
+    }
 
 }

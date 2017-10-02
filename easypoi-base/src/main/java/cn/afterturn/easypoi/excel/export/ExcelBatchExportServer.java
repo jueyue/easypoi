@@ -72,7 +72,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
-                null);
+                null, null);
             sortAllParams(excelParams);
             try {
                 sheet = workbook.createSheet(entity.getSheetName());
@@ -81,8 +81,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
                 sheet = workbook.createSheet();
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
+            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
         }
     }
 
