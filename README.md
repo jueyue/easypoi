@@ -28,7 +28,7 @@ history.md
 基础示例
 basedemo.md
 
-[测试项目](http://git.oschina.net/lemur/easypoi-test): http://git.oschina.net/jueyue/easypoi-test
+[测试项目](http://git.oschina.net/lemur/easypoi-test): http://git.oschina.net/lemur/easypoi-test
 
 **!!! 3.0 版本开始全新包名和GROUPID cn.afterturn**
 
