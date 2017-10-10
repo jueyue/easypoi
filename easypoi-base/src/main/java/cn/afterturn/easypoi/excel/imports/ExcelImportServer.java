@@ -408,14 +408,14 @@ public class ExcelImportServer extends ImportBaseService {
         return importResult;
     }
 
-    private Workbook removeSuperfluousRows(Workbook book, List<Row> successRow, ImportParams params) {
+    private Workbook removeSuperfluousRows(Workbook book, List<Row> rowList, ImportParams params) {
         for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
                 + params.getSheetNum(); i++) {
-            for (int j = 0; j < successRow.size(); j++) {
-                if (successRow.get(j).getRowNum() < successRow.get(j).getSheet().getLastRowNum()) {
-                    book.getSheetAt(i).shiftRows(successRow.get(j).getRowNum() + 1, successRow.get(j).getSheet().getLastRowNum(), -1);
-                } else {
-                    book.getSheetAt(i).shiftRows(successRow.get(j).getRowNum(), successRow.get(j).getSheet().getLastRowNum(), -1);
+            for (int j = 0; j < rowList.size(); j++) {
+                if (rowList.get(j).getRowNum() < rowList.get(j).getSheet().getLastRowNum()) {
+                    book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum() + 1, rowList.get(j).getSheet().getLastRowNum(), -1);
+                } else if(rowList.get(j).getRowNum() == rowList.get(j).getSheet().getLastRowNum()){
+                    book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum(), rowList.get(j).getSheet().getLastRowNum(), -1);
                 }
             }
         }
