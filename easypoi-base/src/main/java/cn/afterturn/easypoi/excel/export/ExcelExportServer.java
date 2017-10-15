@@ -34,7 +34,7 @@ import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
-import cn.afterturn.easypoi.excel.export.base.ExportBaseServer;
+import cn.afterturn.easypoi.excel.export.base.BaseExportServer;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
@@ -46,10 +46,10 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
  *
  * @author JueYue 2014年6月17日 下午5:30:54
  */
-public class ExcelExportServer extends ExportBaseServer {
+public class ExcelExportServer extends BaseExportServer {
 
     // 最大行数,超过自动多Sheet
-    private int MAX_NUM = 60000;
+    private static int MAX_NUM = 60000;
 
     protected int createHeaderAndTitle(ExportParams entity, Sheet sheet, Workbook workbook,
                                        List<ExcelExportEntity> excelParams) {
@@ -175,8 +175,9 @@ public class ExcelExportServer extends ExportBaseServer {
                 Object t = its.next();
                 index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight);
                 tempList.add(t);
-                if (index >= MAX_NUM)
+                if (index >= MAX_NUM) {
                     break;
+                }
             }
             if (entity.getFreezeCol() != 0) {
                 sheet.createFreezePane(entity.getFreezeCol(), 0, entity.getFreezeCol(), 0);

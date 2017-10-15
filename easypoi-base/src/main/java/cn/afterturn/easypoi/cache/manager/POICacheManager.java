@@ -52,8 +52,9 @@ public final class POICacheManager {
             .build(new CacheLoader<String, byte[]>() {
                 @Override
                 public byte[] load(String url) throws Exception {
-                    if (LOCAL_FILELOADER.get() != null)
+                    if (LOCAL_FILELOADER.get() != null) {
                         return LOCAL_FILELOADER.get().getFile(url);
+                    }
                     return fileLoder.getFile(url);
                 }
             });
@@ -81,8 +82,9 @@ public final class POICacheManager {
      * @param fileLoder
      */
     public static void setFileLoderOnce(IFileLoader fileLoder) {
-        if (fileLoder != null)
+        if (fileLoder != null) {
             LOCAL_FILELOADER.set(fileLoder);
+        }
     }
 
     public static void setLoadingCache(LoadingCache<String, byte[]> loadingCache) {

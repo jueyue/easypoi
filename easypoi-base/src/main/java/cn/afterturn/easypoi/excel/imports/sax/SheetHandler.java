@@ -108,7 +108,7 @@ public class SheetHandler extends DefaultHandler {
             // 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符  
         } else if ("v".equals(name)) {
             String value = lastContents.trim();
-            value = value.equals("") ? " " : value;
+            value = "".equals(value) ? " " : value;
             if (CellValueType.Date.equals(type)) {
                 Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
                 rowlist.add(curCol, new SaxReadCellEntity(CellValueType.Date, date));
@@ -119,7 +119,7 @@ public class SheetHandler extends DefaultHandler {
                 rowlist.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
             }
             curCol++;
-        } else if (name.equals("row")) {//如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法  
+        } else if ("row".equals(name)) {//如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
             read.parse(curRow, rowlist);
             rowlist.clear();
             curRow++;

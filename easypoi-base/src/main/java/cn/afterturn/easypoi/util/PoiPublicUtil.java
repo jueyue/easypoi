@@ -251,10 +251,10 @@ public final class PoiPublicUtil {
         if (fieldType.isArray()) {
             isBaseClass = false;
         } else if (fieldType.isPrimitive() || fieldType.getPackage() == null
-                   || fieldType.getPackage().getName().equals("java.lang")
-                   || fieldType.getPackage().getName().equals("java.math")
-                   || fieldType.getPackage().getName().equals("java.sql")
-                   || fieldType.getPackage().getName().equals("java.util")) {
+                   || "java.lang".equals(fieldType.getPackage().getName())
+                   || "java.math".equals(fieldType.getPackage().getName())
+                   || "java.sql".equals(fieldType.getPackage().getName())
+                   || "java.util".equals(fieldType.getPackage().getName())) {
             isBaseClass = true;
         }
         return isBaseClass;
@@ -300,21 +300,21 @@ public final class PoiPublicUtil {
      * @return
      */
     private static boolean isUseInThis(String exportName, String targetId) {
-        return targetId == null || exportName.equals("") || exportName.indexOf("_") < 0
+        return targetId == null || "".equals(exportName) || exportName.indexOf("_") < 0
                || exportName.indexOf(targetId) != -1;
     }
 
     private static Integer getImageType(String type) {
-        if (type.equalsIgnoreCase("JPG") || type.equalsIgnoreCase("JPEG")) {
+        if ("JPG".equalsIgnoreCase(type) || "JPEG".equalsIgnoreCase(type)) {
             return XWPFDocument.PICTURE_TYPE_JPEG;
         }
-        if (type.equalsIgnoreCase("GIF")) {
+        if ("GIF".equalsIgnoreCase(type)) {
             return XWPFDocument.PICTURE_TYPE_GIF;
         }
-        if (type.equalsIgnoreCase("BMP")) {
+        if ("BMP".equalsIgnoreCase(type)) {
             return XWPFDocument.PICTURE_TYPE_GIF;
         }
-        if (type.equalsIgnoreCase("PNG")) {
+        if ("PNG".equalsIgnoreCase(type)) {
             return XWPFDocument.PICTURE_TYPE_PNG;
         }
         return XWPFDocument.PICTURE_TYPE_JPEG;

@@ -29,19 +29,19 @@ import javax.validation.ValidatorFactory;
  */
 public class PoiValidationUtil {
 
-    private final static Validator validator;
+    private final static Validator VALIDATOR;
 
     static {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        VALIDATOR = factory.getValidator();
     }
 
     public static String validation(Object obj, Class[] verfiyGroup) {
         Set<ConstraintViolation<Object>> set = null;
         if(verfiyGroup != null){
-            set = validator.validate(obj,verfiyGroup);
+            set = VALIDATOR.validate(obj,verfiyGroup);
         }else{
-            set = validator.validate(obj);
+            set = VALIDATOR.validate(obj);
         }
         if (set!= null && set.size() > 0) {
             return getValidateErrMsg(set);

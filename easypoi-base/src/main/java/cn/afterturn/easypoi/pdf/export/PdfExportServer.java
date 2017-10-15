@@ -87,7 +87,7 @@ public class PdfExportServer extends ExportCommonServer {
                 //excelParams.add(indexExcelEntity(entity));
             }
             // 得到所有字段
-            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
+            Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,

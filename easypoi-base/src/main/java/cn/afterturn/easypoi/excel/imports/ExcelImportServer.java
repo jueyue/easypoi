@@ -142,7 +142,7 @@ public class ExcelImportServer extends ImportBaseService {
      */
     private String getSaveUrl(ExcelImportEntity excelImportEntity, Object object) throws Exception {
         String url = "";
-        if (excelImportEntity.getSaveUrl().equals("upload")) {
+        if ("upload".equals(excelImportEntity.getSaveUrl())) {
             if (excelImportEntity.getMethods() != null
                     && excelImportEntity.getMethods().size() > 0) {
                 object = getFieldBySomeMethod(excelImportEntity.getMethods(), object);
@@ -162,7 +162,7 @@ public class ExcelImportServer extends ImportBaseService {
         List<ExcelCollectionParams> excelCollection = new ArrayList<ExcelCollectionParams>();
         String targetId = null;
         if (!Map.class.equals(pojoClass)) {
-            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
+            Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             if (etarget != null) {
                 targetId = etarget.value();
@@ -267,8 +267,9 @@ public class ExcelImportServer extends ImportBaseService {
         if (params.getVerifyHanlder() != null) {
             ExcelVerifyHanlderResult result = params.getVerifyHanlder().verifyHandler(object);
             if (!result.isSuccess()) {
-                if (cell == null)
+                if (cell == null) {
                     cell = row.createCell(row.getLastCellNum());
+                }
                 cell.setCellValue((StringUtils.isNoneBlank(cell.getStringCellValue())
                         ? cell.getStringCellValue() + "," : "") + result.getMsg());
                 if (object instanceof IExcelModel) {
@@ -372,7 +373,7 @@ public class ExcelImportServer extends ImportBaseService {
         for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
                 + params.getSheetNum(); i++) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(" start to read excel by is ,startTime is {}", new Date().getTime());
+                LOGGER.debug(" start to read excel by is ,startTime is {}", System.currentTimeMillis());
             }
             if (isXSSFWorkbook) {
                 pictures = PoiPublicUtil.getSheetPictrues07((XSSFSheet) book.getSheetAt(i),
@@ -382,16 +383,16 @@ public class ExcelImportServer extends ImportBaseService {
                         (HSSFWorkbook) book);
             }
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(" end to read excel by is ,endTime is {}", new Date().getTime());
+                LOGGER.debug(" end to read excel by is ,endTime is {}", System.currentTimeMillis());
             }
             result.addAll(importExcel(result, book.getSheetAt(i), pojoClass, params, pictures));
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(" end to read excel list by pos ,endTime is {}", new Date().getTime());
+                LOGGER.debug(" end to read excel list by pos ,endTime is {}", System.currentTimeMillis());
             }
             if (params.isReadSingleCell()) {
                 readSingleCell(importResult, book.getSheetAt(i), params);
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(" read Key-Value ,endTime is {}", new Date().getTime());
+                    LOGGER.debug(" read Key-Value ,endTime is {}", System.currentTimeMillis());
                 }
             }
         }

@@ -83,7 +83,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private void initParams(Class<?> pojoClass, ImportParams params) {
         try {
 
-            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
+            Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             if (etarget != null) {
                 targetId = etarget.value();

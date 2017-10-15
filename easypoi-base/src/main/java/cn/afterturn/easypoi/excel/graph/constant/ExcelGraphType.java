@@ -11,7 +11,7 @@ package cn.afterturn.easypoi.excel.graph.constant;
  */
 public interface ExcelGraphType
 {
-	public static final Integer LineChart=1;
-	public static final Integer ScatterChart=2;
+	public static final Integer LINE_CHART =1;
+	public static final Integer SCATTER_CHART =2;
 	
 }

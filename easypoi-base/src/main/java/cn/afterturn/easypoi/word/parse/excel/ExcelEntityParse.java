@@ -171,7 +171,7 @@ public class ExcelEntityParse extends ExportCommonServer {
         Map<String, Integer> titlemap = getTitleMap(table, index, entity.getHeadRows());
         try {
             // 得到所有字段
-            Field fileds[] = PoiPublicUtil.getClassFields(entity.getClazz());
+            Field[] fileds = PoiPublicUtil.getClassFields(entity.getClazz());
             ExcelTarget etarget = entity.getClazz().getAnnotation(ExcelTarget.class);
             String targetId = null;
             if (etarget != null) {

@@ -69,13 +69,14 @@ public class StylerHelper {
         this.out = out;
         this.sheetNum = sheetNum;
         this.cssRandom = cssRandom;
-        if (wb instanceof HSSFWorkbook)
+        if (wb instanceof HSSFWorkbook) {
             helper = new HSSFHtmlHelper((HSSFWorkbook) wb);
-        else if (wb instanceof XSSFWorkbook)
+        } else if (wb instanceof XSSFWorkbook) {
             helper = new XSSFHtmlHelper((XSSFWorkbook) wb);
-        else
+        } else {
             throw new IllegalArgumentException(
-                "unknown workbook type: " + wb.getClass().getSimpleName());
+                    "unknown workbook type: " + wb.getClass().getSimpleName());
+        }
         printInlineStyle(wb);
     }
 
@@ -157,10 +158,12 @@ public class StylerHelper {
     }
 
     private void fontStyle(Font font) {
-        if (font.getBoldweight() >= Font.BOLDWEIGHT_BOLD)
+        if (font.getBoldweight() >= Font.BOLDWEIGHT_BOLD) {
             out.format("  font-weight: bold;%n");
-        if (font.getItalic())
+        }
+        if (font.getItalic()) {
             out.format("  font-style: italic;%n");
+        }
         out.format("  font-family: %s;%n", font.getFontName());
 
         int fontheight = font.getFontHeightInPoints();
@@ -181,8 +184,9 @@ public class StylerHelper {
     }
 
     private String styleName(CellStyle style) {
-        if (style == null)
+        if (style == null) {
             return "";
+        }
         return String.format("style_%02x_%s", style.getIndex(), cssRandom);
     }
 
@@ -209,13 +213,14 @@ public class StylerHelper {
         private final HSSFWorkbook wb;
         private final HSSFPalette  colors;
 
-        private HSSFColor          HSSF_AUTO = new HSSFColor.AUTOMATIC();
+        private HSSFColor hssfAuto = new HSSFColor.AUTOMATIC();
 
         public HSSFHtmlHelper(HSSFWorkbook wb) {
             this.wb = wb;
             colors = wb.getCustomPalette();
         }
 
+        @Override
         public void colorStyles(CellStyle style, Formatter out) {
             HSSFCellStyle cs = (HSSFCellStyle) style;
             out.format("  /* fill pattern = %d */%n", cs.getFillPattern());
@@ -225,7 +230,7 @@ public class StylerHelper {
 
         private void styleColor(Formatter out, String attr, short index) {
             HSSFColor color = colors.getColor(index);
-            if (index == HSSF_AUTO.getIndex() || color == null) {
+            if (index == hssfAuto.getIndex() || color == null) {
                 out.format("  /* %s: index = %d */%n", attr, index);
             } else {
                 short[] rgb = color.getTriplet();
@@ -234,6 +239,7 @@ public class StylerHelper {
             }
         }
 
+        @Override
         public void styleColor(Formatter out, String attr, Color color) {
             if (color == null) {
                 return;
@@ -254,16 +260,19 @@ public class StylerHelper {
         public XSSFHtmlHelper(XSSFWorkbook wb) {
         }
 
+        @Override
         public void colorStyles(CellStyle style, Formatter out) {
             XSSFCellStyle cs = (XSSFCellStyle) style;
             styleColor(out, "background-color", cs.getFillForegroundXSSFColor());
             styleColor(out, "color", cs.getFont().getXSSFColor());
         }
 
+        @Override
         public void styleColor(Formatter out, String attr, Color color) {
             XSSFColor xSSFColor = (XSSFColor) color;
-            if (color == null || xSSFColor.isAuto())
+            if (color == null || xSSFColor.isAuto()) {
                 return;
+            }
 
             byte[] rgb = xSSFColor.getRGB();
             if (rgb == null) {

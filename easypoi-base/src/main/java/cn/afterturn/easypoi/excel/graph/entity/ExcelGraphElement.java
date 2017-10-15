@@ -18,7 +18,7 @@ public class ExcelGraphElement
 	private Integer endRowNum;
 	private Integer startColNum;
 	private Integer endColNum;
-	private Integer elementType=ExcelGraphElementType.StringType;
+	private Integer elementType=ExcelGraphElementType.STRING_TYPE;
 	
 	
 	public Integer getStartRowNum()

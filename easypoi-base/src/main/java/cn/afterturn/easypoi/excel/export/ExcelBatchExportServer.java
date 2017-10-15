@@ -68,7 +68,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
                 excelParams.add(indexExcelEntity(entity));
             }
             // 得到所有字段
-            Field fileds[] = PoiPublicUtil.getClassFields(pojoClass);
+            Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             String targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
@@ -104,6 +104,7 @@ public class ExcelBatchExportServer extends ExcelExportServer {
         return workbook;
     }
 
+    @Override
     protected void insertDataToSheet(Workbook workbook, ExportParams entity,
                                      List<ExcelExportEntity> entityList, Collection<?> dataSet,
                                      Sheet sheet) {

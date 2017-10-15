@@ -37,6 +37,7 @@ public class FileLoaderImpl implements IFileLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileLoaderImpl.class);
 
+    @Override
     public byte[] getFile(String url) {
         InputStream fileis = null;
         ByteArrayOutputStream baos = null;
