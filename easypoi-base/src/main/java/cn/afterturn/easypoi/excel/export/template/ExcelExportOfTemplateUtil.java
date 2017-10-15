@@ -47,7 +47,7 @@ import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
-import cn.afterturn.easypoi.excel.export.base.ExportBaseServer;
+import cn.afterturn.easypoi.excel.export.base.BaseExportServer;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.excel.export.template.TemplateSumHanlder.TemplateSumEntity;
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
@@ -64,7 +64,7 @@ import cn.afterturn.easypoi.util.PoiSheetUtility;
  *  2013-10-17
  * @version 1.0
  */
-public final class ExcelExportOfTemplateUtil extends ExportBaseServer {
+public final class ExcelExportOfTemplateUtil extends BaseExportServer {
 
     private static final Logger  LOGGER            = LoggerFactory
         .getLogger(ExcelExportOfTemplateUtil.class);
@@ -517,8 +517,9 @@ public final class ExcelExportOfTemplateUtil extends ExportBaseServer {
                         : getStyles(true,
                             size >= j - columnIndex ? null : columns.get(j - columnIndex));
                     //返回的styler不为空时才使用,否则使用Excel设置的,更加推荐Excel设置的样式
-                    if (style != null)
+                    if (style != null) {
                         row.getCell(j).setCellStyle(style);
+                    }
                 }
 
             }

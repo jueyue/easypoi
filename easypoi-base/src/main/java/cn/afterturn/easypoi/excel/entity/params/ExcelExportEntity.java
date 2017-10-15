@@ -212,18 +212,23 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ExcelExportEntity other = (ExcelExportEntity) obj;
         if (key == null) {
-            if (other.key != null)
+            if (other.key != null) {
                 return false;
-        } else if (!key.equals(other.key))
+            }
+        } else if (!key.equals(other.key)) {
             return false;
+        }
         return true;
     }
 }

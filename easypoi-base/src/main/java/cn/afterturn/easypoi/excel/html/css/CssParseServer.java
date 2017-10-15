@@ -28,6 +28,9 @@ public class CssParseServer {
 
     private static final Logger      log           = LoggerFactory.getLogger(CssParseServer.class);
 
+    private static final Pattern STYLE_PATTERN =  Pattern.compile("(?:^|\\s+)(italic|oblique)(?:\\s+|$)");
+    private static final Pattern WEIGHT_PATTERN =  Pattern.compile("(?:^|\\s+)(bold(?:er)?|[7-9]00)(?:\\s+|$)");
+
     @SuppressWarnings("serial")
     private final static Set<String> BORDER_STYLES = new HashSet<String>() {
                                                        {
@@ -193,8 +196,7 @@ public class CssParseServer {
                 font.replaceAll("^|\\s*" + StringUtils.join(ignoreStyles, "|") + "\\s+|$", " "));
             log.debug("Font Attr [{}] After Process Ingore.", sbFont);
             // style
-            Matcher m = Pattern.compile("(?:^|\\s+)(italic|oblique)(?:\\s+|$)")
-                .matcher(sbFont.toString());
+            Matcher m = STYLE_PATTERN.matcher(sbFont.toString());
             if (m.find()) {
                 sbFont.setLength(0);
                 if (log.isDebugEnabled()) {
@@ -205,8 +207,7 @@ public class CssParseServer {
                 m.appendTail(sbFont);
             }
             // weight
-            m = Pattern.compile("(?:^|\\s+)(bold(?:er)?|[7-9]00)(?:\\s+|$)")
-                .matcher(sbFont.toString());
+            m = WEIGHT_PATTERN.matcher(sbFont.toString());
             if (m.find()) {
                 sbFont.setLength(0);
                 if (log.isDebugEnabled()) {

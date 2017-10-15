@@ -20,10 +20,11 @@ public class ExcelGraphDefined implements ExcelGraph
 	private ExcelGraphElement category;
 	public List<ExcelGraphElement> valueList=Lists.newArrayList();
 	public List<ExcelTitleCell> titleCell=Lists.newArrayList();
-	private Integer graphType=ExcelGraphType.LineChart;
+	private Integer graphType=ExcelGraphType.LINE_CHART;
 	public List<String> title=Lists.newArrayList();
 	
-	public ExcelGraphElement getCategory()
+	@Override
+    public ExcelGraphElement getCategory()
 	{
 		return category;
 	}
@@ -31,7 +32,8 @@ public class ExcelGraphDefined implements ExcelGraph
 	{
 		this.category = category;
 	}
-	public List<ExcelGraphElement> getValueList()
+	@Override
+    public List<ExcelGraphElement> getValueList()
 	{
 		return valueList;
 	}
@@ -40,7 +42,8 @@ public class ExcelGraphDefined implements ExcelGraph
 		this.valueList = valueList;
 	}
 
-	public Integer getGraphType()
+	@Override
+    public Integer getGraphType()
 	{
 		return graphType;
 	}
@@ -48,7 +51,8 @@ public class ExcelGraphDefined implements ExcelGraph
 	{
 		this.graphType = graphType;
 	}
-	public List<ExcelTitleCell> getTitleCell()
+	@Override
+    public List<ExcelTitleCell> getTitleCell()
 	{
 		return titleCell;
 	}
@@ -56,7 +60,8 @@ public class ExcelGraphDefined implements ExcelGraph
 	{
 		this.titleCell = titleCell;
 	}
-	public List<String> getTitle()
+	@Override
+    public List<String> getTitle()
 	{
 		return title;
 	}

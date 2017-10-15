@@ -103,11 +103,11 @@ public final class PoiFunctionUtil {
         }
         SimpleDateFormat dateFormat = null;
         if (DAY_STR.equals(format)) {
-            dateFormat = DAY_FORMAT;
+            dateFormat = new SimpleDateFormat(DAY_STR);
         } else if (TIME_STR.equals(format)) {
-            dateFormat = TIME_FORMAT;
+            dateFormat = new SimpleDateFormat(TIME_STR);
         } else if (TIME__NO_S_STR.equals(format)) {
-            dateFormat = TIME__NO_S_FORMAT;
+            dateFormat = new SimpleDateFormat(TIME__NO_S_STR);
         } else {
             dateFormat = new SimpleDateFormat(format);
         }

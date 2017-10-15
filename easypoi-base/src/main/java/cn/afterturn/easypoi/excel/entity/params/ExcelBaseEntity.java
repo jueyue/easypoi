@@ -37,7 +37,7 @@ public class ExcelBaseEntity {
     /**
      * 对应type
      */
-    private int          type = BaseEntityTypeConstants.StringType;
+    private int          type = BaseEntityTypeConstants.STRING_TYPE;
     /**
      * 数据库格式
      */

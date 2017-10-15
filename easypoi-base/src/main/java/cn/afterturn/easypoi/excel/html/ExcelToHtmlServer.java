@@ -71,7 +71,7 @@ public class ExcelToHtmlServer {
         this.sheetNum = params.getSheetNum();
         cssRandom = (int) Math.ceil(Math.random() * 1000);
         this.imageCachePath = params.getPath();
-        today = DATE_FORMAT.format(new Date());
+        today = new SimpleDateFormat("yyyy_MM_dd").format(new Date());
     }
 
     public String printPage() {
@@ -101,8 +101,9 @@ public class ExcelToHtmlServer {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
-            if (out != null)
+            if (out != null) {
                 out.close();
+            }
         }
         return null;
     }
@@ -125,8 +126,9 @@ public class ExcelToHtmlServer {
     }
 
     private void ensureOut() {
-        if (out == null)
+        if (out == null) {
             out = new Formatter(new StringBuilder());
+        }
     }
 
     private void printSheets() {
@@ -159,8 +161,9 @@ public class ExcelToHtmlServer {
     }
 
     private void ensureColumnBounds(Sheet sheet) {
-        if (gotBounds)
+        if (gotBounds) {
             return;
+        }
 
         Iterator<Row> iter = sheet.rowIterator();
         firstColumn = (iter.hasNext() ? Integer.MAX_VALUE : 0);
@@ -301,8 +304,9 @@ public class ExcelToHtmlServer {
     }
 
     private String styleName(CellStyle style) {
-        if (style == null)
+        if (style == null) {
             return "";
+        }
         return String.format("style_%02x_%s font_%s_%s", style.getIndex(), cssRandom,
             style.getFontIndex(), cssRandom);
     }

@@ -196,7 +196,7 @@ public final class PoiReflectorUtil {
                     // Ignored. This is only a final precaution, nothing we can do.
                 }
             }
-            if (field.isAccessible() && !field.getName().equalsIgnoreCase("serialVersionUID")) {
+            if (field.isAccessible() && !"serialVersionUID".equalsIgnoreCase(field.getName())) {
                 this.fieldList.add(field);
             }
         }

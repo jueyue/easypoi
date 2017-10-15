@@ -73,9 +73,9 @@ public class MyXWPFDocument extends XWPFDocument {
     }
 
     public void createPicture(String blipId, int id, int width, int height) {
-        final int EMU = 9525;
-        width *= EMU;
-        height *= EMU;
+        final int emu = 9525;
+        width *= emu;
+        height *= emu;
         CTInline inline = createParagraph().createRun().getCTR().addNewDrawing().addNewInline();
         String picXml = String.format(PICXML, id, blipId, width, height);
         XmlToken xmlToken = null;
@@ -102,9 +102,9 @@ public class MyXWPFDocument extends XWPFDocument {
     }
 
     public void createPicture(XWPFRun run, String blipId, int id, int width, int height) {
-        final int EMU = 9525;
-        width *= EMU;
-        height *= EMU;
+        final int emu = 9525;
+        width *= emu;
+        height *= emu;
         CTInline inline = run.getCTR().addNewDrawing().addNewInline();
         String picXml = String.format(PICXML, id, blipId, width, height);
         XmlToken xmlToken = null;

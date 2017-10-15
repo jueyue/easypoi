@@ -222,7 +222,7 @@ public class ImportBaseService {
      */
     public String getSaveExcelUrl(ImportParams params, Class<?> pojoClass) throws Exception {
         String url = "";
-        if (params.getSaveUrl().equals("upload/excelUpload")) {
+        if ("upload/excelUpload".equals(params.getSaveUrl())) {
             url = pojoClass.getName().split("\\.")[pojoClass.getName().split("\\.").length - 1];
             return params.getSaveUrl() + "/" + url;
         }

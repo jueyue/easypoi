@@ -78,8 +78,9 @@ public class TemplateSumHanlder {
     }
 
     public void addValueOfKey(String key, String val) {
-        if (StringUtils.isNoneEmpty(key))
+        if (StringUtils.isNoneEmpty(key)) {
             sumMap.get(key).setValue(sumMap.get(key).getValue() + Double.valueOf(val));
+        }
     }
 
     public List<TemplateSumEntity> getDataList() {

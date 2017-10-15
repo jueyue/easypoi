@@ -28,8 +28,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.Collection;
@@ -56,7 +54,7 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
  * @author JueYue 2014年6月17日 下午6:15:13
  */
 @SuppressWarnings("unchecked")
-public abstract class ExportBaseServer extends ExportCommonServer {
+public abstract class BaseExportServer extends ExportCommonServer {
 
     private int currentIndex = 0;
 
@@ -100,7 +98,7 @@ public abstract class ExportBaseServer extends ExportCommonServer {
                 } else {
                     Object value = getCellValue(entity, t);
 
-                    if (entity.getType() == BaseEntityTypeConstants.StringType) {
+                    if (entity.getType() == BaseEntityTypeConstants.STRING_TYPE) {
                         createStringCell(row, cellNum++, value == null ? "" : value.toString(),
                                 index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                                 entity);
@@ -110,7 +108,7 @@ public abstract class ExportBaseServer extends ExportCommonServer {
                                             row.getSheet().getWorkbook().getCreationHelper(), t,
                                             entity.getName(), value));
                         }
-                    } else if (entity.getType() == BaseEntityTypeConstants.DoubleType) {
+                    } else if (entity.getType() == BaseEntityTypeConstants.DOUBLE_TYPE) {
                         createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
                                 index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                                 entity);
@@ -193,7 +191,7 @@ public abstract class ExportBaseServer extends ExportCommonServer {
     }
 
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
-        if (excelExportEntity.getName() != null && excelExportEntity.getName().equals("序号") && excelExportEntity.getFormat() != null
+        if (excelExportEntity.getName() != null && "序号".equals(excelExportEntity.getName()) && excelExportEntity.getFormat() != null
                 && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
             createStringCell(row, 0, currentIndex + "",
                     index % 2 == 0 ? getStyles(false, null) : getStyles(true, null), null);
@@ -221,7 +219,7 @@ public abstract class ExportBaseServer extends ExportCommonServer {
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);
             Object value = getCellValue(entity, obj);
-            if (entity.getType() == BaseEntityTypeConstants.StringType) {
+            if (entity.getType() == BaseEntityTypeConstants.STRING_TYPE) {
                 createStringCell(row, cellNum++, value == null ? "" : value.toString(),
                         row.getRowNum() % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                         entity);
@@ -231,7 +229,7 @@ public abstract class ExportBaseServer extends ExportCommonServer {
                                     row.getSheet().getWorkbook().getCreationHelper(), obj, entity.getName(),
                                     value));
                 }
-            } else if (entity.getType() == BaseEntityTypeConstants.DoubleType) {
+            } else if (entity.getType() == BaseEntityTypeConstants.DOUBLE_TYPE) {
                 createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
                         index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity), entity);
                 if (entity.isHyperlink()) {
@@ -257,13 +255,13 @@ public abstract class ExportBaseServer extends ExportCommonServer {
             cell.setCellValue(Double.parseDouble(text));
             cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         } else {
-            RichTextString Rtext;
+            RichTextString rtext;
             if (type.equals(ExcelType.HSSF)) {
-                Rtext = new HSSFRichTextString(text);
+                rtext = new HSSFRichTextString(text);
             } else {
-                Rtext = new XSSFRichTextString(text);
+                rtext = new XSSFRichTextString(text);
             }
-            cell.setCellValue(Rtext);
+            cell.setCellValue(rtext);
         }
         if (style != null) {
             cell.setCellStyle(style);
@@ -330,9 +328,9 @@ public abstract class ExportBaseServer extends ExportCommonServer {
      */
     public int getImageType(byte[] value) {
         String type = PoiPublicUtil.getFileExtendName(value);
-        if (type.equalsIgnoreCase("JPG")) {
+        if ("JPG".equalsIgnoreCase(type)) {
             return Workbook.PICTURE_TYPE_JPEG;
-        } else if (type.equalsIgnoreCase("PNG")) {
+        } else if ("PNG".equalsIgnoreCase(type)) {
             return Workbook.PICTURE_TYPE_PNG;
         }
 

@@ -27,6 +27,11 @@ public class PoiCssUtils {
     private static final String           COLOR_PATTERN_VALUE_LONG  = "^(#(?:[a-f]|\\d{2}){3})$";
     // matches #rgb(r, g, b)
     private static final String           COLOR_PATTERN_RGB         = "^(rgb\\s*\\(\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*\\))$";
+
+    private static final Pattern           COLOR_PATTERN_VALUE_SHORT_PATTERN  = Pattern.compile("([a-f]|\\d)");
+    private static final Pattern           INT_PATTERN  = Pattern.compile("^(\\d+)(?:\\w+|%)?$");
+    private static final Pattern           INT_AND_PER_PATTERN  = Pattern.compile("^(\\d*\\.?\\d+)\\s*(%)?$");
+
     // color name -> POI Color
     private static Map<String, HSSFColor> colors                    = new HashMap<String, HSSFColor>();
     // static init
@@ -67,7 +72,7 @@ public class PoiCssUtils {
     public static int getInt(String strValue) {
         int value = 0;
         if (StringUtils.isNotBlank(strValue)) {
-            Matcher m = Pattern.compile("^(\\d+)(?:\\w+|%)?$").matcher(strValue);
+            Matcher m = INT_PATTERN.matcher(strValue);
             if (m.find()) {
                 value = Integer.parseInt(m.group(1));
             }
@@ -98,7 +103,7 @@ public class PoiCssUtils {
             if (color.matches(COLOR_PATTERN_VALUE_SHORT)) {
                 log.debug("Short Hex Color [{}] Found.", color);
                 StringBuffer sbColor = new StringBuffer();
-                Matcher m = Pattern.compile("([a-f]|\\d)").matcher(color);
+                Matcher m = COLOR_PATTERN_VALUE_SHORT_PATTERN.matcher(color);
                 while (m.find()) {
                     m.appendReplacement(sbColor, "$1$1");
                 }
@@ -180,7 +185,7 @@ public class PoiCssUtils {
     public static int calcColorValue(String color) {
         int rtn = 0;
         // matches 64 or 64%
-        Matcher m = Pattern.compile("^(\\d*\\.?\\d+)\\s*(%)?$").matcher(color);
+        Matcher m = INT_AND_PER_PATTERN.matcher(color);
         if (m.matches()) {
             // % not found
             if (m.group(2) == null) {

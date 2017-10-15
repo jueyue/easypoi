@@ -11,6 +11,6 @@ package cn.afterturn.easypoi.excel.graph.constant;
  */
 public interface ExcelGraphElementType
 {
-	public static final Integer StringType=1;
-	public static final Integer NumericType=2;
+	public static final Integer STRING_TYPE =1;
+	public static final Integer NUMERIC_TYPE =2;
 }

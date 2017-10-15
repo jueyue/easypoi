@@ -88,7 +88,7 @@ public class ExcelChartBuildService
         ExcelGraphElement categoryElement=graph.getCategory();
         
         ChartDataSource categoryChart;
-        if(categoryElement!=null&&categoryElement.getElementType()==ExcelGraphElementType.StringType){
+        if(categoryElement!=null&& categoryElement.getElementType().equals(ExcelGraphElementType.STRING_TYPE)){
         	categoryChart=DataSources.fromStringCellRange(dataSourceSheet, new CellRangeAddress(categoryElement.getStartRowNum(),categoryElement.getEndRowNum(),categoryElement.getStartColNum(),categoryElement.getEndColNum()));
         }else{
         	categoryChart=DataSources.fromNumericCellRange(dataSourceSheet, new CellRangeAddress(categoryElement.getStartRowNum(),categoryElement.getEndRowNum(),categoryElement.getStartColNum(),categoryElement.getEndColNum()));
@@ -103,7 +103,7 @@ public class ExcelChartBuildService
         	}
         }
         
-		if(graph.getGraphType()==ExcelGraphType.LineChart){
+		if(graph.getGraphType().equals(ExcelGraphType.LINE_CHART)){
 			LineChartData data = chart.getChartDataFactory().createLineChartData();
 			buildLineChartData(data, categoryChart, chartValueList, graph.getTitle());
 			chart.plot(data, bottomAxis, leftAxis);
@@ -220,8 +220,8 @@ public class ExcelChartBuildService
 		{
 			int i=0;
 			for(ChartDataSource<Number> source:chartValueList){
-				String _title=title.get(i);
-				if(StringUtils.isNotBlank(_title)){
+				String temp_title=title.get(i);
+				if(StringUtils.isNotBlank(temp_title)){
 					//data.addSerie(categoryChart, source).setTitle(_title);
 				}else{
 					//data.addSerie(categoryChart, source);
@@ -249,9 +249,9 @@ public class ExcelChartBuildService
 		{
 			int i=0;
 			for(ChartDataSource<Number> source:chartValueList){
-				String _title=title.get(i);
-				if(StringUtils.isNotBlank(_title)){
-					data.addSerie(categoryChart, source).setTitle(_title);
+				String temp_title=title.get(i);
+				if(StringUtils.isNotBlank(temp_title)){
+					data.addSerie(categoryChart, source).setTitle(temp_title);
 				}else{
 					data.addSerie(categoryChart, source);
 				}

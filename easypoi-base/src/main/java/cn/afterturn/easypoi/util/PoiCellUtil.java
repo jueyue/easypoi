@@ -100,8 +100,9 @@ public class PoiCellUtil {
      * @return  
      */
     public static String getCellValue(Cell cell) {
-        if (cell == null)
+        if (cell == null) {
             return "";
+        }
 
         if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
 
