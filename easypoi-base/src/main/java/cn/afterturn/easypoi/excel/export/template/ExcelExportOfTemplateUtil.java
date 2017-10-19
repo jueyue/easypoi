@@ -95,9 +95,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportServer {
     private void addDataToSheet(Class<?> pojoClass, Collection<?> dataSet, Sheet sheet,
                                 Workbook workbook) throws Exception {
 
-        if (workbook instanceof XSSFWorkbook) {
-            super.type = ExcelType.XSSF;
-        }
         // 获取表头数据
         Map<String, Integer> titlemap = getTitleMap(sheet);
         Drawing patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
@@ -182,6 +179,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportServer {
         try {
             this.teplateParams = params;
             wb = getCloneWorkBook();
+            if (wb instanceof XSSFWorkbook) {
+                super.type = ExcelType.XSSF;
+            }
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
                 .getConstructor(Workbook.class).newInstance(wb));
