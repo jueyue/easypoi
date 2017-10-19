@@ -167,7 +167,7 @@ public class ExcelExportServer extends BaseExportServer {
                     ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
             int titleHeight = index;
             setCellWith(excelParams, sheet);
-            short rowHeight = entity.getHeight() > 0? entity.getHeight() : getRowHeight(excelParams);
+            short rowHeight = entity.getHeight() > 0 ? entity.getHeight() : getRowHeight(excelParams);
             setCurrentIndex(1);
             Iterator<?> its = dataSet.iterator();
             List<Object> tempList = new ArrayList<Object>();
@@ -226,15 +226,18 @@ public class ExcelExportServer extends BaseExportServer {
         CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
         for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
             ExcelExportEntity entity = excelParams.get(i);
+            // 加入换了groupName或者结束就，就把之前的那个换行
+            if (StringUtils.isBlank(entity.getGroupName()) || !entity.getGroupName().equals(excelParams.get(i - 1).getGroupName())) {
+                if(groupCellLength > 1){
+                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
+                }
+                groupCellLength = 0;
+            }
             if (StringUtils.isNotBlank(entity.getGroupName())) {
                 createStringCell(row, cellIndex, entity.getGroupName(), titleStyle, entity);
                 createStringCell(listRow, cellIndex, entity.getName(), titleStyle, entity);
                 groupCellLength++;
             } else if (StringUtils.isNotBlank(entity.getName())) {
-                if(groupCellLength > 0){
-                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex - groupCellLength));
-                    groupCellLength = 0;
-                }
                 createStringCell(row, cellIndex, entity.getName(), titleStyle, entity);
             }
             if (entity.getList() != null) {
@@ -254,7 +257,7 @@ public class ExcelExportServer extends BaseExportServer {
             }
             cellIndex++;
         }
-        if(groupCellLength > 0){
+        if (groupCellLength > 1) {
             sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
         }
         return rows;
