@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  Unless required by applicable law or agreed to in writing, software
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -16,6 +16,7 @@
 package cn.afterturn.easypoi.excel.export.styler;
 
 import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -24,18 +25,18 @@ import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
 
 /**
  * 抽象接口提供两个公共方法
- * @author JueYue
- *  2015年1月9日 下午5:48:55
+ *
+ * @author JueYue 2015年1月9日 下午5:48:55
  */
 public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
     //单行
-    protected CellStyle          stringNoneStyle;
-    protected CellStyle          stringNoneWrapStyle;
+    protected CellStyle stringNoneStyle;
+    protected CellStyle stringNoneWrapStyle;
     //间隔行
-    protected CellStyle          stringSeptailStyle;
-    protected CellStyle          stringSeptailWrapStyle;
+    protected CellStyle stringSeptailStyle;
+    protected CellStyle stringSeptailWrapStyle;
 
-    protected Workbook           workbook;
+    protected Workbook workbook;
 
     protected static final short STRING_FORMAT = (short) BuiltinFormats.getBuiltinFormat("TEXT");
 
@@ -61,6 +62,11 @@ public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
         return stringSeptailStyle;
     }
 
+    @Override
+    public CellStyle getStyles(Cell cell, int dataRow, ExcelExportEntity entity, Object obj, Object data) {
+        return getStyles(dataRow % 2 == 1, entity);
+    }
+
     public CellStyle stringNoneStyle(Workbook workbook, boolean isWarp) {
         return null;
     }
@@ -68,6 +74,7 @@ public abstract class AbstractExcelExportStyler implements IExcelExportStyler {
     public CellStyle stringSeptailStyle(Workbook workbook, boolean isWarp) {
         return null;
     }
+
 
     @Override
     public CellStyle getTemplateStyles(boolean isSingle, ExcelForEachParams excelForEachParams) {
