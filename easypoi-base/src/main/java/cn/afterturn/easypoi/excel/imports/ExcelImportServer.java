@@ -167,7 +167,7 @@ public class ExcelImportServer extends ImportBaseService {
             if (etarget != null) {
                 targetId = etarget.value();
             }
-            getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null);
+            getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null, null);
         }
         Iterator<Row> rows = sheet.rowIterator();
         for (int j = 0; j < params.getTitleRows(); j++) {
@@ -415,7 +415,7 @@ public class ExcelImportServer extends ImportBaseService {
             for (int j = 0; j < rowList.size(); j++) {
                 if (rowList.get(j).getRowNum() < rowList.get(j).getSheet().getLastRowNum()) {
                     book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum() + 1, rowList.get(j).getSheet().getLastRowNum(), -1);
-                } else if(rowList.get(j).getRowNum() == rowList.get(j).getSheet().getLastRowNum()){
+                } else if (rowList.get(j).getRowNum() == rowList.get(j).getSheet().getLastRowNum()) {
                     book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum(), rowList.get(j).getSheet().getLastRowNum(), -1);
                 }
             }

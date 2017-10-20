@@ -84,7 +84,7 @@ public class ExportCommonServer {
 
     private Object dateFormatValue(Object value, ExcelExportEntity entity) throws Exception {
         Date temp = null;
-        if (value instanceof String) {
+        if (value instanceof String && StringUtils.isNoneEmpty(value.toString())) {
             SimpleDateFormat format = new SimpleDateFormat(entity.getDatabaseFormat());
             temp = format.parse(value.toString());
         } else if (value instanceof Date) {
