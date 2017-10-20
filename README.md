@@ -23,10 +23,12 @@ EasyPoi Excel和 Word简易工具类
 [用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
 版本介绍
+
 [history.md](https://gitee.com/lemur/easypoi/blob/master/history.md)
 
 基础示例
-[]basedemo.md](https://gitee.com/lemur/easypoi/blob/master/basedemo.md)
+
+[basedemo.md](https://gitee.com/lemur/easypoi/blob/master/basedemo.md)
 
 [测试项目](http://git.oschina.net/lemur/easypoi-test): http://git.oschina.net/lemur/easypoi-test
 
