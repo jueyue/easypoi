@@ -88,7 +88,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
             if (etarget != null) {
                 targetId = etarget.value();
             }
-            getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null);
+            getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null,null);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ExcelImportException(e.getMessage());

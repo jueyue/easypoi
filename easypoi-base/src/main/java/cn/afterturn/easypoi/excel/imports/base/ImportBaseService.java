@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 
@@ -39,6 +40,8 @@ import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelCollectionParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
+import cn.afterturn.easypoi.exception.excel.ExcelImportException;
+import cn.afterturn.easypoi.exception.excel.enums.ExcelImportEnum;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 
@@ -62,7 +65,7 @@ public class ImportBaseService {
      */
     public void addEntityToMap(String targetId, Field field, ExcelImportEntity excelEntity,
                                Class<?> pojoClass, List<Method> getMethods,
-                               Map<String, ExcelImportEntity> temp) throws Exception {
+                               Map<String, ExcelImportEntity> temp, ExcelEntity excelEntityAnn) throws Exception {
         Excel excel = field.getAnnotation(Excel.class);
         excelEntity = new ExcelImportEntity();
         excelEntity.setType(excel.type());
@@ -73,7 +76,7 @@ public class ImportBaseService {
         excelEntity.setSuffix(excel.suffix());
         excelEntity.setImportField(Boolean
                 .valueOf(PoiPublicUtil.getValueByTargetId(excel.isImportField(), targetId, "false")));
-        getExcelField(targetId, field, excelEntity, excel, pojoClass);
+        getExcelField(targetId, field, excelEntity, excel, pojoClass, excelEntityAnn);
         if (getMethods != null) {
             List<Method> newMethods = new ArrayList<Method>();
             newMethods.addAll(getMethods);
@@ -97,7 +100,7 @@ public class ImportBaseService {
     public void getAllExcelField(String targetId, Field[] fields,
                                  Map<String, ExcelImportEntity> excelParams,
                                  List<ExcelCollectionParams> excelCollection, Class<?> pojoClass,
-                                 List<Method> getMethods) throws Exception {
+                                 List<Method> getMethods, ExcelEntity excelEntityAnn) throws Exception {
         ExcelImportEntity excelEntity = null;
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
@@ -121,7 +124,7 @@ public class ImportBaseService {
                 additionalCollectionName(collection);
                 excelCollection.add(collection);
             } else if (PoiPublicUtil.isJavaClass(field)) {
-                addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, excelParams);
+                addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, excelParams, excelEntityAnn);
             } else {
                 List<Method> newMethods = new ArrayList<Method>();
                 if (getMethods != null) {
@@ -130,9 +133,12 @@ public class ImportBaseService {
                 //
                 newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
+                if (excel.show() && StringUtils.isEmpty(excel.name())) {
+                    throw new ExcelImportException("if use ExcelEntity ,name mus has value ,data: " + ReflectionToStringBuilder.toString(excel), ExcelImportEnum.PARAMETER_ERROR);
+                }
                 getAllExcelField(StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
                         PoiPublicUtil.getClassFields(field.getType()), excelParams, excelCollection,
-                        field.getType(), newMethods);
+                        field.getType(), newMethods, excel);
             }
         }
     }
@@ -152,10 +158,13 @@ public class ImportBaseService {
     }
 
     public void getExcelField(String targetId, Field field, ExcelImportEntity excelEntity,
-                              Excel excel, Class<?> pojoClass) throws Exception {
+                              Excel excel, Class<?> pojoClass, ExcelEntity excelEntityAnn) throws Exception {
         excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null));
         if (StringUtils.isNoneEmpty(excel.groupName())) {
             excelEntity.setName(excel.groupName() + "_" + excelEntity.getName());
+        }
+        if(excelEntityAnn != null && excelEntityAnn.show()){
+            excelEntity.setName(excelEntityAnn.name() + "_" + excelEntity.getName());
         }
         String fieldname = field.getName();
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(fieldname));
@@ -176,7 +185,7 @@ public class ImportBaseService {
                 continue;
             }
             if (PoiPublicUtil.isJavaClass(field)) {
-                addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, temp);
+                addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, temp, null);
             } else {
                 List<Method> newMethods = new ArrayList<Method>();
                 if (getMethods != null) {
