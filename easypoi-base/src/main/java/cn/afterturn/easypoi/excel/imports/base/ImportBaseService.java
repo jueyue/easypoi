@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  Unless required by applicable law or agreed to in writing, software
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -51,7 +51,7 @@ public class ImportBaseService {
 
     /**
      * 把这个注解解析放到类型对象中
-     * 
+     *
      * @param targetId
      * @param field
      * @param excelEntity
@@ -72,7 +72,7 @@ public class ImportBaseService {
         excelEntity.setDatabaseFormat(excel.databaseFormat());
         excelEntity.setSuffix(excel.suffix());
         excelEntity.setImportField(Boolean
-            .valueOf(PoiPublicUtil.getValueByTargetId(excel.isImportField(), targetId, "false")));
+                .valueOf(PoiPublicUtil.getValueByTargetId(excel.isImportField(), targetId, "false")));
         getExcelField(targetId, field, excelEntity, excel, pojoClass);
         if (getMethods != null) {
             List<Method> newMethods = new ArrayList<Method>();
@@ -114,10 +114,10 @@ public class ImportBaseService {
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
                 collection.setType(clz);
                 getExcelFieldList(StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
-                    PoiPublicUtil.getClassFields(clz), clz, temp, null);
+                        PoiPublicUtil.getClassFields(clz), clz, temp, null);
                 collection.setExcelParams(temp);
                 collection.setExcelName(PoiPublicUtil.getValueByTargetId(
-                    field.getAnnotation(ExcelCollection.class).name(), targetId, null));
+                        field.getAnnotation(ExcelCollection.class).name(), targetId, null));
                 additionalCollectionName(collection);
                 excelCollection.add(collection);
             } else if (PoiPublicUtil.isJavaClass(field)) {
@@ -131,8 +131,8 @@ public class ImportBaseService {
                 newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
                 ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
                 getAllExcelField(StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
-                    PoiPublicUtil.getClassFields(field.getType()), excelParams, excelCollection,
-                    field.getType(), newMethods);
+                        PoiPublicUtil.getClassFields(field.getType()), excelParams, excelCollection,
+                        field.getType(), newMethods);
             }
         }
     }
@@ -146,7 +146,7 @@ public class ImportBaseService {
         keys.addAll(collection.getExcelParams().keySet());
         for (String key : keys) {
             collection.getExcelParams().put(collection.getExcelName() + "_" + key,
-                collection.getExcelParams().get(key));
+                    collection.getExcelParams().get(key));
             collection.getExcelParams().remove(key);
         }
     }
@@ -154,6 +154,9 @@ public class ImportBaseService {
     public void getExcelField(String targetId, Field field, ExcelImportEntity excelEntity,
                               Excel excel, Class<?> pojoClass) throws Exception {
         excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null));
+        if (StringUtils.isNoneEmpty(excel.groupName())) {
+            excelEntity.setName(excel.groupName() + "_" + excelEntity.getName());
+        }
         String fieldname = field.getName();
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(fieldname));
         if (StringUtils.isNotEmpty(excel.importFormat())) {
@@ -182,8 +185,8 @@ public class ImportBaseService {
                 ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
                 newMethods.add(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));
                 getExcelFieldList(StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
-                    PoiPublicUtil.getClassFields(field.getType()), field.getType(), temp,
-                    newMethods);
+                        PoiPublicUtil.getClassFields(field.getType()), field.getType(), temp,
+                        newMethods);
             }
         }
     }
@@ -192,7 +195,7 @@ public class ImportBaseService {
         Method m;
         for (int i = 0; i < list.size() - 1; i++) {
             m = list.get(i);
-            t = m.invoke(t, new Object[] {});
+            t = m.invoke(t, new Object[]{});
         }
         return t;
     }
@@ -206,15 +209,15 @@ public class ImportBaseService {
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyMMddHHmmss");
         FileOutputStream fos = new FileOutputStream(
-            path + "/" + format.format(new Date()) + "_" + Math.round(Math.random() * 100000)
-                                                    + (isXSSFWorkbook == true ? ".xlsx" : ".xls"));
+                path + "/" + format.format(new Date()) + "_" + Math.round(Math.random() * 100000)
+                        + (isXSSFWorkbook == true ? ".xlsx" : ".xls"));
         book.write(fos);
         IOUtils.closeQuietly(fos);
     }
 
     /**
      * 获取保存的Excel 的真实路径
-     * 
+     *
      * @param params
      * @param pojoClass
      * @return
@@ -231,7 +234,7 @@ public class ImportBaseService {
 
     /**
      * 多个get 最后再set
-     * 
+     *
      * @param setMethods
      * @param object
      */
@@ -242,7 +245,7 @@ public class ImportBaseService {
     }
 
     /**
-     * 
+     *
      * @param entity
      * @param object
      * @param value
