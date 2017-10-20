@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.afterturn</groupId>
 	<artifactId>easypoi</artifactId>
-	<version>3.0.3-SNAPSHOT</version>
+	<version>3.0.3</version>
 	<packaging>pom</packaging>
 	<name>easypoi</name>
 	<modules>
@@ -38,7 +38,7 @@
 	</developers>
 
 	<properties>
-		<sub.version>3.0.3-SNAPSHOT</sub.version>
+		<sub.version>3.0.3</sub.version>
 		<poi.version>3.16</poi.version>
 		<xerces.version>2.9.1</xerces.version>
 		<guava.version>16.0.1</guava.version>
