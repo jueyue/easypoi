@@ -1,6 +1,6 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
 
 /**
  * 导入参数设置
- * 
+ *
  * @author JueYue
  *  2013-9-24
  * @version 1.0
@@ -86,6 +86,10 @@ public class ImportParams extends ExcelBaseParams {
      * 导入时校验数据模板,是不是正确的Excel
      */
     private String[]            importFields;
+    /**
+     * 导入时校验excel的标题列顺序。依赖于importFields的配置顺序
+    */
+    private boolean             needCheckOrder = false;
     /**
      * Key-Value 读取标记,以这个为Key,后面一个Cell 为Value,多个改为ArrayList
      */
@@ -225,4 +229,11 @@ public class ImportParams extends ExcelBaseParams {
         this.verfiyGroup = verfiyGroup;
     }
 
+    public boolean isNeedCheckOrder() {
+        return needCheckOrder;
+    }
+
+    public void setNeedCheckOrder(boolean needCheckOrder) {
+        this.needCheckOrder = needCheckOrder;
+    }
 }

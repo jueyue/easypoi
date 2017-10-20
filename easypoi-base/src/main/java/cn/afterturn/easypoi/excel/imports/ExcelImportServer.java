@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -295,7 +296,7 @@ public class ExcelImportServer extends ImportBaseService {
      */
     private Map<Integer, String> getTitleMap(Iterator<Row> rows, ImportParams params,
                                              List<ExcelCollectionParams> excelCollection) {
-        Map<Integer, String> titlemap = new HashMap<Integer, String>();
+        Map<Integer, String> titlemap = new LinkedHashMap<Integer, String>();
         Iterator<Cell> cellTitle;
         String collectionName = null;
         ExcelCollectionParams collectionParams = null;
@@ -469,9 +470,24 @@ public class ExcelImportServer extends ImportBaseService {
                                       List<ExcelCollectionParams> excelCollection) {
 
         if (params.getImportFields() != null) {
-            for (int i = 0, le = params.getImportFields().length; i < le; i++) {
-                if (!titlemap.containsValue(params.getImportFields()[i])) {
+            if (params.isNeedCheckOrder()) { // 同时校验列顺序
+
+                if (params.getImportFields().length != titlemap.size()) {
+                    LOGGER.error("excel列顺序不一致");
                     throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
+                }
+                int i = 0;
+                for (String title : titlemap.values()) {
+                    if (!StringUtils.equals(title, params.getImportFields()[i++])) {
+                        LOGGER.error("excel列顺序不一致");
+                        throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
+                    }
+                }
+            } else {
+                for (int i = 0, le = params.getImportFields().length; i < le; i++) {
+                    if (!titlemap.containsValue(params.getImportFields()[i])) {
+                        throw new ExcelImportException(ExcelImportEnum.IS_NOT_A_VALID_TEMPLATE);
+                    }
                 }
             }
         } else {
