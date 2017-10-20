@@ -12,7 +12,7 @@
 		<module>easypoi-annotation</module>
 	</modules>
 
-	<url>http://git.oschina.net/jueyue/easypoi</url>
+	<url>http://www.afterturn.cn</url>
 	<description> office 工具类 基于 poi</description>
 
 	<licenses>
@@ -32,10 +32,17 @@
 		<developer>
 			<name>JueYue</name>
 			<email>qrb.jueyue@gmail.com</email>
-			<organization>Lumer</organization>
-			<organizationUrl>http://www.afterturn.cn</organizationUrl>
+		</developer>
+		<developer>
+			<name>魔幻之翼</name>
+			<email>xf.key@163.com</email>
 		</developer>
 	</developers>
+
+	<organization>
+		<name>Lumer</name>
+		<url>http://www.afterturn.cn</url>
+	</organization>
 
 	<properties>
 		<sub.version>3.0.3</sub.version>
