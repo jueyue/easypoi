@@ -49,7 +49,7 @@ public class FileLoaderImpl implements IFileLoader {
                 //获取项目文件
                 fileis = ClassLoader.getSystemResourceAsStream(url);
                 if (fileis == null) {
-                    //最后再拿想对文件路径
+                    //最后再拿相对文件路径
                     String path = PoiPublicUtil.getWebRootPath(url);
                     fileis = new FileInputStream(path);
                 }
@@ -62,8 +62,6 @@ public class FileLoaderImpl implements IFileLoader {
             }
             baos.flush();
             return baos.toByteArray();
-        } catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         } finally {

@@ -30,7 +30,7 @@ import org.springframework.stereotype.Controller;
 import cn.afterturn.easypoi.entity.vo.NormalExcelConstants;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.export.ExcelExportServer;
+import cn.afterturn.easypoi.excel.export.ExcelExportService;
 
 /**
  * @author JueYue on 14-3-8. Excel 生成解析器,减少用户操作
@@ -59,7 +59,7 @@ public class EasypoiSingleExcelView extends MiniAbstractExcelView {
                     .get(NormalExcelConstants.CLASS),
                 (Collection<?>) list.get(0).get(NormalExcelConstants.DATA_LIST));
             for (int i = 1; i < list.size(); i++) {
-                new ExcelExportServer().createSheet(workbook,
+                new ExcelExportService().createSheet(workbook,
                     (ExportParams) list.get(i).get(NormalExcelConstants.PARAMS), (Class<?>) list
                         .get(i).get(NormalExcelConstants.CLASS),
                     (Collection<?>) list.get(i).get(NormalExcelConstants.DATA_LIST));

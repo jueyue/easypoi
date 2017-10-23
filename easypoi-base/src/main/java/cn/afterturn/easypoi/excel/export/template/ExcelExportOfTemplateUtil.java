@@ -47,7 +47,7 @@ import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
-import cn.afterturn.easypoi.excel.export.base.BaseExportServer;
+import cn.afterturn.easypoi.excel.export.base.BaseExportService;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.excel.export.template.TemplateSumHanlder.TemplateSumEntity;
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
@@ -64,7 +64,7 @@ import cn.afterturn.easypoi.util.PoiSheetUtility;
  *  2013-10-17
  * @version 1.0
  */
-public final class ExcelExportOfTemplateUtil extends BaseExportServer {
+public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     private static final Logger  LOGGER            = LoggerFactory
         .getLogger(ExcelExportOfTemplateUtil.class);

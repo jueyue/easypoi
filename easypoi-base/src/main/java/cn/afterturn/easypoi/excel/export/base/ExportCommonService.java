@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -55,9 +54,9 @@ import cn.afterturn.easypoi.util.PoiReflectorUtil;
  * @author JueYue 2014年8月9日 下午11:01:32
  */
 @SuppressWarnings("rawtypes")
-public class ExportCommonServer {
+public class ExportCommonService {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(ExportCommonServer.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(ExportCommonService.class);
 
     protected IExcelDataHandler dataHanlder;
 

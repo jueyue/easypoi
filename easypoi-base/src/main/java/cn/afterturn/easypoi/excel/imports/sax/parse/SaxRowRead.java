@@ -33,7 +33,7 @@ import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelCollectionParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
 import cn.afterturn.easypoi.excel.entity.sax.SaxReadCellEntity;
-import cn.afterturn.easypoi.excel.imports.CellValueServer;
+import cn.afterturn.easypoi.excel.imports.CellValueService;
 import cn.afterturn.easypoi.excel.imports.base.ImportBaseService;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
 import cn.afterturn.easypoi.handler.inter.IExcelReadRowHanlder;
@@ -67,7 +67,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
 
     private String                         targetId;
 
-    private CellValueServer                cellValueServer;
+    private CellValueService cellValueServer;
 
     private IExcelReadRowHanlder           hanlder;
 
@@ -75,7 +75,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
         list = Lists.newArrayList();
         this.params = params;
         this.pojoClass = pojoClass;
-        cellValueServer = new CellValueServer();
+        cellValueServer = new CellValueService();
         this.hanlder = hanlder;
         initParams(pojoClass, params);
     }
