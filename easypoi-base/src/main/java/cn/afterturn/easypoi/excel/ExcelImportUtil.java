@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
-import cn.afterturn.easypoi.excel.imports.ExcelImportServer;
+import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import cn.afterturn.easypoi.excel.imports.sax.SaxReadExcel;
 import cn.afterturn.easypoi.excel.imports.sax.parse.ISaxRowRead;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
@@ -59,7 +59,7 @@ public class ExcelImportUtil {
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
-            return new ExcelImportServer().importExcelByIs(in, pojoClass, params).getList();
+            return new ExcelImportService().importExcelByIs(in, pojoClass, params).getList();
         } catch (ExcelImportException e) {
             throw new ExcelImportException(e.getType(), e);
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class ExcelImportUtil {
      */
     public static <T> List<T> importExcel(InputStream inputstream, Class<?> pojoClass,
                                           ImportParams params) throws Exception {
-        return new ExcelImportServer().importExcelByIs(inputstream, pojoClass, params).getList();
+        return new ExcelImportService().importExcelByIs(inputstream, pojoClass, params).getList();
     }
 
     /**
@@ -97,7 +97,7 @@ public class ExcelImportUtil {
     public static <T> ExcelImportResult<T> importExcelMore(InputStream inputstream,
                                                              Class<?> pojoClass,
                                                              ImportParams params) throws Exception {
-        return new ExcelImportServer().importExcelByIs(inputstream, pojoClass, params);
+        return new ExcelImportService().importExcelByIs(inputstream, pojoClass, params);
     }
 
     /**
@@ -113,7 +113,7 @@ public class ExcelImportUtil {
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
-            return new ExcelImportServer().importExcelByIs(in, pojoClass, params);
+            return new ExcelImportService().importExcelByIs(in, pojoClass, params);
         } catch (ExcelImportException e) {
             throw new ExcelImportException(e.getType(), e);
         } catch (Exception e) {

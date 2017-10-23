@@ -54,7 +54,7 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
  * @author JueYue 2014年6月17日 下午6:15:13
  */
 @SuppressWarnings("unchecked")
-public abstract class BaseExportServer extends ExportCommonServer {
+public abstract class BaseExportService extends ExportCommonService {
 
     private int currentIndex = 0;
 

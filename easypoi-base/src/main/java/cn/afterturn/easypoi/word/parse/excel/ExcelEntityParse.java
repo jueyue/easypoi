@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
-import cn.afterturn.easypoi.excel.export.base.ExportCommonServer;
+import cn.afterturn.easypoi.excel.export.base.ExportCommonService;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.exception.word.WordExportException;
@@ -47,7 +47,7 @@ import cn.afterturn.easypoi.word.entity.params.ExcelListEntity;
  * @author JueYue
  *  2014年8月9日 下午10:30:57
  */
-public class ExcelEntityParse extends ExportCommonServer {
+public class ExcelEntityParse extends ExportCommonService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelEntityParse.class);
 

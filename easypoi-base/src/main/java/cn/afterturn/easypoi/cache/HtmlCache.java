@@ -7,7 +7,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 import cn.afterturn.easypoi.excel.entity.ExcelToHtmlParams;
-import cn.afterturn.easypoi.excel.html.ExcelToHtmlServer;
+import cn.afterturn.easypoi.excel.html.ExcelToHtmlService;
 
 /**
  * Excel 转变成为Html 的缓存
@@ -23,7 +23,7 @@ public class HtmlCache {
             .build(new CacheLoader<ExcelToHtmlParams, String>() {
                 @Override
                 public String load(ExcelToHtmlParams params) throws Exception {
-                    return new ExcelToHtmlServer(params).printPage();
+                    return new ExcelToHtmlService(params).printPage();
                 }
             });
     }

@@ -11,7 +11,7 @@ import java.io.InputStream;
 import cn.afterturn.easypoi.cache.HtmlCache;
 import cn.afterturn.easypoi.excel.entity.ExcelToHtmlParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import cn.afterturn.easypoi.excel.html.HtmlToExcelServer;
+import cn.afterturn.easypoi.excel.html.HtmlToExcelService;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 
@@ -65,7 +65,7 @@ public class ExcelXorHtmlUtil {
         } else {
             workbook = new XSSFWorkbook();
         }
-        new HtmlToExcelServer().createSheet(html, workbook);
+        new HtmlToExcelService().createSheet(html, workbook);
         return workbook;
     }
 

@@ -41,7 +41,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import cn.afterturn.easypoi.cache.ImageCache;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
-import cn.afterturn.easypoi.excel.export.base.ExportCommonServer;
+import cn.afterturn.easypoi.excel.export.base.ExportCommonService;
 import cn.afterturn.easypoi.pdf.entity.PdfExportParams;
 import cn.afterturn.easypoi.pdf.styler.IPdfExportStyler;
 import cn.afterturn.easypoi.pdf.styler.PdfExportStylerDefaultImpl;
@@ -52,7 +52,7 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
  * @author JueYue
  *  2015年10月6日 下午8:21:08
  */
-public class PdfExportServer extends ExportCommonServer {
+public class PdfExportServer extends ExportCommonService {
 
     private static final Logger LOGGER     = LoggerFactory.getLogger(PdfExportServer.class);
 
