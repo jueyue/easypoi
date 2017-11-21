@@ -1,6 +1,6 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -55,11 +55,11 @@ import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
-import cn.afterturn.easypoi.util.PoiSheetUtility;
+import cn.afterturn.easypoi.util.PoiSheetUtil;
 
 /**
  * Excel 导出根据模板导出
- * 
+ *
  * @author JueYue
  *  2013-10-17
  * @version 1.0
@@ -86,7 +86,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
-     * 
+     *
      * @param sheet
      * @param pojoClass
      * @param dataSet
@@ -147,7 +147,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 获取单个对象的高度,主要是处理一堆多的情况
-     * 
+     *
      * @param t
      * @param excelParams
      * @throws Exception
@@ -212,7 +212,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 克隆excel防止操作原对象,workbook无法克隆,只能对excel进行克隆
-     * 
+     *
      * @throws Exception
      */
     private Workbook getCloneWorkBook() throws Exception {
@@ -223,7 +223,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 获取表头数据,设置表头的序号
-     * 
+     *
      * @param sheet
      * @return
      */
@@ -352,7 +352,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      * 先判断删除,省得影响效率
      * @param sheet
      * @param map
-     * @throws Exception 
+     * @throws Exception
      */
     private void deleteCell(Sheet sheet, Map<String, Object> map) throws Exception {
         Row row = null;
@@ -373,7 +373,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                         if (Boolean.valueOf(
                             eval(text.substring(text.indexOf(START_STR) + 2, text.indexOf(END_STR))
                                 .trim(), map).toString())) {
-                            PoiSheetUtility.deleteColumn(sheet, i);
+                            PoiSheetUtil.deleteColumn(sheet, i);
+                            i--;
                         }
                         cell.setCellValue("");
                     }
@@ -384,7 +385,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 给每个Cell通过解析方式set值
-     * 
+     *
      * @param cell
      * @param map
      */
@@ -432,10 +433,10 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 利用foreach循环输出数据
-     * @param cell 
+     * @param cell
      * @param map
      * @param name
-     * @throws Exception 
+     * @throws Exception
      */
     private void addListDataToExcel(Cell cell, Map<String, Object> map,
                                     String name) throws Exception {
@@ -484,8 +485,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 创建并返回第一个Row
-     * @param sheet 
-     * @param rowIndex 
+     * @param sheet
+     * @param rowIndex
      * @param isCreate
      * @param rows
      * @return
@@ -617,7 +618,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      * 获取迭代的数据的值
      * @param cell
      * @param name
-     * @param mergedRegionHelper 
+     * @param mergedRegionHelper
      * @return
      */
     private Object[] getAllDataColumns(Cell cell, String name,
@@ -693,7 +694,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      * 获取模板参数
      * @param name
      * @param cell
-     * @param mergedRegionHelper 
+     * @param mergedRegionHelper
      * @return
      */
     private ExcelForEachParams getExcelTemplateParams(String name, Cell cell,
@@ -724,7 +725,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 对导出序列进行排序和塞选
-     * 
+     *
      * @param excelParams
      * @param titlemap
      */
