@@ -100,7 +100,7 @@ public class ExcelExportUtil {
      *            Excel对象数据List
      */
     public static Workbook exportExcel(ExportParams entity, List<ExcelExportEntity> entityList,
-                                       Collection<? extends Map<?, ?>> dataSet) {
+                                       Collection<?> dataSet) {
         Workbook workbook = getWorkbook(entity.getType(),dataSet.size());;
         new ExcelExportService().createSheetForMap(workbook, entity, entityList, dataSet);
         return workbook;

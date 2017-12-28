@@ -59,7 +59,7 @@ public class ExcelImportUtil {
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
-            return new ExcelImportService().importExcelByIs(in, pojoClass, params).getList();
+            return new ExcelImportService().importExcelByIs(in, pojoClass, params, false).getList();
         } catch (ExcelImportException e) {
             throw new ExcelImportException(e.getType(), e);
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class ExcelImportUtil {
      */
     public static <T> List<T> importExcel(InputStream inputstream, Class<?> pojoClass,
                                           ImportParams params) throws Exception {
-        return new ExcelImportService().importExcelByIs(inputstream, pojoClass, params).getList();
+        return new ExcelImportService().importExcelByIs(inputstream, pojoClass, params, false).getList();
     }
 
     /**
@@ -97,7 +97,7 @@ public class ExcelImportUtil {
     public static <T> ExcelImportResult<T> importExcelMore(InputStream inputstream,
                                                              Class<?> pojoClass,
                                                              ImportParams params) throws Exception {
-        return new ExcelImportService().importExcelByIs(inputstream, pojoClass, params);
+        return new ExcelImportService().importExcelByIs(inputstream, pojoClass, params, true);
     }
 
     /**
@@ -113,7 +113,7 @@ public class ExcelImportUtil {
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
-            return new ExcelImportService().importExcelByIs(in, pojoClass, params);
+            return new ExcelImportService().importExcelByIs(in, pojoClass, params, true);
         } catch (ExcelImportException e) {
             throw new ExcelImportException(e.getType(), e);
         } catch (Exception e) {

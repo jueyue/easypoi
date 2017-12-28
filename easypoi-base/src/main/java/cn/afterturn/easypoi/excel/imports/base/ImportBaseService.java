@@ -76,6 +76,7 @@ public class ImportBaseService {
         excelEntity.setSuffix(excel.suffix());
         excelEntity.setImportField(Boolean
                 .valueOf(PoiPublicUtil.getValueByTargetId(excel.isImportField(), targetId, "false")));
+        excelEntity.setFixedIndex(excel.fixedIndex());
         getExcelField(targetId, field, excelEntity, excel, pojoClass, excelEntityAnn);
         if (getMethods != null) {
             List<Method> newMethods = new ArrayList<Method>();
@@ -83,7 +84,11 @@ public class ImportBaseService {
             newMethods.add(excelEntity.getMethod());
             excelEntity.setMethods(newMethods);
         }
-        temp.put(excelEntity.getName(), excelEntity);
+        if(excelEntity.getFixedIndex() != -1){
+            temp.put("FIXED_"+excelEntity.getFixedIndex() , excelEntity);
+        } else {
+            temp.put(excelEntity.getName(), excelEntity);
+        }
 
     }
 

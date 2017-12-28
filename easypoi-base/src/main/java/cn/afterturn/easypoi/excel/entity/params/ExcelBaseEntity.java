@@ -57,7 +57,11 @@ public class ExcelBaseEntity {
     /**
      * 这个是不是超链接,如果是需要实现接口返回对象
      */
-    private boolean      hyperlink;
+    private boolean     hyperlink;
+    /**
+     * 固定的列
+     */
+    private Integer      fixedIndex;
 
     private List<Method> methods;
 
@@ -134,4 +138,11 @@ public class ExcelBaseEntity {
         this.hyperlink = hyperlink;
     }
 
+    public int getFixedIndex() {
+        return fixedIndex;
+    }
+
+    public void setFixedIndex(int fixedIndex) {
+        this.fixedIndex = fixedIndex;
+    }
 }

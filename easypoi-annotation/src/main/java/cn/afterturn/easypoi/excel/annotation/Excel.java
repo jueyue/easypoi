@@ -150,4 +150,10 @@ public @interface Excel {
      * @return
      */
     public String isImportField() default "false";
+
+    /**
+     * 固定的某一列,解决不好解析的问题
+     * @return
+     */
+    public int fixedIndex() default -1;
 }

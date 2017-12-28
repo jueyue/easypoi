@@ -17,6 +17,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.DocumentFactoryHelper;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -37,14 +41,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
@@ -173,7 +172,7 @@ public class ExcelImportService extends ImportBaseService {
         for (int j = 0; j < params.getTitleRows(); j++) {
             rows.next();
         }
-        Map<Integer, String> titlemap = getTitleMap(rows, params, excelCollection);
+        Map<Integer, String> titlemap = getTitleMap(rows, params, excelCollection,excelParams);
         checkIsValidTemplate(titlemap, excelParams, params, excelCollection);
         Row row = null;
         Object object = null;
@@ -206,13 +205,14 @@ public class ExcelImportService extends ImportBaseService {
             } else {
                 object = PoiPublicUtil.createObject(pojoClass, targetId);
                 try {
-                    for (int i = row.getFirstCellNum(), le = titlemap.size(); i < le; i++) {
-                        Cell cell = row.getCell(i);
-                        String titleString = (String) titlemap.get(i);
+                    Set<Integer> keys = titlemap.keySet();
+                    for (Integer cn:keys) {
+                        Cell cell = row.getCell(cn);
+                        String titleString = (String) titlemap.get(cn);
                         if (excelParams.containsKey(titleString) || Map.class.equals(pojoClass)) {
                             if (excelParams.get(titleString) != null
                                     && excelParams.get(titleString).getType() == 2) {
-                                picId = row.getRowNum() + "_" + i;
+                                picId = row.getRowNum() + "_" + cn;
                                 saveImage(object, picId, excelParams, titleString, pictures,
                                         params);
                             } else {
@@ -220,6 +220,9 @@ public class ExcelImportService extends ImportBaseService {
                             }
                         }
                     }
+                    //for (int i = row.getFirstCellNum(), le = titlemap.size(); i < le; i++) {
+
+                    //}
 
                     for (ExcelCollectionParams param : excelCollection) {
                         addListContinue(object, param, row, titlemap, targetId, pictures, params);
@@ -294,7 +297,8 @@ public class ExcelImportService extends ImportBaseService {
      * 获取表格字段列名对应信息
      */
     private Map<Integer, String> getTitleMap(Iterator<Row> rows, ImportParams params,
-                                             List<ExcelCollectionParams> excelCollection) {
+                                             List<ExcelCollectionParams> excelCollection,
+                                             Map<String, ExcelImportEntity> excelParams) {
         Map<Integer, String> titlemap = new LinkedHashMap<Integer, String>();
         Iterator<Cell> cellTitle;
         String collectionName = null;
@@ -331,6 +335,15 @@ public class ExcelImportService extends ImportBaseService {
                 }
             }
         }
+
+        // 处理指定列的情况
+        Set<String> keys = excelParams.keySet();
+        for (String key : keys){
+            if (key.startsWith("FIXED_")){
+                String [] arr = key.split("_");
+                titlemap.put(Integer.parseInt(arr[1]),key);
+            }
+        }
         return titlemap;
     }
 
@@ -351,7 +364,7 @@ public class ExcelImportService extends ImportBaseService {
      * Excel 导入 field 字段类型 Integer,Long,Double,Date,String,Boolean
      */
     public ExcelImportResult importExcelByIs(InputStream inputstream, Class<?> pojoClass,
-                                             ImportParams params) throws Exception {
+                                             ImportParams params, boolean needMore) throws Exception {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Excel import start ,class is {}", pojoClass);
         }
@@ -365,8 +378,15 @@ public class ExcelImportService extends ImportBaseService {
         baos.flush();
 
         InputStream userIs = new ByteArrayInputStream(baos.toByteArray());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Excel clone success");
+        }
         Workbook book = WorkbookFactory.create(userIs);
+
         boolean isXSSFWorkbook = !(book instanceof HSSFWorkbook);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Workbook create success");
+        }
         ExcelImportResult importResult = new ExcelImportResult();
         createErrorCellStyle(book);
         Map<String, PictureData> pictures;
@@ -387,7 +407,7 @@ public class ExcelImportService extends ImportBaseService {
             }
             result.addAll(importExcel(result, book.getSheetAt(i), pojoClass, params, pictures));
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(" end to read excel list by pos ,endTime is {}", System.currentTimeMillis());
+                LOGGER.debug(" end to read excel list by sheet ,endTime is {}", System.currentTimeMillis());
             }
             if (params.isReadSingleCell()) {
                 readSingleCell(importResult, book.getSheetAt(i), params);
@@ -399,13 +419,17 @@ public class ExcelImportService extends ImportBaseService {
         if (params.isNeedSave()) {
             saveThisExcel(params, pojoClass, isXSSFWorkbook, book);
         }
-        InputStream successIs = new ByteArrayInputStream(baos.toByteArray());
-        Workbook successBook = WorkbookFactory.create(successIs);
-        importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
-        importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
         importResult.setList(result);
-        importResult.setFailList(failCollection);
-        importResult.setVerfiyFail(verfiyFail);
+        if (needMore) {
+            InputStream successIs = new ByteArrayInputStream(baos.toByteArray());
+            Workbook successBook = WorkbookFactory.create(successIs);
+            importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
+            importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
+            importResult.setFailList(failCollection);
+            importResult.setVerfiyFail(verfiyFail);
+            successIs.close();
+        }
+        baos.close();
         return importResult;
     }
 
