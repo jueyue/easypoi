@@ -8,7 +8,7 @@ EasyPoi Excel和 Word简易工具类
 
 	官网： http://www.afterturn.cn/
 	邮箱： qrb.jueyue@gmail.com
-	QQ群:  364192721
+	QQ群:  1群 364192721(满) 2 群116844390
 	
 	开发者:魔幻之翼 xf.key@163.com
 Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
