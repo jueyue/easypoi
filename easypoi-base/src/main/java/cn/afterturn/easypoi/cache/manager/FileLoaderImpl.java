@@ -15,17 +15,12 @@
  */
 package cn.afterturn.easypoi.cache.manager;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-
+import cn.afterturn.easypoi.util.PoiPublicUtil;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.afterturn.easypoi.util.PoiPublicUtil;
+import java.io.*;
 
 /**
  * 文件加载类,根据路径加载指定文件
@@ -47,7 +42,7 @@ public class FileLoaderImpl implements IFileLoader {
                 fileis = new FileInputStream(url);
             } catch (FileNotFoundException e) {
                 //获取项目文件
-                fileis = ClassLoader.getSystemResourceAsStream(url);
+                fileis = FileLoaderImpl.class.getClassLoader().getResourceAsStream(url);
                 if (fileis == null) {
                     //最后再拿相对文件路径
                     String path = PoiPublicUtil.getWebRootPath(url);
