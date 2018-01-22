@@ -1,6 +1,6 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -115,7 +115,7 @@ public @interface Excel {
 
     /**
      * 导入路径,如果是图片可以填写,默认是upload/className/ IconEntity这个类对应的就是upload/Icon/
-     * 
+     *
      */
     public String savePath() default "upload";
 
@@ -136,13 +136,13 @@ public @interface Excel {
      * @return
      */
     public boolean isStatistics() default false;
-    
+
     /**
      * 这个是不是超链接,如果是需要实现接口返回对象
      * @return
      */
     public boolean isHyperlink() default false;
-    
+
     /**
      *  导入时会校验这个字段,看看这个字段是不是导入的Excel中有,如果没有说明是错误的Excel
      *  本意是想用true的,想想还是false比较好
@@ -156,4 +156,10 @@ public @interface Excel {
      * @return
      */
     public int fixedIndex() default -1;
+
+    /**
+     *  是否需要隐藏该列
+     * @return
+     */
+    public boolean isColumnHidden() default  false;
 }
