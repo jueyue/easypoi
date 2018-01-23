@@ -114,8 +114,8 @@ public abstract class BaseExportService extends ExportCommonService {
                                 entity);
                         if (entity.isHyperlink()) {
                             row.getCell(cellNum - 1).setHyperlink(dataHanlder.getHyperlink(
-                                            row.getSheet().getWorkbook().getCreationHelper(), t,
-                                            entity.getName(), value));
+                                    row.getSheet().getWorkbook().getCreationHelper(), t,
+                                    entity.getName(), value));
                         }
                     } else {
                         createImageCell(patriarch, entity, row, cellNum++,
@@ -385,6 +385,23 @@ public abstract class BaseExportService extends ExportCommonService {
                 }
             } else {
                 sheet.setColumnWidth(index, (int) (256 * excelParams.get(i).getWidth()));
+                index++;
+            }
+        }
+    }
+
+
+    public void setColumnHidden(List<ExcelExportEntity> excelParams, Sheet sheet){
+        int index = 0;
+        for (int i = 0; i < excelParams.size(); i++) {
+            if (excelParams.get(i).getList() != null) {
+                List<ExcelExportEntity> list = excelParams.get(i).getList();
+                for (int j = 0; j < list.size(); j++) {
+                    sheet.setColumnHidden(index,list.get(i).isColumnHidden());
+                    index++;
+                }
+            } else {
+                sheet.setColumnHidden(index,excelParams.get(i).isColumnHidden());;
                 index++;
             }
         }

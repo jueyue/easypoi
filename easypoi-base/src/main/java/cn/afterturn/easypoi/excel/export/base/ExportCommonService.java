@@ -242,6 +242,7 @@ public class ExportCommonService {
         excelEntity.setHyperlink(excel.isHyperlink());
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
         excelEntity.setNumFormat(excel.numFormat());
+        excelEntity.setColumnHidden(excel.isColumnHidden());
         if (excelGroup != null) {
             excelEntity.setGroupName(PoiPublicUtil.getValueByTargetId(excelGroup.name(), targetId, null));
         } else {
