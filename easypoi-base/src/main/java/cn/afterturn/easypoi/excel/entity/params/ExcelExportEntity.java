@@ -1,6 +1,6 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * excel 导出工具类,对cell类型做映射
- * 
+ *
  * @author JueYue
  * @version 1.0 2013年8月24日
  */
@@ -58,7 +58,7 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
      */
     private boolean                 mergeVertical;
     /**
-     * 合并依赖
+     * 合并依赖`
      */
     private int[]                   mergeRely;
     /**
@@ -71,6 +71,18 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
     private boolean                 isStatistics;
 
     private String                   numFormat;
+    /**
+     *  是否隐藏列
+     */
+    private boolean                  isColumnHidden;
+
+    public boolean isColumnHidden() {
+        return isColumnHidden;
+    }
+
+    public void setColumnHidden(boolean columnHidden) {
+        isColumnHidden = columnHidden;
+    }
 
     private List<ExcelExportEntity> list;
 

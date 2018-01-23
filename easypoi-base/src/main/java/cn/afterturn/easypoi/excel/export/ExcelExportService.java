@@ -167,6 +167,7 @@ public class ExcelExportService extends BaseExportService {
                     ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
             int titleHeight = index;
             setCellWith(excelParams, sheet);
+            setColumnHidden(excelParams,sheet);
             short rowHeight = entity.getHeight() > 0 ? entity.getHeight() : getRowHeight(excelParams);
             setCurrentIndex(1);
             Iterator<?> its = dataSet.iterator();
