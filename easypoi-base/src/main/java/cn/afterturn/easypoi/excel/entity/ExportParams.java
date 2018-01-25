@@ -83,6 +83,11 @@ public class ExportParams extends ExcelBaseParams {
      * Excel 导出style
      */
     private Class<?>  style             = ExcelExportStylerDefaultImpl.class;
+
+    /**
+     * 表头高度
+     */
+    private double     headerHeight       = 9D;
     /**
      * 是否创建表头
      */
@@ -272,4 +277,11 @@ public class ExportParams extends ExcelBaseParams {
         this.height = height;
     }
 
+    public short getHeaderHeight() {
+        return (short) (titleHeight * 50);
+    }
+
+    public void setHeaderHeight(double headerHeight) {
+        this.headerHeight = headerHeight;
+    }
 }
