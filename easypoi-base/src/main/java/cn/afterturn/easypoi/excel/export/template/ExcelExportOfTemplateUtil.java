@@ -53,6 +53,7 @@ import cn.afterturn.easypoi.excel.export.template.TemplateSumHanlder.TemplateSum
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
+import cn.afterturn.easypoi.util.PoiCellUtil;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiSheetUtil;
@@ -301,8 +302,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 cell = row.getCell(i);
                 if (row.getCell(i) != null && (cell.getCellType() == Cell.CELL_TYPE_STRING
                                                || cell.getCellType() == Cell.CELL_TYPE_NUMERIC)) {
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                    String text = cell.getStringCellValue();
+                    String text = PoiCellUtil.getCellValue(cell);   // plq modify at 2017-11-11
                     if (text.contains(FOREACH_COL) || text.contains(FOREACH_COL_VALUE)) {
                         foreachCol(cell, map, text);
                     }
@@ -570,7 +570,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                         LOGGER.error(e.getMessage(), e);
                     }
                 }
-                row.getCell(ci).setCellStyle(columns.get(i).getCellStyle());
+                row.getCell(ci).setCellStyle(params.getCellStyle());    // plq modify at 2017-11-13
                 //判断这个属性是不是需要统计
                 if (params.isNeedSum()) {
                     templateSumHanlder.addValueOfKey(params.getName(), val);
