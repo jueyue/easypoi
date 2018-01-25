@@ -302,7 +302,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 cell = row.getCell(i);
                 if (row.getCell(i) != null && (cell.getCellType() == Cell.CELL_TYPE_STRING
                                                || cell.getCellType() == Cell.CELL_TYPE_NUMERIC)) {
-                    String text = PoiCellUtil.getCellValue(cell);   // plq modify at 2017-11-11
+                    String text = PoiCellUtil.getCellValue(cell);
                     if (text.contains(FOREACH_COL) || text.contains(FOREACH_COL_VALUE)) {
                         foreachCol(cell, map, text);
                     }

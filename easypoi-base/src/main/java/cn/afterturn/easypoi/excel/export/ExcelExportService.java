@@ -55,9 +55,9 @@ public class ExcelExportService extends BaseExportService {
                                        List<ExcelExportEntity> excelParams) {
         int rows = 0, fieldLength = getFieldLength(excelParams);
         if (entity.getTitle() != null) {
-            rows += createHeaderRow(entity, sheet, workbook, fieldLength);
+            rows += createTitle2Row(entity, sheet, workbook, fieldLength);
         }
-        rows += createTitleRow(entity, sheet, workbook, rows, excelParams);
+        rows += createHeaderRow(entity, sheet, workbook, rows, excelParams);
         sheet.createFreezePane(0, rows, 0, rows);
         return rows;
     }
@@ -65,7 +65,7 @@ public class ExcelExportService extends BaseExportService {
     /**
      * 创建 表头改变
      */
-    public int createHeaderRow(ExportParams entity, Sheet sheet, Workbook workbook,
+    public int createTitle2Row(ExportParams entity, Sheet sheet, Workbook workbook,
                                int fieldWidth) {
 
         Row row = sheet.createRow(0);
@@ -212,15 +212,15 @@ public class ExcelExportService extends BaseExportService {
     /**
      * 创建表头
      */
-    private int createTitleRow(ExportParams title, Sheet sheet, Workbook workbook, int index,
-                               List<ExcelExportEntity> excelParams) {
+    private int createHeaderRow(ExportParams title, Sheet sheet, Workbook workbook, int index,
+                                List<ExcelExportEntity> excelParams) {
         Row row = sheet.createRow(index);
         int rows = getRowNums(excelParams);
-        row.setHeight((short) 450);
+        row.setHeight(title.getHeaderHeight());
         Row listRow = null;
         if (rows == 2) {
             listRow = sheet.createRow(index + 1);
-            listRow.setHeight((short) 450);
+            listRow.setHeight(title.getHeaderHeight());
         }
         int cellIndex = 0;
         int groupCellLength = 0;
