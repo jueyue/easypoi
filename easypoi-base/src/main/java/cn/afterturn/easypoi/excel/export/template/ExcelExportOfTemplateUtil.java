@@ -632,7 +632,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             //保存col 的开始列
             int startIndex = cell.getColumnIndex();
             Row row = cell.getRow();
-            while (true) {
+            while (index  < row.getLastCellNum()) {
                 int colSpan = columns.get(columns.size() - 1) != null
                     ? columns.get(columns.size() - 1).getColspan() : 1;
                 index += colSpan;
