@@ -207,11 +207,13 @@ public final class PoiPublicUtil {
                 XSSFDrawing drawing = (XSSFDrawing) dr;
                 List<XSSFShape> shapes = drawing.getShapes();
                 for (XSSFShape shape : shapes) {
-                    XSSFPicture pic = (XSSFPicture) shape;
-                    XSSFClientAnchor anchor = pic.getPreferredSize();
-                    CTMarker ctMarker = anchor.getFrom();
-                    String picIndex = ctMarker.getRow() + "_" + ctMarker.getCol();
-                    sheetIndexPicMap.put(picIndex, pic.getPictureData());
+                    if (shape instanceof XSSFPicture) {
+                        XSSFPicture pic = (XSSFPicture) shape;
+                        XSSFClientAnchor anchor = pic.getPreferredSize();
+                        CTMarker ctMarker = anchor.getFrom();
+                        String picIndex = ctMarker.getRow() + "_" + ctMarker.getCol();
+                        sheetIndexPicMap.put(picIndex, pic.getPictureData());
+                    }
                 }
             }
         }
