@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -321,13 +321,20 @@ public class ExportCommonService {
                 Collections.sort(entry.getValue());
                 // 插入到excelParams当中
                 boolean isInsert = false;
-                for (int i = 0; i < excelParams.size() - 1; i++) {
+                String groupName = "START";
+                for (int i = 0; i < excelParams.size(); i++) {
                     // 跳过groupName 的元素,防止破会内部结构
-                    if (StringUtils.isEmpty(excelParams.get(i).getGroupName()) && excelParams.get(i).getOrderNum() <= entry.getValue().get(0).getOrderNum()
-                            && excelParams.get(i + 1).getOrderNum() > entry.getValue().get(0).getOrderNum()) {
-                        excelParams.addAll(i + 1, entry.getValue());
+                    if (excelParams.get(i).getOrderNum() > entry.getValue().get(0).getOrderNum()
+                            && !groupName.equals(excelParams.get(i).getGroupName())) {
+                        if (StringUtils.isNotEmpty(excelParams.get(i).getGroupName())) {
+                            groupName = excelParams.get(i).getGroupName();
+                        }
+                        excelParams.addAll(i, entry.getValue());
                         isInsert = true;
                         break;
+                    } else if (!groupName.equals(excelParams.get(i).getGroupName()) &&
+                            StringUtils.isNotEmpty(excelParams.get(i).getGroupName())) {
+                        groupName = excelParams.get(i).getGroupName();
                     }
                 }
                 //如果都比他小就插入到最后
