@@ -68,7 +68,7 @@ public class ImportParams extends ExcelBaseParams {
     /**
      * 校验处理接口
      */
-    private IExcelVerifyHandler verifyHanlder;
+    private IExcelVerifyHandler verifyHandler;
     /**
      * 保存上传的Excel目录,默认是 如 TestEntity这个类保存路径就是
      * upload/excelUpload/Test/yyyyMMddHHmss_***** 保存名称上传时间_五位随机数
@@ -120,8 +120,8 @@ public class ImportParams extends ExcelBaseParams {
         return titleRows;
     }
 
-    public IExcelVerifyHandler getVerifyHanlder() {
-        return verifyHanlder;
+    public IExcelVerifyHandler getVerifyHandler() {
+        return verifyHandler;
     }
 
     public boolean isNeedSave() {
@@ -157,8 +157,8 @@ public class ImportParams extends ExcelBaseParams {
         this.titleRows = titleRows;
     }
 
-    public void setVerifyHanlder(IExcelVerifyHandler verifyHanlder) {
-        this.verifyHanlder = verifyHanlder;
+    public void setVerifyHandler(IExcelVerifyHandler verifyHandler) {
+        this.verifyHandler = verifyHandler;
     }
 
     public int getLastOfInvalidRow() {

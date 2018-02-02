@@ -30,7 +30,7 @@ import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import cn.afterturn.easypoi.excel.imports.sax.SaxReadExcel;
 import cn.afterturn.easypoi.excel.imports.sax.parse.ISaxRowRead;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
-import cn.afterturn.easypoi.handler.inter.IExcelReadRowHanlder;
+import cn.afterturn.easypoi.handler.inter.IExcelReadRowHandler;
 
 /**
  * Excel 导入工具
@@ -149,7 +149,7 @@ public class ExcelImportUtil {
      */
     @SuppressWarnings("rawtypes")
     public static void importExcelBySax(InputStream inputstream, Class<?> pojoClass,
-                                        ImportParams params, IExcelReadRowHanlder hanlder) {
+                                        ImportParams params, IExcelReadRowHandler hanlder) {
         new SaxReadExcel().readExcel(inputstream, pojoClass, params, null, hanlder);
     }
 

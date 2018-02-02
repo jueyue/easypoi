@@ -15,7 +15,7 @@
  */
 package cn.afterturn.easypoi.handler.inter;
 
-import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHanlderResult;
+import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHandlerResult;
 
 /**
  * 导入校验接口
@@ -32,6 +32,6 @@ public interface IExcelVerifyHandler<T> {
      *            当前对象
      * @return
      */
-    public ExcelVerifyHanlderResult verifyHandler(T obj);
+    public ExcelVerifyHandlerResult verifyHandler(T obj);
 
 }

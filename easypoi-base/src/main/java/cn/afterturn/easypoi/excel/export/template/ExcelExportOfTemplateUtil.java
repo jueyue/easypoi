@@ -49,7 +49,7 @@ import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
 import cn.afterturn.easypoi.excel.export.base.BaseExportService;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
-import cn.afterturn.easypoi.excel.export.template.TemplateSumHanlder.TemplateSumEntity;
+import cn.afterturn.easypoi.excel.export.template.TemplateSumHandler.TemplateSumEntity;
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
@@ -83,7 +83,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      */
     private MergedRegionHelper   mergedRegionHelper;
 
-    private TemplateSumHanlder   templateSumHanlder;
+    private TemplateSumHandler   templateSumHandler;
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
@@ -253,7 +253,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                                boolean colForeach) throws Exception {
         deleteCell(sheet, map);
         mergedRegionHelper = new MergedRegionHelper(sheet);
-        templateSumHanlder = new TemplateSumHanlder(sheet);
+        templateSumHandler = new TemplateSumHandler(sheet);
         if (colForeach) {
             colForeach(sheet, map);
         }
@@ -277,7 +277,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     }
 
     private void hanlderSumCell(Sheet sheet) {
-        for (TemplateSumEntity sumEntity : templateSumHanlder.getDataList()) {
+        for (TemplateSumEntity sumEntity : templateSumHandler.getDataList()) {
             Cell cell = sheet.getRow(sumEntity.getRow()).getCell(sumEntity.getCol());
             cell.setCellValue(cell.getStringCellValue()
                 .replace("sum:(" + sumEntity.getSumKey() + ")", sumEntity.getValue() + ""));
@@ -468,7 +468,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             createRowNoRow(cell.getRowIndex() + rowspan,cell.getRow().getSheet().getLastRowNum(),(datas.size() - 1) * rowspan);
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
                 cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
-            templateSumHanlder.shiftRows(cell.getRowIndex(),(datas.size() - 1) * rowspan);
+            templateSumHandler.shiftRows(cell.getRowIndex(),(datas.size() - 1) * rowspan);
         }
         while (its.hasNext()) {
             Object t = its.next();
@@ -573,7 +573,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 row.getCell(ci).setCellStyle(params.getCellStyle());    // plq modify at 2017-11-13
                 //判断这个属性是不是需要统计
                 if (params.isNeedSum()) {
-                    templateSumHanlder.addValueOfKey(params.getName(), val);
+                    templateSumHandler.addValueOfKey(params.getName(), val);
                 }
                 //如果合并单元格,就把这个单元格的样式和之前的保持一致
                 setMergedRegionStyle(row, ci, columns.get(i));
@@ -719,7 +719,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             params.setRowspan(colAndrow[0]);
             params.setColspan(colAndrow[1]);
         }
-        params.setNeedSum(templateSumHanlder.isSumKey(params.getName()));
+        params.setNeedSum(templateSumHandler.isSumKey(params.getName()));
         return params;
     }
 
