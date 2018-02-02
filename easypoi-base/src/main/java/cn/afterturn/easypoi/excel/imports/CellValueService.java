@@ -212,14 +212,14 @@ public class CellValueService {
 
     /**
      * 获取cell值
-     * @param dataHanlder
+     * @param dataHandler
      * @param object
      * @param cellEntity
      * @param excelParams
      * @param titleString
      * @return
      */
-    public Object getValue(IExcelDataHandler<?> dataHanlder, Object object,
+    public Object getValue(IExcelDataHandler<?> dataHandler, Object object,
                            SaxReadCellEntity cellEntity, Map<String, ExcelImportEntity> excelParams,
                            String titleString) {
         ExcelImportEntity entity = excelParams.get(titleString);
@@ -230,7 +230,7 @@ public class CellValueService {
         Object result = cellEntity.getValue();
         result = hanlderSuffix(entity.getSuffix(), result);
         result = replaceValue(entity.getReplace(), result);
-        result = handlerValue(dataHanlder, object, result, titleString);
+        result = handlerValue(dataHandler, object, result, titleString);
         return getValueByType(xclass, result, entity);
     }
 

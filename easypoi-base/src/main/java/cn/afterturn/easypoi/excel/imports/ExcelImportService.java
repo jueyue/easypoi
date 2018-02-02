@@ -50,7 +50,7 @@ import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelCollectionParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
-import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHanlderResult;
+import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHandlerResult;
 import cn.afterturn.easypoi.excel.imports.base.ImportBaseService;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelImportEnum;
@@ -267,8 +267,8 @@ public class ExcelImportService extends ImportBaseService {
                 verfiyFail = true;
             }
         }
-        if (params.getVerifyHanlder() != null) {
-            ExcelVerifyHanlderResult result = params.getVerifyHanlder().verifyHandler(object);
+        if (params.getVerifyHandler() != null) {
+            ExcelVerifyHandlerResult result = params.getVerifyHandler().verifyHandler(object);
             if (!result.isSuccess()) {
                 if (cell == null) {
                     cell = row.createCell(row.getLastCellNum());

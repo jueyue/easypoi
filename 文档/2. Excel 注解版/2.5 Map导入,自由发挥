@@ -6,7 +6,7 @@
 导入的逻辑就变成了
 ```java
         ImportParams params = new ImportParams();
-        params.setDataHanlder(new MapImportHanlder());
+        params.setDataHandler(new MapImportHandler());
         long start = new Date().getTime();
         List<Map<String, Object>> list = ExcelImportUtil.importExcel(
             new File(PoiPublicUtil.getWebRootPath("import/check.xls")), Map.class, params);

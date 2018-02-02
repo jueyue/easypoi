@@ -34,7 +34,7 @@ import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.imports.sax.parse.ISaxRowRead;
 import cn.afterturn.easypoi.excel.imports.sax.parse.SaxRowRead;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
-import cn.afterturn.easypoi.handler.inter.IExcelReadRowHanlder;
+import cn.afterturn.easypoi.handler.inter.IExcelReadRowHandler;
 
 /**
  * 基于SAX Excel大数据读取,读取Excel 07版本,不支持图片读取
@@ -48,7 +48,7 @@ public class SaxReadExcel {
     private static final Logger LOGGER = LoggerFactory.getLogger(SaxReadExcel.class);
 
     public <T> List<T> readExcel(InputStream inputstream, Class<?> pojoClass, ImportParams params,
-                                 ISaxRowRead rowRead, IExcelReadRowHanlder hanlder) {
+                                 ISaxRowRead rowRead, IExcelReadRowHandler hanlder) {
         try {
             OPCPackage opcPackage = OPCPackage.open(inputstream);
             return readExcel(opcPackage, pojoClass, params, rowRead, hanlder);
@@ -59,7 +59,7 @@ public class SaxReadExcel {
     }
 
     private <T> List<T> readExcel(OPCPackage opcPackage, Class<?> pojoClass, ImportParams params,
-                                  ISaxRowRead rowRead, IExcelReadRowHanlder hanlder) {
+                                  ISaxRowRead rowRead, IExcelReadRowHandler hanlder) {
         try {
             XSSFReader xssfReader = new XSSFReader(opcPackage);
             SharedStringsTable sst = xssfReader.getSharedStringsTable();
