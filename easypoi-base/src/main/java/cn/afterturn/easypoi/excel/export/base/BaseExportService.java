@@ -104,7 +104,7 @@ public abstract class BaseExportService extends ExportCommonService {
                                 entity);
                         if (entity.isHyperlink()) {
                             row.getCell(cellNum - 1)
-                                    .setHyperlink(dataHanlder.getHyperlink(
+                                    .setHyperlink(dataHandler.getHyperlink(
                                             row.getSheet().getWorkbook().getCreationHelper(), t,
                                             entity.getName(), value));
                         }
@@ -113,7 +113,7 @@ public abstract class BaseExportService extends ExportCommonService {
                                 index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                                 entity);
                         if (entity.isHyperlink()) {
-                            row.getCell(cellNum - 1).setHyperlink(dataHanlder.getHyperlink(
+                            row.getCell(cellNum - 1).setHyperlink(dataHandler.getHyperlink(
                                     row.getSheet().getWorkbook().getCreationHelper(), t,
                                     entity.getName(), value));
                         }
@@ -225,7 +225,7 @@ public abstract class BaseExportService extends ExportCommonService {
                         entity);
                 if (entity.isHyperlink()) {
                     row.getCell(cellNum - 1)
-                            .setHyperlink(dataHanlder.getHyperlink(
+                            .setHyperlink(dataHandler.getHyperlink(
                                     row.getSheet().getWorkbook().getCreationHelper(), obj, entity.getName(),
                                     value));
                 }
@@ -234,7 +234,7 @@ public abstract class BaseExportService extends ExportCommonService {
                         index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity), entity);
                 if (entity.isHyperlink()) {
                     row.getCell(cellNum - 1)
-                            .setHyperlink(dataHanlder.getHyperlink(
+                            .setHyperlink(dataHandler.getHyperlink(
                                     row.getSheet().getWorkbook().getCreationHelper(), obj, entity.getName(),
                                     value));
                 }

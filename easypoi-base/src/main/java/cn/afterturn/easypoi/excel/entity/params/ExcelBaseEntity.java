@@ -51,6 +51,10 @@ public class ExcelBaseEntity {
      */
     private String[]     replace;
     /**
+     * 字典名称
+     */
+    private String       dict;
+    /**
      * set/get方法
      */
     private Method       method;
@@ -143,6 +147,18 @@ public class ExcelBaseEntity {
     }
 
     public void setFixedIndex(int fixedIndex) {
+        this.fixedIndex = fixedIndex;
+    }
+
+    public String getDict() {
+        return dict;
+    }
+
+    public void setDict(String dict) {
+        this.dict = dict;
+    }
+
+    public void setFixedIndex(Integer fixedIndex) {
         this.fixedIndex = fixedIndex;
     }
 }

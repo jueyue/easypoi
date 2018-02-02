@@ -16,6 +16,7 @@
 package cn.afterturn.easypoi.excel.entity;
 
 import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
+import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
 
 /**
  * 基础参数
@@ -28,14 +29,26 @@ public class ExcelBaseParams {
     /**
      * 数据处理接口,以此为主,replace,format都在这后面
      */
-    private IExcelDataHandler dataHanlder;
+    private IExcelDataHandler dataHandler;
 
-    public IExcelDataHandler getDataHanlder() {
-        return dataHanlder;
+    /**
+     * 字段处理类
+     */
+    private IExcelDictHandler dictHandler;
+
+    public IExcelDataHandler getDataHandler() {
+        return dataHandler;
     }
 
-    public void setDataHanlder(IExcelDataHandler dataHanlder) {
-        this.dataHanlder = dataHanlder;
+    public void setDataHandler(IExcelDataHandler dataHandler) {
+        this.dataHandler = dataHandler;
     }
 
+    public IExcelDictHandler getDictHandler() {
+        return dictHandler;
+    }
+
+    public void setDictHandler(IExcelDictHandler dictHandler) {
+        this.dictHandler = dictHandler;
+    }
 }

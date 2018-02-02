@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -58,9 +59,10 @@ public class ExportCommonService {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(ExportCommonService.class);
 
-    protected IExcelDataHandler dataHanlder;
+    protected IExcelDataHandler dataHandler;
+    protected IExcelDictHandler dictHandler;
 
-    protected List<String> needHanlderList;
+    protected List<String> needHandlerList;
 
     /**
      * 创建导出实体对象
@@ -195,8 +197,11 @@ public class ExportCommonService {
         if (StringUtils.isNotEmpty(entity.getNumFormat())) {
             value = numFormatValue(value, entity);
         }
-        if (needHanlderList != null && needHanlderList.contains(entity.getName())) {
-            value = dataHanlder.exportHandler(obj, entity.getName(), value);
+        if (StringUtils.isNotEmpty(entity.getDict()) && dictHandler != null) {
+            value = dictHandler.toName(entity.getDict(), obj, entity.getName(), value);
+        }
+        if (needHandlerList != null && needHandlerList.contains(entity.getName())) {
+            value = dataHandler.exportHandler(obj, entity.getName(), value);
         }
         if (StringUtils.isNotEmpty(entity.getSuffix()) && value != null) {
             value = value + entity.getSuffix();
@@ -243,6 +248,7 @@ public class ExportCommonService {
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getGetMethod(field.getName()));
         excelEntity.setNumFormat(excel.numFormat());
         excelEntity.setColumnHidden(excel.isColumnHidden());
+        excelEntity.setDict(excel.dict());
         if (excelGroup != null) {
             excelEntity.setGroupName(PoiPublicUtil.getValueByTargetId(excelGroup.name(), targetId, null));
         } else {
