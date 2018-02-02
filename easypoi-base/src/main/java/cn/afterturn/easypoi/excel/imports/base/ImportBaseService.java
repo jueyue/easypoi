@@ -178,6 +178,7 @@ public class ImportBaseService {
         } else {
             excelEntity.setFormat(excel.format());
         }
+        excelEntity.setDict(excel.dict());
     }
 
     public void getExcelFieldList(String targetId, Field[] fields, Class<?> pojoClass,

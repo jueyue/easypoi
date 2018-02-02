@@ -542,11 +542,11 @@ public class ExcelImportService extends ImportBaseService {
     private void saveFieldValue(ImportParams params, Object object, Cell cell,
                                 Map<String, ExcelImportEntity> excelParams, String titleString,
                                 Row row) throws Exception {
-        Object value = cellValueServer.getValue(params.getDataHanlder(), object, cell, excelParams,
-                titleString);
+        Object value = cellValueServer.getValue(params.getDataHandler(), object, cell, excelParams,
+                titleString, params.getDictHandler());
         if (object instanceof Map) {
-            if (params.getDataHanlder() != null) {
-                params.getDataHanlder().setMapValue((Map) object, titleString, value);
+            if (params.getDataHandler() != null) {
+                params.getDataHandler().setMapValue((Map) object, titleString, value);
             } else {
                 ((Map) object).put(titleString, value);
             }

@@ -109,9 +109,9 @@ public class ExcelBatchExportService extends ExcelExportService {
                                      List<ExcelExportEntity> entityList, Collection<?> dataSet,
                                      Sheet sheet) {
         try {
-            dataHanlder = entity.getDataHanlder();
-            if (dataHanlder != null && dataHanlder.getNeedHandlerFields() != null) {
-                needHanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
+            dataHandler = entity.getDataHandler();
+            if (dataHandler != null && dataHandler.getNeedHandlerFields() != null) {
+                needHandlerList = Arrays.asList(dataHandler.getNeedHandlerFields());
             }
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) entity.getStyle()

@@ -199,7 +199,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private void saveFieldValue(ImportParams params, Object object, SaxReadCellEntity entity,
                                 Map<String, ExcelImportEntity> excelParams,
                                 String titleString) throws Exception {
-        Object value = cellValueServer.getValue(params.getDataHanlder(), object, entity,
+        Object value = cellValueServer.getValue(params.getDataHandler(), object, entity,
             excelParams, titleString);
         setValues(excelParams.get(titleString), object, value);
     }

@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -52,7 +53,7 @@ public class CellValueService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CellValueService.class);
 
-    private List<String> hanlderList = null;
+    private List<String> handlerList = null;
 
     /**
      * 获取单元格内的值
@@ -179,15 +180,15 @@ public class CellValueService {
 
     /**
      * 获取cell的值
-     *
-     * @param object
-     * @param excelParams
+     *  @param object
      * @param cell
+     * @param excelParams
      * @param titleString
+     * @param dictHandler
      */
-    public Object getValue(IExcelDataHandler<?> dataHanlder, Object object, Cell cell,
+    public Object getValue(IExcelDataHandler<?> dataHandler, Object object, Cell cell,
                            Map<String, ExcelImportEntity> excelParams,
-                           String titleString) throws Exception {
+                           String titleString, IExcelDictHandler dictHandler) throws Exception {
         ExcelImportEntity entity = excelParams.get(titleString);
         String xclass = "class java.lang.Object";
         if (!(object instanceof Map)) {
@@ -200,8 +201,12 @@ public class CellValueService {
         if (entity != null) {
             result = hanlderSuffix(entity.getSuffix(), result);
             result = replaceValue(entity.getReplace(), result);
+            result = replaceValue(entity.getReplace(), result);
+            if(dictHandler != null && StringUtils.isNoneBlank(entity.getDict())){
+                dictHandler.toValue(entity.getDict(), object, entity.getName(), result);
+            }
         }
-        result = hanlderValue(dataHanlder, object, result, titleString);
+        result = handlerValue(dataHandler, object, result, titleString);
         return getValueByType(xclass, result, entity);
     }
 
@@ -225,7 +230,7 @@ public class CellValueService {
         Object result = cellEntity.getValue();
         result = hanlderSuffix(entity.getSuffix(), result);
         result = replaceValue(entity.getReplace(), result);
-        result = hanlderValue(dataHanlder, object, result, titleString);
+        result = handlerValue(dataHanlder, object, result, titleString);
         return getValueByType(xclass, result, entity);
     }
 
@@ -310,24 +315,24 @@ public class CellValueService {
     /**
      * 调用处理接口处理值
      *
-     * @param dataHanlder
+     * @param dataHandler
      * @param object
      * @param result
      * @param titleString
      * @return
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private Object hanlderValue(IExcelDataHandler dataHanlder, Object object, Object result,
+    private Object handlerValue(IExcelDataHandler dataHandler, Object object, Object result,
                                 String titleString) {
-        if (dataHanlder == null || dataHanlder.getNeedHandlerFields() == null
-                || dataHanlder.getNeedHandlerFields().length == 0) {
+        if (dataHandler == null || dataHandler.getNeedHandlerFields() == null
+                || dataHandler.getNeedHandlerFields().length == 0) {
             return result;
         }
-        if (hanlderList == null) {
-            hanlderList = Arrays.asList(dataHanlder.getNeedHandlerFields());
+        if (handlerList == null) {
+            handlerList = Arrays.asList(dataHandler.getNeedHandlerFields());
         }
-        if (hanlderList.contains(titleString)) {
-            return dataHanlder.importHandler(object, titleString, result);
+        if (handlerList.contains(titleString)) {
+            return dataHandler.importHandler(object, titleString, result);
         }
         return result;
     }

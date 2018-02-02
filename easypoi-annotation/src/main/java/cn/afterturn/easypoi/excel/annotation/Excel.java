@@ -112,6 +112,10 @@ public @interface Excel {
      * 值得替换  导出是{a_id,b_id} 导入反过来,所以只用写一个
      */
     public String[] replace() default {};
+    /**
+     *  字典名称
+     */
+    public String dict() default  "";
 
     /**
      * 导入路径,如果是图片可以填写,默认是upload/className/ IconEntity这个类对应的就是upload/Icon/
@@ -162,4 +166,6 @@ public @interface Excel {
      * @return
      */
     public boolean isColumnHidden() default  false;
+
+
 }
