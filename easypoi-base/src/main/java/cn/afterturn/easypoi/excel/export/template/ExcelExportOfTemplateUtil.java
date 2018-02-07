@@ -407,10 +407,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 oldString = oldString.replaceFirst(NUMBER_SYMBOL, "");
             }
             Object obj = PoiPublicUtil.getRealValue(oldString, map);
-            //如何是数值 类型,就按照数值类型进行设置
-            if (obj instanceof ImageEntity) {// 如果是图片就设置为图片
+            //如何是数值 类型,就按照数值类型进行设置// 如果是图片就设置为图片
+            if (obj instanceof ImageEntity) {
                 ImageEntity img = (ImageEntity)obj;
                 cell.setCellValue("");
+                if (img.getRowspan()>1 || img.getColspan() > 1){
+                    img.setHeight(0);
+                    cell.getSheet().addMergedRegion(new CellRangeAddress(cell.getRowIndex(),
+                            cell.getRowIndex() + img.getRowspan() - 1, cell.getColumnIndex(), cell.getColumnIndex() + img.getColspan() -1));
+                }
                 createImageCell(cell,img.getHeight(),img.getUrl(),img.getData());
             }else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
                 cell.setCellValue(Double.parseDouble(obj.toString()));
@@ -464,7 +469,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 rowspan, colspan, mergedRegionHelper);
             rowIndex += rowspan - 1;
         }
-        if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()) {
+        //不论后面有没有数据,都应该执行的是插入操作
+        // && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()
+        if (isShift && datas.size() * rowspan > 1) {
             createRowNoRow(cell.getRowIndex() + rowspan,cell.getRow().getSheet().getLastRowNum(),(datas.size() - 1) * rowspan);
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
                 cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
@@ -548,6 +555,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     continue;
                 }
                 String val = null;
+                Object obj = null;
                 //是不是常量
                 if (StringUtils.isEmpty(params.getName())) {
                     val = params.getConstValue();
@@ -558,9 +566,14 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                         tempStr = tempStr.replaceFirst(NUMBER_SYMBOL, "");
                     }
                     map.put(teplateParams.getTempParams(), t);
-                    val = eval(tempStr, map).toString();
+                    obj = eval(tempStr, map);
+                    val = obj.toString();
                 }
-                if (isNumber && StringUtils.isNotEmpty(val)) {
+                if (obj != null  && obj instanceof ImageEntity) {
+                    ImageEntity img = (ImageEntity)obj;
+                    row.getCell(ci).setCellValue("");
+                    createImageCell(row.getCell(ci),img.getHeight(),img.getUrl(),img.getData());
+                }else if (isNumber && StringUtils.isNotEmpty(val)) {
                     row.getCell(ci).setCellValue(Double.parseDouble(val));
                     row.getCell(ci).setCellType(Cell.CELL_TYPE_NUMERIC);
                 } else {

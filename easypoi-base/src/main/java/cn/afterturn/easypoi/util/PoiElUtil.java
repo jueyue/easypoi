@@ -1,6 +1,6 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -26,25 +26,25 @@ import cn.afterturn.easypoi.exception.excel.ExcelExportException;
  */
 public final class PoiElUtil {
 
-	public static final String	LENGTH				= "le:";
-	public static final String	FOREACH				= "fe:";
-	public static final String	FOREACH_NOT_CREATE	= "!fe:";
-	public static final String	FOREACH_AND_SHIFT	= "$fe:";
-	public static final String	FOREACH_COL			= "#fe:";
-	public static final String	FOREACH_COL_VALUE	= "v_fe:";
-	public static final String	START_STR			= "{{";
-	public static final String	END_STR				= "}}";
-	public static final String	WRAP				= "]]";
-	public static final String	NUMBER_SYMBOL		= "n:";
-	public static final String	FORMAT_DATE			= "fd:";
-	public static final String	FORMAT_NUMBER		= "fn:";
-	public static final String	SUM		            = "sum:";
-	public static final String	IF_DELETE			= "!if:";
-	public static final String	EMPTY				= "";
-	public static final String	CONST				= "'";
-	public static final String	NULL				= "&NULL&";
-	public static final String	LEFT_BRACKET		= "(";
-	public static final String	RIGHT_BRACKET		= ")";
+	public static final String	 LENGTH				= "le:";
+	public static final String	 FOREACH				= "fe:";
+	public static final String	 FOREACH_NOT_CREATE	= "!fe:";
+	public static final String	 FOREACH_AND_SHIFT	= "$fe:";
+	public static final String	 FOREACH_COL			= "#fe:";
+	public static final String	 FOREACH_COL_VALUE	= "v_fe:";
+	public static final String	 START_STR			= "{{";
+	public static final String	 END_STR				= "}}";
+	public static final String	 WRAP				= "]]";
+	public static final String	 NUMBER_SYMBOL		= "n:";
+	public static final String	 FORMAT_DATE			= "fd:";
+	public static final String	 FORMAT_NUMBER		= "fn:";
+	public static final String	 SUM		            = "sum:";
+	public static final String	 IF_DELETE			= "!if:";
+	public static final String	 EMPTY				= "";
+	public static final String	 CONST				= "'";
+	public static final String	 NULL				= "&NULL&";
+	public static final String	 LEFT_BRACKET		= "(";
+	public static final String	 RIGHT_BRACKET		= ")";
 
 	private PoiElUtil() {
 	}
@@ -54,7 +54,7 @@ public final class PoiElUtil {
 	 * @param text
 	 * @param map
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static Object eval(String text, Map<String, Object> map) throws Exception {
 		String tempText = new String(text);
@@ -71,7 +71,7 @@ public final class PoiElUtil {
 	 * @param text
 	 * @param map
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static Object innerEval(String text, Map<String, Object> map) throws Exception {
 		if (text.indexOf("?") != -1 && text.indexOf(":") != -1) {
@@ -100,7 +100,7 @@ public final class PoiElUtil {
 	 * @param text
 	 * @param map
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private static Object ifDelete(String text, Map<String, Object> map) throws Exception {
 		//把多个空格变成一个空格
@@ -150,7 +150,7 @@ public final class PoiElUtil {
 	 * @param text
 	 * @param map
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private static Object formatNumber(String text, Map<String, Object> map) throws Exception {
 		String[] key = getKey(FORMAT_NUMBER, text).split(";");
@@ -166,7 +166,7 @@ public final class PoiElUtil {
 	 * @param text
 	 * @param map
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private static Object formatDate(String text, Map<String, Object> map) throws Exception {
 		String[] key = getKey(FORMAT_DATE, text).split(";");
@@ -181,7 +181,7 @@ public final class PoiElUtil {
 	 * 计算这个的长度
 	 * @param text
 	 * @param map
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private static Object length(String text, Map<String, Object> map) throws Exception {
 		String key = getKey(LENGTH, text);
@@ -226,7 +226,7 @@ public final class PoiElUtil {
 	/**
 	 * 三目运算
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private static Object trinocular(String text, Map<String, Object> map) throws Exception {
 		//把多个空格变成一个空格
@@ -250,7 +250,7 @@ public final class PoiElUtil {
                 for (int i = 2; i < keys.length; i++) {
                     trinocular +=  ":" + keys[i];
                 }
-		        second = eval(trinocular, map); 
+		        second = eval(trinocular, map);
 		    }
 		}else{
 		    first = eval(keys[0].trim(), map);
