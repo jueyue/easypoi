@@ -41,6 +41,10 @@ public class ImageEntity {
     // 图片信息
     private byte[]       data;
 
+    private int          rowspan = 1;
+    private int          colspan = 1;
+
+
     public ImageEntity() {
 
     }
@@ -98,4 +102,19 @@ public class ImageEntity {
         this.width = width;
     }
 
+    public int getRowspan() {
+        return rowspan;
+    }
+
+    public void setRowspan(int rowspan) {
+        this.rowspan = rowspan;
+    }
+
+    public int getColspan() {
+        return colspan;
+    }
+
+    public void setColspan(int colspan) {
+        this.colspan = colspan;
+    }
 }
