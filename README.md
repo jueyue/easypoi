@@ -15,6 +15,13 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 [官网](http://www.afterturn.cn/)
 
+[VIP技术服务](https://lemur.taobao.com)
+
+    提供一年的技术支持服务
+    提供10次内的1V1服务,限1小时
+    提供升级指导
+    针对lemur提供的所有开源项目提供支持服务
+
 **开发指南**
 
 **[http://www.afterturn.cn/doc/easypoi.html](http://www.afterturn.cn/doc/easypoi.html)**
