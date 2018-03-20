@@ -169,7 +169,7 @@ public class ExcelExportService extends BaseExportService {
             int titleHeight = index;
             setCellWith(excelParams, sheet);
             setColumnHidden(excelParams,sheet);
-            short rowHeight = entity.getHeight() > 0 ? entity.getHeight() : getRowHeight(excelParams);
+            short rowHeight = entity.getHeight() != 0 ? entity.getHeight() : getRowHeight(excelParams);
             setCurrentIndex(1);
             Iterator<?> its = dataSet.iterator();
             List<Object> tempList = new ArrayList<Object>();

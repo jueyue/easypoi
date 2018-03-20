@@ -75,7 +75,9 @@ public abstract class BaseExportService extends ExportCommonService {
         try {
             ExcelExportEntity entity;
             Row row = sheet.createRow(index);
-            row.setHeight(rowHeight);
+            if (rowHeight != -1) {
+                row.setHeight(rowHeight);
+            }
             int maxHeight = 1, cellNum = 0;
             int indexKey = createIndexCell(row, index, excelParams.get(0));
             cellNum += indexKey;
@@ -211,10 +213,14 @@ public abstract class BaseExportService extends ExportCommonService {
         Row row;
         if (sheet.getRow(index) == null) {
             row = sheet.createRow(index);
-            row.setHeight(rowHeight);
+            if (rowHeight != -1) {
+                row.setHeight(rowHeight);
+            }
         } else {
             row = sheet.getRow(index);
-            row.setHeight(rowHeight);
+            if (rowHeight != -1) {
+                row.setHeight(rowHeight);
+            }
         }
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);

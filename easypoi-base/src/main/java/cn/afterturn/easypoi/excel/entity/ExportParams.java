@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -22,7 +22,7 @@ import cn.afterturn.easypoi.excel.export.styler.ExcelExportStylerDefaultImpl;
 
 /**
  * Excel 导出参数
- * 
+ *
  * @author JueYue
  * @version 1.0 2013年8月24日
  */
@@ -31,86 +31,86 @@ public class ExportParams extends ExcelBaseParams {
     /**
      * 表格名称
      */
-    private String    title;
+    private String title;
 
     /**
      * 表格名称
      */
-    private short     titleHeight       = 10;
+    private short titleHeight = 10;
 
     /**
      * 第二行名称
      */
-    private String    secondTitle;
+    private String secondTitle;
 
     /**
      * 表格名称
      */
-    private short     secondTitleHeight = 8;
+    private short secondTitleHeight = 8;
     /**
      * sheetName
      */
-    private String    sheetName;
+    private String sheetName;
     /**
      * 过滤的属性
      */
-    private String[]  exclusions;
+    private String[] exclusions;
     /**
      * 是否添加需要需要
      */
-    private boolean   addIndex;
+    private boolean addIndex;
     /**
      * 是否添加需要需要
      */
-    private String    indexName         = "序号";
+    private String indexName = "序号";
     /**
      * 冰冻列
      */
-    private int       freezeCol;
+    private int freezeCol;
     /**
      * 表头颜色
      */
-    private short     color             = HSSFColor.WHITE.index;
+    private short color = HSSFColor.WHITE.index;
     /**
      * 属性说明行的颜色 例如:HSSFColor.SKY_BLUE.index 默认
      */
-    private short     headerColor       = HSSFColor.SKY_BLUE.index;
+    private short headerColor = HSSFColor.SKY_BLUE.index;
     /**
      * Excel 导出版本
      */
-    private ExcelType type              = ExcelType.HSSF;
+    private ExcelType type = ExcelType.HSSF;
     /**
      * Excel 导出style
      */
-    private Class<?>  style             = ExcelExportStylerDefaultImpl.class;
+    private Class<?> style = ExcelExportStylerDefaultImpl.class;
 
     /**
      * 表头高度
      */
-    private double     headerHeight       = 9D;
+    private double headerHeight = 9D;
     /**
      * 是否创建表头
      */
-    private boolean   isCreateHeadRows  = true;
+    private boolean isCreateHeadRows = true;
     /**
      * 是否动态获取数据
      */
-    private boolean   isDynamicData     = false;
+    private boolean isDynamicData = false;
     /**
      * 是否追加图形
      */
-    private boolean   isAppendGraph     = true;
+    private boolean isAppendGraph = true;
     /**
      * 单sheet最大值
      * 03版本默认6W行,07默认100W
      */
-    private int       maxNum            = 0;
+    private int maxNum = 0;
 
     /**
      * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
      * 全局设置,优先使用
      */
-    public short     height              = 0;
+    public short height = 0;
 
     public ExportParams() {
 
@@ -261,16 +261,16 @@ public class ExportParams extends ExcelBaseParams {
         this.isAppendGraph = isAppendGraph;
     }
 
-	public int getMaxNum() {
-		return maxNum;
-	}
+    public int getMaxNum() {
+        return maxNum;
+    }
 
-	public void setMaxNum(int maxNum) {
-		this.maxNum = maxNum;
-	}
+    public void setMaxNum(int maxNum) {
+        this.maxNum = maxNum;
+    }
 
     public short getHeight() {
-        return (short) (height * 50);
+        return height == -1 ? -1 : (short) (height * 50);
     }
 
     public void setHeight(short height) {
@@ -284,4 +284,5 @@ public class ExportParams extends ExcelBaseParams {
     public void setHeaderHeight(double headerHeight) {
         this.headerHeight = headerHeight;
     }
+
 }
