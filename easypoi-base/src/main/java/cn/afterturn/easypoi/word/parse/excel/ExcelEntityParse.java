@@ -63,7 +63,9 @@ public class ExcelEntityParse extends ExportCommonService {
         try {
             ExcelExportEntity entity;
             XWPFTableRow row = table.insertNewTableRow(index);
-            row.setHeight(rowHeight);
+            if (rowHeight != -1) {
+                row.setHeight(rowHeight);
+            }
             int maxHeight = 1, cellNum = 0;
             for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
