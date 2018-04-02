@@ -75,6 +75,10 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
      *  是否隐藏列
      */
     private boolean                  isColumnHidden;
+    /**
+     * 枚举导出属性字段
+     */
+    private String                    enumExportField;
 
     public boolean isColumnHidden() {
         return isColumnHidden;
@@ -207,6 +211,14 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
 
     public void setNumFormat(String numFormat) {
         this.numFormat = numFormat;
+    }
+
+    public String getEnumExportField() {
+        return enumExportField;
+    }
+
+    public void setEnumExportField(String enumExportField) {
+        this.enumExportField = enumExportField;
     }
 
     @Override

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
+import cn.afterturn.easypoi.util.PoiReflectorUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -191,11 +192,13 @@ public class CellValueService {
                            String titleString, IExcelDictHandler dictHandler) throws Exception {
         ExcelImportEntity entity = excelParams.get(titleString);
         String xclass = "class java.lang.Object";
+        Class clazz = null;
         if (!(object instanceof Map)) {
             Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
                     ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
             Type[] ts = setMethod.getGenericParameterTypes();
             xclass = ts[0].toString();
+            clazz = (Class) ts[0];
         }
         Object result = getCellValue(xclass, cell, entity);
         if (entity != null) {
@@ -207,7 +210,7 @@ public class CellValueService {
             }
         }
         result = handlerValue(dataHandler, object, result, titleString);
-        return getValueByType(xclass, result, entity);
+        return getValueByType(xclass, result, entity, clazz);
     }
 
     /**
@@ -231,7 +234,7 @@ public class CellValueService {
         result = hanlderSuffix(entity.getSuffix(), result);
         result = replaceValue(entity.getReplace(), result);
         result = handlerValue(dataHandler, object, result, titleString);
-        return getValueByType(xclass, result, entity);
+        return getValueByType(xclass, result, entity, (Class) ts[0]);
     }
 
     /**
@@ -255,9 +258,10 @@ public class CellValueService {
      * @param xclass
      * @param result
      * @param entity
+     * @param clazz
      * @return
      */
-    private Object getValueByType(String xclass, Object result, ExcelImportEntity entity) {
+    private Object getValueByType(String xclass, Object result, ExcelImportEntity entity, Class clazz) {
         try {
             //过滤空和空字符串,如果基本类型null会在上层抛出,这里就不处理了
             if (result == null || StringUtils.isBlank(result.toString())) {
@@ -304,6 +308,13 @@ public class CellValueService {
                     return PoiPublicUtil.doubleToString((Double) result);
                 }
                 return String.valueOf(result);
+            }
+            if (clazz.isEnum()) {
+                if (StringUtils.isNotEmpty(entity.getEnumImportMethod())) {
+                    return PoiReflectorUtil.fromCache(clazz).execEnumStaticMethod(entity.getEnumImportMethod(),result);
+                } else {
+                    return Enum.valueOf(clazz,result.toString());
+                }
             }
             return result;
         } catch (Exception e) {

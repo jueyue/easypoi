@@ -105,7 +105,7 @@ public final class PoiPublicUtil {
                     ExcelCollection collection = field.getAnnotation(ExcelCollection.class);
                     PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(),
                         collection.type().newInstance());
-                } else if (!isJavaClass(field)) {
+                } else if (!isJavaClass(field) && !field.getType().isEnum()) {
                     PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(),
                         createObject(field.getType(), targetId));
                 }

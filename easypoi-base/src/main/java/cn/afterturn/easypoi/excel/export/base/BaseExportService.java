@@ -403,7 +403,7 @@ public abstract class BaseExportService extends ExportCommonService {
             if (excelParams.get(i).getList() != null) {
                 List<ExcelExportEntity> list = excelParams.get(i).getList();
                 for (int j = 0; j < list.size(); j++) {
-                    sheet.setColumnHidden(index,list.get(i).isColumnHidden());
+                    sheet.setColumnHidden(index,list.get(j).isColumnHidden());
                     index++;
                 }
             } else {

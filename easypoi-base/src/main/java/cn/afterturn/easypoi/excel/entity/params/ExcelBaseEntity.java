@@ -161,4 +161,6 @@ public class ExcelBaseEntity {
     public void setFixedIndex(Integer fixedIndex) {
         this.fixedIndex = fixedIndex;
     }
+
+
 }
