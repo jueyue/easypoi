@@ -206,6 +206,9 @@ public class ExportCommonService {
         if (StringUtils.isNotEmpty(entity.getSuffix()) && value != null) {
             value = value + entity.getSuffix();
         }
+        if (value != null && StringUtils.isNotEmpty(entity.getEnumExportField())){
+            value = PoiReflectorUtil.fromCache(value.getClass()).getValue(value,entity.getEnumExportField());
+        }
         return value == null ? "" : value.toString();
     }
 
@@ -249,6 +252,7 @@ public class ExportCommonService {
         excelEntity.setNumFormat(excel.numFormat());
         excelEntity.setColumnHidden(excel.isColumnHidden());
         excelEntity.setDict(excel.dict());
+        excelEntity.setEnumExportField(excel.enumExportField());
         if (excelGroup != null) {
             excelEntity.setGroupName(PoiPublicUtil.getValueByTargetId(excelGroup.name(), targetId, null));
         } else {

@@ -167,5 +167,16 @@ public @interface Excel {
      */
     public boolean isColumnHidden() default  false;
 
+    /**
+     * 枚举导出使用的字段
+     * @return
+     */
+    public String enumExportField() default "";
+    /**
+     * 枚举导入使用的函数
+     * @return
+     */
+    public String enumImportMethod() default "";
+
 
 }

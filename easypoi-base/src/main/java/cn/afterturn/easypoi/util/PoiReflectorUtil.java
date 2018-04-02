@@ -1,6 +1,7 @@
 package cn.afterturn.easypoi.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ReflectPermission;
 import java.util.ArrayList;
@@ -14,20 +15,23 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 反射工具类,缓存读取的class信息,省的一直获取
- * @author JueYue 
- * 参考的 mybatis的Reflector
+ *
+ * @author JueYue
+ *         参考的 mybatis的Reflector
  */
 public final class PoiReflectorUtil {
 
     private static final Map<Class<?>, PoiReflectorUtil> CACHE_REFLECTOR = new ConcurrentHashMap<Class<?>, PoiReflectorUtil>();
 
-    private Map<String, Method>                          getMethods      = new HashMap<String, Method>();
-    private Map<String, Method>                          setMethods      = new HashMap<String, Method>();
-    private List<Field>                                  fieldList       = new ArrayList<Field>();
+    private Map<String, Method> getMethods = new HashMap<String, Method>();
+    private Map<String, Method> setMethods = new HashMap<String, Method>();
+    private Map<String, Method> enumMethods = new HashMap<String, Method>();
+    private List<Field> fieldList = new ArrayList<Field>();
 
-    private Class<?>                                     type;
+    private Class<?> type;
 
     private PoiReflectorUtil(Class<?> clazz) {
+        this.type = clazz;
         addGetMethods(clazz);
         addFields(clazz);
         addSetMethods(clazz);
@@ -79,11 +83,11 @@ public final class PoiReflectorUtil {
                     Class<?> methodType = method.getReturnType();
                     if (methodType.equals(getterType)) {
                         throw new RuntimeException(
-                            "Illegal overloaded getter method with ambiguous type for property "
-                                                   + propName + " in class "
-                                                   + firstMethod.getDeclaringClass()
-                                                   + ".  This breaks the JavaBeans "
-                                                   + "specification and can cause unpredicatble results.");
+                                "Illegal overloaded getter method with ambiguous type for property "
+                                        + propName + " in class "
+                                        + firstMethod.getDeclaringClass()
+                                        + ".  This breaks the JavaBeans "
+                                        + "specification and can cause unpredicatble results.");
                     } else if (methodType.isAssignableFrom(getterType)) {
                         // OK getter type is descendant
                     } else if (getterType.isAssignableFrom(methodType)) {
@@ -91,11 +95,11 @@ public final class PoiReflectorUtil {
                         getterType = methodType;
                     } else {
                         throw new RuntimeException(
-                            "Illegal overloaded getter method with ambiguous type for property "
-                                                   + propName + " in class "
-                                                   + firstMethod.getDeclaringClass()
-                                                   + ".  This breaks the JavaBeans "
-                                                   + "specification and can cause unpredicatble results.");
+                                "Illegal overloaded getter method with ambiguous type for property "
+                                        + propName + " in class "
+                                        + firstMethod.getDeclaringClass()
+                                        + ".  This breaks the JavaBeans "
+                                        + "specification and can cause unpredicatble results.");
                     }
                 }
                 addGetMethod(propName, getter);
@@ -131,7 +135,7 @@ public final class PoiReflectorUtil {
             name = name.substring(3);
         } else {
             throw new RuntimeException("Error parsing property name '" + name
-                                       + "'.  Didn't start with 'is', 'get' or 'set'.");
+                    + "'.  Didn't start with 'is', 'get' or 'set'.");
         }
 
         if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
@@ -169,11 +173,11 @@ public final class PoiReflectorUtil {
                 }
                 if (setter == null) {
                     throw new RuntimeException(
-                        "Illegal overloaded setter method with ambiguous type for property "
-                                               + propName + " in class "
-                                               + firstMethod.getDeclaringClass()
-                                               + ".  This breaks the JavaBeans "
-                                               + "specification and can cause unpredicatble results.");
+                            "Illegal overloaded setter method with ambiguous type for property "
+                                    + propName + " in class "
+                                    + firstMethod.getDeclaringClass()
+                                    + ".  This breaks the JavaBeans "
+                                    + "specification and can cause unpredicatble results.");
                 }
                 addSetMethod(propName, setter);
             }
@@ -296,7 +300,7 @@ public final class PoiReflectorUtil {
         Method method = getMethods.get(propertyName);
         if (method == null) {
             throw new RuntimeException(
-                "There is no getter for property named '" + propertyName + "' in '" + type + "'");
+                    "There is no getter for property named '" + propertyName + "' in '" + type + "'");
         }
         return method;
     }
@@ -305,13 +309,14 @@ public final class PoiReflectorUtil {
         Method method = setMethods.get(propertyName);
         if (method == null) {
             throw new RuntimeException(
-                "There is no getter for property named '" + propertyName + "' in '" + type + "'");
+                    "There is no getter for property named '" + propertyName + "' in '" + type + "'");
         }
         return method;
     }
 
     /**
      * 获取field 值
+     *
      * @param obj
      * @param property
      * @return
@@ -321,7 +326,7 @@ public final class PoiReflectorUtil {
         Method m = getMethods.get(property);
         if (m != null) {
             try {
-                value = m.invoke(obj, new Object[] {});
+                value = m.invoke(obj, new Object[]{});
             } catch (Exception ex) {
             }
         }
@@ -330,9 +335,10 @@ public final class PoiReflectorUtil {
 
     /**
      * 设置field值
-     * @param obj 对象
+     *
+     * @param obj      对象
      * @param property
-     * @param object 属性值
+     * @param object   属性值
      * @return
      */
     public boolean setValue(Object obj, String property, Object object) {
@@ -356,4 +362,19 @@ public final class PoiReflectorUtil {
         return fieldList;
     }
 
+    public Object execEnumStaticMethod(String staticMethod, Object params) {
+        if (!enumMethods.containsKey(setMethods)) {
+            try {
+                enumMethods.put(staticMethod,type.getMethod(staticMethod,params.getClass()));
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(
+                        "There is no enum for property named '" + staticMethod + "' in '" + type + "'");
+            }
+        }
+        try {
+            return enumMethods.get(staticMethod).invoke(null,params);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

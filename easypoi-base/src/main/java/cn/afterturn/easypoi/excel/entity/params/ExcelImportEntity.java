@@ -48,6 +48,11 @@ public class ExcelImportEntity extends ExcelBaseEntity {
      */
     private boolean                 importField;
 
+    /**
+     * 枚举导入静态方法
+     */
+    private String                   enumImportMethod;
+
     private List<ExcelImportEntity> list;
 
     public String getClassType() {
@@ -106,4 +111,11 @@ public class ExcelImportEntity extends ExcelBaseEntity {
         this.importField = importField;
     }
 
+    public String getEnumImportMethod() {
+        return enumImportMethod;
+    }
+
+    public void setEnumImportMethod(String enumImportMethod) {
+        this.enumImportMethod = enumImportMethod;
+    }
 }
