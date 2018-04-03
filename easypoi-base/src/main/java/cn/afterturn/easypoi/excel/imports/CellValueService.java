@@ -63,14 +63,14 @@ public class CellValueService {
      * @param entity
      * @return
      */
-    private Object getCellValue(String xclass, Cell cell, ExcelImportEntity entity) {
+    private Object getCellValue(String classFullName, Cell cell, ExcelImportEntity entity) {
         if (cell == null) {
             return "";
         }
         Object result = null;
-        if ("class java.util.Date".equals(xclass) || "class java.sql.Date".equals(xclass)
-                || ("class java.sql.Time").equals(xclass)
-                || ("class java.sql.Timestamp").equals(xclass)) {
+        if ("class java.util.Date".equals(classFullName) || "class java.sql.Date".equals(classFullName)
+                || ("class java.sql.Time").equals(classFullName)
+                || ("class java.sql.Timestamp").equals(classFullName)) {
             /*
             if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
                 // 日期格式
@@ -86,13 +86,13 @@ public class CellValueService {
                 cell.setCellType(CellType.STRING);
                 result = getDateData(entity, cell.getStringCellValue());
             }
-            if (("class java.sql.Date").equals(xclass)) {
+            if (("class java.sql.Date").equals(classFullName)) {
                 result = new java.sql.Date(((Date) result).getTime());
             }
-            if (("class java.sql.Time").equals(xclass)) {
+            if (("class java.sql.Time").equals(classFullName)) {
                 result = new Time(((Date) result).getTime());
             }
-            if (("class java.sql.Timestamp").equals(xclass)) {
+            if (("class java.sql.Timestamp").equals(classFullName)) {
                 result = new Timestamp(((Date) result).getTime());
             }
         } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
@@ -105,7 +105,7 @@ public class CellValueService {
                     break;
                 case Cell.CELL_TYPE_NUMERIC:
                     if (DateUtil.isCellDateFormatted(cell)) {
-                        if ("class java.lang.String".equals(xclass)) {
+                        if ("class java.lang.String".equals(classFullName)) {
                             result = formateDate(entity, cell.getDateCellValue());
                         }
                     } else {
@@ -191,18 +191,18 @@ public class CellValueService {
                            Map<String, ExcelImportEntity> excelParams,
                            String titleString, IExcelDictHandler dictHandler) throws Exception {
         ExcelImportEntity entity = excelParams.get(titleString);
-        String xclass = "class java.lang.Object";
+        String classFullName = "class java.lang.Object";
         Class clazz = null;
         if (!(object instanceof Map)) {
             Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
                     ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
             Type[] ts = setMethod.getGenericParameterTypes();
-            xclass = ts[0].toString();
+            classFullName = ts[0].toString();
             clazz = (Class) ts[0];
         }
-        Object result = getCellValue(xclass, cell, entity);
+        Object result = getCellValue(classFullName, cell, entity);
         if (entity != null) {
-            result = hanlderSuffix(entity.getSuffix(), result);
+            result = handlerSuffix(entity.getSuffix(), result);
             result = replaceValue(entity.getReplace(), result);
             result = replaceValue(entity.getReplace(), result);
             if(dictHandler != null && StringUtils.isNoneBlank(entity.getDict())){
@@ -210,7 +210,7 @@ public class CellValueService {
             }
         }
         result = handlerValue(dataHandler, object, result, titleString);
-        return getValueByType(xclass, result, entity, clazz);
+        return getValueByType(classFullName, result, entity, clazz);
     }
 
     /**
@@ -229,12 +229,12 @@ public class CellValueService {
         Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
                 ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
         Type[] ts = setMethod.getGenericParameterTypes();
-        String xclass = ts[0].toString();
+        String classFullName = ts[0].toString();
         Object result = cellEntity.getValue();
-        result = hanlderSuffix(entity.getSuffix(), result);
+        result = handlerSuffix(entity.getSuffix(), result);
         result = replaceValue(entity.getReplace(), result);
         result = handlerValue(dataHandler, object, result, titleString);
-        return getValueByType(xclass, result, entity, (Class) ts[0]);
+        return getValueByType(classFullName, result, entity, (Class) ts[0]);
     }
 
     /**
@@ -243,7 +243,7 @@ public class CellValueService {
      * @param suffix
      * @return
      */
-    private Object hanlderSuffix(String suffix, Object result) {
+    private Object handlerSuffix(String suffix, Object result) {
         if (StringUtils.isNotEmpty(suffix) && result != null
                 && result.toString().endsWith(suffix)) {
             String temp = result.toString();
@@ -255,28 +255,28 @@ public class CellValueService {
     /**
      * 根据返回类型获取返回值
      *
-     * @param xclass
+     * @param classFullName
      * @param result
      * @param entity
      * @param clazz
      * @return
      */
-    private Object getValueByType(String xclass, Object result, ExcelImportEntity entity, Class clazz) {
+    private Object getValueByType(String classFullName, Object result, ExcelImportEntity entity, Class clazz) {
         try {
             //过滤空和空字符串,如果基本类型null会在上层抛出,这里就不处理了
             if (result == null || StringUtils.isBlank(result.toString())) {
                 return null;
             }
-            if ("class java.util.Date".equals(xclass)) {
+            if ("class java.util.Date".equals(classFullName)) {
                 return result;
             }
-            if ("class java.lang.Boolean".equals(xclass) || "boolean".equals(xclass)) {
+            if ("class java.lang.Boolean".equals(classFullName) || "boolean".equals(classFullName)) {
                 return Boolean.valueOf(String.valueOf(result));
             }
-            if ("class java.lang.Double".equals(xclass) || "double".equals(xclass)) {
+            if ("class java.lang.Double".equals(classFullName) || "double".equals(classFullName)) {
                 return Double.valueOf(String.valueOf(result));
             }
-            if ("class java.lang.Long".equals(xclass) || "long".equals(xclass)) {
+            if ("class java.lang.Long".equals(classFullName) || "long".equals(classFullName)) {
                 try {
                     return Long.valueOf(String.valueOf(result));
                 } catch (Exception e) {
@@ -284,10 +284,10 @@ public class CellValueService {
                     return Double.valueOf(String.valueOf(result)).longValue();
                 }
             }
-            if ("class java.lang.Float".equals(xclass) || "float".equals(xclass)) {
+            if ("class java.lang.Float".equals(classFullName) || "float".equals(classFullName)) {
                 return Float.valueOf(String.valueOf(result));
             }
-            if ("class java.lang.Integer".equals(xclass) || "int".equals(xclass)) {
+            if ("class java.lang.Integer".equals(classFullName) || "int".equals(classFullName)) {
                 try {
                     return Integer.valueOf(String.valueOf(result));
                 } catch (Exception e) {
@@ -295,10 +295,10 @@ public class CellValueService {
                     return Double.valueOf(String.valueOf(result)).intValue();
                 }
             }
-            if ("class java.math.BigDecimal".equals(xclass)) {
+            if ("class java.math.BigDecimal".equals(classFullName)) {
                 return new BigDecimal(String.valueOf(result));
             }
-            if ("class java.lang.String".equals(xclass)) {
+            if ("class java.lang.String".equals(classFullName)) {
                 //针对String 类型,但是Excel获取的数据却不是String,比如Double类型,防止科学计数法
                 if (result instanceof String) {
                     return result;
