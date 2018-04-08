@@ -13,6 +13,7 @@
  */
 package cn.afterturn.easypoi.excel.imports;
 
+import cn.afterturn.easypoi.handler.inter.IExcelDataModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -106,6 +107,9 @@ public class ExcelImportService extends ImportBaseService {
         Collection collection = (Collection) PoiReflectorUtil.fromCache(object.getClass())
                 .getValue(object, param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
+        if(entity instanceof IExcelDataModel) {
+            ((IExcelDataModel)entity).setRowNum(row.getRowNum());
+        }
         String picId;
         boolean isUsed = false;// 是否需要加上这个对象
         for (int i = row.getFirstCellNum(); i < titlemap.size(); i++) {
@@ -223,7 +227,9 @@ public class ExcelImportService extends ImportBaseService {
                     //for (int i = row.getFirstCellNum(), le = titlemap.size(); i < le; i++) {
 
                     //}
-
+                    if(object instanceof IExcelDataModel) {
+                        ((IExcelDataModel)object).setRowNum(row.getRowNum());
+                    }
                     for (ExcelCollectionParams param : excelCollection) {
                         addListContinue(object, param, row, titlemap, targetId, pictures, params);
                     }

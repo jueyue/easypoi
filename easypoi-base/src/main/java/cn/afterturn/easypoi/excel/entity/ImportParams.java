@@ -44,7 +44,7 @@ public class ImportParams extends ExcelBaseParams {
      * 大家不理解，去掉这个
      */
 
-    private Integer             keyIndex         = 0;
+    private Integer             keyIndex         = null;
     /**
      * 开始读取的sheet位置,默认为0
      */
