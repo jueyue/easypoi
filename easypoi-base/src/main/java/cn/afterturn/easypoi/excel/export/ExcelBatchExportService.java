@@ -1,17 +1,5 @@
 package cn.afterturn.easypoi.excel.export;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
@@ -21,6 +9,13 @@ import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * 提供批次插入服务
@@ -41,29 +36,27 @@ public class ExcelBatchExportService extends ExcelExportService {
     private int                                        index;
 
     public void init(ExportParams entity, Class<?> pojoClass) {
+        List<ExcelExportEntity> excelParams = createExcelExportEntityList(entity, pojoClass);
+        init(entity, excelParams);
+    }
+
+    public void init(ExportParams entity, List<ExcelExportEntity> excelParams) {
         LOGGER.debug("ExcelBatchExportServer only support SXSSFWorkbook");
         entity.setType(ExcelType.XSSF);
         workbook = new SXSSFWorkbook();
         this.entity = entity;
+        this.excelParams = excelParams;
         super.type = entity.getType();
-        createSheet(workbook, entity, pojoClass);
+        createSheet(workbook, entity, excelParams);
         if (entity.getMaxNum() == 0) {
             entity.setMaxNum(1000000);
         }
         insertDataToSheet(workbook, entity, excelParams, null, sheet);
     }
 
-    public void createSheet(Workbook workbook, ExportParams entity, Class<?> pojoClass) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Excel export start ,class is {}", pojoClass);
-            LOGGER.debug("Excel version is {}",
-                entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
-        }
-        if (workbook == null || entity == null || pojoClass == null) {
-            throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
-        }
+    public List<ExcelExportEntity> createExcelExportEntityList(ExportParams entity, Class<?> pojoClass) {
         try {
-            excelParams = new ArrayList<ExcelExportEntity>();
+            List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
                 excelParams.add(indexExcelEntity(entity));
             }
@@ -74,6 +67,23 @@ public class ExcelBatchExportService extends ExcelExportService {
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
                 null, null);
             sortAllParams(excelParams);
+
+            return excelParams;
+        } catch (Exception e) {
+            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
+        }
+    }
+
+    public void createSheet(Workbook workbook, ExportParams entity, List<ExcelExportEntity> excelParams) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Excel export start ,List<ExcelExportEntity> is {}", excelParams);
+            LOGGER.debug("Excel version is {}",
+                entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
+        }
+        if (workbook == null || entity == null || excelParams == null) {
+            throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
+        }
+        try {
             try {
                 sheet = workbook.createSheet(entity.getSheetName());
             } catch (Exception e) {
@@ -142,6 +152,20 @@ public class ExcelBatchExportService extends ExcelExportService {
             batchServer.init(entity, pojoClass);
             THREAD_LOCAL.set(batchServer);
         }
+        return THREAD_LOCAL.get();
+    }
+
+    public static ExcelBatchExportService getExcelBatchExportService(ExportParams entity,
+                                                                     List<ExcelExportEntity> excelParams) {
+        if (THREAD_LOCAL.get() == null) {
+            ExcelBatchExportService batchServer = new ExcelBatchExportService();
+            batchServer.init(entity, excelParams);
+            THREAD_LOCAL.set(batchServer);
+        }
+        return THREAD_LOCAL.get();
+    }
+
+    public static ExcelBatchExportService getCurrentExcelBatchExportService() {
         return THREAD_LOCAL.get();
     }
 
