@@ -59,10 +59,18 @@ public class ExcelExportUtil {
         return batchService.appendData(dataSet);
     }
 
+    public static Workbook exportBigExcel(ExportParams entity, List<ExcelExportEntity> excelParams,
+                                          Collection<?> dataSet) {
+        ExcelBatchExportService batchService = ExcelBatchExportService
+            .getExcelBatchExportService(entity, excelParams);
+        return batchService.appendData(dataSet);
+    }
+
     public static void closeExportBigExcel() {
-        ExcelBatchExportService batchService = ExcelBatchExportService.getExcelBatchExportService(null,
-            null);
-        batchService.closeExportBigExcel();
+        ExcelBatchExportService batchService = ExcelBatchExportService.getCurrentExcelBatchExportService();
+        if(batchService != null) {
+            batchService.closeExportBigExcel();
+        }
     }
 
     /**
