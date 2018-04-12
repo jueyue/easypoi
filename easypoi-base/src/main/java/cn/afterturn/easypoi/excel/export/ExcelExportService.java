@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -168,7 +168,7 @@ public class ExcelExportService extends BaseExportService {
                     ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
             int titleHeight = index;
             setCellWith(excelParams, sheet);
-            setColumnHidden(excelParams,sheet);
+            setColumnHidden(excelParams, sheet);
             short rowHeight = entity.getHeight() != 0 ? entity.getHeight() : getRowHeight(excelParams);
             setCurrentIndex(1);
             Iterator<?> its = dataSet.iterator();
@@ -230,7 +230,7 @@ public class ExcelExportService extends BaseExportService {
             ExcelExportEntity entity = excelParams.get(i);
             // 加入换了groupName或者结束就，就把之前的那个换行
             if (StringUtils.isBlank(entity.getGroupName()) || !entity.getGroupName().equals(excelParams.get(i - 1).getGroupName())) {
-                if(groupCellLength > 1){
+                if (groupCellLength > 1) {
                     sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
                 }
                 groupCellLength = 0;
@@ -244,7 +244,7 @@ public class ExcelExportService extends BaseExportService {
             }
             if (entity.getList() != null) {
                 List<ExcelExportEntity> sTitel = entity.getList();
-                if (StringUtils.isNotBlank(entity.getName())) {
+                if (StringUtils.isNotBlank(entity.getName()) && sTitel.size() > 1) {
                     sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex + sTitel.size() - 1));
                 }
                 for (int j = 0, size = sTitel.size(); j < size; j++) {
