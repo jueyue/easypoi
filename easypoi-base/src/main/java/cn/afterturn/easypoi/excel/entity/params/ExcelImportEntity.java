@@ -23,6 +23,8 @@ import java.util.List;
  * @version 1.0 2013年8月24日
  */
 public class ExcelImportEntity extends ExcelBaseEntity {
+
+    public final static String IMG_SAVE_PATH = "/excel/upload/img";
     /**
      * 对应 Collection NAME
      */

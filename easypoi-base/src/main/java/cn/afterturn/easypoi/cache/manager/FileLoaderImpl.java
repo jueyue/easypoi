@@ -55,11 +55,6 @@ public class FileLoaderImpl implements IFileLoader {
                 } catch (FileNotFoundException e) {
                     //获取项目文件
                     fileis = FileLoaderImpl.class.getClassLoader().getResourceAsStream(url);
-                    if (fileis == null) {
-                        //最后再拿相对文件路径
-                        String path = PoiPublicUtil.getWebRootPath(url);
-                        fileis = new FileInputStream(path);
-                    }
                 }
             }
 

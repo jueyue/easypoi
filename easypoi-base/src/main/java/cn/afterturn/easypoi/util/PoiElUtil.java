@@ -59,9 +59,34 @@ public final class PoiElUtil {
 	public static Object eval(String text, Map<String, Object> map) throws Exception {
 		String tempText = new String(text);
 		Object obj = innerEval(text, map);
-		//如果没有被处理而且这个值找map中存在就处理这个值
-		if (tempText.equals(obj.toString()) && map.containsKey(tempText.split("\\.")[0])) {
-			return PoiPublicUtil.getParamsValue(tempText, map);
+		//如果没有被处理而且这个值找map中存在就处理这个值,找不到就返回空字符串
+		if (tempText.equals(obj.toString())) {
+			if(map.containsKey(tempText.split("\\.")[0])){
+				return PoiPublicUtil.getParamsValue(tempText, map);
+			}else{
+				return "";
+			}
+		}
+		return obj;
+	}
+
+	/**
+	 * 解析字符串,支持 le,fd,fn,!if,三目  找不到返回原值
+	 * @param text
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object evalNoParse(String text, Map<String, Object> map) throws Exception {
+		String tempText = new String(text);
+		Object obj = innerEval(text, map);
+		//如果没有被处理而且这个值找map中存在就处理这个值,找不到就返回空字符串
+		if (tempText.equals(obj.toString())) {
+			if(map.containsKey(tempText.split("\\.")[0])){
+				return PoiPublicUtil.getParamsValue(tempText, map);
+			}else{
+				return obj;
+			}
 		}
 		return obj;
 	}
@@ -126,8 +151,8 @@ public final class PoiElUtil {
 			return Boolean.valueOf(PoiPublicUtil.getParamsValue(keys[0], map).toString());
 		}
 		if (keys.length == 3) {
-			Object first = eval(keys[0], map);
-			Object second = eval(keys[2], map);
+			Object first = evalNoParse(keys[0], map);
+			Object second = evalNoParse(keys[2], map);
 			return PoiFunctionUtil.isTrue(first, keys[1], second);
 		}
 		throw new ExcelExportException("判断参数不对");
@@ -242,19 +267,19 @@ public final class PoiElUtil {
 		        for (int i = 1; i < keys.length-1; i++) {
 		            trinocular +=  ":" + keys[i];
                 }
-		        first = eval(trinocular, map);
-		        second = eval(keys[keys.length-1].trim(), map);
+		        first = evalNoParse(trinocular, map);
+		        second = evalNoParse(keys[keys.length-1].trim(), map);
 		    } else {
-		        first = eval(keys[0].trim(), map);
+		        first = evalNoParse(keys[0].trim(), map);
 		        String trinocular = keys[1];
                 for (int i = 2; i < keys.length; i++) {
                     trinocular +=  ":" + keys[i];
                 }
-		        second = eval(trinocular, map);
+		        second = evalNoParse(trinocular, map);
 		    }
 		}else{
-		    first = eval(keys[0].trim(), map);
-	        second = eval(keys[1].trim(), map);
+		    first = evalNoParse(keys[0].trim(), map);
+	        second = evalNoParse(keys[1].trim(), map);
 		}
 		return isTrue(testText.split(" "), map) ? first : second;
 	}

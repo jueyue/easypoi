@@ -145,14 +145,14 @@ public class ExcelImportService extends ImportBaseService {
      */
     private String getSaveUrl(ExcelImportEntity excelImportEntity, Object object) throws Exception {
         String url = "";
-        if ("upload".equals(excelImportEntity.getSaveUrl())) {
+        if (ExcelImportEntity.IMG_SAVE_PATH.equals(excelImportEntity.getSaveUrl())) {
             if (excelImportEntity.getMethods() != null
                     && excelImportEntity.getMethods().size() > 0) {
                 object = getFieldBySomeMethod(excelImportEntity.getMethods(), object);
             }
             url = object.getClass().getName()
                     .split("\\.")[object.getClass().getName().split("\\.").length - 1];
-            return excelImportEntity.getSaveUrl() + "/" + url;
+            return excelImportEntity.getSaveUrl() + File.separator + url;
         }
         return excelImportEntity.getSaveUrl();
     }
@@ -185,6 +185,10 @@ public class ExcelImportService extends ImportBaseService {
         //跳过无效行
         for (int i = 0; i < params.getStartRows(); i++) {
             rows.next();
+        }
+        //判断index 和集合,集合情况默认为第一列
+        if (excelCollection.size() > 0  && params.getKeyIndex() == null) {
+            params.setKeyIndex(0);
         }
         while (rows.hasNext()
                 && (row == null
@@ -585,13 +589,12 @@ public class ExcelImportService extends ImportBaseService {
         String fileName = "pic" + Math.round(Math.random() * 100000000000L);
         fileName += "." + PoiPublicUtil.getFileExtendName(data);
         if (excelParams.get(titleString).getSaveType() == 1) {
-            String path = PoiPublicUtil
-                    .getWebRootPath(getSaveUrl(excelParams.get(titleString), object));
+            String path = getSaveUrl(excelParams.get(titleString), object);
             File savefile = new File(path);
             if (!savefile.exists()) {
                 savefile.mkdirs();
             }
-            savefile = new File(path + "/" + fileName);
+            savefile = new File(path + File.separator + fileName);
             FileOutputStream fos = new FileOutputStream(savefile);
             try {
                 fos.write(data);
@@ -599,7 +602,7 @@ public class ExcelImportService extends ImportBaseService {
                 IOUtils.closeQuietly(fos);
             }
             setValues(excelParams.get(titleString), object,
-                    getSaveUrl(excelParams.get(titleString), object) + "/" + fileName);
+                    getSaveUrl(excelParams.get(titleString), object) + File.separator + fileName);
         } else {
             setValues(excelParams.get(titleString), object, data);
         }
