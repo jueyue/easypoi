@@ -9,7 +9,7 @@
         params.setDataHandler(new MapImportHandler());
         long start = new Date().getTime();
         List<Map<String, Object>> list = ExcelImportUtil.importExcel(
-            new File(PoiPublicUtil.getWebRootPath("import/check.xls")), Map.class, params);
+            new File(FileUtilTest.getWebRootPath("import/check.xls")), Map.class, params);
 ```
 导入后,处理每个map,然后入库完美的解决了老师的需求,简单更快捷,和bean导入基础没有区别,省去了bean的构造时间
 

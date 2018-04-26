@@ -129,7 +129,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
      */
     private void addListData(List<SaxReadCellEntity> datas) throws Exception {
         // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
-        if ((datas.get(params.getKeyIndex()) == null
+        if (params.getKeyIndex() != null && (datas.get(params.getKeyIndex()) == null
              || StringUtils.isEmpty(String.valueOf(datas.get(params.getKeyIndex()).getValue())))
             && object != null) {
             for (ExcelCollectionParams param : excelCollection) {

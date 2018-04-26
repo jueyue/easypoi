@@ -26,6 +26,9 @@ import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
  */
 @SuppressWarnings("rawtypes")
 public class ImportParams extends ExcelBaseParams {
+
+    public static final String SAVE_URL = "/excel/upload/excelUpload";
+
     /**
      * 表格标题行数,默认0
      */
@@ -73,7 +76,7 @@ public class ImportParams extends ExcelBaseParams {
      * 保存上传的Excel目录,默认是 如 TestEntity这个类保存路径就是
      * upload/excelUpload/Test/yyyyMMddHHmss_***** 保存名称上传时间_五位随机数
      */
-    private String              saveUrl          = "upload/excelUpload";
+    private String              saveUrl          = SAVE_URL;
     /**
      * 最后的无效行数
      */

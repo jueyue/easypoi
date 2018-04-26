@@ -278,7 +278,7 @@ public class ExcelToHtmlService {
         /*String fileName = "pic" + Math.round(Math.random() * 100000000000L);
         fileName += "." + PoiPublicUtil.getFileExtendName(data);
         if (!imageCachePath.startsWith("/") && !imageCachePath.contains(":")) {
-            imageCachePath = PoiPublicUtil.getWebRootPath(imageCachePath);
+            imageCachePath = FileUtilTest.getWebRootPath(imageCachePath);
         }
         File savefile = new File(imageCachePath + "/" + today);
         if (!savefile.exists()) {

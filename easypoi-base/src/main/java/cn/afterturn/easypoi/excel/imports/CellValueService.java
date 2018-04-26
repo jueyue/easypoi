@@ -309,7 +309,7 @@ public class CellValueService {
                 }
                 return String.valueOf(result);
             }
-            if (clazz.isEnum()) {
+            if (clazz != null && clazz.isEnum()) {
                 if (StringUtils.isNotEmpty(entity.getEnumImportMethod())) {
                     return PoiReflectorUtil.fromCache(clazz).execEnumStaticMethod(entity.getEnumImportMethod(),result);
                 } else {

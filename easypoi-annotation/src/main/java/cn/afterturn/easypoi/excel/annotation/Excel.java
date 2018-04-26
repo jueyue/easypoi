@@ -121,7 +121,7 @@ public @interface Excel {
      * 导入路径,如果是图片可以填写,默认是upload/className/ IconEntity这个类对应的就是upload/Icon/
      *
      */
-    public String savePath() default "upload";
+    public String savePath() default "/excel/upload/img";
 
     /**
      * 导出类型 1 是文本 2 是图片,3 是函数,10 是数字 默认是文本

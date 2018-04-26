@@ -220,17 +220,6 @@ public final class PoiPublicUtil {
         return sheetIndexPicMap;
     }
 
-    public static String getWebRootPath(String filePath) {
-        try {
-            String path = PoiPublicUtil.class.getClassLoader().getResource("").toURI().getPath();
-            path = path.replace("WEB-INF/classes/", "");
-            path = path.replace("file:/", "");
-            return path + filePath;
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /**
      * 判断是不是集合的实现类
      * 
@@ -460,7 +449,7 @@ public final class PoiPublicUtil {
      * @param currentText
      */
     public static void setWordText(XWPFRun currentRun, String currentText) {
-        if (StringUtils.isNotBlank(currentText)) {
+        if (StringUtils.isNotEmpty(currentText)) {
             String[] tempArr = currentText.split("\r\n");
             for (int i = 0, le = tempArr.length - 1; i < le; i++) {
                 currentRun.setText(tempArr[i], i);

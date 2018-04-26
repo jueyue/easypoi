@@ -214,14 +214,14 @@ public class ImportBaseService {
 
     public void saveThisExcel(ImportParams params, Class<?> pojoClass, boolean isXSSFWorkbook,
                               Workbook book) throws Exception {
-        String path = PoiPublicUtil.getWebRootPath(getSaveExcelUrl(params, pojoClass));
+        String path = getSaveExcelUrl(params, pojoClass);
         File savefile = new File(path);
         if (!savefile.exists()) {
             savefile.mkdirs();
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyMMddHHmmss");
         FileOutputStream fos = new FileOutputStream(
-                path + "/" + format.format(new Date()) + "_" + Math.round(Math.random() * 100000)
+                path + File.separator + format.format(new Date()) + "_" + Math.round(Math.random() * 100000)
                         + (isXSSFWorkbook == true ? ".xlsx" : ".xls"));
         book.write(fos);
         IOUtils.closeQuietly(fos);
@@ -237,9 +237,9 @@ public class ImportBaseService {
      */
     public String getSaveExcelUrl(ImportParams params, Class<?> pojoClass) throws Exception {
         String url = "";
-        if ("upload/excelUpload".equals(params.getSaveUrl())) {
+        if (ImportParams.SAVE_URL.equals(params.getSaveUrl())) {
             url = pojoClass.getName().split("\\.")[pojoClass.getName().split("\\.").length - 1];
-            return params.getSaveUrl() + "/" + url;
+            return params.getSaveUrl() + File.separator + url;
         }
         return params.getSaveUrl();
     }
