@@ -1,11 +1,11 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -107,8 +107,8 @@ public class ExcelImportService extends ImportBaseService {
         Collection collection = (Collection) PoiReflectorUtil.fromCache(object.getClass())
                 .getValue(object, param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
-        if(entity instanceof IExcelDataModel) {
-            ((IExcelDataModel)entity).setRowNum(row.getRowNum());
+        if (entity instanceof IExcelDataModel) {
+            ((IExcelDataModel) entity).setRowNum(row.getRowNum());
         }
         String picId;
         boolean isUsed = false;// 是否需要加上这个对象
@@ -176,7 +176,7 @@ public class ExcelImportService extends ImportBaseService {
         for (int j = 0; j < params.getTitleRows(); j++) {
             rows.next();
         }
-        Map<Integer, String> titlemap = getTitleMap(rows, params, excelCollection,excelParams);
+        Map<Integer, String> titlemap = getTitleMap(rows, params, excelCollection, excelParams);
         checkIsValidTemplate(titlemap, excelParams, params, excelCollection);
         Row row = null;
         Object object = null;
@@ -187,7 +187,7 @@ public class ExcelImportService extends ImportBaseService {
             rows.next();
         }
         //判断index 和集合,集合情况默认为第一列
-        if (excelCollection.size() > 0  && params.getKeyIndex() == null) {
+        if (excelCollection.size() > 0 && params.getKeyIndex() == null) {
             params.setKeyIndex(0);
         }
         while (rows.hasNext()
@@ -214,7 +214,7 @@ public class ExcelImportService extends ImportBaseService {
                 object = PoiPublicUtil.createObject(pojoClass, targetId);
                 try {
                     Set<Integer> keys = titlemap.keySet();
-                    for (Integer cn:keys) {
+                    for (Integer cn : keys) {
                         Cell cell = row.getCell(cn);
                         String titleString = (String) titlemap.get(cn);
                         if (excelParams.containsKey(titleString) || Map.class.equals(pojoClass)) {
@@ -231,8 +231,8 @@ public class ExcelImportService extends ImportBaseService {
                     //for (int i = row.getFirstCellNum(), le = titlemap.size(); i < le; i++) {
 
                     //}
-                    if(object instanceof IExcelDataModel) {
-                        ((IExcelDataModel)object).setRowNum(row.getRowNum());
+                    if (object instanceof IExcelDataModel) {
+                        ((IExcelDataModel) object).setRowNum(row.getRowNum());
                     }
                     for (ExcelCollectionParams param : excelCollection) {
                         addListContinue(object, param, row, titlemap, targetId, pictures, params);
@@ -348,10 +348,10 @@ public class ExcelImportService extends ImportBaseService {
 
         // 处理指定列的情况
         Set<String> keys = excelParams.keySet();
-        for (String key : keys){
-            if (key.startsWith("FIXED_")){
-                String [] arr = key.split("_");
-                titlemap.put(Integer.parseInt(arr[1]),key);
+        for (String key : keys) {
+            if (key.startsWith("FIXED_")) {
+                String[] arr = key.split("_");
+                titlemap.put(Integer.parseInt(arr[1]), key);
             }
         }
         return titlemap;
@@ -450,7 +450,8 @@ public class ExcelImportService extends ImportBaseService {
                 if (rowList.get(j).getRowNum() < rowList.get(j).getSheet().getLastRowNum()) {
                     book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum() + 1, rowList.get(j).getSheet().getLastRowNum(), -1);
                 } else if (rowList.get(j).getRowNum() == rowList.get(j).getSheet().getLastRowNum()) {
-                    book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum(), rowList.get(j).getSheet().getLastRowNum(), -1);
+                    book.getSheetAt(i).createRow(rowList.get(j).getRowNum() + 1);
+                    book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum() + 1, rowList.get(j).getSheet().getLastRowNum() + 1, -1);
                 }
             }
         }
@@ -566,7 +567,6 @@ public class ExcelImportService extends ImportBaseService {
     }
 
     /**
-     *
      * @param object
      * @param picId
      * @param excelParams
