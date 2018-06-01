@@ -589,7 +589,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     templateSumHandler.addValueOfKey(params.getName(), val);
                 }
                 //如果合并单元格,就把这个单元格的样式和之前的保持一致
-                setMergedRegionStyle(row, ci, columns.get(i));
+                setMergedRegionStyle(row, ci, params);
                 //合并对应单元格
                 if ((params.getRowspan() != 1 || params.getColspan() != 1)
                     && !mergedRegionHelper.isMergedRegion(row.getRowNum() + 1, ci)) {
@@ -663,19 +663,19 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 }
                 String cellStringString;
                 try {//不允许为空 便利单元格必须有结尾和值
-                    cellStringString = cell.getStringCellValue();
-                    if (StringUtils.isBlank(cellStringString) && colspan + startIndex <= index) {
-                        throw new ExcelExportException("for each 当中存在空字符串,请检查模板");
-                    } else if (StringUtils.isBlank(cellStringString)
-                               && colspan + startIndex > index) {
-                        //读取是判断,跳过,数据为空,但是不是第一次读这一列,所以可以跳过
-                        columns.add(new ExcelForEachParams(null, cell.getCellStyle(), (short) 0));
-                        continue;
-                    }
-                } catch (Exception e) {
-                    throw new ExcelExportException(ExcelExportEnum.TEMPLATE_ERROR, e);
+                cellStringString = cell.getStringCellValue();
+                if (StringUtils.isBlank(cellStringString) && colspan + startIndex <= index) {
+                    throw new ExcelExportException("for each 当中存在空字符串,请检查模板");
+                } else if (StringUtils.isBlank(cellStringString)
+                        && colspan + startIndex > index) {
+                    //读取是判断,跳过,数据为空,但是不是第一次读这一列,所以可以跳过
+                    columns.add(new ExcelForEachParams(null, cell.getCellStyle(), (short) 0));
+                    continue;
                 }
-                //把读取过的cell 置为空
+            } catch (Exception e) {
+                throw new ExcelExportException(ExcelExportEnum.TEMPLATE_ERROR, e);
+            }
+            //把读取过的cell 置为空
                 cell.setCellValue("");
                 if (cellStringString.contains(END_STR)) {
                     columns.add(getExcelTemplateParams(cellStringString.replace(END_STR, EMPTY),
