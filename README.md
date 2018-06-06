@@ -30,6 +30,16 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 [用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
+
+按登记顺序展示,如果你正在使用EasyPoi欢迎在 https://gitee.com/lemur/easypoi/issues/IFDX7 登记。仅作为开源参考，不作其它用途
+
+   - [博丰(深圳)跨境电商服务有限公司 ](http://www.bfeservice.com/)
+   - [陕西昊景无线网络技术有限公司](http://www.hjwxbd.com)
+   - [湖北省楚天云有限公司](http://www.chutianyun.gov.cn)
+   - [博彦科技](http://www.beyondsoft.com)
+   - 新光新云
+    
+
 版本介绍
 
 [history.md](https://gitee.com/lemur/easypoi/blob/master/history.md)
