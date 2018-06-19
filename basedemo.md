@@ -13,21 +13,12 @@ EasyPoi 文档
 
 后面都是新的了
 
-[EasyPoi-在财务报表中的应用](http://git.oschina.net/jueyue/easypoi/wikis/EasyPoi-%E5%9C%A8%E8%B4%A2%E5%8A%A1%E6%8A%A5%E8%A1%A8%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8)
-
-[EasyPoi-如何筛选导出属性](http://git.oschina.net/jueyue/easypoi/wikis/EasyPoi-%E5%A6%82%E4%BD%95%E7%AD%9B%E9%80%89%E5%AF%BC%E5%87%BA%E5%B1%9E%E6%80%A7)
-
 [EasyPoi 在spring mvc中简易开发方式](http://note.youdao.com/share/?id=8b04c4d88a0574a59aeaffd142c8e34b&type=note)
 
 [EasyPoi-新版自定义导出样式类型](http://note.youdao.com/share/?id=7937a9fe15f1016b8f39bf813be894f8&type=note)
 
 [EasyPoi-标签-模板导出的语法介绍](http://blog.csdn.net/qjueyue/article/details/45231801)
 
-[EasyPoi-Excel预览(New)](http://blog.afterturn.cn/?p=34)
-
-[EasyPoi-多行模板输出(New)](http://blog.afterturn.cn/?p=40)
-
-[EasyPoi-校验集成](http://blog.afterturn.cn/?p=65)
 
 
 --------------------------
