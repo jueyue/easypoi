@@ -26,7 +26,7 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 **[http://www.afterturn.cn/doc/easypoi.html](http://www.afterturn.cn/doc/easypoi.html)**
 
-
+[API文档](https://apidoc.gitee.com/lemur/easypoi/)
 
 [用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
