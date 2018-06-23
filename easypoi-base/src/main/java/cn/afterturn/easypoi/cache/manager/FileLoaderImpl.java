@@ -26,8 +26,9 @@ import java.net.URLConnection;
 
 /**
  * 文件加载类,根据路径加载指定文件
+ *
  * @author JueYue
- *  2014年2月10日
+ *         2014年2月10日
  * @version 1.0
  */
 public class FileLoaderImpl implements IFileLoader {
@@ -66,7 +67,7 @@ public class FileLoaderImpl implements IFileLoader {
             }
             baos.flush();
             return baos.toByteArray();
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(fileis);
