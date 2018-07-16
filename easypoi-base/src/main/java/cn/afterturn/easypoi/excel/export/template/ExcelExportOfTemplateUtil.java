@@ -130,6 +130,57 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     }
 
     /**
+     * 利用foreach循环输出数据
+     * @param cell
+     * @param map
+     * @param name
+     * @throws Exception
+     */
+    private void addListDataToExcel(Cell cell, Map<String, Object> map,
+                                    String name) throws Exception {
+        boolean isCreate = !name.contains(FOREACH_NOT_CREATE);
+        boolean isShift = name.contains(FOREACH_AND_SHIFT);
+        name = name.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
+                .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
+        String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
+        Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
+        Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
+                mergedRegionHelper);
+        if (datas == null) {
+            return;
+        }
+        Iterator<?> its = datas.iterator();
+        int rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
+        @SuppressWarnings("unchecked")
+        List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
+        Row row = null;
+        int rowIndex = cell.getRow().getRowNum() + 1;
+        //处理当前行
+        if (its.hasNext()) {
+            Object t = its.next();
+            setForEeachRowCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns, map,
+                    rowspan, colspan, mergedRegionHelper);
+            rowIndex += rowspan - 1;
+        }
+        //不论后面有没有数据,都应该执行的是插入操作
+        // && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()
+        if (isShift && datas.size() * rowspan > 1) {
+            createRowNoRow(cell.getRowIndex() + rowspan,cell.getRow().getSheet().getLastRowNum(),(datas.size() - 1) * rowspan);
+            cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
+                    cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
+            templateSumHandler.shiftRows(cell.getRowIndex(),(datas.size() - 1) * rowspan);
+
+        }
+        while (its.hasNext()) {
+            Object t = its.next();
+            row = createRow(rowIndex, cell.getSheet(), isCreate, rowspan);
+            setForEeachRowCellValue(isCreate, row, cell.getColumnIndex(), t, columns, map, rowspan,
+                    colspan, mergedRegionHelper);
+            rowIndex += rowspan;
+        }
+    }
+
+    /**
      * 下移数据
      * @param dataSet
      * @param excelParams
@@ -434,56 +485,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     private boolean isNumber(String text) {
         return text.startsWith(NUMBER_SYMBOL) || text.contains("{" + NUMBER_SYMBOL)
                 || text.contains(" " + NUMBER_SYMBOL);
-    }
-
-    /**
-     * 利用foreach循环输出数据
-     * @param cell
-     * @param map
-     * @param name
-     * @throws Exception
-     */
-    private void addListDataToExcel(Cell cell, Map<String, Object> map,
-                                    String name) throws Exception {
-        boolean isCreate = !name.contains(FOREACH_NOT_CREATE);
-        boolean isShift = name.contains(FOREACH_AND_SHIFT);
-        name = name.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
-                .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
-        String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
-        Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
-        Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
-                mergedRegionHelper);
-        if (datas == null) {
-            return;
-        }
-        Iterator<?> its = datas.iterator();
-        int rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
-        @SuppressWarnings("unchecked")
-        List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
-        Row row = null;
-        int rowIndex = cell.getRow().getRowNum() + 1;
-        //处理当前行
-        if (its.hasNext()) {
-            Object t = its.next();
-            setForEeachRowCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns, map,
-                    rowspan, colspan, mergedRegionHelper);
-            rowIndex += rowspan - 1;
-        }
-        //不论后面有没有数据,都应该执行的是插入操作
-        // && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()
-        if (isShift && datas.size() * rowspan > 1) {
-            createRowNoRow(cell.getRowIndex() + rowspan,cell.getRow().getSheet().getLastRowNum(),(datas.size() - 1) * rowspan);
-            cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
-                    cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
-            templateSumHandler.shiftRows(cell.getRowIndex(),(datas.size() - 1) * rowspan);
-        }
-        while (its.hasNext()) {
-            Object t = its.next();
-            row = createRow(rowIndex, cell.getSheet(), isCreate, rowspan);
-            setForEeachRowCellValue(isCreate, row, cell.getColumnIndex(), t, columns, map, rowspan,
-                    colspan, mergedRegionHelper);
-            rowIndex += rowspan;
-        }
     }
 
     private void createRowNoRow(int startRow, int lastRowNum, int i1) {

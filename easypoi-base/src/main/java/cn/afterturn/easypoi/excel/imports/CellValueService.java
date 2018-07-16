@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +30,7 @@ import java.util.Map;
 import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -205,7 +206,7 @@ public class CellValueService {
             result = handlerSuffix(entity.getSuffix(), result);
             result = replaceValue(entity.getReplace(), result);
             result = replaceValue(entity.getReplace(), result);
-            if(dictHandler != null && StringUtils.isNoneBlank(entity.getDict())){
+            if (dictHandler != null && StringUtils.isNoneBlank(entity.getDict())) {
                 dictHandler.toValue(entity.getDict(), object, entity.getName(), result);
             }
         }
@@ -267,7 +268,12 @@ public class CellValueService {
             if (result == null || StringUtils.isBlank(result.toString())) {
                 return null;
             }
-            if ("class java.util.Date".equals(classFullName)) {
+            if ("class java.util.Date".equals(classFullName) && result instanceof Date) {
+                return result;
+            } else if ("class java.util.Date".equals(classFullName) && result instanceof String) {
+                return DateUtils.parseDate(result.toString(), entity.getFormat());
+            }
+            if ("class java.sql.Date".equals(classFullName) && result instanceof java.sql.Date) {
                 return result;
             }
             if ("class java.lang.Boolean".equals(classFullName) || "boolean".equals(classFullName)) {
@@ -311,9 +317,9 @@ public class CellValueService {
             }
             if (clazz != null && clazz.isEnum()) {
                 if (StringUtils.isNotEmpty(entity.getEnumImportMethod())) {
-                    return PoiReflectorUtil.fromCache(clazz).execEnumStaticMethod(entity.getEnumImportMethod(),result);
+                    return PoiReflectorUtil.fromCache(clazz).execEnumStaticMethod(entity.getEnumImportMethod(), result);
                 } else {
-                    return Enum.valueOf(clazz,result.toString());
+                    return Enum.valueOf(clazz, result.toString());
                 }
             }
             return result;
