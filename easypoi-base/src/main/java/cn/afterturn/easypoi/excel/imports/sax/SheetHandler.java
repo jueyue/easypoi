@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
@@ -119,14 +120,18 @@ public class SheetHandler extends DefaultHandler {
                 rowlist.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
             }
             curCol++;
-        } else if ("row".equals(name)) {//如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
+            //如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
+        } else if("c".equals(name) && StringUtils.isEmpty(lastContents)){
+            rowlist.add(curCol,new SaxReadCellEntity(CellValueType.String,""));
+            curCol++;
+         } else if ("row".equals(name)) {
             read.parse(curRow, rowlist);
             rowlist.clear();
             curRow++;
             curCol = 0;
         }
 
-    }
+                                                          }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
