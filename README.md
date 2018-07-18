@@ -33,11 +33,15 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 按登记顺序展示,如果你正在使用EasyPoi欢迎在 https://gitee.com/lemur/easypoi/issues/IFDX7 登记。仅作为开源参考，不作其它用途
 
+   - [一众科技](http://studio.afterturn.cn/)
    - [博丰(深圳)跨境电商服务有限公司 ](http://www.bfeservice.com/)
    - [陕西昊景无线网络技术有限公司](http://www.hjwxbd.com)
    - [湖北省楚天云有限公司](http://www.chutianyun.gov.cn)
    - [博彦科技](http://www.beyondsoft.com)
    - 新光新云
+   - [图灵谷（北京）科技有限公司] (http://www.turingoal.com)
+   - [多贝拉](https://www.duobeila.cn/)
+   
     
 
 版本介绍
