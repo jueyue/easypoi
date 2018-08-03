@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
+import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -61,6 +62,7 @@ public class ExportCommonService {
 
     protected IExcelDataHandler dataHandler;
     protected IExcelDictHandler dictHandler;
+    protected IExcelI18nHandler i18nHandler;
 
     protected List<String> needHandlerList;
 
@@ -152,6 +154,9 @@ public class ExportCommonService {
                         PoiPublicUtil.getClassFields(clz), list, clz, null, null);
                 excelEntity = new ExcelExportEntity();
                 excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null));
+                if (i18nHandler == null) {
+                    excelEntity.setName(i18nHandler.getLocaleName(excelEntity.getName()));
+                }
                 excelEntity.setOrderNum(Integer
                         .valueOf(PoiPublicUtil.getValueByTargetId(excel.orderNum(), targetId, "0")));
                 excelEntity
@@ -257,6 +262,10 @@ public class ExportCommonService {
             excelEntity.setGroupName(PoiPublicUtil.getValueByTargetId(excelGroup.name(), targetId, null));
         } else {
             excelEntity.setGroupName(excel.groupName());
+        }
+        if (i18nHandler == null) {
+            excelEntity.setName(i18nHandler.getLocaleName(excelEntity.getName()));
+            excelEntity.setGroupName(i18nHandler.getLocaleName(excelEntity.getGroupName()));
         }
     }
 
