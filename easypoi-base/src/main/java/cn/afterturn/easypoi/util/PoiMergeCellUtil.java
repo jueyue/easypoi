@@ -14,13 +14,18 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 import cn.afterturn.easypoi.excel.entity.params.MergeEntity;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 纵向合并单元格工具类
+ *
  * @author JueYue
- *  2015年6月21日 上午11:21:40
+ *         2015年6月21日 上午11:21:40
  */
 public final class PoiMergeCellUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PoiMergeCellUtil.class);
 
     private PoiMergeCellUtil() {
     }
@@ -30,7 +35,7 @@ public final class PoiMergeCellUtil {
      *
      * @param sheet
      * @param startRow 开始行
-     * @param columns 需要处理的列
+     * @param columns  需要处理的列
      */
     public static void mergeCells(Sheet sheet, int startRow, Integer... columns) {
         if (columns == null) {
@@ -60,7 +65,7 @@ public final class PoiMergeCellUtil {
      * @param sheet
      * @param mergeMap key--列,value--依赖的列,没有传空
      * @param startRow 开始行
-     * @param endRow 结束行
+     * @param endRow   结束行
      */
     public static void mergeCells(Sheet sheet, Map<Integer, int[]> mergeMap, int startRow,
                                   int endRow) {
@@ -84,8 +89,8 @@ public final class PoiMergeCellUtil {
                 } else {
                     text = row.getCell(index).getStringCellValue();
                     if (StringUtils.isNotEmpty(text)) {
-                        hanlderMergeCells(index, i, text, mergeDataMap, sheet, row.getCell(index),
-                            mergeMap.get(index));
+                        handlerMergeCells(index, i, text, mergeDataMap, sheet, row.getCell(index),
+                                mergeMap.get(index));
                     } else {
                         mergeCellOrContinue(index, mergeDataMap, sheet);
                     }
@@ -94,9 +99,9 @@ public final class PoiMergeCellUtil {
         }
         if (mergeDataMap.size() > 0) {
             for (Integer index : mergeDataMap.keySet()) {
-                if(mergeDataMap.get(index).getEndRow() >  mergeDataMap.get(index).getStartRow()) {
-                    sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
-                            mergeDataMap.get(index).getEndRow(), index, index));
+                if (mergeDataMap.get(index).getEndRow() > mergeDataMap.get(index).getStartRow()) {
+                    PoiMergeCellUtil.addMergedRegion(sheet,mergeDataMap.get(index).getStartRow(),
+                            mergeDataMap.get(index).getEndRow(), index, index);
                 }
             }
         }
@@ -114,16 +119,16 @@ public final class PoiMergeCellUtil {
      * @param cell
      * @param delys
      */
-    private static void hanlderMergeCells(Integer index, int rowNum, String text,
+    private static void handlerMergeCells(Integer index, int rowNum, String text,
                                           Map<Integer, MergeEntity> mergeDataMap, Sheet sheet,
                                           Cell cell, int[] delys) {
         if (mergeDataMap.containsKey(index)) {
             if (checkIsEqualByCellContents(mergeDataMap.get(index), text, cell, delys, rowNum)) {
                 mergeDataMap.get(index).setEndRow(rowNum);
             } else {
-                if(mergeDataMap.get(index).getEndRow() >  mergeDataMap.get(index).getStartRow()){
-                    sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
-                            mergeDataMap.get(index).getEndRow(), index, index));
+                if (mergeDataMap.get(index).getEndRow() > mergeDataMap.get(index).getStartRow()) {
+                    PoiMergeCellUtil.addMergedRegion(sheet,mergeDataMap.get(index).getStartRow(),
+                            mergeDataMap.get(index).getEndRow(), index, index);
                 }
                 mergeDataMap.put(index, createMergeEntity(text, rowNum, cell, delys));
             }
@@ -142,10 +147,10 @@ public final class PoiMergeCellUtil {
     private static void mergeCellOrContinue(Integer index, Map<Integer, MergeEntity> mergeDataMap,
                                             Sheet sheet) {
         if (mergeDataMap.containsKey(index)
-            && mergeDataMap.get(index).getEndRow() != mergeDataMap.get(index).getStartRow()) {
+                && mergeDataMap.get(index).getEndRow() != mergeDataMap.get(index).getStartRow()) {
             try {
-                sheet.addMergedRegion(new CellRangeAddress(mergeDataMap.get(index).getStartRow(),
-                    mergeDataMap.get(index).getEndRow(), index, index));
+                PoiMergeCellUtil.addMergedRegion(sheet,mergeDataMap.get(index).getStartRow(),
+                        mergeDataMap.get(index).getEndRow(), index, index);
             } catch (Exception e) {
 
             }
@@ -176,7 +181,7 @@ public final class PoiMergeCellUtil {
         if (mergeEntity.getText().equals(text)) {
             for (int i = 0; i < delys.length; i++) {
                 if (mergeEntity.getRelyList().get(i) == null || !mergeEntity.getRelyList().get(i)
-                    .equals(getCellNotNullText(cell, delys[i], rowNum))) {
+                        .equals(getCellNotNullText(cell, delys[i], rowNum))) {
                     return false;
                 }
             }
@@ -198,11 +203,21 @@ public final class PoiMergeCellUtil {
             return null;
         }
         if (cell.getRow().getCell(index) != null
-            && StringUtils.isNotEmpty(cell.getRow().getCell(index).getStringCellValue())) {
+                && StringUtils.isNotEmpty(cell.getRow().getCell(index).getStringCellValue())) {
             return cell.getRow().getCell(index).getStringCellValue();
         }
         return getCellNotNullText(cell.getRow().getSheet().getRow(--rowNum).getCell(index), index,
-            rowNum);
+                rowNum);
+    }
+
+
+    public static void addMergedRegion(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
+        try {
+            sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+        } catch (Exception e) {
+            // 忽略掉合并的错误,不打印异常
+            LOGGER.debug(e.getMessage(), e);
+        }
     }
 
 }
