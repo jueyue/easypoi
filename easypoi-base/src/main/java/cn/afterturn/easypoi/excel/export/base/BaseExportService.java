@@ -136,8 +136,7 @@ public abstract class BaseExportService extends ExportCommonService {
                         sheet.getRow(i).createCell(cellNum);
                         sheet.getRow(i).getCell(cellNum).setCellStyle(getStyles(false, entity));
                     }
-                    sheet.addMergedRegion(
-                            new CellRangeAddress(index, index + maxHeight - 1, cellNum, cellNum));
+                    PoiMergeCellUtil.addMergedRegion(sheet,index, index + maxHeight - 1, cellNum, cellNum);
                     cellNum++;
                 }
             }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.afterturn.easypoi.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -53,10 +54,6 @@ import cn.afterturn.easypoi.excel.export.template.TemplateSumHandler.TemplateSum
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
-import cn.afterturn.easypoi.util.PoiCellUtil;
-import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
-import cn.afterturn.easypoi.util.PoiPublicUtil;
-import cn.afterturn.easypoi.util.PoiSheetUtil;
 
 /**
  * Excel 导出根据模板导出
@@ -464,8 +461,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 cell.setCellValue("");
                 if (img.getRowspan()>1 || img.getColspan() > 1){
                     img.setHeight(0);
-                    cell.getSheet().addMergedRegion(new CellRangeAddress(cell.getRowIndex(),
-                            cell.getRowIndex() + img.getRowspan() - 1, cell.getColumnIndex(), cell.getColumnIndex() + img.getColspan() -1));
+                    PoiMergeCellUtil.addMergedRegion(cell.getSheet(),cell.getRowIndex(),
+                            cell.getRowIndex() + img.getRowspan() - 1, cell.getColumnIndex(), cell.getColumnIndex() + img.getColspan() -1);
                 }
                 createImageCell(cell,img.getHeight(),img.getUrl(),img.getData());
             }else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
@@ -601,10 +598,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 //合并对应单元格
                 if ((params.getRowspan() != 1 || params.getColspan() != 1)
                         && !mergedRegionHelper.isMergedRegion(row.getRowNum() + 1, ci)) {
-                    row.getSheet()
-                            .addMergedRegion(new CellRangeAddress(row.getRowNum(),
+                    PoiMergeCellUtil.addMergedRegion(row.getSheet(), row.getRowNum(),
                                     row.getRowNum() + params.getRowspan() - 1, ci,
-                                    ci + params.getColspan() - 1));
+                                    ci + params.getColspan() - 1);
                 }
                 ci = ci + params.getColspan();
             }

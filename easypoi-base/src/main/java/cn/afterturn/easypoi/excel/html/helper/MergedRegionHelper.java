@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 
@@ -112,10 +113,10 @@ public class MergedRegionHelper {
                     mergedCache.put(newKey, mergedCache.get(key));
                     try {
                         // 还原合并单元格
-                        sheet.addMergedRegion(new CellRangeAddress(
+                        PoiMergeCellUtil.addMergedRegion(sheet,
                                 Integer.parseInt(temp[0]) + size - 1, Integer.parseInt(temp[0]) + data[0] + size - 2,
                                 Integer.parseInt(temp[1]), Integer.parseInt(temp[1]) + data[1] - 1
-                        ));
+                        );
                     } catch (Exception e) {
                     }
                 }

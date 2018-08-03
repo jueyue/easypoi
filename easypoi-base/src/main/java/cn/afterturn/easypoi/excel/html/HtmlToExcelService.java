@@ -3,6 +3,7 @@ package cn.afterturn.easypoi.excel.html;
 import java.util.Map;
 import java.util.List;
 
+import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import org.jsoup.Jsoup;
 
 import org.slf4j.Logger;
@@ -269,6 +270,6 @@ public class HtmlToExcelService {
     private void mergeRegion(int firstRow, int lastRow, int firstCol, int lastCol) {
         LOGGER.debug("Merge Region, From Row [{}], To [{}].", firstRow, lastRow);
         LOGGER.debug("From Col [{}], To [{}].", firstCol, lastCol);
-        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+        PoiMergeCellUtil.addMergedRegion(sheet,firstRow, lastRow, firstCol, lastCol);
     }
 }
