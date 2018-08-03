@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -51,6 +52,9 @@ import cn.afterturn.easypoi.util.PoiReflectorUtil;
  *  2015年1月9日 下午10:25:53
  */
 public class ImportBaseService {
+
+    protected IExcelI18nHandler i18nHandler;
+
 
     /**
      * 把这个注解解析放到类型对象中
@@ -83,6 +87,9 @@ public class ImportBaseService {
         }
         if(excelEntityAnn != null && excelEntityAnn.show()){
             excelEntity.setName(excelEntityAnn.name() + "_" + excelEntity.getName());
+        }
+        if (i18nHandler == null) {
+            excelEntity.setName(i18nHandler.getLocaleName(excelEntity.getName()));
         }
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));
         if (StringUtils.isNotEmpty(excel.importFormat())) {

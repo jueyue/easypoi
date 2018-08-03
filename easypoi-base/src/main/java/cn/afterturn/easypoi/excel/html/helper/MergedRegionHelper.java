@@ -107,12 +107,18 @@ public class MergedRegionHelper {
             String[] temp = key.split("_");
             if (Integer.parseInt(temp[0]) >= rowIndex) {
                 Integer[] data = mergedCache.get(key);
-                mergedCache.put((Integer.parseInt(temp[0]) + size) + "_" + temp[1], mergedCache.get(key));
-                // 还原合并单元格
-                sheet.addMergedRegion(new CellRangeAddress(
-                        Integer.parseInt(temp[0]) + size - 1, Integer.parseInt(temp[0]) + data[0] + size - 2,
-                        Integer.parseInt(temp[1]), Integer.parseInt(temp[1]) + data[1] - 1
-                ));
+                String newKey = (Integer.parseInt(temp[0]) + size) + "_" + temp[1];
+                if(!mergedCache.containsKey(newKey)){
+                    mergedCache.put(newKey, mergedCache.get(key));
+                    try {
+                        // 还原合并单元格
+                        sheet.addMergedRegion(new CellRangeAddress(
+                                Integer.parseInt(temp[0]) + size - 1, Integer.parseInt(temp[0]) + data[0] + size - 2,
+                                Integer.parseInt(temp[1]), Integer.parseInt(temp[1]) + data[1] - 1
+                        ));
+                    } catch (Exception e) {
+                    }
+                }
             }
         }
     }

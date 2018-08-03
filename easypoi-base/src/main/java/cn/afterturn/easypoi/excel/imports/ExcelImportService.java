@@ -111,7 +111,8 @@ public class ExcelImportService extends ImportBaseService {
             ((IExcelDataModel) entity).setRowNum(row.getRowNum());
         }
         String picId;
-        boolean isUsed = false;// 是否需要加上这个对象
+        // 是否需要加上这个对象
+        boolean isUsed = false;
         for (int i = row.getFirstCellNum(); i < titlemap.size(); i++) {
             Cell cell = row.getCell(i);
             String titleString = (String) titlemap.get(i);
@@ -164,6 +165,7 @@ public class ExcelImportService extends ImportBaseService {
         Map<String, ExcelImportEntity> excelParams = new HashMap<String, ExcelImportEntity>();
         List<ExcelCollectionParams> excelCollection = new ArrayList<ExcelCollectionParams>();
         String targetId = null;
+        i18nHandler = params.getI18nHandler();
         if (!Map.class.equals(pojoClass)) {
             Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
@@ -380,73 +382,81 @@ public class ExcelImportService extends ImportBaseService {
         }
         List<T> result = new ArrayList<T>();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len;
-        while ((len = inputstream.read(buffer)) > -1) {
-            baos.write(buffer, 0, len);
-        }
-        baos.flush();
+        ExcelImportResult importResult;
+        try {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = inputstream.read(buffer)) > -1) {
+                baos.write(buffer, 0, len);
+            }
+            baos.flush();
 
-        InputStream userIs = new ByteArrayInputStream(baos.toByteArray());
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Excel clone success");
-        }
-        Workbook book = WorkbookFactory.create(userIs);
+            InputStream userIs = new ByteArrayInputStream(baos.toByteArray());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Excel clone success");
+            }
+            Workbook book = WorkbookFactory.create(userIs);
 
-        boolean isXSSFWorkbook = !(book instanceof HSSFWorkbook);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Workbook create success");
-        }
-        ExcelImportResult importResult = new ExcelImportResult();
-        createErrorCellStyle(book);
-        Map<String, PictureData> pictures;
-        for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
-                + params.getSheetNum(); i++) {
+            boolean isXSSFWorkbook = !(book instanceof HSSFWorkbook);
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(" start to read excel by is ,startTime is {}", System.currentTimeMillis());
+                LOGGER.debug("Workbook create success");
             }
-            if (isXSSFWorkbook) {
-                pictures = PoiPublicUtil.getSheetPictrues07((XSSFSheet) book.getSheetAt(i),
-                        (XSSFWorkbook) book);
-            } else {
-                pictures = PoiPublicUtil.getSheetPictrues03((HSSFSheet) book.getSheetAt(i),
-                        (HSSFWorkbook) book);
-            }
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(" end to read excel by is ,endTime is {}", System.currentTimeMillis());
-            }
-            result.addAll(importExcel(result, book.getSheetAt(i), pojoClass, params, pictures));
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(" end to read excel list by sheet ,endTime is {}", System.currentTimeMillis());
-            }
-            if (params.isReadSingleCell()) {
-                readSingleCell(importResult, book.getSheetAt(i), params);
+            importResult = new ExcelImportResult();
+            createErrorCellStyle(book);
+            Map<String, PictureData> pictures;
+            for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
+                    + params.getSheetNum(); i++) {
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(" read Key-Value ,endTime is {}", System.currentTimeMillis());
+                    LOGGER.debug(" start to read excel by is ,startTime is {}", System.currentTimeMillis());
+                }
+                if (isXSSFWorkbook) {
+                    pictures = PoiPublicUtil.getSheetPictrues07((XSSFSheet) book.getSheetAt(i),
+                            (XSSFWorkbook) book);
+                } else {
+                    pictures = PoiPublicUtil.getSheetPictrues03((HSSFSheet) book.getSheetAt(i),
+                            (HSSFWorkbook) book);
+                }
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(" end to read excel by is ,endTime is {}", System.currentTimeMillis());
+                }
+                result.addAll(importExcel(result, book.getSheetAt(i), pojoClass, params, pictures));
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(" end to read excel list by sheet ,endTime is {}", System.currentTimeMillis());
+                }
+                if (params.isReadSingleCell()) {
+                    readSingleCell(importResult, book.getSheetAt(i), params);
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug(" read Key-Value ,endTime is {}", System.currentTimeMillis());
+                    }
                 }
             }
+            if (params.isNeedSave()) {
+                saveThisExcel(params, pojoClass, isXSSFWorkbook, book);
+            }
+            importResult.setList(result);
+            if (needMore) {
+                InputStream successIs = new ByteArrayInputStream(baos.toByteArray());
+                try {
+                    Workbook successBook = WorkbookFactory.create(successIs);
+                    importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
+                    importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
+                    importResult.setFailList(failCollection);
+                    importResult.setVerfiyFail(verfiyFail);
+                } finally {
+                    successIs.close();
+                }
+            }
+        } finally {
+            IOUtils.closeQuietly(baos);
         }
-        if (params.isNeedSave()) {
-            saveThisExcel(params, pojoClass, isXSSFWorkbook, book);
-        }
-        importResult.setList(result);
-        if (needMore) {
-            InputStream successIs = new ByteArrayInputStream(baos.toByteArray());
-            Workbook successBook = WorkbookFactory.create(successIs);
-            importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
-            importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
-            importResult.setFailList(failCollection);
-            importResult.setVerfiyFail(verfiyFail);
-            successIs.close();
-        }
-        baos.close();
+
         return importResult;
     }
 
     private Workbook removeSuperfluousRows(Workbook book, List<Row> rowList, ImportParams params) {
         for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex()
                 + params.getSheetNum(); i++) {
-            for (int j = 0; j < rowList.size(); j++) {
+            for (int j = rowList.size() - 1; j >= 0; j--) {
                 if (rowList.get(j).getRowNum() < rowList.get(j).getSheet().getLastRowNum()) {
                     book.getSheetAt(i).shiftRows(rowList.get(j).getRowNum() + 1, rowList.get(j).getSheet().getLastRowNum(), -1);
                 } else if (rowList.get(j).getRowNum() == rowList.get(j).getSheet().getLastRowNum()) {
