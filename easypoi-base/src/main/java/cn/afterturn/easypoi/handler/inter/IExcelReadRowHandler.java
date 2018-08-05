@@ -26,6 +26,6 @@ public interface IExcelReadRowHandler<T> {
      * 处理解析对象
      * @param t
      */
-    public void hanlder(T t);
+    public void handler(T t);
 
 }

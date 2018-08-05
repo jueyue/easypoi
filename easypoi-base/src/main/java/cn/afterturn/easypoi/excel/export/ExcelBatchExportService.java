@@ -105,7 +105,7 @@ public class ExcelBatchExportService extends ExcelExportService {
         while (its.hasNext()) {
             Object t = its.next();
             try {
-                index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight);
+                index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight, 0)[0];
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
                 throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);

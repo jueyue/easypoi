@@ -88,7 +88,7 @@ public class ImportBaseService {
         if(excelEntityAnn != null && excelEntityAnn.show()){
             excelEntity.setName(excelEntityAnn.name() + "_" + excelEntity.getName());
         }
-        if (i18nHandler == null) {
+        if (i18nHandler != null) {
             excelEntity.setName(i18nHandler.getLocaleName(excelEntity.getName()));
         }
         excelEntity.setMethod(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));

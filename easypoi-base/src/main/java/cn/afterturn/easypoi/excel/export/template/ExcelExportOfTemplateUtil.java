@@ -120,7 +120,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         Iterator<?> its = dataSet.iterator();
         while (its.hasNext()) {
             Object t = its.next();
-            index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight);
+            index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight, 0)[0];
         }
         // 合并同类项
         mergeCells(sheet, excelParams, titleHeight);

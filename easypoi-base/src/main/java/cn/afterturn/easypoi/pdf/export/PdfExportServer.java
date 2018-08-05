@@ -251,7 +251,7 @@ public class PdfExportServer extends ExportCommonService {
      */
     private int createTitleRow(PdfExportParams title, PdfPTable table,
                                List<ExcelExportEntity> excelParams) {
-        int rows = getRowNums(excelParams);
+        int rows = getRowNums(excelParams, false);
         for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
             ExcelExportEntity entity = excelParams.get(i);
             if (entity.getList() != null) {

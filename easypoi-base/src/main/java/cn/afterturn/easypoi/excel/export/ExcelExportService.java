@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -48,7 +49,9 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
  */
 public class ExcelExportService extends BaseExportService {
 
-    // 最大行数,超过自动多Sheet
+    /**
+     * 最大行数,超过自动多Sheet
+     */
     private static int MAX_NUM = 60000;
 
     protected int createHeaderAndTitle(ExportParams entity, Sheet sheet, Workbook workbook,
@@ -57,9 +60,69 @@ public class ExcelExportService extends BaseExportService {
         if (entity.getTitle() != null) {
             rows += createTitle2Row(entity, sheet, workbook, fieldLength);
         }
-        rows += createHeaderRow(entity, sheet, workbook, rows, excelParams);
+        createHeaderRow(entity, sheet, workbook, rows, excelParams, 0);
+        rows += getRowNums(excelParams, true);
         sheet.createFreezePane(0, rows, 0, rows);
         return rows;
+    }
+
+    /**
+     * 创建表头
+     */
+    private int createHeaderRow(ExportParams title, Sheet sheet, Workbook workbook, int index,
+                                List<ExcelExportEntity> excelParams, int cellIndex) {
+        Row row = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
+        int rows = getRowNums(excelParams, true);
+        row.setHeight(title.getHeaderHeight());
+        Row listRow = null;
+        if (rows >= 2) {
+            listRow = sheet.createRow(index + 1);
+            listRow.setHeight(title.getHeaderHeight());
+        }
+        int groupCellLength = 0;
+        CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
+        for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
+            ExcelExportEntity entity = excelParams.get(i);
+            // 加入换了groupName或者结束就，就把之前的那个换行
+            if (StringUtils.isBlank(entity.getGroupName()) || !entity.getGroupName().equals(excelParams.get(i - 1).getGroupName())) {
+                if (groupCellLength > 1) {
+                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
+                }
+                groupCellLength = 0;
+            }
+            if (StringUtils.isNotBlank(entity.getGroupName())) {
+                createStringCell(row, cellIndex, entity.getGroupName(), titleStyle, entity);
+                createStringCell(listRow, cellIndex, entity.getName(), titleStyle, entity);
+                groupCellLength++;
+            } else if (StringUtils.isNotBlank(entity.getName())) {
+                createStringCell(row, cellIndex, entity.getName(), titleStyle, entity);
+            }
+            if (entity.getList() != null) {
+                // 保持原来的
+                int tempCellIndex = cellIndex;
+                cellIndex = createHeaderRow(title, sheet, workbook, rows == 1 ? index : index + 1, entity.getList(), cellIndex);
+                List<ExcelExportEntity> sTitel = entity.getList();
+                if (StringUtils.isNotBlank(entity.getName()) && sTitel.size() > 1) {
+                    PoiMergeCellUtil.addMergedRegion(sheet, index, index, tempCellIndex, tempCellIndex + sTitel.size() - 1);
+                }
+                /*for (int j = 0, size = sTitel.size(); j < size; j++) {
+
+                    createStringCell(rows == 2 ? listRow : row, cellIndex, sTitel.get(j).getName(),
+                            titleStyle, entity);
+                    cellIndex++;
+                }*/
+                cellIndex--;
+            } else if (rows > 1 && StringUtils.isBlank(entity.getGroupName())) {
+                createStringCell(listRow, cellIndex, "", titleStyle, entity);
+                PoiMergeCellUtil.addMergedRegion(sheet, index, index + rows - 1, cellIndex, cellIndex);
+            }
+            cellIndex++;
+        }
+        if (groupCellLength > 1) {
+            PoiMergeCellUtil.addMergedRegion(sheet, index, index, cellIndex - groupCellLength, cellIndex - 1);
+        }
+        return cellIndex;
+
     }
 
     /**
@@ -76,7 +139,7 @@ public class ExcelExportService extends BaseExportService {
             createStringCell(row, i, "",
                     getExcelExportStyler().getHeaderStyle(entity.getHeaderColor()), null);
         }
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, fieldWidth));
+        PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, 0, fieldWidth);
         if (entity.getSecondTitle() != null) {
             row = sheet.createRow(1);
             row.setHeight(entity.getSecondTitleHeight());
@@ -87,7 +150,7 @@ public class ExcelExportService extends BaseExportService {
                 createStringCell(row, i, "",
                         getExcelExportStyler().getHeaderStyle(entity.getHeaderColor()), null);
             }
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, fieldWidth));
+            PoiMergeCellUtil.addMergedRegion(sheet, 1, 1, 0, fieldWidth);
             return 2;
         }
         return 1;
@@ -176,7 +239,7 @@ public class ExcelExportService extends BaseExportService {
             List<Object> tempList = new ArrayList<Object>();
             while (its.hasNext()) {
                 Object t = its.next();
-                index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight);
+                index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight, 0)[0];
                 tempList.add(t);
                 if (index >= MAX_NUM) {
                     break;
@@ -211,60 +274,5 @@ public class ExcelExportService extends BaseExportService {
         }
     }
 
-    /**
-     * 创建表头
-     */
-    private int createHeaderRow(ExportParams title, Sheet sheet, Workbook workbook, int index,
-                                List<ExcelExportEntity> excelParams) {
-        Row row = sheet.createRow(index);
-        int rows = getRowNums(excelParams);
-        row.setHeight(title.getHeaderHeight());
-        Row listRow = null;
-        if (rows == 2) {
-            listRow = sheet.createRow(index + 1);
-            listRow.setHeight(title.getHeaderHeight());
-        }
-        int cellIndex = 0;
-        int groupCellLength = 0;
-        CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
-        for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
-            ExcelExportEntity entity = excelParams.get(i);
-            // 加入换了groupName或者结束就，就把之前的那个换行
-            if (StringUtils.isBlank(entity.getGroupName()) || !entity.getGroupName().equals(excelParams.get(i - 1).getGroupName())) {
-                if (groupCellLength > 1) {
-                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
-                }
-                groupCellLength = 0;
-            }
-            if (StringUtils.isNotBlank(entity.getGroupName())) {
-                createStringCell(row, cellIndex, entity.getGroupName(), titleStyle, entity);
-                createStringCell(listRow, cellIndex, entity.getName(), titleStyle, entity);
-                groupCellLength++;
-            } else if (StringUtils.isNotBlank(entity.getName())) {
-                createStringCell(row, cellIndex, entity.getName(), titleStyle, entity);
-            }
-            if (entity.getList() != null) {
-                List<ExcelExportEntity> sTitel = entity.getList();
-                if (StringUtils.isNotBlank(entity.getName()) && sTitel.size() > 1) {
-                    sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex, cellIndex + sTitel.size() - 1));
-                }
-                for (int j = 0, size = sTitel.size(); j < size; j++) {
-                    createStringCell(rows == 2 ? listRow : row, cellIndex, sTitel.get(j).getName(),
-                            titleStyle, entity);
-                    cellIndex++;
-                }
-                cellIndex--;
-            } else if (rows == 2 && StringUtils.isBlank(entity.getGroupName())) {
-                createStringCell(listRow, cellIndex, "", titleStyle, entity);
-                sheet.addMergedRegion(new CellRangeAddress(index, index + 1, cellIndex, cellIndex));
-            }
-            cellIndex++;
-        }
-        if (groupCellLength > 1) {
-            sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
-        }
-        return rows;
-
-    }
 
 }
