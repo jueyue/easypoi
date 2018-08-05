@@ -1,11 +1,11 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -69,16 +69,18 @@ public abstract class BaseExportService extends ExportCommonService {
     /**
      * 创建 最主要的 Cells
      */
-    public int createCells(Drawing patriarch, int index, Object t,
-                           List<ExcelExportEntity> excelParams, Sheet sheet, Workbook workbook,
-                           short rowHeight) {
+    public int[] createCells(Drawing patriarch, int index, Object t,
+                             List<ExcelExportEntity> excelParams, Sheet sheet, Workbook workbook,
+                             short rowHeight, int cellNum) {
         try {
             ExcelExportEntity entity;
-            Row row = sheet.createRow(index);
+            Row row = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
             if (rowHeight != -1) {
                 row.setHeight(rowHeight);
             }
-            int maxHeight = 1, cellNum = 0;
+            int maxHeight = 1;
+            // 合并需要合并的单元格
+            int margeCellNum = cellNum;
             int indexKey = createIndexCell(row, index, excelParams.get(0));
             cellNum += indexKey;
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
@@ -87,16 +89,22 @@ public abstract class BaseExportService extends ExportCommonService {
                     Collection<?> list = getListCellValue(entity, t);
                     int listC = 0;
                     if (list != null && list.size() > 0) {
+                        int tempCellNum = 0;
                         for (Object obj : list) {
-                            createListCells(patriarch, index + listC, cellNum, obj, entity.getList(),
+                            int[] temp = createCells(patriarch, index + maxHeight - 1, obj, entity.getList(), sheet, workbook, rowHeight, cellNum);
+                            tempCellNum = temp[1];
+                            maxHeight += temp[0];
+                            /*createListCells(patriarch, index + listC, cellNum, obj, entity.getList(),
                                     sheet, workbook, rowHeight);
-                            listC++;
+                            listC++;*/
                         }
+                        cellNum = tempCellNum;
+                        maxHeight--;
                     }
-                    cellNum += entity.getList().size();
+                    /*  cellNum += entity.getList().size();
                     if (list != null && list.size() > maxHeight) {
                         maxHeight = list.size();
-                    }
+                    }*/
                 } else {
                     Object value = getCellValue(entity, t);
 
@@ -125,24 +133,23 @@ public abstract class BaseExportService extends ExportCommonService {
                     }
                 }
             }
-            // 合并需要合并的单元格
-            cellNum = 0;
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
                 if (entity.getList() != null) {
-                    cellNum += entity.getList().size();
+                    margeCellNum += entity.getList().size();
                 } else if (entity.isNeedMerge() && maxHeight > 1) {
                     for (int i = index + 1; i < index + maxHeight; i++) {
-                        sheet.getRow(i).createCell(cellNum);
-                        sheet.getRow(i).getCell(cellNum).setCellStyle(getStyles(false, entity));
+                        sheet.getRow(i).createCell(margeCellNum);
+                        sheet.getRow(i).getCell(margeCellNum).setCellStyle(getStyles(false, entity));
                     }
-                    PoiMergeCellUtil.addMergedRegion(sheet,index, index + maxHeight - 1, cellNum, cellNum);
-                    cellNum++;
+                    PoiMergeCellUtil.addMergedRegion(sheet, index, index + maxHeight - 1, margeCellNum, margeCellNum);
+                    margeCellNum++;
                 }
             }
-            return maxHeight;
+            return new int[]{maxHeight, cellNum};
         } catch (Exception e) {
             LOGGER.error("excel cell export error ,data is :{}", ReflectionToStringBuilder.toString(t));
+            LOGGER.error(e.getMessage(), e);
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
         }
 
@@ -396,17 +403,17 @@ public abstract class BaseExportService extends ExportCommonService {
     }
 
 
-    public void setColumnHidden(List<ExcelExportEntity> excelParams, Sheet sheet){
+    public void setColumnHidden(List<ExcelExportEntity> excelParams, Sheet sheet) {
         int index = 0;
         for (int i = 0; i < excelParams.size(); i++) {
             if (excelParams.get(i).getList() != null) {
                 List<ExcelExportEntity> list = excelParams.get(i).getList();
                 for (int j = 0; j < list.size(); j++) {
-                    sheet.setColumnHidden(index,list.get(j).isColumnHidden());
+                    sheet.setColumnHidden(index, list.get(j).isColumnHidden());
                     index++;
                 }
             } else {
-                sheet.setColumnHidden(index,excelParams.get(i).isColumnHidden());;
+                sheet.setColumnHidden(index, excelParams.get(i).isColumnHidden());
                 index++;
             }
         }

@@ -100,7 +100,7 @@ public final class PoiMergeCellUtil {
         if (mergeDataMap.size() > 0) {
             for (Integer index : mergeDataMap.keySet()) {
                 if (mergeDataMap.get(index).getEndRow() > mergeDataMap.get(index).getStartRow()) {
-                    PoiMergeCellUtil.addMergedRegion(sheet,mergeDataMap.get(index).getStartRow(),
+                    PoiMergeCellUtil.addMergedRegion(sheet, mergeDataMap.get(index).getStartRow(),
                             mergeDataMap.get(index).getEndRow(), index, index);
                 }
             }
@@ -127,7 +127,7 @@ public final class PoiMergeCellUtil {
                 mergeDataMap.get(index).setEndRow(rowNum);
             } else {
                 if (mergeDataMap.get(index).getEndRow() > mergeDataMap.get(index).getStartRow()) {
-                    PoiMergeCellUtil.addMergedRegion(sheet,mergeDataMap.get(index).getStartRow(),
+                    PoiMergeCellUtil.addMergedRegion(sheet, mergeDataMap.get(index).getStartRow(),
                             mergeDataMap.get(index).getEndRow(), index, index);
                 }
                 mergeDataMap.put(index, createMergeEntity(text, rowNum, cell, delys));
@@ -149,7 +149,7 @@ public final class PoiMergeCellUtil {
         if (mergeDataMap.containsKey(index)
                 && mergeDataMap.get(index).getEndRow() != mergeDataMap.get(index).getStartRow()) {
             try {
-                PoiMergeCellUtil.addMergedRegion(sheet,mergeDataMap.get(index).getStartRow(),
+                PoiMergeCellUtil.addMergedRegion(sheet, mergeDataMap.get(index).getStartRow(),
                         mergeDataMap.get(index).getEndRow(), index, index);
             } catch (Exception e) {
 
@@ -215,6 +215,9 @@ public final class PoiMergeCellUtil {
         try {
             sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
         } catch (Exception e) {
+            LOGGER.error("发生了一次合并单元格错误,{},{},{},{}", new Integer[]{
+                    firstRow, lastRow, firstCol, lastCol
+            });
             // 忽略掉合并的错误,不打印异常
             LOGGER.debug(e.getMessage(), e);
         }

@@ -137,7 +137,7 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
             }
         } else {
             if (object != null && hanlder != null) {
-                hanlder.hanlder(object);
+                hanlder.handler(object);
             }
             object = PoiPublicUtil.createObject(pojoClass, targetId);
             SaxReadCellEntity entity;

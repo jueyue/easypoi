@@ -154,7 +154,7 @@ public class ExportCommonService {
                         PoiPublicUtil.getClassFields(clz), list, clz, null, null);
                 excelEntity = new ExcelExportEntity();
                 excelEntity.setName(PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null));
-                if (i18nHandler == null) {
+                if (i18nHandler != null) {
                     excelEntity.setName(i18nHandler.getLocaleName(excelEntity.getName()));
                 }
                 excelEntity.setOrderNum(Integer
@@ -211,8 +211,8 @@ public class ExportCommonService {
         if (StringUtils.isNotEmpty(entity.getSuffix()) && value != null) {
             value = value + entity.getSuffix();
         }
-        if (value != null && StringUtils.isNotEmpty(entity.getEnumExportField())){
-            value = PoiReflectorUtil.fromCache(value.getClass()).getValue(value,entity.getEnumExportField());
+        if (value != null && StringUtils.isNotEmpty(entity.getEnumExportField())) {
+            value = PoiReflectorUtil.fromCache(value.getClass()).getValue(value, entity.getEnumExportField());
         }
         return value == null ? "" : value.toString();
     }
@@ -263,7 +263,7 @@ public class ExportCommonService {
         } else {
             excelEntity.setGroupName(excel.groupName());
         }
-        if (i18nHandler == null) {
+        if (i18nHandler != null) {
             excelEntity.setName(i18nHandler.getLocaleName(excelEntity.getName()));
             excelEntity.setGroupName(i18nHandler.getLocaleName(excelEntity.getGroupName()));
         }
@@ -383,21 +383,25 @@ public class ExportCommonService {
     public int getFieldLength(List<ExcelExportEntity> excelParams) {
         int length = -1;// 从0开始计算单元格的
         for (ExcelExportEntity entity : excelParams) {
-            length += entity.getList() != null ? entity.getList().size() : 1;
+            if (entity.getList() != null) {
+                length += getFieldLength(entity.getList()) + 1;
+            } else {
+                length++;
+            }
         }
         return length;
     }
 
     /**
-     * 判断表头是只有一行还是两行
+     * 判断表头是只有一行还是多行
      */
-    public int getRowNums(List<ExcelExportEntity> excelParams) {
+    public int getRowNums(List<ExcelExportEntity> excelParams,boolean isDeep) {
         for (int i = 0; i < excelParams.size(); i++) {
             if (excelParams.get(i).getList() != null
                     && StringUtils.isNotBlank(excelParams.get(i).getName())) {
-                return 2;
+                return isDeep? 1 + getRowNums(excelParams.get(i).getList() , isDeep) : 2;
             }
-            if (StringUtils.isNoneEmpty(excelParams.get(i).getGroupName())) {
+            if (StringUtils.isNotEmpty(excelParams.get(i).getGroupName())) {
                 return 2;
             }
         }
