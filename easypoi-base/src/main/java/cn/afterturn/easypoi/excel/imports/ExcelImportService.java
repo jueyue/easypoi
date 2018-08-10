@@ -103,7 +103,7 @@ public class ExcelImportService extends ImportBaseService {
     private void addListContinue(Object object, ExcelCollectionParams param, Row row,
                                  Map<Integer, String> titlemap, String targetId,
                                  Map<String, PictureData> pictures,
-                                 ImportParams params) throws Exception {
+                                 ImportParams params, StringBuilder errorMsg) throws Exception {
         Collection collection = (Collection) PoiReflectorUtil.fromCache(object.getClass())
                 .getValue(object, param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
@@ -121,7 +121,14 @@ public class ExcelImportService extends ImportBaseService {
                     picId = row.getRowNum() + "_" + i;
                     saveImage(object, picId, param.getExcelParams(), titleString, pictures, params);
                 } else {
-                    saveFieldValue(params, entity, cell, param.getExcelParams(), titleString, row);
+                    try {
+                        saveFieldValue(params, entity, cell, param.getExcelParams(), titleString, row);
+                    } catch (ExcelImportException e) {
+                        // 如果需要去校验就忽略,这个错误,继续执行
+                        if(params.isNeedVerfiy() && ExcelImportEnum.GET_VALUE_ERROR.equals(e.getType())){
+                            errorMsg.append(" ").append(titleString).append(ExcelImportEnum.GET_VALUE_ERROR.getMsg());
+                        }
+                    }
                 }
                 isUsed = true;
             }
@@ -192,6 +199,7 @@ public class ExcelImportService extends ImportBaseService {
         if (excelCollection.size() > 0 && params.getKeyIndex() == null) {
             params.setKeyIndex(0);
         }
+        StringBuilder errorMsg;
         while (rows.hasNext()
                 && (row == null
                 || sheet.getLastRowNum() - row.getRowNum() > params.getLastOfInvalidRow())) {
@@ -203,6 +211,7 @@ public class ExcelImportService extends ImportBaseService {
             if (sheet.getLastRowNum() - row.getRowNum() < params.getLastOfInvalidRow()) {
                 break;
             }
+            errorMsg = new StringBuilder();
             // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
             // keyIndex 如果为空就不处理,仍然处理这一行
             if (params.getKeyIndex() != null
@@ -210,7 +219,7 @@ public class ExcelImportService extends ImportBaseService {
                     || StringUtils.isEmpty(getKeyValue(row.getCell(params.getKeyIndex()))))
                     && object != null) {
                 for (ExcelCollectionParams param : excelCollection) {
-                    addListContinue(object, param, row, titlemap, targetId, pictures, params);
+                    addListContinue(object, param, row, titlemap, targetId, pictures, params, errorMsg);
                 }
             } else {
                 object = PoiPublicUtil.createObject(pojoClass, targetId);
@@ -226,7 +235,14 @@ public class ExcelImportService extends ImportBaseService {
                                 saveImage(object, picId, excelParams, titleString, pictures,
                                         params);
                             } else {
-                                saveFieldValue(params, object, cell, excelParams, titleString, row);
+                                try {
+                                    saveFieldValue(params, object, cell, excelParams, titleString, row);
+                                } catch (ExcelImportException e) {
+                                    // 如果需要去校验就忽略,这个错误,继续执行
+                                    if(params.isNeedVerfiy() && ExcelImportEnum.GET_VALUE_ERROR.equals(e.getType())){
+                                        errorMsg.append(" ").append(titleString).append(ExcelImportEnum.GET_VALUE_ERROR.getMsg());
+                                    }
+                                }
                             }
                         }
                     }
@@ -237,9 +253,9 @@ public class ExcelImportService extends ImportBaseService {
                         ((IExcelDataModel) object).setRowNum(row.getRowNum());
                     }
                     for (ExcelCollectionParams param : excelCollection) {
-                        addListContinue(object, param, row, titlemap, targetId, pictures, params);
+                        addListContinue(object, param, row, titlemap, targetId, pictures, params, errorMsg);
                     }
-                    if (verifyingDataValidity(object, row, params, pojoClass)) {
+                    if (verifyingDataValidity(object, row, params, pojoClass, errorMsg)) {
                         collection.add(object);
                     } else {
                         failCollection.add(object);
@@ -263,7 +279,7 @@ public class ExcelImportService extends ImportBaseService {
      * 校验数据合法性
      */
     private boolean verifyingDataValidity(Object object, Row row, ImportParams params,
-                                          Class<?> pojoClass) {
+                                          Class<?> pojoClass, StringBuilder fieldErrorMsg) {
         boolean isAdd = true;
         Cell cell = null;
         if (params.isNeedVerfiy()) {
@@ -295,6 +311,15 @@ public class ExcelImportService extends ImportBaseService {
                 isAdd = false;
                 verfiyFail = true;
             }
+        }
+        if((params.isNeedVerfiy() || params.getVerifyHandler() != null) && fieldErrorMsg.length() > 0){
+            if (object instanceof IExcelModel) {
+                IExcelModel model = (IExcelModel) object;
+                model.setErrorMsg((StringUtils.isNoneBlank(model.getErrorMsg())
+                        ? model.getErrorMsg() + "," : "") + fieldErrorMsg.toString());
+            }
+            isAdd = false;
+            verfiyFail = true;
         }
         if (cell != null) {
             cell.setCellStyle(errorCellStyle);
