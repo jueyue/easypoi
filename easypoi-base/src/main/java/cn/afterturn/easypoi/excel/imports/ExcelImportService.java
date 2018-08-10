@@ -318,6 +318,11 @@ public class ExcelImportService extends ImportBaseService {
                 model.setErrorMsg((StringUtils.isNoneBlank(model.getErrorMsg())
                         ? model.getErrorMsg() + "," : "") + fieldErrorMsg.toString());
             }
+            if (cell == null) {
+                cell = row.createCell(row.getLastCellNum());
+            }
+            cell.setCellValue((StringUtils.isNoneBlank(cell.getStringCellValue())
+                    ? cell.getStringCellValue() + "," : "")+ fieldErrorMsg.toString());
             isAdd = false;
             verfiyFail = true;
         }
