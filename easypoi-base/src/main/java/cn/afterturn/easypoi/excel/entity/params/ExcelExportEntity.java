@@ -25,6 +25,26 @@ import java.util.List;
  */
 public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<ExcelExportEntity> {
 
+
+    public ExcelExportEntity() {
+
+    }
+
+    public ExcelExportEntity(String name) {
+        super.name = name;
+    }
+
+    public ExcelExportEntity(String name, Object key) {
+        super.name = name;
+        this.key = key;
+    }
+
+    public ExcelExportEntity(String name, Object key, int width) {
+        super.name = name;
+        this.width = width;
+        this.key = key;
+    }
+
     /**
      * 如果是MAP导出,这个是map的key
      */
@@ -68,46 +88,19 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
     /**
      * 统计
      */
-    private boolean                 isStatistics;
+    private boolean                isStatistics;
 
-    private String                   numFormat;
+    private String                  numFormat;
     /**
      *  是否隐藏列
      */
-    private boolean                  isColumnHidden;
+    private boolean                isColumnHidden;
     /**
      * 枚举导出属性字段
      */
-    private String                    enumExportField;
-
-    public boolean isColumnHidden() {
-        return isColumnHidden;
-    }
-
-    public void setColumnHidden(boolean columnHidden) {
-        isColumnHidden = columnHidden;
-    }
+    private String                  enumExportField;
 
     private List<ExcelExportEntity> list;
-
-    public ExcelExportEntity() {
-
-    }
-
-    public ExcelExportEntity(String name) {
-        super.name = name;
-    }
-
-    public ExcelExportEntity(String name, Object key) {
-        super.name = name;
-        this.key = key;
-    }
-
-    public ExcelExportEntity(String name, Object key, int width) {
-        super.name = name;
-        this.width = width;
-        this.key = key;
-    }
 
     public int getExportImageType() {
         return exportImageType;
@@ -219,6 +212,14 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
 
     public void setEnumExportField(String enumExportField) {
         this.enumExportField = enumExportField;
+    }
+
+    public boolean isColumnHidden() {
+        return isColumnHidden;
+    }
+
+    public void setColumnHidden(boolean columnHidden) {
+        isColumnHidden = columnHidden;
     }
 
     @Override
