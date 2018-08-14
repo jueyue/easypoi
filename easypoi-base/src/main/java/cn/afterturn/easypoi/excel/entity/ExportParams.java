@@ -101,6 +101,10 @@ public class ExportParams extends ExcelBaseParams {
      */
     private boolean isAppendGraph = true;
     /**
+     * 是否固定表头
+     */
+    private boolean isFixedTitle= true;
+    /**
      * 单sheet最大值
      * 03版本默认6W行,07默认100W
      */
@@ -285,4 +289,11 @@ public class ExportParams extends ExcelBaseParams {
         this.headerHeight = headerHeight;
     }
 
+    public boolean isFixedTitle() {
+        return isFixedTitle;
+    }
+
+    public void setFixedTitle(boolean fixedTitle) {
+        isFixedTitle = fixedTitle;
+    }
 }

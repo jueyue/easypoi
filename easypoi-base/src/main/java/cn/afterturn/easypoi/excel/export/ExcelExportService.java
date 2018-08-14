@@ -62,7 +62,9 @@ public class ExcelExportService extends BaseExportService {
         }
         createHeaderRow(entity, sheet, workbook, rows, excelParams, 0);
         rows += getRowNums(excelParams, true);
-        sheet.createFreezePane(0, rows, 0, rows);
+        if (entity.isFixedTitle()) {
+            sheet.createFreezePane(0, rows, 0, rows);
+        }
         return rows;
     }
 
