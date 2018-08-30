@@ -114,7 +114,7 @@ public class PoiCellUtil {
 
         } else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 
-            return cell.getCellFormula();
+            return cell.getStringCellValue();
 
         } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 
