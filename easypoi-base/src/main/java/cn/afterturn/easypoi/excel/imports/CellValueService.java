@@ -81,7 +81,7 @@ public class CellValueService {
                 result = getDateData(entity, cell.getStringCellValue());
             }*/
             //FIX: 单元格yyyyMMdd数字时候使用 cell.getDateCellValue() 解析出的日期错误
-            if (Cell.CELL_TYPE_NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
+            if (CellType.NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
                 result = DateUtil.getJavaDate(cell.getNumericCellValue());
             } else {
                 cell.setCellType(CellType.STRING);
@@ -96,15 +96,15 @@ public class CellValueService {
             if (("class java.sql.Timestamp").equals(classFullName)) {
                 result = new Timestamp(((Date) result).getTime());
             }
-        } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
+        } else if (CellType.NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
             result = DateUtil.getJavaDate(cell.getNumericCellValue());
         } else {
             switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_STRING:
+                case STRING:
                     result = cell.getRichStringCellValue() == null ? ""
                             : cell.getRichStringCellValue().getString();
                     break;
-                case Cell.CELL_TYPE_NUMERIC:
+                case NUMERIC:
                     if (DateUtil.isCellDateFormatted(cell)) {
                         if ("class java.lang.String".equals(classFullName)) {
                             result = formateDate(entity, cell.getDateCellValue());
@@ -113,14 +113,14 @@ public class CellValueService {
                         result = readNumericCell(cell);
                     }
                     break;
-                case Cell.CELL_TYPE_BOOLEAN:
+                case BOOLEAN:
                     result = Boolean.toString(cell.getBooleanCellValue());
                     break;
-                case Cell.CELL_TYPE_BLANK:
+                case BLANK:
                     break;
-                case Cell.CELL_TYPE_ERROR:
+                case ERROR:
                     break;
-                case Cell.CELL_TYPE_FORMULA:
+                case FORMULA:
                     try {
                         result = readNumericCell(cell);
                     } catch (Exception e1) {

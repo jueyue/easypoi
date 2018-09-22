@@ -30,12 +30,7 @@ import java.util.Set;
 
 import cn.afterturn.easypoi.util.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -348,8 +343,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             }
             for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
                 cell = row.getCell(i);
-                if (row.getCell(i) != null && (cell.getCellType() == Cell.CELL_TYPE_STRING
-                        || cell.getCellType() == Cell.CELL_TYPE_NUMERIC)) {
+                if (row.getCell(i) != null && (cell.getCellType() == CellType.STRING
+                        || cell.getCellType() == CellType.NUMERIC)) {
                     String text = PoiCellUtil.getCellValue(cell);
                     if (text.contains(FOREACH_COL) || text.contains(FOREACH_COL_VALUE)) {
                         foreachCol(cell, map, text);
@@ -413,9 +408,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             }
             for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
                 cell = row.getCell(i);
-                if (row.getCell(i) != null && (cell.getCellType() == Cell.CELL_TYPE_STRING
-                        || cell.getCellType() == Cell.CELL_TYPE_NUMERIC)) {
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                if (row.getCell(i) != null && (cell.getCellType() == CellType.STRING
+                        || cell.getCellType() == CellType.NUMERIC)) {
+                    cell.setCellType(CellType.STRING);
                     String text = cell.getStringCellValue();
                     if (text.contains(IF_DELETE)) {
                         if (Boolean.valueOf(
@@ -438,12 +433,12 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      * @param map
      */
     private void setValueForCellByMap(Cell cell, Map<String, Object> map) throws Exception {
-        int cellType = cell.getCellType();
-        if (cellType != Cell.CELL_TYPE_STRING && cellType != Cell.CELL_TYPE_NUMERIC) {
+        CellType cellType = cell.getCellType();
+        if (cellType != CellType.STRING && cellType != CellType.NUMERIC) {
             return;
         }
         String oldString;
-        cell.setCellType(Cell.CELL_TYPE_STRING);
+        cell.setCellType(CellType.STRING);
         oldString = cell.getStringCellValue();
         if (oldString != null && oldString.indexOf(START_STR) != -1
                 && !oldString.contains(FOREACH)) {
@@ -467,7 +462,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 createImageCell(cell,img.getHeight(),img.getUrl(),img.getData());
             }else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
                 cell.setCellValue(Double.parseDouble(obj.toString()));
-                cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+                cell.setCellType(CellType.NUMERIC);
             } else {
                 cell.setCellValue(obj.toString());
             }
@@ -580,7 +575,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     createImageCell(row.getCell(ci),img.getHeight(),img.getUrl(),img.getData());
                 }else if (isNumber && StringUtils.isNotEmpty(val)) {
                     row.getCell(ci).setCellValue(Double.parseDouble(val));
-                    row.getCell(ci).setCellType(Cell.CELL_TYPE_NUMERIC);
+                    row.getCell(ci).setCellType(CellType.NUMERIC);
                 } else {
                     try {
                         row.getCell(ci).setCellValue(val);

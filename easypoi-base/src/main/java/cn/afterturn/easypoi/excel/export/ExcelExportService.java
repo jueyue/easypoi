@@ -24,11 +24,7 @@ import java.util.List;
 
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
@@ -146,7 +142,7 @@ public class ExcelExportService extends BaseExportService {
             row = sheet.createRow(1);
             row.setHeight(entity.getSecondTitleHeight());
             CellStyle style = workbook.createCellStyle();
-            style.setAlignment(CellStyle.ALIGN_RIGHT);
+            style.setAlignment(HorizontalAlignment.RIGHT);
             createStringCell(row, 0, entity.getSecondTitle(), style, null);
             for (int i = 1; i <= fieldWidth; i++) {
                 createStringCell(row, i, "",

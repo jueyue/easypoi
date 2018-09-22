@@ -1,15 +1,5 @@
 package cn.afterturn.easypoi.excel.html.helper;
 
-import static org.apache.poi.ss.usermodel.CellStyle.ALIGN_CENTER;
-import static org.apache.poi.ss.usermodel.CellStyle.ALIGN_CENTER_SELECTION;
-import static org.apache.poi.ss.usermodel.CellStyle.ALIGN_FILL;
-import static org.apache.poi.ss.usermodel.CellStyle.ALIGN_JUSTIFY;
-import static org.apache.poi.ss.usermodel.CellStyle.ALIGN_LEFT;
-import static org.apache.poi.ss.usermodel.CellStyle.ALIGN_RIGHT;
-import static org.apache.poi.ss.usermodel.CellStyle.VERTICAL_BOTTOM;
-import static org.apache.poi.ss.usermodel.CellStyle.VERTICAL_CENTER;
-import static org.apache.poi.ss.usermodel.CellStyle.VERTICAL_TOP;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,13 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Color;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -39,31 +23,34 @@ import cn.afterturn.easypoi.util.PoiPublicUtil;
 
 /**
  * 样式帮助类
+ *
  * @author JueYue
- *  2015年5月9日 下午4:04:24
+ * 2015年5月9日 下午4:04:24
  */
 public class StylerHelper {
 
-    private static String                   DEFAULTS_CLASS_CSS = ".excelDefaults {background-color: white;color: black;text-decoration: none;direction: ltr;text-transform: none;text-indent: 0;letter-spacing: 0;word-spacing: 0;white-space: normal;unicode-bidi: normal;vertical-align: 0;text-shadow: none;padding: 0;margin: 0;border-collapse: collapse;white-space: pre-wrap;word-wrap: break-word;word-break: break-all;}.excelDefaults td {padding: 1px 5px;border: 1px solid silver;border-color: #000000;text-align: center;vertical-align: middle;font-size: 12pt;}.excelDefaults .colHeader {background-color: silver;font-weight: bold;border: 1px solid black;text-align: center;padding: 1px 5px;}.excelDefaults .rowHeader {background-color: silver;font-weight: bold;border: 1px solid black;text-align: right;padding: 1px 5px;}";
+    private static String DEFAULTS_CLASS_CSS = ".excelDefaults {background-color: white;color: black;text-decoration: none;direction: ltr;text-transform: none;text-indent: 0;letter-spacing: 0;word-spacing: 0;white-space: normal;unicode-bidi: normal;vertical-align: 0;text-shadow: none;padding: 0;margin: 0;border-collapse: collapse;white-space: pre-wrap;word-wrap: break-word;word-break: break-all;}.excelDefaults td {padding: 1px 5px;border: 1px solid silver;border-color: #000000;text-align: center;vertical-align: middle;font-size: 12pt;}.excelDefaults .colHeader {background-color: silver;font-weight: bold;border: 1px solid black;text-align: center;padding: 1px 5px;}.excelDefaults .rowHeader {background-color: silver;font-weight: bold;border: 1px solid black;text-align: right;padding: 1px 5px;}";
 
-    private static final String             DEFAULTS_CLASS     = "excelDefaults";
+    private static final String DEFAULTS_CLASS = "excelDefaults";
 
-    private static final Map<Short, String> ALIGN              = PoiPublicUtil.mapFor(ALIGN_LEFT,
-        "left", ALIGN_CENTER, "center", ALIGN_RIGHT, "right", ALIGN_FILL, "left", ALIGN_JUSTIFY,
-        "left", ALIGN_CENTER_SELECTION, "center");
+    private static final Map<HorizontalAlignment, String> ALIGN = PoiPublicUtil.mapFor(HorizontalAlignment.LEFT,
+            "left", HorizontalAlignment.CENTER, "center", HorizontalAlignment.RIGHT, "right", HorizontalAlignment.FILL,
+            "left", HorizontalAlignment.JUSTIFY,
+            "left", HorizontalAlignment.CENTER_SELECTION, "center");
 
-    private static final Map<Short, String> VERTICAL_ALIGN     = PoiPublicUtil
-        .mapFor(VERTICAL_BOTTOM, "bottom", VERTICAL_CENTER, "middle", VERTICAL_TOP, "top");
+    private static final Map<VerticalAlignment, String> VERTICAL_ALIGN = PoiPublicUtil
+            .mapFor(VerticalAlignment.BOTTOM, "bottom", VerticalAlignment.CENTER,
+                    "middle", VerticalAlignment.TOP, "top");
 
-    private Formatter                       out;
+    private Formatter out;
 
-    private Sheet                           sheet;
+    private Sheet sheet;
 
-    private HtmlHelper                      helper;
+    private HtmlHelper helper;
 
-    private int                             sheetNum;
+    private int sheetNum;
 
-    private int                             cssRandom;
+    private int cssRandom;
 
     public StylerHelper(Workbook wb, Formatter out, int sheetNum, int cssRandom) {
         this.out = out;
@@ -123,7 +110,7 @@ public class StylerHelper {
         Formatter formatter = new Formatter(sb);
         try {
             in = new BufferedReader(
-                new InputStreamReader(StylerHelper.class.getResourceAsStream("excelStyle.css")));
+                    new InputStreamReader(StylerHelper.class.getResourceAsStream("excelStyle.css")));
             String line;
             while ((line = in.readLine()) != null) {
                 formatter.format("%s%n", line);
@@ -150,15 +137,15 @@ public class StylerHelper {
     }
 
     private void styleContents(CellStyle style) {
-        if (style.getAlignment() != 2) {
+        if (style.getAlignment() != HorizontalAlignment.CENTER) {
             styleOut("text-align", style.getAlignment(), ALIGN);
-            styleOut("vertical-align", style.getAlignment(), VERTICAL_ALIGN);
+            styleOut("vertical-align", style.getVerticalAlignment(), VERTICAL_ALIGN);
         }
         helper.colorStyles(style, out);
     }
 
     private void fontStyle(Font font) {
-        if (font.getBoldweight() >= Font.BOLDWEIGHT_BOLD) {
+        if (font.getBold()) {
             out.format("  font-weight: bold;%n");
         }
         if (font.getItalic()) {
@@ -177,7 +164,7 @@ public class StylerHelper {
     private Color getColor(Font font) {
         if (helper instanceof HSSFHtmlHelper) {
             return ((HSSFWorkbook) sheet.getWorkbook()).getCustomPalette()
-                .getColor(font.getColor());
+                    .getColor(font.getColor());
         } else {
             return ((XSSFFont) font).getXSSFColor();
         }
@@ -211,9 +198,9 @@ public class StylerHelper {
 
     private class HSSFHtmlHelper implements HtmlHelper {
         private final HSSFWorkbook wb;
-        private final HSSFPalette  colors;
+        private final HSSFPalette colors;
 
-        private HSSFColor hssfAuto = new HSSFColor.AUTOMATIC();
+        private HSSFColor hssfAuto = HSSFColor.HSSFColorPredefined.AUTOMATIC.getColor();
 
         public HSSFHtmlHelper(HSSFWorkbook wb) {
             this.wb = wb;
@@ -235,7 +222,7 @@ public class StylerHelper {
             } else {
                 short[] rgb = color.getTriplet();
                 out.format("  %s: #%02x%02x%02x; /* index = %d */%n", attr, rgb[0], rgb[1], rgb[2],
-                    index);
+                        index);
             }
         }
 

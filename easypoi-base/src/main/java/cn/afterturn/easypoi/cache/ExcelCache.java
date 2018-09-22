@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
@@ -53,8 +52,6 @@ public final class ExcelCache {
                 }
             }
             return wb;
-        } catch (InvalidFormatException e) {
-            LOGGER.error(e.getMessage(), e);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {

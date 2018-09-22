@@ -40,17 +40,17 @@ public class PoiCssUtils {
             colors.put(colorName(color.getValue().getClass()), color.getValue());
         }
         // light gray
-        HSSFColor color = colors.get(colorName(HSSFColor.GREY_25_PERCENT.class));
+        HSSFColor color = colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getColor().getClass()));
         colors.put("lightgray", color);
         colors.put("lightgrey", color);
         // silver
-        colors.put("silver", colors.get(colorName(HSSFColor.GREY_40_PERCENT.class)));
+        colors.put("silver", colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_40_PERCENT.getColor().getClass())));
         // darkgray
-        color = colors.get(colorName(HSSFColor.GREY_50_PERCENT.class));
+        color = colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_50_PERCENT.getColor().getClass()));
         colors.put("darkgray", color);
         colors.put("darkgrey", color);
         // gray
-        color = colors.get(colorName(HSSFColor.GREY_80_PERCENT.class));
+        color = colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_80_PERCENT.getColor().getClass()));
         colors.put("gray", color);
         colors.put("grey", color);
     }
@@ -165,7 +165,7 @@ public class PoiCssUtils {
         if (StringUtils.isNotBlank(color)) {
             Color awtColor = Color.decode(color);
             if (awtColor != null) {
-                poiColor = new XSSFColor(awtColor); 
+                poiColor = new XSSFColor(awtColor,null);
             }
         }
         return poiColor;
