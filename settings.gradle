@@ -1,8 +1,0 @@
-rootProject.name = 'easypoi'
-include ':easypoi-base'
-include ':easypoi-web'
-include ':easypoi-annotation'
-
-project(':easypoi-base').projectDir = "$rootDir/easypoi-base" as File
-project(':easypoi-web').projectDir = "$rootDir/easypoi-web" as File
-project(':easypoi-annotation').projectDir = "$rootDir/easypoi-annotation" as File
