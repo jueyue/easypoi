@@ -70,11 +70,11 @@ public class ExportParams extends ExcelBaseParams {
     /**
      * 表头颜色
      */
-    private short color = HSSFColor.WHITE.index;
+    private short color = HSSFColor.HSSFColorPredefined.WHITE.getIndex();
     /**
      * 属性说明行的颜色 例如:HSSFColor.SKY_BLUE.index 默认
      */
-    private short headerColor = HSSFColor.SKY_BLUE.index;
+    private short headerColor = HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex();
     /**
      * Excel 导出版本
      */

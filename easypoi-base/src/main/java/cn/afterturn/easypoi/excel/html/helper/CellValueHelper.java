@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -49,7 +50,7 @@ public class CellValueHelper {
     private void cacheFontInfo(Workbook wb) {
         for (short i = 0, le = wb.getNumberOfFonts(); i < le; i++) {
             Font font = wb.getFontAt(i);
-            fontCache.put(font.getBoldweight() + "_" + font.getItalic() + "_" + font.getFontName()
+            fontCache.put(font.getBold() + "_" + font.getItalic() + "_" + font.getFontName()
                           + "_" + font.getFontHeightInPoints() + "_" + font.getColor(),
                 font.getIndex() + "");
         }
@@ -57,11 +58,11 @@ public class CellValueHelper {
     }
 
     public String getHtmlValue(Cell cell) {
-        if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType()
-            || Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-            cell.setCellType(Cell.CELL_TYPE_STRING);
+        if (CellType.BOOLEAN == cell.getCellType()
+            || CellType.NUMERIC == cell.getCellType()) {
+            cell.setCellType(CellType.STRING);
             return cell.getStringCellValue();
-        } else if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
+        } else if (CellType.STRING == cell.getCellType()) {
             if (cell.getRichStringCellValue().numFormattingRuns() == 0) {
                 return XmlEscapers.xmlContentEscaper().escape(cell.getStringCellValue());
             } else if (is07) {
@@ -135,7 +136,7 @@ public class CellValueHelper {
 
     private String getFontIndex(XSSFFont font) {
         return fontCache
-            .get(font.getBoldweight() + "_" + font.getItalic() + "_" + font.getFontName() + "_"
+            .get(font.getBold() + "_" + font.getItalic() + "_" + font.getFontName() + "_"
                  + font.getFontHeightInPoints() + "_" + font.getColor());
     }
 }

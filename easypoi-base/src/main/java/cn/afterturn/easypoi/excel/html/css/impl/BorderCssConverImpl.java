@@ -23,6 +23,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -109,31 +110,31 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
             } catch (Exception e) {
                 log.error("Set Border Style Error Caused.", e);
             }
-            short shortValue = -1;
+            BorderStyle shortValue = BorderStyle.NONE;
             // empty or solid
             if (StringUtils.isBlank(styleValue) || "solid".equals(styleValue)) {
                 if (width > 2) {
-                    shortValue = CellStyle.BORDER_THICK;
+                    shortValue = BorderStyle.THICK;
                 } else if (width > 1) {
-                    shortValue = CellStyle.BORDER_MEDIUM;
+                    shortValue = BorderStyle.MEDIUM;
                 } else {
-                    shortValue = CellStyle.BORDER_THIN;
+                    shortValue = BorderStyle.THIN;
                 }
             } else if (ArrayUtils.contains(new String[] { NONE, HIDDEN }, styleValue)) {
-                shortValue = CellStyle.BORDER_NONE;
+                shortValue = BorderStyle.NONE;
             } else if (DOUBLE.equals(styleValue)) {
-                shortValue = CellStyle.BORDER_DOUBLE;
+                shortValue = BorderStyle.DOUBLE;
             } else if (DOTTED.equals(styleValue)) {
-                shortValue = CellStyle.BORDER_DOTTED;
+                shortValue = BorderStyle.DOTTED;
             } else if (DASHED.equals(styleValue)) {
                 if (width > 1) {
-                    shortValue = CellStyle.BORDER_MEDIUM_DASHED;
+                    shortValue = BorderStyle.MEDIUM_DASHED;
                 } else {
-                    shortValue = CellStyle.BORDER_DASHED;
+                    shortValue = BorderStyle.DASHED;
                 }
             }
             // border style
-            if (shortValue != -1) {
+            if (shortValue != BorderStyle.NONE) {
                 try {
                     MethodUtils.invokeMethod(cellStyle, "setBorder" + posName, shortValue);
                 } catch (Exception e) {

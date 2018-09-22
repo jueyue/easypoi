@@ -1,12 +1,12 @@
 package cn.afterturn.easypoi.excel.html.css.impl;
 
 import static cn.afterturn.easypoi.excel.html.entity.HtmlCssConstant.*;
+import static org.apache.poi.ss.usermodel.IndexedColors.BLACK;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.hssf.util.HSSFColor.BLACK;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -41,7 +41,7 @@ public class TextCssConvertImpl implements ICssConvertToExcel, ICssConvertToHtml
             font.setFontHeightInPoints((short) fontSize);
         }
         if (BOLD.equals(style.getFont().getWeight())) {
-            font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            font.setBold(true);
         }
         String fontFamily = style.getFont().getFamily();
         if (StringUtils.isNotBlank(fontFamily)) {
