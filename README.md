@@ -13,9 +13,9 @@ EasyPoi Excel和 Word简易工具类
 	开发者:魔幻之翼 xf.key@163.com
 Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
-[官网](http://www.afterturn.cn/)
+[官网](http://opensource.afterturn.cn)
 
-[VIP技术服务](https://lemur.taobao.com)
+[VIP技术服务-账号忘了,还是ＱＱ吧](https://lemur.taobao.com)
 
     提供一年的技术支持服务
     提供10次内的1V1服务,限1小时
@@ -24,7 +24,7 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 **开发指南**
 
-**[http://www.afterturn.cn/doc/easypoi.html](http://www.afterturn.cn/doc/easypoi.html)**
+**[http://www.afterturn.cn/doc/easypoi.html](hhttp://opensource.afterturn.cn／doc/easypoi.html)**
 
 [API文档](https://apidoc.gitee.com/lemur/easypoi/)
 
@@ -41,6 +41,7 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
    - 新光新云
    - [图灵谷（北京）科技有限公司] (http://www.turingoal.com)
    - [多贝拉](https://www.duobeila.cn/)
+   － [河南八六三软件股份有限公司] (http://www.863soft.com/cn/)
    
     
 
