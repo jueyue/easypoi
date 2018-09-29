@@ -24,7 +24,7 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 **开发指南**
 
-**[http://opensource.afterturn.cn/doc/easypoi.html](http://opensource.afterturn.cn／doc/easypoi.html)**
+**[http://opensource.afterturn.cn/doc/easypoi.html](http://opensource.afterturn.cn/doc/easypoi.html)**
 
 [API文档](https://apidoc.gitee.com/lemur/easypoi/)
 
