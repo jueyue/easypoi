@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -59,13 +59,13 @@ import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
  */
 public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
-    private static final Logger  LOGGER            = LoggerFactory
+    private static final Logger LOGGER = LoggerFactory
             .getLogger(ExcelExportOfTemplateUtil.class);
 
     /**
      * 缓存TEMP 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
      */
-    private Set<String>          tempCreateCellSet = new HashSet<String>();
+    private Set<String> tempCreateCellSet = new HashSet<String>();
     /**
      * 模板参数,全局都用到
      */
@@ -73,9 +73,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     /**
      * 单元格合并信息
      */
-    private MergedRegionHelper   mergedRegionHelper;
+    private MergedRegionHelper mergedRegionHelper;
 
-    private TemplateSumHandler   templateSumHandler;
+    private TemplateSumHandler templateSumHandler;
 
     /**
      * 往Sheet 填充正常数据,根据表头信息 使用导入的部分逻辑,坐对象映射
@@ -159,8 +159,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()) {
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
                     cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
-            mergedRegionHelper.shiftRows(cell.getSheet(),cell.getRowIndex() + rowspan,(datas.size() - 1) * rowspan);
-            templateSumHandler.shiftRows(cell.getRowIndex() + rowspan,(datas.size() - 1) * rowspan);
+            mergedRegionHelper.shiftRows(cell.getSheet(), cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
+            templateSumHandler.shiftRows(cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
 
         }
         while (its.hasNext()) {
@@ -202,7 +202,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);
             if (entity.getList() != null) {
-                Collection<?> list = (Collection<?>) entity.getMethod().invoke(t, new Object[] {});
+                Collection<?> list = (Collection<?>) entity.getMethod().invoke(t, new Object[]{});
                 if (list != null && list.size() > maxHeight) {
                     maxHeight = list.size();
                 }
@@ -215,14 +215,18 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     public Workbook createExcleByTemplate(TemplateExportParams params, Class<?> pojoClass,
                                           Collection<?> dataSet, Map<String, Object> map) {
         // step 1. 判断模板的地址
-        if (params == null || map == null || StringUtils.isEmpty(params.getTemplateUrl())) {
+        if (params == null || map == null || (StringUtils.isEmpty(params.getTemplateUrl()) || params.getTemplateWb() == null)) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
         Workbook wb = null;
         // step 2. 判断模板的Excel类型,解析模板
         try {
             this.teplateParams = params;
-            wb = getCloneWorkBook();
+            if (params.getTemplateWb() != null) {
+                wb = params.getTemplateWb();
+            } else {
+                wb = getCloneWorkBook();
+            }
             if (wb instanceof XSSFWorkbook) {
                 super.type = ExcelType.XSSF;
             }
@@ -380,7 +384,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             Object t = its.next();
             setForEeachRowCellValue(true, cell.getRow(), cell.getColumnIndex(), t, columns, map,
                     rowspan, colspan, mergedRegionHelper);
-            if(cell.getRow().getCell(cell.getColumnIndex() + colspan) == null){
+            if (cell.getRow().getCell(cell.getColumnIndex() + colspan) == null) {
                 cell.getRow().createCell(cell.getColumnIndex() + colspan);
             }
             cell = cell.getRow().getCell(cell.getColumnIndex() + colspan);
@@ -452,15 +456,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             Object obj = PoiPublicUtil.getRealValue(oldString, map);
             //如何是数值 类型,就按照数值类型进行设置// 如果是图片就设置为图片
             if (obj instanceof ImageEntity) {
-                ImageEntity img = (ImageEntity)obj;
+                ImageEntity img = (ImageEntity) obj;
                 cell.setCellValue("");
-                if (img.getRowspan()>1 || img.getColspan() > 1){
+                if (img.getRowspan() > 1 || img.getColspan() > 1) {
                     img.setHeight(0);
-                    PoiMergeCellUtil.addMergedRegion(cell.getSheet(),cell.getRowIndex(),
-                            cell.getRowIndex() + img.getRowspan() - 1, cell.getColumnIndex(), cell.getColumnIndex() + img.getColspan() -1);
+                    PoiMergeCellUtil.addMergedRegion(cell.getSheet(), cell.getRowIndex(),
+                            cell.getRowIndex() + img.getRowspan() - 1, cell.getColumnIndex(), cell.getColumnIndex() + img.getColspan() - 1);
                 }
-                createImageCell(cell,img.getHeight(),img.getUrl(),img.getData());
-            }else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
+                createImageCell(cell, img.getHeight(), img.getUrl(), img.getData());
+            } else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
                 cell.setCellValue(Double.parseDouble(obj.toString()));
                 cell.setCellType(CellType.NUMERIC);
             } else {
@@ -530,13 +534,13 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         for (int k = 0; k < rowspan; k++) {
             int ci = columnIndex;//cell的序号
 
-            short high=columns.get(0).getHeight();
-            int n=k;
-            while (n>0) {
-                if ( columns.get(n * colspan).getHeight()==0) {
+            short high = columns.get(0).getHeight();
+            int n = k;
+            while (n > 0) {
+                if (columns.get(n * colspan).getHeight() == 0) {
                     n--;
                 } else {
-                    high= columns.get(n * colspan).getHeight();
+                    high = columns.get(n * colspan).getHeight();
                     break;
                 }
             }
@@ -569,11 +573,11 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     obj = eval(tempStr, map);
                     val = obj.toString();
                 }
-                if (obj != null  && obj instanceof ImageEntity) {
-                    ImageEntity img = (ImageEntity)obj;
+                if (obj != null && obj instanceof ImageEntity) {
+                    ImageEntity img = (ImageEntity) obj;
                     row.getCell(ci).setCellValue("");
-                    createImageCell(row.getCell(ci),img.getHeight(),img.getUrl(),img.getData());
-                }else if (isNumber && StringUtils.isNotEmpty(val)) {
+                    createImageCell(row.getCell(ci), img.getHeight(), img.getUrl(), img.getData());
+                } else if (isNumber && StringUtils.isNotEmpty(val)) {
                     row.getCell(ci).setCellValue(Double.parseDouble(val));
                     row.getCell(ci).setCellType(CellType.NUMERIC);
                 } else {
@@ -594,8 +598,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 if ((params.getRowspan() != 1 || params.getColspan() != 1)
                         && !mergedRegionHelper.isMergedRegion(row.getRowNum() + 1, ci)) {
                     PoiMergeCellUtil.addMergedRegion(row.getSheet(), row.getRowNum(),
-                                    row.getRowNum() + params.getRowspan() - 1, ci,
-                                    ci + params.getColspan() - 1);
+                            row.getRowNum() + params.getRowspan() - 1, ci,
+                            ci + params.getColspan() - 1);
                 }
                 ci = ci + params.getColspan();
             }
@@ -644,8 +648,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             //保存col 的开始列
             int startIndex = cell.getColumnIndex();
             Row row = cell.getRow();
-            while (index  < row.getLastCellNum()) {
-                int  colSpan = columns.get(columns.size() - 1) != null
+            while (index < row.getLastCellNum()) {
+                int colSpan = columns.get(columns.size() - 1) != null
                         ? columns.get(columns.size() - 1).getColspan() : 1;
                 index += colSpan;
 
@@ -682,7 +686,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     columns.add(getExcelTemplateParams(cellStringString.replace(END_STR, EMPTY),
                             cell, mergedRegionHelper));
                     //补全缺失的cell(合并单元格后面的)
-                    int lastCellColspan =columns.get(columns.size() - 1).getColspan();
+                    int lastCellColspan = columns.get(columns.size() - 1).getColspan();
                     for (int i = 1; i < lastCellColspan; i++) {
                         //添加合并的单元格,这些单元可能不是空,但是没有值,所以也需要跳过
                         columns.add(null);
@@ -707,7 +711,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             colspan += columns.get(i) != null ? columns.get(i).getColspan() : 0;
         }
         colspan = colspan / rowspan;
-        return new Object[] { rowspan, colspan, columns };
+        return new Object[]{rowspan, colspan, columns};
     }
 
     /**
