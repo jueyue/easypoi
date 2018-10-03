@@ -38,7 +38,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.PushbackInputStream;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -69,7 +68,7 @@ public class ExcelImportService extends ImportBaseService {
 
     private CellValueService cellValueServer;
 
-    private boolean verfiyFail = false;
+    private boolean verifyFail = false;
     /**
      * 异常数据styler
      */
@@ -121,7 +120,7 @@ public class ExcelImportService extends ImportBaseService {
                         saveFieldValue(params, entity, cell, param.getExcelParams(), titleString, row);
                     } catch (ExcelImportException e) {
                         // 如果需要去校验就忽略,这个错误,继续执行
-                        if(params.isNeedVerfiy() && ExcelImportEnum.GET_VALUE_ERROR.equals(e.getType())){
+                        if(params.isNeedVerify() && ExcelImportEnum.GET_VALUE_ERROR.equals(e.getType())){
                             errorMsg.append(" ").append(titleString).append(ExcelImportEnum.GET_VALUE_ERROR.getMsg());
                         }
                     }
@@ -235,7 +234,7 @@ public class ExcelImportService extends ImportBaseService {
                                     saveFieldValue(params, object, cell, excelParams, titleString, row);
                                 } catch (ExcelImportException e) {
                                     // 如果需要去校验就忽略,这个错误,继续执行
-                                    if(params.isNeedVerfiy() && ExcelImportEnum.GET_VALUE_ERROR.equals(e.getType())){
+                                    if(params.isNeedVerify() && ExcelImportEnum.GET_VALUE_ERROR.equals(e.getType())){
                                         errorMsg.append(" ").append(titleString).append(ExcelImportEnum.GET_VALUE_ERROR.getMsg());
                                     }
                                 }
@@ -278,8 +277,8 @@ public class ExcelImportService extends ImportBaseService {
                                           Class<?> pojoClass, StringBuilder fieldErrorMsg) {
         boolean isAdd = true;
         Cell cell = null;
-        if (params.isNeedVerfiy()) {
-            String errorMsg = PoiValidationUtil.validation(object, params.getVerfiyGroup());
+        if (params.isNeedVerify()) {
+            String errorMsg = PoiValidationUtil.validation(object, params.getVerifyGroup());
             if (StringUtils.isNotEmpty(errorMsg)) {
                 cell = row.createCell(row.getLastCellNum());
                 cell.setCellValue(errorMsg);
@@ -288,7 +287,7 @@ public class ExcelImportService extends ImportBaseService {
                     model.setErrorMsg(errorMsg);
                 }
                 isAdd = false;
-                verfiyFail = true;
+                verifyFail = true;
             }
         }
         if (params.getVerifyHandler() != null) {
@@ -305,10 +304,10 @@ public class ExcelImportService extends ImportBaseService {
                             ? model.getErrorMsg() + "," : "") + result.getMsg());
                 }
                 isAdd = false;
-                verfiyFail = true;
+                verifyFail = true;
             }
         }
-        if((params.isNeedVerfiy() || params.getVerifyHandler() != null) && fieldErrorMsg.length() > 0){
+        if((params.isNeedVerify() || params.getVerifyHandler() != null) && fieldErrorMsg.length() > 0){
             if (object instanceof IExcelModel) {
                 IExcelModel model = (IExcelModel) object;
                 model.setErrorMsg((StringUtils.isNoneBlank(model.getErrorMsg())
@@ -320,7 +319,7 @@ public class ExcelImportService extends ImportBaseService {
             cell.setCellValue((StringUtils.isNoneBlank(cell.getStringCellValue())
                     ? cell.getStringCellValue() + "," : "")+ fieldErrorMsg.toString());
             isAdd = false;
-            verfiyFail = true;
+            verifyFail = true;
         }
         if (cell != null) {
             cell.setCellStyle(errorCellStyle);
@@ -467,7 +466,7 @@ public class ExcelImportService extends ImportBaseService {
                     importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
                     importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
                     importResult.setFailList(failCollection);
-                    importResult.setVerfiyFail(verfiyFail);
+                    importResult.setVerfiyFail(verifyFail);
                 } finally {
                     successIs.close();
                 }

@@ -16,6 +16,9 @@
 package cn.afterturn.easypoi.excel.entity;
 
 import cn.afterturn.easypoi.excel.export.styler.ExcelExportStylerDefaultImpl;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.InputStream;
 
 /**
  * 模板导出参数设置
@@ -34,6 +37,10 @@ public class TemplateExportParams extends ExcelBaseParams {
      * 模板的路径
      */
     private String    templateUrl;
+    /**
+     * 模板
+     */
+    private Workbook  templateWb;
 
     /**
      * 需要导出的第几个 sheetNum,默认是第0个
@@ -205,4 +212,11 @@ public class TemplateExportParams extends ExcelBaseParams {
 		this.colForEach = colForEach;
 	}
 
+    public void setTemplateWb(Workbook templateWb) {
+        this.templateWb = templateWb;
+    }
+
+    public Workbook getTemplateWb() {
+        return templateWb;
+    }
 }

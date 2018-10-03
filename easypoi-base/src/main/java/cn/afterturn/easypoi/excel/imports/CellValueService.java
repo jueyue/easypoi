@@ -180,6 +180,41 @@ public class CellValueService {
         return null;
     }
 
+
+    /**
+     * 获取cell的值
+     *  @param object
+     * @param cell
+     * @param excelParams
+     * @param titleString
+     * @param dictHandler
+     */
+    public Object getValue(IExcelDataHandler<?> dataHandler, Object object, String cell,
+                           Map<String, ExcelImportEntity> excelParams,
+                           String titleString, IExcelDictHandler dictHandler) throws Exception {
+        ExcelImportEntity entity = excelParams.get(titleString);
+        String classFullName = "class java.lang.Object";
+        Class clazz = null;
+        if (!(object instanceof Map)) {
+            Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
+                    ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
+            Type[] ts = setMethod.getGenericParameterTypes();
+            classFullName = ts[0].toString();
+            clazz = (Class) ts[0];
+        }
+        Object result = cell;
+        if (entity != null) {
+            result = handlerSuffix(entity.getSuffix(), result);
+            result = replaceValue(entity.getReplace(), result);
+            result = replaceValue(entity.getReplace(), result);
+            if (dictHandler != null && StringUtils.isNoneBlank(entity.getDict())) {
+                dictHandler.toValue(entity.getDict(), object, entity.getName(), result);
+            }
+        }
+        result = handlerValue(dataHandler, object, result, titleString);
+        return getValueByType(classFullName, result, entity, clazz);
+    }
+
     /**
      * 获取cell的值
      *  @param object

@@ -63,11 +63,11 @@ public class ImportParams extends ExcelBaseParams {
     /**
      * 校验组
      */
-    private Class[]             verfiyGroup         = null;
+    private Class[]             verifyGroup = null;
     /**
      * 是否需要校验上传的Excel,默认为false
      */
-    private boolean             needVerfiy       = false;
+    private boolean             needVerify = false;
     /**
      * 校验处理接口
      */
@@ -135,7 +135,6 @@ public class ImportParams extends ExcelBaseParams {
         this.headRows = headRows;
     }
 
-    @Deprecated
     public void setKeyIndex(Integer keyIndex) {
         this.keyIndex = keyIndex;
     }
@@ -180,12 +179,12 @@ public class ImportParams extends ExcelBaseParams {
         this.startSheetIndex = startSheetIndex;
     }
 
-    public boolean isNeedVerfiy() {
-        return needVerfiy;
+    public boolean isNeedVerify() {
+        return needVerify;
     }
 
-    public void setNeedVerfiy(boolean needVerfiy) {
-        this.needVerfiy = needVerfiy;
+    public void setNeedVerify(boolean needVerify) {
+        this.needVerify = needVerify;
     }
 
     public String[] getImportFields() {
@@ -224,12 +223,12 @@ public class ImportParams extends ExcelBaseParams {
         this.readSingleCell = readSingleCell;
     }
 
-    public Class[] getVerfiyGroup() {
-        return verfiyGroup;
+    public Class[] getVerifyGroup() {
+        return verifyGroup;
     }
 
-    public void setVerfiyGroup(Class[] verfiyGroup) {
-        this.verfiyGroup = verfiyGroup;
+    public void setVerifyGroup(Class[] verifyGroup) {
+        this.verifyGroup = verifyGroup;
     }
 
     public boolean isNeedCheckOrder() {
