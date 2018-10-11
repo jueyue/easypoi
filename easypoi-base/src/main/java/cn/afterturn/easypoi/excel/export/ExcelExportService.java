@@ -82,7 +82,7 @@ public class ExcelExportService extends BaseExportService {
         for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
             ExcelExportEntity entity = excelParams.get(i);
             // 加入换了groupName或者结束就，就把之前的那个换行
-            if (StringUtils.isBlank(entity.getGroupName()) || !entity.getGroupName().equals(excelParams.get(i - 1).getGroupName())) {
+            if (StringUtils.isBlank(entity.getGroupName()) || i = 0 || !entity.getGroupName().equals(excelParams.get(i - 1).getGroupName())) {
                 if (groupCellLength > 1) {
                     sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength, cellIndex - 1));
                 }
