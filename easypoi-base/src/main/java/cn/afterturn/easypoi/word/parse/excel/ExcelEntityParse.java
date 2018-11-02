@@ -25,6 +25,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -198,12 +200,34 @@ public class ExcelEntityParse extends ExportCommonService {
     private void setCellValue(XWPFTableRow row, Object value, int cellNum) {
         if (row.getCell(cellNum++) != null) {
             row.getCell(cellNum - 1).setText(value == null ? "" : value.toString());
-            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),
-                    value == null ? "" : value.toString());
+            setWordText(row, value);
         } else {
-            PoiPublicUtil.setWordText(row.createCell().addParagraph().createRun(),
-                    value == null ? "" : value.toString());
+            setWordText(row, value);
         }
+    }
+
+    /**
+     * 解决word导出表格多出的换行符问题
+     * @param row
+     * @param value
+     */
+    private void setWordText(XWPFTableRow row, Object value) {
+        XWPFTableCell cell = row.createCell();
+        List<XWPFParagraph> paragraphs = cell.getParagraphs();
+        XWPFParagraph paragraph = null;
+        XWPFRun run = null;
+        if(paragraphs != null && paragraphs.size() > 0) {
+            paragraph = paragraphs.get(0);
+        } else {
+            paragraph = row.createCell().addParagraph();
+        }
+        List<XWPFRun> runs = paragraph.getRuns();
+        if(runs != null && runs.size() > 0) {
+            run = runs.get(0);
+        } else {
+            run = paragraph.createRun();
+        }
+        PoiPublicUtil.setWordText(run, value == null ? "" : value.toString());
     }
 
     /**
