@@ -14,6 +14,7 @@ import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 import cn.afterturn.easypoi.util.PoiValidationUtil;
+import cn.afterturn.easypoi.util.UnicodeInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.ss.usermodel.Cell;
@@ -57,6 +58,9 @@ public class CsvImportService extends ImportBaseService {
                 }
                 getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null, null);
             }
+            if(PoiPublicUtil.hasBom(inputstream)){
+                inputstream = new UnicodeInputStream(inputstream);
+            }
             BufferedReader rows = new BufferedReader(new InputStreamReader(inputstream, params.getEncoding()));
             for (int j = 0; j < params.getTitleRows(); j++) {
                 rows.readLine();
@@ -76,8 +80,11 @@ public class CsvImportService extends ImportBaseService {
             Object object = null;
             String[] cells;
             while ((row = rows.readLine()) != null) {
+                if(StringUtils.isEmpty(row)){
+                    continue;
+                }
                 errorMsg = new StringBuilder();
-                cells = row.split(params.getSpiltMark());
+                cells = row.split(params.getSpiltMark(),-1);
                 // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
                 // keyIndex 如果为空就不处理,仍然处理这一行
                 if (params.getKeyIndex() != null && (cells[params.getKeyIndex()] == null

@@ -1,6 +1,6 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -18,8 +18,7 @@ package cn.afterturn.easypoi.util;
 import static cn.afterturn.easypoi.util.PoiElUtil.*;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
@@ -85,7 +84,7 @@ public final class PoiPublicUtil {
 
     /**
      * 彻底创建一个对象
-     * 
+     *
      * @param clazz
      * @return
      */
@@ -121,7 +120,7 @@ public final class PoiPublicUtil {
 
     /**
      * 获取class的 包括父类的
-     * 
+     *
      * @param clazz
      * @return
      */
@@ -159,9 +158,24 @@ public final class PoiPublicUtil {
         return strFileExtendName;
     }
 
+
+    /**
+     * 判断流是否含有BOM
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    public static boolean hasBom(InputStream in) throws IOException {
+        byte[] head = new byte[3];
+        in.read(head);
+        if(head[0]==-17 && head[1]==-69 && head[2] ==-65) {
+            return true;
+        }
+        return false;
+    }
     /**
      * 获取Excel2003图片
-     * 
+     *
      * @param sheet
      *            当前sheet对象
      * @param workbook
@@ -192,7 +206,7 @@ public final class PoiPublicUtil {
 
     /**
      * 获取Excel2007图片
-     * 
+     *
      * @param sheet
      *            当前sheet对象
      * @param workbook
@@ -222,7 +236,7 @@ public final class PoiPublicUtil {
 
     /**
      * 判断是不是集合的实现类
-     * 
+     *
      * @param clazz
      * @return
      */
@@ -232,7 +246,7 @@ public final class PoiPublicUtil {
 
     /**
      * 是不是java基础类
-     * 
+     *
      * @param field
      * @return
      */
@@ -253,7 +267,7 @@ public final class PoiPublicUtil {
 
     /**
      * 判断是否不要在这个excel操作中
-     * 
+     *
      * @param exclusionsList
      * @param field
      * @param targetId
@@ -285,7 +299,7 @@ public final class PoiPublicUtil {
 
     /**
      * 判断是不是使用
-     * 
+     *
      * @param exportName
      * @param targetId
      * @return
@@ -317,7 +331,7 @@ public final class PoiPublicUtil {
      *   2013-11-20
      *@param entity
      *@return  (byte[]) isAndType[0],(Integer)isAndType[1]
-     * @throws Exception 
+     * @throws Exception
      */
     public static Object[] getIsAndType(ImageEntity entity) throws Exception {
         Object[] result = new Object[2];
@@ -335,7 +349,7 @@ public final class PoiPublicUtil {
 
     /**
      * 获取参数值
-     * 
+     *
      * @param params
      * @param object
      * @return
@@ -354,7 +368,7 @@ public final class PoiPublicUtil {
 
     /**
      * 解析数据
-     * 
+     *
      * @author JueYue
      *  2013-11-16
      * @return
@@ -379,7 +393,7 @@ public final class PoiPublicUtil {
 
     /**
      * 通过遍历过去对象值
-     * 
+     *
      * @param object
      * @param paramsArr
      * @param index
