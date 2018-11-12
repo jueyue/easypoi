@@ -21,10 +21,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -58,8 +55,15 @@ public class CsvImportService extends ImportBaseService {
                 }
                 getAllExcelField(targetId, fileds, excelParams, excelCollection, pojoClass, null, null);
             }
-            if(PoiPublicUtil.hasBom(inputstream)){
+
+            inputstream = new PushbackInputStream(inputstream, 3);
+            byte[] head = new byte[3];
+            inputstream.read(head);
+            if (head[0] == -17 && head[1] == -69 && head[2] == -65) {
+                ((PushbackInputStream) inputstream).unread(head, 0, 3);
                 inputstream = new UnicodeInputStream(inputstream);
+            } else {
+                ((PushbackInputStream) inputstream).unread(head, 0, 3);
             }
             BufferedReader rows = new BufferedReader(new InputStreamReader(inputstream, params.getEncoding()));
             for (int j = 0; j < params.getTitleRows(); j++) {
@@ -80,11 +84,11 @@ public class CsvImportService extends ImportBaseService {
             Object object = null;
             String[] cells;
             while ((row = rows.readLine()) != null) {
-                if(StringUtils.isEmpty(row)){
+                if (StringUtils.isEmpty(row)) {
                     continue;
                 }
                 errorMsg = new StringBuilder();
-                cells = row.split(params.getSpiltMark(),-1);
+                cells = row.split(params.getSpiltMark(), -1);
                 // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
                 // keyIndex 如果为空就不处理,仍然处理这一行
                 if (params.getKeyIndex() != null && (cells[params.getKeyIndex()] == null

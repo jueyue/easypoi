@@ -39,8 +39,8 @@ public final class CsvImportUtil {
      * @param params
      * @return
      */
-    public static <T> List<T> importCsv(InputStream inputstream, Class<?> pojoClass,
+    public static void importCsv(InputStream inputstream, Class<?> pojoClass,
                                         CsvImportParams params, ICsvSaveDataHandler saveDataHandler) {
-        return new CsvImportService().readExcel(inputstream, pojoClass, params, saveDataHandler);
+        new CsvImportService().readExcel(inputstream, pojoClass, params, saveDataHandler);
     }
 }
