@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
+ * Csv 导入服务
  * @author by jueyue on 18-10-3.
  */
 public class CsvImportService extends ImportBaseService {
@@ -59,6 +60,7 @@ public class CsvImportService extends ImportBaseService {
             inputstream = new PushbackInputStream(inputstream, 3);
             byte[] head = new byte[3];
             inputstream.read(head);
+            // 判断 UTF8 是不是有 BOM
             if (head[0] == -17 && head[1] == -69 && head[2] == -65) {
                 ((PushbackInputStream) inputstream).unread(head, 0, 3);
                 inputstream = new UnicodeInputStream(inputstream);

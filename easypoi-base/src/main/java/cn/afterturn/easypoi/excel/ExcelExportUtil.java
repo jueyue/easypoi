@@ -39,7 +39,7 @@ import cn.afterturn.easypoi.excel.export.template.ExcelExportOfTemplateUtil;
  * @version 1.0
  *  2013-10-17
  */
-public class ExcelExportUtil {
+public final class ExcelExportUtil {
 
     private ExcelExportUtil() {
     }
