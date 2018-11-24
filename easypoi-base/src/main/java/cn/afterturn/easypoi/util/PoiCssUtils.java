@@ -1,62 +1,45 @@
 package cn.afterturn.easypoi.util;
 
-import java.util.Map;
-import java.awt.Color;
-import org.slf4j.Logger;
-import java.util.HashMap;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import org.slf4j.LoggerFactory;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * @version 2.0.1
  * @author Shaun Chyxion
  * @author JueYue
+ * @version 2.0.1
  */
 public class PoiCssUtils {
-    private static final Logger           log                       = LoggerFactory
-        .getLogger(PoiCssUtils.class);
-    // matches #rgb
-    private static final String           COLOR_PATTERN_VALUE_SHORT = "^(#(?:[a-f]|\\d){3})$";
-    // matches #rrggbb
-    private static final String           COLOR_PATTERN_VALUE_LONG  = "^(#(?:[a-f]|\\d{2}){3})$";
-    // matches #rgb(r, g, b)
-    private static final String           COLOR_PATTERN_RGB         = "^(rgb\\s*\\(\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*\\))$";
+    private static final Logger log = LoggerFactory
+            .getLogger(PoiCssUtils.class);
+    /**
+     * matches #rgb
+     */
+    private static final String COLOR_PATTERN_VALUE_SHORT = "^(#(?:[a-f]|\\d){3})$";
+    /**
+     * matches #rrggbb
+     */
+    private static final String COLOR_PATTERN_VALUE_LONG = "^(#(?:[a-f]|\\d{2}){3})$";
+    /**
+     * matches #rgb(r, g, b)
+     **/
+    private static final String COLOR_PATTERN_RGB = "^(rgb\\s*\\(\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*\\))$";
 
-    private static final Pattern           COLOR_PATTERN_VALUE_SHORT_PATTERN  = Pattern.compile("([a-f]|\\d)");
-    private static final Pattern           INT_PATTERN  = Pattern.compile("^(\\d+)(?:\\w+|%)?$");
-    private static final Pattern           INT_AND_PER_PATTERN  = Pattern.compile("^(\\d*\\.?\\d+)\\s*(%)?$");
-
-    // color name -> POI Color
-    private static Map<String, HSSFColor> colors                    = new HashMap<String, HSSFColor>();
-    // static init
-    static {
-        for (Map.Entry<Integer, HSSFColor> color : HSSFColor.getIndexHash().entrySet()) {
-            colors.put(colorName(color.getValue().getClass()), color.getValue());
-        }
-        // light gray
-        HSSFColor color = colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getColor().getClass()));
-        colors.put("lightgray", color);
-        colors.put("lightgrey", color);
-        // silver
-        colors.put("silver", colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_40_PERCENT.getColor().getClass())));
-        // darkgray
-        color = colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_50_PERCENT.getColor().getClass()));
-        colors.put("darkgray", color);
-        colors.put("darkgrey", color);
-        // gray
-        color = colors.get(colorName(HSSFColor.HSSFColorPredefined.GREY_80_PERCENT.getColor().getClass()));
-        colors.put("gray", color);
-        colors.put("grey", color);
-    }
+    private static final Pattern COLOR_PATTERN_VALUE_SHORT_PATTERN = Pattern.compile("([a-f]|\\d)");
+    private static final Pattern INT_PATTERN = Pattern.compile("^(\\d+)(?:\\w+|%)?$");
+    private static final Pattern INT_AND_PER_PATTERN = Pattern.compile("^(\\d*\\.?\\d+)\\s*(%)?$");
 
     /**
      * get color name
+     *
      * @param color HSSFColor
      * @return color name
      */
@@ -66,6 +49,7 @@ public class PoiCssUtils {
 
     /**
      * get int value of string
+     *
      * @param strValue string value
      * @return int value
      */
@@ -81,7 +65,8 @@ public class PoiCssUtils {
     }
 
     /**
-     * check number string 
+     * check number string
+     *
      * @param strValue string
      * @return true if string is number
      */
@@ -91,6 +76,7 @@ public class PoiCssUtils {
 
     /**
      * process color
+     *
      * @param color color to process
      * @return color after process
      */
@@ -121,12 +107,12 @@ public class PoiCssUtils {
                 if (m.matches()) {
                     log.debug("RGB Color [{}] Found.", color);
                     colorRtn = convertColor(calcColorValue(m.group(2)), calcColorValue(m.group(3)),
-                        calcColorValue(m.group(4)));
+                            calcColorValue(m.group(4)));
                     log.debug("Translate RGB Color [{}] To Hex [{}].", color, colorRtn);
                 }
             }
             // color name, red, green, ...
-            else if ((poiColor = getColor(color)) != null) {
+            else if ((poiColor = getHssfColor(color)) != null) {
                 log.debug("Color Name [{}] Found.", color);
                 short[] t = poiColor.getTriplet();
                 colorRtn = convertColor(t[0], t[1], t[2]);
@@ -136,16 +122,116 @@ public class PoiCssUtils {
         return colorRtn;
     }
 
+    private static HSSFColor getHssfColor(String color) {
+        String tmpColor = color.replace("_", "").toUpperCase();
+        switch (tmpColor) {
+            case "BLACK":
+                return HSSFColor.HSSFColorPredefined.BLACK.getColor();
+            case "BROWN":
+                return HSSFColor.HSSFColorPredefined.BROWN.getColor();
+            case "OLIVEGREEN":
+                return HSSFColor.HSSFColorPredefined.OLIVE_GREEN.getColor();
+            case "DARKGREEN":
+                return HSSFColor.HSSFColorPredefined.DARK_GREEN.getColor();
+            case "DARKTEAL":
+                return HSSFColor.HSSFColorPredefined.DARK_TEAL.getColor();
+            case "DARKBLUE":
+                return HSSFColor.HSSFColorPredefined.DARK_BLUE.getColor();
+            case "INDIGO":
+                return HSSFColor.HSSFColorPredefined.INDIGO.getColor();
+            case "GREY80PERCENT":
+                return HSSFColor.HSSFColorPredefined.GREY_80_PERCENT.getColor();
+            case "ORANGE":
+                return HSSFColor.HSSFColorPredefined.ORANGE.getColor();
+            case "DARKYELLOW":
+                return HSSFColor.HSSFColorPredefined.DARK_YELLOW.getColor();
+            case "GREEN":
+                return HSSFColor.HSSFColorPredefined.GREEN.getColor();
+            case "TEAL":
+                return HSSFColor.HSSFColorPredefined.TEAL.getColor();
+            case "BLUE":
+                return HSSFColor.HSSFColorPredefined.BLUE.getColor();
+            case "BLUEGREY":
+                return HSSFColor.HSSFColorPredefined.BLUE_GREY.getColor();
+            case "GREY50PERCENT":
+                return HSSFColor.HSSFColorPredefined.GREY_50_PERCENT.getColor();
+            case "RED":
+                return HSSFColor.HSSFColorPredefined.RED.getColor();
+            case "LIGHTORANGE":
+                return HSSFColor.HSSFColorPredefined.LIGHT_ORANGE.getColor();
+            case "LIME":
+                return HSSFColor.HSSFColorPredefined.LIME.getColor();
+            case "SEAGREEN":
+                return HSSFColor.HSSFColorPredefined.SEA_GREEN.getColor();
+            case "AQUA":
+                return HSSFColor.HSSFColorPredefined.AQUA.getColor();
+            case "LIGHTBLUE":
+                return HSSFColor.HSSFColorPredefined.LIGHT_BLUE.getColor();
+            case "VIOLET":
+                return HSSFColor.HSSFColorPredefined.VIOLET.getColor();
+            case "GREY40PERCENT":
+                return HSSFColor.HSSFColorPredefined.GREY_40_PERCENT.getColor();
+            case "GOLD":
+                return HSSFColor.HSSFColorPredefined.GOLD.getColor();
+            case "YELLOW":
+                return HSSFColor.HSSFColorPredefined.YELLOW.getColor();
+            case "BRIGHTGREEN":
+                return HSSFColor.HSSFColorPredefined.BRIGHT_GREEN.getColor();
+            case "TURQUOISE":
+                return HSSFColor.HSSFColorPredefined.TURQUOISE.getColor();
+            case "DARKRED":
+                return HSSFColor.HSSFColorPredefined.DARK_RED.getColor();
+            case "SKYBLUE":
+                return HSSFColor.HSSFColorPredefined.SKY_BLUE.getColor();
+            case "PLUM":
+                return HSSFColor.HSSFColorPredefined.PLUM.getColor();
+            case "GREY25PERCENT":
+                return HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getColor();
+            case "ROSE":
+                return HSSFColor.HSSFColorPredefined.ROSE.getColor();
+            case "LIGHTYELLOW":
+                return HSSFColor.HSSFColorPredefined.LIGHT_YELLOW.getColor();
+            case "LIGHTGREEN":
+                return HSSFColor.HSSFColorPredefined.LIGHT_GREEN.getColor();
+            case "LIGHTTURQUOISE":
+                return HSSFColor.HSSFColorPredefined.LIGHT_TURQUOISE.getColor();
+            case "PALEBLUE":
+                return HSSFColor.HSSFColorPredefined.PALE_BLUE.getColor();
+            case "LAVENDER":
+                return HSSFColor.HSSFColorPredefined.LAVENDER.getColor();
+            case "WHITE":
+                return HSSFColor.HSSFColorPredefined.WHITE.getColor();
+            case "CORNFLOWERBLUE":
+                return HSSFColor.HSSFColorPredefined.CORNFLOWER_BLUE.getColor();
+            case "LEMONCHIFFON":
+                return HSSFColor.HSSFColorPredefined.LEMON_CHIFFON.getColor();
+            case "MAROON":
+                return HSSFColor.HSSFColorPredefined.MAROON.getColor();
+            case "ORCHID":
+                return HSSFColor.HSSFColorPredefined.ORANGE.getColor();
+            case "CORAL":
+                return HSSFColor.HSSFColorPredefined.CORAL.getColor();
+            case "ROYALBLUE":
+                return HSSFColor.HSSFColorPredefined.ROYAL_BLUE.getColor();
+            case "LIGHTCORNFLOWERBLUE":
+                return HSSFColor.HSSFColorPredefined.LIGHT_CORNFLOWER_BLUE.getColor();
+            case "TAN":
+                return HSSFColor.HSSFColorPredefined.TAN.getColor();
+        }
+        return null;
+    }
+
     /**
      * parse color
+     *
      * @param workBook work book
-     * @param color string color
-     * @return HSSFColor 
+     * @param color    string color
+     * @return HSSFColor
      */
     public static HSSFColor parseColor(HSSFWorkbook workBook, String color) {
         HSSFColor poiColor = null;
         if (StringUtils.isNotBlank(color)) {
-            Color awtColor = Color.decode(color);
+            Color awtColor = getAwtColor(color);
             if (awtColor != null) {
                 int r = awtColor.getRed();
                 int g = awtColor.getGreen();
@@ -160,22 +246,39 @@ public class PoiCssUtils {
         return poiColor;
     }
 
+    private static Color getAwtColor(String color) {
+        HSSFColor hssfColor = getHssfColor(color);
+        if (hssfColor != null) {
+            short[] t = hssfColor.getTriplet();
+            return new Color(t[0], t[1], t[2]);
+        }
+        String tmpColor = color.replace("_", "").toLowerCase();
+        switch (tmpColor) {
+            case "lightgray":
+                return Color.LIGHT_GRAY;
+            case "gray":
+                return Color.GRAY;
+            case "darkgray":
+                return Color.DARK_GRAY;
+            case "pink":
+                return Color.PINK;
+            case "magenta":
+                return Color.MAGENTA;
+            case "cyan":
+                return Color.CYAN;
+        }
+        return Color.decode(color);
+    }
+
     public static XSSFColor parseColor(String color) {
         XSSFColor poiColor = null;
         if (StringUtils.isNotBlank(color)) {
-            Color awtColor = Color.decode(color);
+            Color awtColor = getAwtColor(color);
             if (awtColor != null) {
-                poiColor = new XSSFColor(awtColor,null);
+                poiColor = new XSSFColor(awtColor, null);
             }
         }
         return poiColor;
-    }
-
-    // --
-    // private methods
-
-    private static HSSFColor getColor(String color) {
-        return colors.get(color.replace("_", ""));
     }
 
     private static String convertColor(int r, int g, int b) {

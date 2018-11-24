@@ -1,67 +1,57 @@
 package cn.afterturn.easypoi.excel.html;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
+import cn.afterturn.easypoi.excel.entity.ExcelToHtmlParams;
+import cn.afterturn.easypoi.excel.html.helper.CellValueHelper;
+import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
+import cn.afterturn.easypoi.excel.html.helper.StyleHelper;
+import cn.afterturn.easypoi.util.PoiPublicUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.PictureData;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sun.misc.BASE64Encoder;
 
-import cn.afterturn.easypoi.excel.entity.ExcelToHtmlParams;
-import cn.afterturn.easypoi.excel.html.helper.CellValueHelper;
-import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
-import cn.afterturn.easypoi.excel.html.helper.StylerHelper;
-import cn.afterturn.easypoi.util.PoiPublicUtil;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Excel转换成Html 服务
+ *
  * @author JueYue
- *  2015年5月10日 上午11:41:15
+ * 2015年5月10日 上午11:41:15
  */
 public class ExcelToHtmlService {
 
-    private static final Logger           LOGGER         = LoggerFactory
-        .getLogger(ExcelToHtmlService.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(ExcelToHtmlService.class);
 
-    private static final SimpleDateFormat DATE_FORMAT    = new SimpleDateFormat("yyyy_MM_dd");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
 
-    private String                        today;
+    private String today;
 
-    private Workbook                      wb;
-    private int                           sheetNum;
-    private int                           cssRandom;
+    private Workbook wb;
+    private int sheetNum;
+    private int cssRandom;
 
     /*是不是完成界面*/
-    private boolean                       completeHTML;
-    private Formatter                     out;
+    private boolean completeHTML;
+    private Formatter out;
     /*已经完成范围处理*/
-    private boolean                       gotBounds;
-    private int                           firstColumn;
-    private int                           endColumn;
-    private String                        imageCachePath;
-    private static final String           COL_HEAD_CLASS = "colHeader";
+    private boolean gotBounds;
+    private int firstColumn;
+    private int endColumn;
+    private String imageCachePath;
+    private static final String COL_HEAD_CLASS = "colHeader";
     //private static final String ROW_HEAD_CLASS = "rowHeader";
 
-    private static final String           DEFAULTS_CLASS = "excelDefaults";
+    private static final String DEFAULTS_CLASS = "excelDefaults";
 
     //图片缓存
-    private Map<String, PictureData>      pictures       = new HashMap<String, PictureData>();
+    private Map<String, PictureData> pictures = new HashMap<String, PictureData>();
 
     public ExcelToHtmlService(ExcelToHtmlParams params) {
         this.wb = params.getWb();
@@ -79,13 +69,13 @@ public class ExcelToHtmlService {
                 out.format("<!DOCTYPE HTML>%n");
                 out.format("<html>%n");
                 out.format(
-                    "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">%n");
+                        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">%n");
                 out.format("<head>%n");
             }
             if (StringUtils.isNotEmpty(imageCachePath)) {
                 getPictures();
             }
-            new StylerHelper(wb, out, sheetNum, cssRandom);
+            new StyleHelper(wb, out, sheetNum, cssRandom);
             if (completeHTML) {
                 out.format("</head>%n");
                 out.format("<body>%n");
@@ -112,10 +102,10 @@ public class ExcelToHtmlService {
     private void getPictures() {
         if (wb instanceof XSSFWorkbook) {
             pictures = PoiPublicUtil.getSheetPictrues07((XSSFSheet) wb.getSheetAt(sheetNum),
-                (XSSFWorkbook) wb);
+                    (XSSFWorkbook) wb);
         } else {
             pictures = PoiPublicUtil.getSheetPictrues03((HSSFSheet) wb.getSheetAt(sheetNum),
-                (HSSFWorkbook) wb);
+                    (HSSFWorkbook) wb);
         }
     }
 
@@ -220,17 +210,17 @@ public class ExcelToHtmlService {
                         }
                     }
                     if (pictures.containsKey((rowIndex - 1) + "_" + i)) {
-                        content = "<img src='data:image/"+PoiPublicUtil.getFileExtendName(pictures.get((rowIndex - 1) + "_" + i).getData())
-                                  +";base64," + getImageSrc(pictures.get((rowIndex - 1) + "_" + i))
-                                  + "' style='max-width:  "
-                                  + getImageMaxWidth(
-                                      mergedRegionHelper.getRowAndColSpan(rowIndex, i), i, sheet)
-                                  + "px;' />";
+                        content = "<img src='data:image/" + PoiPublicUtil.getFileExtendName(pictures.get((rowIndex - 1) + "_" + i).getData())
+                                + ";base64," + getImageSrc(pictures.get((rowIndex - 1) + "_" + i))
+                                + "' style='max-width:  "
+                                + getImageMaxWidth(
+                                mergedRegionHelper.getRowAndColSpan(rowIndex, i), i, sheet)
+                                + "px;' />";
                     }
                     if (mergedRegionHelper.isMergedRegion(rowIndex, i)) {
                         Integer[] rowAndColSpan = mergedRegionHelper.getRowAndColSpan(rowIndex, i);
                         out.format("    <td rowspan='%s' colspan='%s' class='%s' >%s</td>%n",
-                            rowAndColSpan[0], rowAndColSpan[1], styleName(style), content);
+                                rowAndColSpan[0], rowAndColSpan[1], styleName(style), content);
                     } else {
                         out.format("    <td class='%s'>%s</td>%n", styleName(style), content);
                     }
@@ -245,9 +235,10 @@ public class ExcelToHtmlService {
 
     /**
      * 获取图片最大宽度
-     * @param colIndex 
-     * @param sheet 
-     * @param rowAndColSpan 
+     *
+     * @param colIndex
+     * @param sheet
+     * @param rowAndColSpan
      * @return
      */
     private int getImageMaxWidth(Integer[] rowAndColSpan, int colIndex, Sheet sheet) {
@@ -263,6 +254,7 @@ public class ExcelToHtmlService {
 
     /**
      * 获取图片路径
+     *
      * @param pictureData
      * @return
      */
@@ -306,6 +298,6 @@ public class ExcelToHtmlService {
             return "";
         }
         return String.format("style_%02x_%s font_%s_%s", style.getIndex(), cssRandom,
-            style.getFontIndex(), cssRandom);
+                style.getFontIndex(), cssRandom);
     }
 }
