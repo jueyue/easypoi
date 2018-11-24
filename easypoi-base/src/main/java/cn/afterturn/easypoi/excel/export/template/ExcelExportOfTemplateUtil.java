@@ -215,7 +215,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     public Workbook createExcleByTemplate(TemplateExportParams params, Class<?> pojoClass,
                                           Collection<?> dataSet, Map<String, Object> map) {
         // step 1. 判断模板的地址
-        if (params == null || map == null || (StringUtils.isEmpty(params.getTemplateUrl()) || params.getTemplateWb() == null)) {
+        if (params == null || map == null || (StringUtils.isEmpty(params.getTemplateUrl()) && params.getTemplateWb() == null)) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
         Workbook wb = null;

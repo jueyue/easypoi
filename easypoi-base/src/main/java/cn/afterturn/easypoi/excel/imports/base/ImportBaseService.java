@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,26 +14,6 @@
  * limitations under the License.
  */
 package cn.afterturn.easypoi.excel.imports.base;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.util.IOUtils;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelCollection;
@@ -43,8 +23,21 @@ import cn.afterturn.easypoi.excel.entity.params.ExcelCollectionParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelImportEnum;
+import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 导入基础和,普通方法和Sax共用
@@ -85,7 +78,7 @@ public class ImportBaseService {
         if (StringUtils.isNoneEmpty(excel.groupName())) {
             excelEntity.setName(excel.groupName() + "_" + excelEntity.getName());
         }
-        if(excelEntityAnn != null && excelEntityAnn.show()){
+        if (excelEntityAnn != null && excelEntityAnn.show()) {
             excelEntity.setName(excelEntityAnn.name() + "_" + excelEntity.getName());
         }
         if (i18nHandler != null) {
@@ -105,8 +98,8 @@ public class ImportBaseService {
             newMethods.add(excelEntity.getMethod());
             excelEntity.setMethods(newMethods);
         }
-        if(excelEntity.getFixedIndex() != -1){
-            temp.put("FIXED_"+excelEntity.getFixedIndex() , excelEntity);
+        if (excelEntity.getFixedIndex() != -1) {
+            temp.put("FIXED_" + excelEntity.getFixedIndex(), excelEntity);
         } else {
             temp.put(excelEntity.getName(), excelEntity);
         }
@@ -182,7 +175,6 @@ public class ImportBaseService {
             collection.getExcelParams().remove(key);
         }
     }
-
 
 
     public void getExcelFieldList(String targetId, Field[] fields, Class<?> pojoClass,
@@ -271,6 +263,10 @@ public class ImportBaseService {
      * @throws Exception
      */
     public void setValues(ExcelImportEntity entity, Object object, Object value) throws Exception {
+        // 去掉非包装类的异常情况
+        if (value == null) {
+            return;
+        }
         if (entity.getMethods() != null) {
             setFieldBySomeMethod(entity.getMethods(), object, value);
         } else {

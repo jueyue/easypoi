@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cn.afterturn.easypoi.util;
 
@@ -11,14 +11,15 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  * @author xfworld
- * @since 2015-12-28
  * @version 1.0
  * @see cn.afterturn.easypoi.util.PoiCellUtil
  * 获取单元格的值
+ * @since 2015-12-28
  */
 public class PoiCellUtil {
     /**
      * 读取单元格的值
+     *
      * @param sheet
      * @param row
      * @param column
@@ -36,12 +37,13 @@ public class PoiCellUtil {
         return value;
     }
 
-    /**  
-     * 获取合并单元格的值  
-     * @param sheet  
-     * @param row  
-     * @param column  
-     * @return  
+    /**
+     * 获取合并单元格的值
+     *
+     * @param sheet
+     * @param row
+     * @param column
+     * @return
      */
     public static String getMergedRegionValue(Sheet sheet, int row, int column) {
         int sheetMergeCount = sheet.getNumMergedRegions();
@@ -67,12 +69,13 @@ public class PoiCellUtil {
         return null;
     }
 
-    /**  
-     * 判断指定的单元格是否是合并单元格  
-     * @param sheet  
-     * @param row  
-     * @param column  
-     * @return  
+    /**
+     * 判断指定的单元格是否是合并单元格
+     *
+     * @param sheet
+     * @param row
+     * @param column
+     * @return
      */
     public static boolean isMergedRegion(Sheet sheet, int row, int column) {
         int sheetMergeCount = sheet.getNumMergedRegions();
@@ -95,10 +98,11 @@ public class PoiCellUtil {
         return false;
     }
 
-    /**  
-     * 获取单元格的值  
-     * @param cell  
-     * @return  
+    /**
+     * 获取单元格的值
+     *
+     * @param cell
+     * @return
      */
     public static String getCellValue(Cell cell) {
         if (cell == null) {
@@ -115,7 +119,11 @@ public class PoiCellUtil {
 
         } else if (cell.getCellType() == CellType.FORMULA) {
 
-            return cell.getStringCellValue();
+            try {
+                return cell.getCellFormula();
+            } catch (Exception e) {
+                return String.valueOf(cell.getNumericCellValue());
+            }
 
         } else if (cell.getCellType() == CellType.NUMERIC) {
 
