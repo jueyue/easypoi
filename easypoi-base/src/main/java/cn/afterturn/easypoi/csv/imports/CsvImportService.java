@@ -1,7 +1,6 @@
 package cn.afterturn.easypoi.csv.imports;
 
 import cn.afterturn.easypoi.csv.entity.CsvImportParams;
-import cn.afterturn.easypoi.csv.handler.ICsvSaveDataHandler;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.params.ExcelCollectionParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
@@ -11,6 +10,7 @@ import cn.afterturn.easypoi.excel.imports.base.ImportBaseService;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelImportEnum;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
+import cn.afterturn.easypoi.handler.inter.IReadHandler;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 import cn.afterturn.easypoi.util.PoiValidationUtil;
@@ -41,7 +41,7 @@ public class CsvImportService extends ImportBaseService {
         this.cellValueServer = new CellValueService();
     }
 
-    public <T> List<T> readExcel(InputStream inputstream, Class<?> pojoClass, CsvImportParams params, ICsvSaveDataHandler saveDataHandler) {
+    public <T> List<T> readExcel(InputStream inputstream, Class<?> pojoClass, CsvImportParams params, IReadHandler readHandler) {
         List collection = new ArrayList();
         try {
             Map<String, ExcelImportEntity> excelParams = new HashMap<String, ExcelImportEntity>();
@@ -120,8 +120,8 @@ public class CsvImportService extends ImportBaseService {
                             addListContinue(object, param, row, titlemap, targetId, params, errorMsg);
                         }
                         if (verifyingDataValidity(object, params, pojoClass, errorMsg)) {
-                            if (saveDataHandler != null) {
-                                saveDataHandler.save(object);
+                            if (readHandler != null) {
+                                readHandler.handler(object);
                             } else {
                                 collection.add(object);
                             }
@@ -137,6 +137,9 @@ public class CsvImportService extends ImportBaseService {
                     }
                 }
                 readRow++;
+            }
+            if (readHandler != null) {
+                readHandler.doAfterAll();
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

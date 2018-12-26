@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.afterturn.easypoi.handler.inter.IReadHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,6 @@ import cn.afterturn.easypoi.excel.entity.sax.SaxReadCellEntity;
 import cn.afterturn.easypoi.excel.imports.CellValueService;
 import cn.afterturn.easypoi.excel.imports.base.ImportBaseService;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
-import cn.afterturn.easypoi.handler.inter.IExcelReadRowHandler;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 
@@ -69,9 +69,9 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
 
     private CellValueService cellValueServer;
 
-    private IExcelReadRowHandler           hanlder;
+    private IReadHandler hanlder;
 
-    public SaxRowRead(Class<?> pojoClass, ImportParams params, IExcelReadRowHandler hanlder) {
+    public SaxRowRead(Class<?> pojoClass, ImportParams params, IReadHandler hanlder) {
         list = Lists.newArrayList();
         this.params = params;
         this.pojoClass = pojoClass;

@@ -1,8 +1,8 @@
 package cn.afterturn.easypoi.csv;
 
 import cn.afterturn.easypoi.csv.entity.CsvImportParams;
-import cn.afterturn.easypoi.csv.handler.ICsvSaveDataHandler;
 import cn.afterturn.easypoi.csv.imports.CsvImportService;
+import cn.afterturn.easypoi.handler.inter.IReadHandler;
 
 import java.io.InputStream;
 import java.util.List;
@@ -40,7 +40,7 @@ public final class CsvImportUtil {
      * @return
      */
     public static void importCsv(InputStream inputstream, Class<?> pojoClass,
-                                        CsvImportParams params, ICsvSaveDataHandler saveDataHandler) {
-        new CsvImportService().readExcel(inputstream, pojoClass, params, saveDataHandler);
+                                        CsvImportParams params, IReadHandler readHandler) {
+        new CsvImportService().readExcel(inputstream, pojoClass, params, readHandler);
     }
 }

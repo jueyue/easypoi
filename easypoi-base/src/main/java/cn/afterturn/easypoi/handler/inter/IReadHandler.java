@@ -21,11 +21,17 @@ package cn.afterturn.easypoi.handler.inter;
  *  2015年1月16日 下午8:06:26
  * @param <T>
  */
-public interface IExcelReadRowHandler<T> {
+public interface IReadHandler<T> {
     /**
      * 处理解析对象
      * @param t
      */
     public void handler(T t);
+
+
+    /**
+     * 处理完成之后的业务
+     */
+    public void doAfterAll();
 
 }
