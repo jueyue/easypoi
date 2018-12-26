@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import cn.afterturn.easypoi.handler.inter.IReadHandler;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,7 @@ import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import cn.afterturn.easypoi.excel.imports.sax.SaxReadExcel;
-import cn.afterturn.easypoi.excel.imports.sax.parse.ISaxRowRead;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
-import cn.afterturn.easypoi.handler.inter.IExcelReadRowHandler;
 
 /**
  * Excel 导入工具
@@ -126,20 +125,6 @@ public class ExcelImportUtil {
 
     /**
      * Excel 通过SAX解析方法,适合大数据导入,不支持图片
-     * 导入 数据源IO流,不返回校验结果 导入 字段类型 Integer,Long,Double,Date,String,Boolean
-     * 
-     * @param inputstream
-     * @param pojoClass
-     * @param params
-     * @return
-     */
-    public static <T> List<T> importExcelBySax(InputStream inputstream, Class<?> pojoClass,
-                                               ImportParams params) {
-        return new SaxReadExcel().readExcel(inputstream, pojoClass, params, null, null);
-    }
-
-    /**
-     * Excel 通过SAX解析方法,适合大数据导入,不支持图片
      * 导入 数据源本地文件,不返回校验结果 导入 字 段类型 Integer,Long,Double,Date,String,Boolean
      * 
      * @param inputstream
@@ -149,20 +134,8 @@ public class ExcelImportUtil {
      */
     @SuppressWarnings("rawtypes")
     public static void importExcelBySax(InputStream inputstream, Class<?> pojoClass,
-                                        ImportParams params, IExcelReadRowHandler hanlder) {
-        new SaxReadExcel().readExcel(inputstream, pojoClass, params, null, hanlder);
-    }
-
-    /**
-     * Excel 通过SAX解析方法,适合大数据导入,不支持图片
-     * 导入 数据源IO流,不返回校验结果 导入 字段类型 Integer,Long,Double,Date,String,Boolean
-     * 
-     * @param inputstream
-     * @param rowRead
-     * @return
-     */
-    public static <T> List<T> importExcelBySax(InputStream inputstream, ISaxRowRead rowRead) {
-        return new SaxReadExcel().readExcel(inputstream, null, null, rowRead, null);
+                                        ImportParams params, IReadHandler hanlder) {
+        new SaxReadExcel().readExcel(inputstream, pojoClass, params, hanlder);
     }
 
 }

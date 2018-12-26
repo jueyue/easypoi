@@ -6,14 +6,14 @@ EasyPoi Excel和 Word简易工具类
 就可以方便的写出Excel导出,Excel模板导出,Excel导入,Word模板导出,通过简单的注解和模板
 语言(熟悉的表达式语法),完成以前复杂的写法
 
-	官网： http://www.afterturn.cn/
+	官网： http://opensource.afterturn.cn/
 	邮箱： qrb.jueyue@foxmail.com
 	QQ群:  1群 364192721(满) 2 群116844390
 	
 	开发者:魔幻之翼 xf.key@163.com
 Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
-[官网](http://opensource.afterturn.cn)
+[官网](https://opensource.afterturn.cn)
 
 [VIP技术服务-账号忘了,还是ＱＱ吧](https://lemur.taobao.com)
 
@@ -24,7 +24,7 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 **开发指南**
 
-**[http://opensource.afterturn.cn/doc/easypoi.html](http://opensource.afterturn.cn/doc/easypoi.html)**
+**[https://opensource.afterturn.cn/doc/easypoi.html](http://opensource.afterturn.cn/doc/easypoi.html)**
 
 [API文档](https://apidoc.gitee.com/lemur/easypoi/)
 
@@ -100,17 +100,17 @@ https://oss.sonatype.org/content/groups/public/
 		 <dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>3.3.0</version>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>3.3.0</version>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>3.3.0</version>
+			<version>4.0.0</version>
 		</dependency>
 ```
 	
