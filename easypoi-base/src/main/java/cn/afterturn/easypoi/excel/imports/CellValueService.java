@@ -84,8 +84,15 @@ public class CellValueService {
             if (CellType.NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
                 result = DateUtil.getJavaDate(cell.getNumericCellValue());
             } else {
-                cell.setCellType(CellType.STRING);
-                result = getDateData(entity, cell.getStringCellValue());
+                String val = "";
+                try {
+                    val = cell.getStringCellValue();
+                } catch (Exception e) {
+                    cell.setCellType(CellType.STRING);
+                    val = cell.getStringCellValue();
+                }
+
+                result = getDateData(entity, val);
             }
             if (("class java.sql.Date").equals(classFullName)) {
                 result = new java.sql.Date(((Date) result).getTime());
