@@ -213,9 +213,8 @@ public class CellValueService {
         if (entity != null) {
             result = handlerSuffix(entity.getSuffix(), result);
             result = replaceValue(entity.getReplace(), result);
-            result = replaceValue(entity.getReplace(), result);
             if (dictHandler != null && StringUtils.isNoneBlank(entity.getDict())) {
-                dictHandler.toValue(entity.getDict(), object, entity.getName(), result);
+                result = dictHandler.toValue(entity.getDict(), object, entity.getName(), result);
             }
         }
         result = handlerValue(dataHandler, object, result, titleString);
