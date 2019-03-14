@@ -123,6 +123,8 @@ public class ExcelBatchExportService extends ExcelExportService {
             if (dataHandler != null && dataHandler.getNeedHandlerFields() != null) {
                 needHandlerList = Arrays.asList(dataHandler.getNeedHandlerFields());
             }
+            dictHandler = entity.getDictHandler();
+            i18nHandler = entity.getI18nHandler();
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) entity.getStyle()
                 .getConstructor(Workbook.class).newInstance(workbook));
