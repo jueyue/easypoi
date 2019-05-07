@@ -514,9 +514,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     row.createCell(j);
                     CellStyle style = row.getRowNum() % 2 == 0
                             ? getStyles(false,
-                            size >= j - columnIndex ? null : columns.get(j - columnIndex))
+                            size <= j - columnIndex ? null : columns.get(j - columnIndex))
                             : getStyles(true,
-                            size >= j - columnIndex ? null : columns.get(j - columnIndex));
+                            size <= j - columnIndex ? null : columns.get(j - columnIndex));
                     //返回的styler不为空时才使用,否则使用Excel设置的,更加推荐Excel设置的样式
                     if (style != null) {
                         row.getCell(j).setCellStyle(style);
