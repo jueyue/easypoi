@@ -15,6 +15,7 @@
  */
 package cn.afterturn.easypoi.word;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -60,4 +61,7 @@ public class WordExportUtil {
         new ParseWord07().parseWord(document, map);
     }
 
+    public static XWPFDocument exportWord07(String url, List<Map<String, Object>> list) throws Exception {
+        return new ParseWord07().parseWord(url, list);
+    }
 }
