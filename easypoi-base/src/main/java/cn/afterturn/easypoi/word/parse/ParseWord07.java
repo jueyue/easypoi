@@ -1,38 +1,19 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package cn.afterturn.easypoi.word.parse;
-
-import static cn.afterturn.easypoi.util.PoiElUtil.*;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import cn.afterturn.easypoi.cache.WordCache;
 import cn.afterturn.easypoi.entity.ImageEntity;
@@ -41,38 +22,49 @@ import cn.afterturn.easypoi.word.entity.MyXWPFDocument;
 import cn.afterturn.easypoi.word.entity.params.ExcelListEntity;
 import cn.afterturn.easypoi.word.parse.excel.ExcelEntityParse;
 import cn.afterturn.easypoi.word.parse.excel.ExcelMapParse;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xwpf.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static cn.afterturn.easypoi.util.PoiElUtil.*;
 
 /**
  * 解析07版的Word,替换文字,生成表格,生成图片
- * 
+ *
  * @author JueYue
- *  2013-11-16
+ * 2013-11-16
  * @version 1.0
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ParseWord07 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParseWord07.class);
 
     /**
      * 添加图片
-     * 
-     * @author JueYue
-     *  2013-11-20
+     *
      * @param obj
      * @param currentRun
      * @throws Exception
+     * @author JueYue
+     * 2013-11-20
      */
     private void addAnImage(ImageEntity obj, XWPFRun currentRun) throws Exception {
         Object[] isAndType = PoiPublicUtil.getIsAndType(obj);
-        String picId;
+        String   picId;
         try {
             picId = currentRun.getDocument().addPictureData((byte[]) isAndType[0],
-                (Integer) isAndType[1]);
+                    (Integer) isAndType[1]);
             ((MyXWPFDocument) currentRun.getDocument()).createPicture(currentRun,
-                picId, currentRun.getDocument()
-                    .getNextPicNameNumber((Integer) isAndType[1]),
-                obj.getWidth(), obj.getHeight());
+                    picId, currentRun.getDocument()
+                            .getNextPicNameNumber((Integer) isAndType[1]),
+                    obj.getWidth(), obj.getHeight());
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -82,10 +74,10 @@ public class ParseWord07 {
 
     /**
      * 根据条件改变值
-     * 
+     *
      * @param map
      * @author JueYue
-     *  2013-11-16
+     * 2013-11-16
      */
     private void changeValues(XWPFParagraph paragraph, XWPFRun currentRun, String currentText,
                               List<Integer> runIndex, Map<String, Object> map) throws Exception {
@@ -105,11 +97,11 @@ public class ParseWord07 {
 
     /**
      * 判断是不是迭代输出
-     * 
-     * @author JueYue
-     *  2013-11-18
+     *
      * @return
      * @throws Exception
+     * @author JueYue
+     * 2013-11-18
      */
     private Object checkThisTableIsNeedIterator(XWPFTableCell cell,
                                                 Map<String, Object> map) throws Exception {
@@ -117,7 +109,7 @@ public class ParseWord07 {
         // 判断是不是迭代输出
         if (text != null && text.contains(FOREACH) && text.startsWith(START_STR)) {
             text = text.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
-                .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
+                    .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
             String[] keys = text.replaceAll("\\s{1,}", " ").trim().split(" ");
             return PoiPublicUtil.getParamsValue(keys[0], map);
         }
@@ -126,11 +118,11 @@ public class ParseWord07 {
 
     /**
      * 解析所有的文本
-     * 
-     * @author JueYue
-     *  2013-11-17
+     *
      * @param paragraphs
      * @param map
+     * @author JueYue
+     * 2013-11-17
      */
     private void parseAllParagraphic(List<XWPFParagraph> paragraphs,
                                      Map<String, Object> map) throws Exception {
@@ -147,20 +139,20 @@ public class ParseWord07 {
 
     /**
      * 解析这个段落
-     * 
-     * @author JueYue
-     *  2013-11-16
+     *
      * @param paragraph
      * @param map
+     * @author JueYue
+     * 2013-11-16
      */
     private void parseThisParagraph(XWPFParagraph paragraph,
                                     Map<String, Object> map) throws Exception {
-        XWPFRun run;
-        XWPFRun currentRun = null;// 拿到的第一个run,用来set值,可以保存格式
-        String currentText = "";// 存放当前的text
-        String text;
-        Boolean isfinde = false;// 判断是不是已经遇到{{
-        List<Integer> runIndex = new ArrayList<Integer>();// 存储遇到的run,把他们置空
+        XWPFRun       run;
+        XWPFRun       currentRun  = null;// 拿到的第一个run,用来set值,可以保存格式
+        String        currentText = "";// 存放当前的text
+        String        text;
+        Boolean       isfinde     = false;// 判断是不是已经遇到{{
+        List<Integer> runIndex    = new ArrayList<Integer>();// 存储遇到的run,把他们置空
         for (int i = 0; i < paragraph.getRuns().size(); i++) {
             run = paragraph.getRuns().get(i);
             text = run.getText(0);
@@ -203,16 +195,16 @@ public class ParseWord07 {
 
     /**
      * 解析这个表格
-     * 
-     * @author JueYue
-     *  2013-11-17
+     *
      * @param table
      * @param map
+     * @author JueYue
+     * 2013-11-17
      */
     private void parseThisTable(XWPFTable table, Map<String, Object> map) throws Exception {
-        XWPFTableRow row;
+        XWPFTableRow        row;
         List<XWPFTableCell> cells;
-        Object listobj;
+        Object              listobj;
         for (int i = 0; i < table.getNumberOfRows(); i++) {
             row = table.getRow(i);
             cells = row.getTableCells();
@@ -231,11 +223,11 @@ public class ParseWord07 {
 
     /**
      * 解析07版的Word并且进行赋值
-     * 
-     * @author JueYue
-     *  2013-11-16
+     *
      * @return
      * @throws Exception
+     * @author JueYue
+     * 2013-11-16
      */
     public XWPFDocument parseWord(String url, Map<String, Object> map) throws Exception {
         MyXWPFDocument doc = WordCache.getXWPFDocumen(url);
@@ -244,7 +236,37 @@ public class ParseWord07 {
     }
 
     /**
+     * 解析07版的Work并且进行赋值但是进行多页拼接
+     *
+     * @param url
+     * @param list
+     * @return
+     */
+    public XWPFDocument parseWord(String url, List<Map<String, Object>> list) throws Exception {
+        if (list.size() == 1) {
+            return parseWord(url, list.get(0));
+        } else if (list.size() == 0) {
+            return null;
+        } else {
+            MyXWPFDocument doc = WordCache.getXWPFDocumen(url);
+            parseWordSetValue(doc, list.get(0));
+            //插入分页
+            doc.createParagraph().setPageBreak(true);
+            for (int i = 1; i < list.size(); i++) {
+                MyXWPFDocument tempDoc = WordCache.getXWPFDocumen(url);
+                parseWordSetValue(tempDoc, list.get(i));
+                tempDoc.createParagraph().setPageBreak(true);
+                doc.getDocument().addNewBody().set(tempDoc.getDocument().getBody());
+
+            }
+            return doc;
+        }
+
+    }
+
+    /**
      * 解析07版的Word并且进行赋值
+     *
      * @throws Exception
      */
     public void parseWord(XWPFDocument document, Map<String, Object> map) throws Exception {
@@ -257,7 +279,7 @@ public class ParseWord07 {
         // 第二步解析页眉,页脚
         parseHeaderAndFoot(doc, map);
         // 第三步解析所有表格
-        XWPFTable table;
+        XWPFTable           table;
         Iterator<XWPFTable> itTable = doc.getTablesIterator();
         while (itTable.hasNext()) {
             table = itTable.next();
@@ -270,6 +292,7 @@ public class ParseWord07 {
 
     /**
      * 解析页眉和页脚
+     *
      * @param doc
      * @param map
      * @throws Exception
@@ -289,4 +312,5 @@ public class ParseWord07 {
         }
 
     }
+
 }
