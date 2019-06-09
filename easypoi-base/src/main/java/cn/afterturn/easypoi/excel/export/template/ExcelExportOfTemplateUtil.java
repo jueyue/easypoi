@@ -621,11 +621,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     private void setMergedRegionStyle(Row row, int ci, ExcelForEachParams params) {
         //第一行数据
         for (int i = 1; i < params.getColspan(); i++) {
-            row.getCell(ci + i).setCellStyle(params.getCellStyle());
+            if(params.getCellStyle() != null){
+                row.getCell(ci + i).setCellStyle(params.getCellStyle());
+            }
         }
         for (int i = 1; i < params.getRowspan(); i++) {
             for (int j = 0; j < params.getColspan(); j++) {
-                row.getCell(ci + j).setCellStyle(params.getCellStyle());
+                if(params.getCellStyle() != null){
+                    row.getCell(ci + j).setCellStyle(params.getCellStyle());
+                }
             }
         }
     }
@@ -785,6 +789,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         try {
             this.teplateParams = params;
             wb = getCloneWorkBook();
+            // 创建表格样式
+            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+                    .getConstructor(Workbook.class).newInstance(wb));
             // step 3. 解析模板
             for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets()
                     : params.getSheetNum().length; i < le; i++) {

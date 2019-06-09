@@ -15,6 +15,22 @@
  */
 package cn.afterturn.easypoi.excel.imports;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
+import cn.afterturn.easypoi.excel.entity.sax.SaxReadCellEntity;
+import cn.afterturn.easypoi.exception.excel.ExcelImportException;
+import cn.afterturn.easypoi.exception.excel.enums.ExcelImportEnum;
+import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
+import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
+import cn.afterturn.easypoi.util.PoiPublicUtil;
+import cn.afterturn.easypoi.util.PoiReflectorUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -27,29 +43,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
-import cn.afterturn.easypoi.util.PoiReflectorUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
-import cn.afterturn.easypoi.excel.entity.sax.SaxReadCellEntity;
-import cn.afterturn.easypoi.exception.excel.ExcelImportException;
-import cn.afterturn.easypoi.exception.excel.enums.ExcelImportEnum;
-import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
-import cn.afterturn.easypoi.util.PoiPublicUtil;
-
 /**
  * Cell 取值服务
  * 判断类型处理数据 1.判断Excel中的类型 2.根据replace替换值 3.handler处理数据 4.判断返回类型转化数据返回
  *
  * @author JueYue
- *  2014年6月26日 下午10:42:28
+ * 2014年6月26日 下午10:42:28
  */
 public class CellValueService {
 
@@ -93,14 +92,15 @@ public class CellValueService {
                 }
 
                 result = getDateData(entity, val);
+                if (result == null) {
+                    return null;
+                }
             }
             if (("class java.sql.Date").equals(classFullName)) {
                 result = new java.sql.Date(((Date) result).getTime());
-            }
-            if (("class java.sql.Time").equals(classFullName)) {
+            } else if (("class java.sql.Time").equals(classFullName)) {
                 result = new Time(((Date) result).getTime());
-            }
-            if (("class java.sql.Timestamp").equals(classFullName)) {
+            } else if (("class java.sql.Timestamp").equals(classFullName)) {
                 result = new Timestamp(((Date) result).getTime());
             }
         } else if (CellType.NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
@@ -148,7 +148,7 @@ public class CellValueService {
 
     private Object readNumericCell(Cell cell) {
         Object result = null;
-        double value = cell.getNumericCellValue();
+        double value  = cell.getNumericCellValue();
         if (((int) value) == value) {
             result = (int) value;
         } else {
@@ -160,11 +160,11 @@ public class CellValueService {
     /**
      * 获取日期类型数据
      *
-     * @author JueYue
-     *  2013年11月26日
      * @param entity
      * @param value
      * @return
+     * @author JueYue
+     * 2013年11月26日
      */
     private Date getDateData(ExcelImportEntity entity, String value) {
         if (StringUtils.isNotEmpty(entity.getFormat()) && StringUtils.isNotEmpty(value)) {
@@ -190,7 +190,8 @@ public class CellValueService {
 
     /**
      * 获取cell的值
-     *  @param object
+     *
+     * @param object
      * @param cell
      * @param excelParams
      * @param titleString
@@ -199,9 +200,9 @@ public class CellValueService {
     public Object getValue(IExcelDataHandler<?> dataHandler, Object object, String cell,
                            Map<String, ExcelImportEntity> excelParams,
                            String titleString, IExcelDictHandler dictHandler) throws Exception {
-        ExcelImportEntity entity = excelParams.get(titleString);
-        String classFullName = "class java.lang.Object";
-        Class clazz = null;
+        ExcelImportEntity entity        = excelParams.get(titleString);
+        String            classFullName = "class java.lang.Object";
+        Class             clazz         = null;
         if (!(object instanceof Map)) {
             Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
                     ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
@@ -224,7 +225,8 @@ public class CellValueService {
 
     /**
      * 获取cell的值
-     *  @param object
+     *
+     * @param object
      * @param cell
      * @param excelParams
      * @param titleString
@@ -233,9 +235,9 @@ public class CellValueService {
     public Object getValue(IExcelDataHandler<?> dataHandler, Object object, Cell cell,
                            Map<String, ExcelImportEntity> excelParams,
                            String titleString, IExcelDictHandler dictHandler) throws Exception {
-        ExcelImportEntity entity = excelParams.get(titleString);
-        String classFullName = "class java.lang.Object";
-        Class clazz = null;
+        ExcelImportEntity entity        = excelParams.get(titleString);
+        String            classFullName = "class java.lang.Object";
+        Class             clazz         = null;
         if (!(object instanceof Map)) {
             Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
                     ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
@@ -258,6 +260,7 @@ public class CellValueService {
 
     /**
      * 获取cell值
+     *
      * @param dataHandler
      * @param object
      * @param cellEntity
@@ -271,9 +274,9 @@ public class CellValueService {
         ExcelImportEntity entity = excelParams.get(titleString);
         Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
                 ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
-        Type[] ts = setMethod.getGenericParameterTypes();
+        Type[] ts            = setMethod.getGenericParameterTypes();
         String classFullName = ts[0].toString();
-        Object result = cellEntity.getValue();
+        Object result        = cellEntity.getValue();
         result = handlerSuffix(entity.getSuffix(), result);
         result = replaceValue(entity.getReplace(), result);
         result = handlerValue(dataHandler, object, result, titleString);
@@ -282,6 +285,7 @@ public class CellValueService {
 
     /**
      * 把后缀删除掉
+     *
      * @param result
      * @param suffix
      * @return
@@ -405,7 +409,7 @@ public class CellValueService {
      */
     private Object replaceValue(String[] replace, Object result) {
         if (replace != null && replace.length > 0) {
-            String temp = String.valueOf(result);
+            String   temp = String.valueOf(result);
             String[] tempArr;
             for (int i = 0; i < replace.length; i++) {
                 tempArr = replace[i].split("_");
