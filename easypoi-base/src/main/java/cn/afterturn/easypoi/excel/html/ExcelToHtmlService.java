@@ -34,19 +34,21 @@ public class ExcelToHtmlService {
     private String today;
 
     private Workbook wb;
-    private int sheetNum;
-    private int cssRandom;
+    private int      sheetNum;
+    private int      cssRandom;
 
     /*是不是完成界面*/
-    private boolean completeHTML;
-    private Formatter out;
+    private              boolean   completeHTML;
+    private              Formatter out;
     /*已经完成范围处理*/
-    private boolean gotBounds;
-    private int firstColumn;
-    private int endColumn;
-    private String imageCachePath;
-    private static final String COL_HEAD_CLASS = "colHeader";
-    //private static final String ROW_HEAD_CLASS = "rowHeader";
+    private              boolean   gotBounds;
+    private              int       firstColumn;
+    private              int       endColumn;
+    private              String    imageCachePath;
+    private              boolean   showRowNum;
+    private              boolean   showColumnHead;
+    private static final String    COL_HEAD_CLASS = "colHeader";
+    private static final String    ROW_HEAD_CLASS = "rowHeader";
 
     private static final String DEFAULTS_CLASS = "excelDefaults";
 
@@ -57,9 +59,11 @@ public class ExcelToHtmlService {
         this.wb = params.getWb();
         this.completeHTML = params.isCompleteHTML();
         this.sheetNum = params.getSheetNum();
-        cssRandom = (int) Math.ceil(Math.random() * 1000);
+        this.cssRandom = (int) Math.ceil(Math.random() * 1000);
         this.imageCachePath = params.getPath();
-        today = new SimpleDateFormat("yyyy_MM_dd").format(new Date());
+        this.showRowNum = params.isShowRowNum();
+        this.showColumnHead = params.isShowColumnHead();
+        this.today = new SimpleDateFormat("yyyy_MM_dd").format(new Date());
     }
 
     public String printPage() {
@@ -125,17 +129,19 @@ public class ExcelToHtmlService {
     }
 
     private void printSheet(Sheet sheet) {
-        out.format("<table class='%s' width='%s'>%n", DEFAULTS_CLASS, getTableWidth(sheet));
+        out.format("<table class='%s' width='%spx;'>%n", DEFAULTS_CLASS, getTableWidth(sheet));
         printCols(sheet);
         printSheetContent(sheet);
         out.format("</table>%n");
     }
 
     private void printCols(Sheet sheet) {
-        //out.format("<col/>%n");
+        if (showRowNum) {
+            out.format("<col style='width:%spx;'/>%n", PoiPublicUtil.getNumDigits(sheet.getLastRowNum()) * 18);
+        }
         ensureColumnBounds(sheet);
         for (int i = firstColumn; i < endColumn; i++) {
-            out.format("<col style='width:%spx;' />%n", sheet.getColumnWidth(i) / 32);
+            out.format("<col style='width:%spx;' />%n", sheet.getColumnWidth(i) / 16);
         }
     }
 
@@ -143,7 +149,7 @@ public class ExcelToHtmlService {
         ensureColumnBounds(sheet);
         int width = 0;
         for (int i = firstColumn; i < endColumn; i++) {
-            width = width + (sheet.getColumnWidth(i) / 32);
+            width = width + (sheet.getColumnWidth(i) / 16);
         }
         return width;
     }
@@ -153,11 +159,11 @@ public class ExcelToHtmlService {
             return;
         }
 
-        Iterator<Row> iter = sheet.rowIterator();
-        firstColumn = (iter.hasNext() ? Integer.MAX_VALUE : 0);
+        int lastRow = sheet.getLastRowNum();
+        firstColumn = (lastRow > 1 ? Integer.MAX_VALUE : 0);
         endColumn = 0;
-        while (iter.hasNext()) {
-            Row row = iter.next();
+        for (int i = 0; i < lastRow; i++) {
+            Row   row       = sheet.getRow(lastRow);
             short firstCell = row.getFirstCellNum();
             if (firstCell >= 0) {
                 firstColumn = Math.min(firstColumn, firstCell);
@@ -188,20 +194,24 @@ public class ExcelToHtmlService {
     }
 
     private void printSheetContent(Sheet sheet) {
-        //printColumnHeads(sheet);
+        if (showColumnHead) {
+            printColumnHeads(sheet);
+        }
         MergedRegionHelper mergedRegionHelper = new MergedRegionHelper(sheet);
-        CellValueHelper cellValueHelper = new CellValueHelper(wb, cssRandom);
+        CellValueHelper    cellValueHelper    = new CellValueHelper(wb, cssRandom);
         out.format("<tbody>%n");
-        Iterator<Row> rows = sheet.rowIterator();
-        int rowIndex = 1;
+        Iterator<Row> rows     = sheet.rowIterator();
+        int           rowIndex = 1;
         while (rows.hasNext()) {
             Row row = rows.next();
             out.format("  <tr style='height:%spx;'>%n", row.getHeight() / 15);
-            //out.format("    <td class='%s'>%d</td>%n", ROW_HEAD_CLASS, row.getRowNum() + 1);
+            if (showRowNum) {
+                out.format("    <td style='font-size:12px;' >%d</td>%n", row.getRowNum() + 1);
+            }
             for (int i = firstColumn; i < endColumn; i++) {
                 if (mergedRegionHelper.isNeedCreate(rowIndex, i)) {
-                    String content = "&nbsp;";
-                    CellStyle style = null;
+                    String    content = "&nbsp;";
+                    CellStyle style   = null;
                     if (i >= row.getFirstCellNum() && i < row.getLastCellNum()) {
                         Cell cell = row.getCell(i);
                         if (cell != null) {

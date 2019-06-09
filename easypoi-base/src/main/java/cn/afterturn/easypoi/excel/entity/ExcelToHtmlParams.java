@@ -28,6 +28,9 @@ public class ExcelToHtmlParams {
      */
     private String   path = null;
 
+    private boolean  showRowNum = false;
+    private boolean  showColumnHead = false;
+
     public ExcelToHtmlParams(Workbook wb) {
         this.wb = wb;
     }
@@ -96,6 +99,22 @@ public class ExcelToHtmlParams {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public boolean isShowRowNum() {
+        return showRowNum;
+    }
+
+    public void setShowRowNum(boolean showRowNum) {
+        this.showRowNum = showRowNum;
+    }
+
+    public boolean isShowColumnHead() {
+        return showColumnHead;
+    }
+
+    public void setShowColumnHead(boolean showColumnHead) {
+        this.showColumnHead = showColumnHead;
     }
 
     @Override

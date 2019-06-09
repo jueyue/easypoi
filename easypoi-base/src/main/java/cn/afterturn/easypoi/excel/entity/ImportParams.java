@@ -102,6 +102,14 @@ public class ImportParams extends ExcelBaseParams {
      * 仅仅支持titleRows + headRows + startRows 以及 lastOfInvalidRow
      */
     private boolean             readSingleCell = false;
+    /**
+     * 是否并行计算
+     */
+    private boolean             concurrentTask = false;
+    /**
+     * 最小截取大小
+     */
+    private Integer             critical = 1000;
 
     public int getHeadRows() {
         return headRows;
@@ -237,5 +245,21 @@ public class ImportParams extends ExcelBaseParams {
 
     public void setNeedCheckOrder(boolean needCheckOrder) {
         this.needCheckOrder = needCheckOrder;
+    }
+
+    public boolean isConcurrentTask() {
+        return concurrentTask;
+    }
+
+    public void setConcurrentTask(boolean concurrentTask) {
+        this.concurrentTask = concurrentTask;
+    }
+
+    public Integer getCritical() {
+        return critical;
+    }
+
+    public void setCritical(Integer critical) {
+        this.critical = critical;
     }
 }

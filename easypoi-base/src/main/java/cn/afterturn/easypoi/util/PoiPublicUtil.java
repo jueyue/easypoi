@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -15,51 +15,32 @@
  */
 package cn.afterturn.easypoi.util;
 
-import static cn.afterturn.easypoi.util.PoiElUtil.*;
-
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
+import cn.afterturn.easypoi.cache.ImageCache;
+import cn.afterturn.easypoi.entity.ImageEntity;
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelCollection;
+import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
+import cn.afterturn.easypoi.excel.annotation.ExcelIgnore;
+import cn.afterturn.easypoi.word.entity.params.ExcelListEntity;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPicture;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
-import org.apache.poi.hssf.usermodel.HSSFShape;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ss.usermodel.PictureData;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFShape;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.afterturn.easypoi.cache.ImageCache;
-import cn.afterturn.easypoi.excel.annotation.Excel;
-import cn.afterturn.easypoi.excel.annotation.ExcelCollection;
-import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
-import cn.afterturn.easypoi.excel.annotation.ExcelIgnore;
-import cn.afterturn.easypoi.entity.ImageEntity;
-import cn.afterturn.easypoi.word.entity.params.ExcelListEntity;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static cn.afterturn.easypoi.util.PoiElUtil.END_STR;
+import static cn.afterturn.easypoi.util.PoiElUtil.START_STR;
 
 /**
  * EASYPOI 的公共基础类
@@ -74,7 +55,7 @@ public final class PoiPublicUtil {
 
     }
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     public static <K, V> Map<K, V> mapFor(Object... mapping) {
         Map<K, V> map = new HashMap<K, V>();
         for (int i = 0; i < mapping.length; i += 2) {
@@ -93,7 +74,7 @@ public final class PoiPublicUtil {
         Object obj = null;
         try {
             if (clazz.equals(Map.class)) {
-                return new LinkedHashMap<String,Object>();
+                return new LinkedHashMap<String, Object>();
             }
             obj = clazz.newInstance();
             Field[] fields = getClassFields(clazz);
@@ -104,10 +85,10 @@ public final class PoiPublicUtil {
                 if (isCollection(field.getType())) {
                     ExcelCollection collection = field.getAnnotation(ExcelCollection.class);
                     PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(),
-                        collection.type().newInstance());
+                            collection.type().newInstance());
                 } else if (!isJavaClass(field) && !field.getType().isEnum()) {
                     PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(),
-                        createObject(field.getType(), targetId));
+                            createObject(field.getType(), targetId));
                 }
             }
 
@@ -127,7 +108,7 @@ public final class PoiPublicUtil {
      */
     public static Field[] getClassFields(Class<?> clazz) {
         List<Field> list = new ArrayList<Field>();
-        Field[] fields;
+        Field[]     fields;
         do {
             fields = clazz.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
@@ -145,11 +126,11 @@ public final class PoiPublicUtil {
     public static String getFileExtendName(byte[] photoByte) {
         String strFileExtendName = "JPG";
         if ((photoByte[0] == 71) && (photoByte[1] == 73) && (photoByte[2] == 70)
-            && (photoByte[3] == 56) && ((photoByte[4] == 55) || (photoByte[4] == 57))
-            && (photoByte[5] == 97)) {
+                && (photoByte[3] == 56) && ((photoByte[4] == 55) || (photoByte[4] == 57))
+                && (photoByte[5] == 97)) {
             strFileExtendName = "GIF";
         } else if ((photoByte[6] == 74) && (photoByte[7] == 70) && (photoByte[8] == 73)
-                   && (photoByte[9] == 70)) {
+                && (photoByte[9] == 70)) {
             strFileExtendName = "JPG";
         } else if ((photoByte[0] == 66) && (photoByte[1] == 77)) {
             strFileExtendName = "BMP";
@@ -169,11 +150,12 @@ public final class PoiPublicUtil {
     public static boolean hasBom(InputStream in) throws IOException {
         byte[] head = new byte[3];
         in.read(head);
-        if(head[0]==-17 && head[1]==-69 && head[2] ==-65) {
+        if (head[0] == -17 && head[1] == -69 && head[2] == -65) {
             return true;
         }
         return false;
     }
+
     /**
      * 获取Excel2003图片
      *
@@ -186,16 +168,16 @@ public final class PoiPublicUtil {
     public static Map<String, PictureData> getSheetPictrues03(HSSFSheet sheet,
                                                               HSSFWorkbook workbook) {
         Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
-        List<HSSFPictureData> pictures = workbook.getAllPictures();
+        List<HSSFPictureData>    pictures         = workbook.getAllPictures();
         if (!pictures.isEmpty()) {
             for (HSSFShape shape : sheet.getDrawingPatriarch().getChildren()) {
                 HSSFClientAnchor anchor = (HSSFClientAnchor) shape.getAnchor();
                 if (shape instanceof HSSFPicture) {
-                    HSSFPicture pic = (HSSFPicture) shape;
-                    int pictureIndex = pic.getPictureIndex() - 1;
-                    HSSFPictureData picData = pictures.get(pictureIndex);
+                    HSSFPicture     pic          = (HSSFPicture) shape;
+                    int             pictureIndex = pic.getPictureIndex() - 1;
+                    HSSFPictureData picData      = pictures.get(pictureIndex);
                     String picIndex = String.valueOf(anchor.getRow1()) + "_"
-                                      + String.valueOf(anchor.getCol1());
+                            + String.valueOf(anchor.getCol1());
                     sheetIndexPicMap.put(picIndex, picData);
                 }
             }
@@ -219,14 +201,14 @@ public final class PoiPublicUtil {
         Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
         for (POIXMLDocumentPart dr : sheet.getRelations()) {
             if (dr instanceof XSSFDrawing) {
-                XSSFDrawing drawing = (XSSFDrawing) dr;
-                List<XSSFShape> shapes = drawing.getShapes();
+                XSSFDrawing     drawing = (XSSFDrawing) dr;
+                List<XSSFShape> shapes  = drawing.getShapes();
                 for (XSSFShape shape : shapes) {
                     if (shape instanceof XSSFPicture) {
-                        XSSFPicture pic = (XSSFPicture) shape;
-                        XSSFClientAnchor anchor = pic.getPreferredSize();
-                        CTMarker ctMarker = anchor.getFrom();
-                        String picIndex = ctMarker.getRow() + "_" + ctMarker.getCol();
+                        XSSFPicture      pic      = (XSSFPicture) shape;
+                        XSSFClientAnchor anchor   = pic.getPreferredSize();
+                        CTMarker         ctMarker = anchor.getFrom();
+                        String           picIndex = ctMarker.getRow() + "_" + ctMarker.getCol();
                         sheetIndexPicMap.put(picIndex, pic.getPictureData());
                     }
                 }
@@ -252,15 +234,15 @@ public final class PoiPublicUtil {
      * @return
      */
     public static boolean isJavaClass(Field field) {
-        Class<?> fieldType = field.getType();
-        boolean isBaseClass = false;
+        Class<?> fieldType   = field.getType();
+        boolean  isBaseClass = false;
         if (fieldType.isArray()) {
             isBaseClass = false;
         } else if (fieldType.isPrimitive() || fieldType.getPackage() == null
-                   || "java.lang".equals(fieldType.getPackage().getName())
-                   || "java.math".equals(fieldType.getPackage().getName())
-                   || "java.sql".equals(fieldType.getPackage().getName())
-                   || "java.util".equals(fieldType.getPackage().getName())) {
+                || "java.lang".equals(fieldType.getPackage().getName())
+                || "java.math".equals(fieldType.getPackage().getName())
+                || "java.sql".equals(fieldType.getPackage().getName())
+                || "java.util".equals(fieldType.getPackage().getName())) {
             isBaseClass = true;
         }
         return isBaseClass;
@@ -280,19 +262,19 @@ public final class PoiPublicUtil {
         if (field.getAnnotation(ExcelIgnore.class) != null) {
             boo = true;
         } else if (boo && field.getAnnotation(ExcelCollection.class) != null
-                   && isUseInThis(field.getAnnotation(ExcelCollection.class).name(), targetId)
-                   && (exclusionsList == null || !exclusionsList
-                       .contains(field.getAnnotation(ExcelCollection.class).name()))) {
+                && isUseInThis(field.getAnnotation(ExcelCollection.class).name(), targetId)
+                && (exclusionsList == null || !exclusionsList
+                .contains(field.getAnnotation(ExcelCollection.class).name()))) {
             boo = false;
         } else if (boo && field.getAnnotation(Excel.class) != null
-                   && isUseInThis(field.getAnnotation(Excel.class).name(), targetId)
-                   && (exclusionsList == null
-                       || !exclusionsList.contains(field.getAnnotation(Excel.class).name()))) {
+                && isUseInThis(field.getAnnotation(Excel.class).name(), targetId)
+                && (exclusionsList == null
+                || !exclusionsList.contains(field.getAnnotation(Excel.class).name()))) {
             boo = false;
         } else if (boo && field.getAnnotation(ExcelEntity.class) != null
-                   && isUseInThis(field.getAnnotation(ExcelEntity.class).name(), targetId)
-                   && (exclusionsList == null || !exclusionsList
-                       .contains(field.getAnnotation(ExcelEntity.class).name()))) {
+                && isUseInThis(field.getAnnotation(ExcelEntity.class).name(), targetId)
+                && (exclusionsList == null || !exclusionsList
+                .contains(field.getAnnotation(ExcelEntity.class).name()))) {
             boo = false;
         }
         return boo;
@@ -307,7 +289,7 @@ public final class PoiPublicUtil {
      */
     private static boolean isUseInThis(String exportName, String targetId) {
         return targetId == null || "".equals(exportName) || exportName.indexOf("_") < 0
-               || exportName.indexOf(targetId) != -1;
+                || exportName.indexOf(targetId) != -1;
     }
 
     private static Integer getImageType(String type) {
@@ -331,12 +313,12 @@ public final class PoiPublicUtil {
      *@author JueYue
      *   2013-11-20
      *@param entity
-     *@return  (byte[]) isAndType[0],(Integer)isAndType[1]
+     *@return (byte[]) isAndType[0],(Integer)isAndType[1]
      * @throws Exception
      */
     public static Object[] getIsAndType(ImageEntity entity) throws Exception {
         Object[] result = new Object[2];
-        String type;
+        String   type;
         if (entity.getType().equals(ImageEntity.URL)) {
             result[0] = ImageCache.getImage(entity.getUrl());
             type = entity.getUrl().split("/.")[entity.getUrl().split("/.").length - 1];
@@ -379,11 +361,11 @@ public final class PoiPublicUtil {
         String params = "";
         while (currentText.indexOf(START_STR) != -1) {
             params = currentText.substring(currentText.indexOf(START_STR) + 2,
-                currentText.indexOf(END_STR));
+                    currentText.indexOf(END_STR));
             Object obj = PoiElUtil.eval(params.trim(), map);
             //判断图片或者是集合
             if (obj instanceof ImageEntity || obj instanceof List
-                || obj instanceof ExcelListEntity) {
+                    || obj instanceof ExcelListEntity) {
                 return obj;
             } else {
                 currentText = currentText.replace(START_STR + params + END_STR, obj.toString());
@@ -414,10 +396,10 @@ public final class PoiPublicUtil {
             object = ((Map) object).get(paramsArr[index]);
         } else {
             object = PoiReflectorUtil.fromCache(object.getClass()).getValue(object,
-                paramsArr[index]);
+                    paramsArr[index]);
         }
         return (index == paramsArr.length - 1) ? (object == null ? "" : object)
-            : getValueDoWhile(object, paramsArr, ++index);
+                : getValueDoWhile(object, paramsArr, ++index);
     }
 
     /**
@@ -472,6 +454,15 @@ public final class PoiPublicUtil {
             }
             currentRun.setText(tempArr[tempArr.length - 1], tempArr.length - 1);
         }
+    }
+
+    public static int getNumDigits(int num) {
+        int count = 0;
+        while (num > 0) {
+            num = num / 10;
+            count++;
+        }
+        return count;
     }
 
 }
