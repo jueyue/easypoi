@@ -15,18 +15,12 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 [官网](https://opensource.afterturn.cn)
 
-[VIP技术服务-账号忘了,还是ＱＱ吧](https://lemur.taobao.com)
-
-    提供一年的技术支持服务
-    提供10次内的1V1服务,限1小时
-    提供升级指导
-    针对lemur提供的所有开源项目提供支持服务
 
 **开发指南**
 
 **[https://opensource.afterturn.cn/doc/easypoi.html](http://opensource.afterturn.cn/doc/easypoi.html)**
 
-[API文档](https://apidoc.gitee.com/lemur/easypoi/)
+
 
 [用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
@@ -38,10 +32,13 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
    - [陕西昊景无线网络技术有限公司](http://www.hjwxbd.com)
    - [湖北省楚天云有限公司](http://www.chutianyun.gov.cn)
    - [博彦科技](http://www.beyondsoft.com)
-   - 新光新云
-   - [图灵谷（北京）科技有限公司] (http://www.turingoal.com)
+   - [图灵谷北京科技有限公司] (http://www.turingoal.com)
    - [多贝拉](https://www.duobeila.cn/)
-   － [河南八六三软件股份有限公司] (http://www.863soft.com/cn/)
+   - [河南八六三软件股份有限公司] (http://www.863soft.com/cn/)
+   - [网易] (http://www.netease.com)
+   - [港华燃气] (http://www.towngas.com.cn/)
+   - [wueasy 快速开发平台] (https://www.wueasy.com)
+   - [北京易才博普奥管理顾问有限公司] (yun.weifenghr.com)
    
     
 
