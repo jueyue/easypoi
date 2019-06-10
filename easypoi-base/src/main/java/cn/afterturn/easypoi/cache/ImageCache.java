@@ -44,7 +44,7 @@ public class ImageCache {
         try {
             BufferedImage bufferImg = ImageIO.read(is);
             ImageIO.write(bufferImg,
-                    imagePath.substring(imagePath.indexOf(".") + 1, imagePath.length()),
+                    imagePath.substring(imagePath.lastIndexOf(".") + 1, imagePath.length()),
                     byteArrayOut);
             return byteArrayOut.toByteArray();
         } catch (Exception e) {
