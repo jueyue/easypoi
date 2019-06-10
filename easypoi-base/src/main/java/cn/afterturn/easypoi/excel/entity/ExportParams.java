@@ -68,10 +68,11 @@ public class ExportParams extends ExcelBaseParams {
      */
     private int freezeCol;
     /**
-     * 表头颜色
+     * 表头颜色 &  标题颜色
      */
     private short color = HSSFColor.HSSFColorPredefined.WHITE.getIndex();
     /**
+     * 第二行标题颜色
      * 属性说明行的颜色 例如:HSSFColor.SKY_BLUE.index 默认
      */
     private short headerColor = HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex();
@@ -114,7 +115,7 @@ public class ExportParams extends ExcelBaseParams {
      * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
      * 全局设置,优先使用
      */
-    public short height = 0;
+    private short height = 0;
 
     public ExportParams() {
 

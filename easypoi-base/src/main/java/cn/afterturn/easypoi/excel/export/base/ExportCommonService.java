@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -86,7 +87,10 @@ public class ExportCommonService {
             temp = format.parse(value.toString());
         } else if (value instanceof Date) {
             temp = (Date) value;
-        } else if (value instanceof LocalDate) {
+        } else if (value instanceof Instant) {
+            Instant instant = (Instant)value;
+            temp = Date.from(instant);
+        }  else if (value instanceof LocalDate) {
             LocalDate localDate = (LocalDate)value;
             temp = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         } else if(value instanceof LocalDateTime){

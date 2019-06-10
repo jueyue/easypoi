@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import cn.afterturn.easypoi.util.PoiCellUtil;
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -120,6 +121,25 @@ public class MergedRegionHelper {
                     } catch (Exception e) {
                     }
                 }
+            }
+        }
+    }
+
+
+
+    /**
+     * 把破坏的单元格合并(POI的shiftRows方法会把移动的行的合并单元格拆分)
+     * @return
+     */
+    public void mergeOtherCell(Sheet sheet) {
+        Set<String> tempMergeKeySet = mergedCache.keySet();
+        for(String mergeKey : tempMergeKeySet) {
+            String[] row_col = mergeKey.split("_");
+            if(!PoiCellUtil.isMergedRegion(sheet, Integer.valueOf(row_col[0]) - 1, Integer.valueOf(row_col[1]))) {
+                Integer[] mergeCellValue = mergedCache.get(mergeKey);
+                sheet.addMergedRegion(new CellRangeAddress(Integer.valueOf(row_col[0]) - 1,
+                                Integer.valueOf(row_col[0]) - 1 + mergeCellValue[0] - 1, Integer.valueOf(row_col[1]),
+                                Integer.valueOf(row_col[1]) + mergeCellValue[1] - 1));
             }
         }
     }

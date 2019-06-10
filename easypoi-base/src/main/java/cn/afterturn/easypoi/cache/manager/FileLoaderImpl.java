@@ -45,8 +45,8 @@ public class FileLoaderImpl implements IFileLoader {
             if (url.startsWith("http")) {
                 URL urlObj = new URL(url);
                 URLConnection urlConnection = urlObj.openConnection();
-                urlConnection.setConnectTimeout(30);
-                urlConnection.setReadTimeout(60);
+                urlConnection.setConnectTimeout(30 * 1000);
+                urlConnection.setReadTimeout(60 * 1000);
                 urlConnection.setDoInput(true);
                 fileis = urlConnection.getInputStream();
             } else {

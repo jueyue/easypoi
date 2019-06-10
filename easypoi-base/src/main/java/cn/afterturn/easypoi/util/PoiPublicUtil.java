@@ -242,6 +242,7 @@ public final class PoiPublicUtil {
                 || "java.lang".equals(fieldType.getPackage().getName())
                 || "java.math".equals(fieldType.getPackage().getName())
                 || "java.sql".equals(fieldType.getPackage().getName())
+                || "java.time".equals(fieldType.getPackage().getName())
                 || "java.util".equals(fieldType.getPackage().getName())) {
             isBaseClass = true;
         }
