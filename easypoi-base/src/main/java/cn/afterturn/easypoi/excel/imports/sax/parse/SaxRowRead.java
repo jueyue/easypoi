@@ -136,9 +136,6 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
                 addListContinue(object, param, datas, titlemap, targetId, params);
             }
         } else {
-            if (object != null && hanlder != null) {
-                hanlder.handler(object);
-            }
             object = PoiPublicUtil.createObject(pojoClass, targetId);
             SaxReadCellEntity entity;
             for (int i = 0, le = datas.size(); i < le; i++) {
@@ -147,6 +144,9 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
                 if (excelParams.containsKey(titleString)) {
                     saveFieldValue(params, object, entity, excelParams, titleString);
                 }
+            }
+            if (object != null && hanlder != null) {
+                hanlder.handler(object);
             }
             for (ExcelCollectionParams param : excelCollection) {
                 addListContinue(object, param, datas, titlemap, targetId, params);
