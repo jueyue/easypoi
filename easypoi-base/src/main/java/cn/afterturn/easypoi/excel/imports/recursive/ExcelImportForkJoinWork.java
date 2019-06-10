@@ -85,6 +85,7 @@ public class ExcelImportForkJoinWork extends RecursiveTask<ExcelImportResult> {
         ExcelImportResult result = new ExcelImportResult();
         result.setFailList(new ArrayList());
         result.setList(new ArrayList());
+        boolean isMap = Map.class.equals(pojoClass);
         for (int i = startRow; i <= endRow; i++) {
             row = sheet.getRow(i);
             errorMsg = new StringBuilder();
@@ -97,7 +98,7 @@ public class ExcelImportForkJoinWork extends RecursiveTask<ExcelImportResult> {
                 for (Integer cn : keys) {
                     Cell   cell        = row.getCell(cn);
                     String titleString = (String) titlemap.get(cn);
-                    if (excelParams.containsKey(titleString) || Map.class.equals(pojoClass)) {
+                    if (excelParams.containsKey(titleString) || isMap) {
                         try {
                             importService.saveFieldValue(params, object, cell, excelParams, titleString, row);
                         } catch (ExcelImportException e) {
@@ -111,7 +112,7 @@ public class ExcelImportForkJoinWork extends RecursiveTask<ExcelImportResult> {
                 if (object instanceof IExcelDataModel) {
                     ((IExcelDataModel) object).setRowNum(row.getRowNum());
                 }
-                if (importService.verifyingDataValidity(object, row, params, pojoClass, errorMsg)) {
+                if (importService.verifyingDataValidity(object, row, params, isMap, errorMsg)) {
                     result.getList().add(object);
                 } else {
                     result.getFailList().add(object);
