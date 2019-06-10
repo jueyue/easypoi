@@ -15,29 +15,6 @@
  */
 package cn.afterturn.easypoi.excel.export.base;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
-import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelCollection;
 import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
@@ -47,8 +24,25 @@ import cn.afterturn.easypoi.excel.entity.vo.PoiBaseConstants;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
+import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
+import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  * 导出基础处理,不涉及POI,只涉及对象,保证复用性
@@ -92,7 +86,13 @@ public class ExportCommonService {
             temp = format.parse(value.toString());
         } else if (value instanceof Date) {
             temp = (Date) value;
-        } else if (value instanceof java.sql.Date) {
+        } else if (value instanceof LocalDate) {
+            LocalDate localDate = (LocalDate)value;
+            temp = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        } else if(value instanceof LocalDateTime){
+            LocalDateTime localDateTime = (LocalDateTime)value;
+            temp = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        } else if(value instanceof java.sql.Date) {
             temp = new Date(((java.sql.Date) value).getTime());
         } else if (value instanceof java.sql.Time) {
             temp = new Date(((java.sql.Time) value).getTime());
