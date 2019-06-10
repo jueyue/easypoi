@@ -87,7 +87,7 @@ public final class PoiMergeCellUtil {
                         mergeDataMap.get(index).setEndRow(i - 1);
                     }
                 } else {
-                    text = row.getCell(index).getStringCellValue();
+                    text = PoiCellUtil.getCellValue(row.getCell(index));
                     if (StringUtils.isNotEmpty(text)) {
                         handlerMergeCells(index, i, text, mergeDataMap, sheet, row.getCell(index),
                                 mergeMap.get(index));
@@ -203,8 +203,8 @@ public final class PoiMergeCellUtil {
             return null;
         }
         if (cell.getRow().getCell(index) != null
-                && StringUtils.isNotEmpty(cell.getRow().getCell(index).getStringCellValue())) {
-            return cell.getRow().getCell(index).getStringCellValue();
+                && StringUtils.isNotEmpty(PoiCellUtil.getCellValue(cell.getRow().getCell(index)))) {
+            return PoiCellUtil.getCellValue(cell.getRow().getCell(index));
         }
         return getCellNotNullText(cell.getRow().getSheet().getRow(--rowNum).getCell(index), index,
                 rowNum);

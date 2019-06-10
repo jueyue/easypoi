@@ -280,10 +280,16 @@ public abstract class BaseExportService extends ExportCommonService {
     public void createDoubleCell(Row row, int index, String text, CellStyle style,
                                  ExcelExportEntity entity) {
         Cell cell = row.createCell(index);
-        if (text != null && text.length() > 0) {
-            cell.setCellValue(Double.parseDouble(text));
-        }
         cell.setCellType(CellType.NUMERIC);
+        if (text != null && text.length() > 0) {
+            try {
+                cell.setCellValue(Double.parseDouble(text));
+            } catch (NumberFormatException e) {
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+                cell.setCellValue(text);
+            }
+        }
+        
         if (style != null) {
             cell.setCellStyle(style);
         }
