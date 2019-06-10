@@ -139,6 +139,7 @@ public class ExcelBatchExportService extends ExcelExportService {
                 ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
             titleHeight = index;
             setCellWith(excelParams, sheet);
+            setColumnHidden(excelParams,sheet);
             rowHeight = getRowHeight(excelParams);
             setCurrentIndex(1);
         } catch (Exception e) {
@@ -173,7 +174,7 @@ public class ExcelBatchExportService extends ExcelExportService {
 
     public void closeExportBigExcel() {
         if (entity.getFreezeCol() != 0) {
-            sheet.createFreezePane(entity.getFreezeCol(), 0, entity.getFreezeCol(), 0);
+            sheet.createFreezePane(entity.getFreezeCol(), titleHeight, entity.getFreezeCol(), titleHeight);
         }
         mergeCells(sheet, excelParams, titleHeight);
         // 创建合计信息

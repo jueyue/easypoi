@@ -19,6 +19,7 @@ import cn.afterturn.easypoi.excel.entity.params.ExcelCollectionParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelImportEntity;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHandlerResult;
+import cn.afterturn.easypoi.excel.entity.vo.BaseEntityTypeConstants;
 import cn.afterturn.easypoi.excel.imports.base.ImportBaseService;
 import cn.afterturn.easypoi.excel.imports.recursive.ExcelImportForkJoinWork;
 import cn.afterturn.easypoi.exception.excel.ExcelImportException;
@@ -66,11 +67,12 @@ public class ExcelImportService extends ImportBaseService {
 
     private List<Row> successRow;
     private List<Row> failRow;
-    private List      failCollection = new ArrayList();
+    private List      failCollection;
 
     public ExcelImportService() {
         successRow = new ArrayList<Row>();
         failRow = new ArrayList<Row>();
+        failCollection = new ArrayList();
         this.cellValueServer = new CellValueService();
     }
 
@@ -102,9 +104,9 @@ public class ExcelImportService extends ImportBaseService {
             Cell   cell        = row.getCell(i);
             String titleString = (String) titlemap.get(i);
             if (param.getExcelParams().containsKey(titleString)) {
-                if (param.getExcelParams().get(titleString).getType() == 2) {
+                if (param.getExcelParams().get(titleString).getType() == BaseEntityTypeConstants.IMAGE_TYPE) {
                     picId = row.getRowNum() + "_" + i;
-                    saveImage(object, picId, param.getExcelParams(), titleString, pictures, params);
+                    saveImage(entity, picId, param.getExcelParams(), titleString, pictures, params);
                 } else {
                     try {
                         saveFieldValue(params, entity, cell, param.getExcelParams(), titleString, row);
@@ -158,7 +160,8 @@ public class ExcelImportService extends ImportBaseService {
         List<ExcelCollectionParams>    excelCollection = new ArrayList<ExcelCollectionParams>();
         String                         targetId        = null;
         i18nHandler = params.getI18nHandler();
-        if (!Map.class.equals(pojoClass)) {
+        boolean isMap = Map.class.equals(pojoClass);
+        if (!isMap) {
             Field[]     fileds  = PoiPublicUtil.getClassFields(pojoClass);
             ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
             if (etarget != null) {
@@ -207,6 +210,13 @@ public class ExcelImportService extends ImportBaseService {
                 if (sheet.getLastRowNum() - row.getRowNum() < params.getLastOfInvalidRow()) {
                     break;
                 }
+                /* 如果当前行的单元格都是无效的，那就继续下一行 */
+                if (row.getLastCellNum()<0) {
+                    continue;
+                }
+                if(isMap) {
+                    ((Map) object).put("excelRowNum", row.getRowNum());
+                }
                 errorMsg = new StringBuilder();
                 // 判断是集合元素还是不是集合元素,如果是就继续加入这个集合,不是就创建新的对象
                 // keyIndex 如果为空就不处理,仍然处理这一行
@@ -224,9 +234,9 @@ public class ExcelImportService extends ImportBaseService {
                         for (Integer cn : keys) {
                             Cell   cell        = row.getCell(cn);
                             String titleString = (String) titlemap.get(cn);
-                            if (excelParams.containsKey(titleString) || Map.class.equals(pojoClass)) {
+                            if (excelParams.containsKey(titleString) || isMap) {
                                 if (excelParams.get(titleString) != null
-                                        && excelParams.get(titleString).getType() == 2) {
+                                        && excelParams.get(titleString).getType() == BaseEntityTypeConstants.IMAGE_TYPE) {
                                     picId = row.getRowNum() + "_" + cn;
                                     saveImage(object, picId, excelParams, titleString, pictures,
                                             params);
@@ -251,7 +261,7 @@ public class ExcelImportService extends ImportBaseService {
                         for (ExcelCollectionParams param : excelCollection) {
                             addListContinue(object, param, row, titlemap, targetId, pictures, params, errorMsg);
                         }
-                        if (verifyingDataValidity(object, row, params, pojoClass, errorMsg)) {
+                        if (verifyingDataValidity(object, row, params, isMap, errorMsg)) {
                             collection.add(object);
                         } else {
                             failCollection.add(object);
@@ -276,7 +286,7 @@ public class ExcelImportService extends ImportBaseService {
      * 校验数据合法性
      */
     public boolean verifyingDataValidity(Object object, Row row, ImportParams params,
-                                         Class<?> pojoClass, StringBuilder fieldErrorMsg) {
+                                         boolean isMap, StringBuilder fieldErrorMsg) {
         boolean isAdd = true;
         Cell    cell  = null;
         if (params.isNeedVerify()) {
@@ -326,6 +336,9 @@ public class ExcelImportService extends ImportBaseService {
         if (cell != null) {
             cell.setCellStyle(errorCellStyle);
             failRow.add(row);
+            if(isMap) {
+                ((Map) object).put("excelErrorMsg", cell.getStringCellValue());
+            }
         } else {
             successRow.add(row);
         }

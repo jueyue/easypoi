@@ -224,8 +224,8 @@ public class CsvImportService extends ImportBaseService {
     private void saveFieldValue(CsvImportParams params, Object object, String cell,
                                 Map<String, ExcelImportEntity> excelParams, String titleString) throws Exception {
         if (cell.startsWith(params.getTextMark()) && cell.endsWith(params.getTextMark())) {
-            cell = cell.replaceFirst(cell, params.getTextMark());
-            cell = cell.substring(0, cell.lastIndexOf(params.getTextMark()));
+            //FIXED 字符串截取时考虑的情况不全面导致的BUG
+            cell = cell.substring(params.getTextMark().length(), cell.lastIndexOf(params.getTextMark()));
         }
         Object value = cellValueServer.getValue(params.getDataHandler(), object, cell, excelParams,
                 titleString, params.getDictHandler());

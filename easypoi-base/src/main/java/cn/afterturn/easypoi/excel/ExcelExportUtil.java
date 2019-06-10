@@ -45,6 +45,9 @@ public final class ExcelExportUtil {
     }
 
     /**
+     * 大数据量导出,方便导出时集合不用一次生成,可以多次生成,多次调用,
+     * 调用完成或需要调用关闭函数(closeExportBigExcel)
+     *
      * @param entity
      *            表格标题属性
      * @param pojoClass
@@ -59,6 +62,14 @@ public final class ExcelExportUtil {
         return batchService.appendData(dataSet);
     }
 
+    /**
+     * 大数据量导出,方便导出时集合不用一次生成,可以多次生成,多次调用,
+     * 调用完成或需要调用关闭函数(closeExportBigExcel)
+     * @param entity
+     * @param excelParams
+     * @param dataSet
+     * @return
+     */
     public static Workbook exportBigExcel(ExportParams entity, List<ExcelExportEntity> excelParams,
                                           Collection<?> dataSet) {
         ExcelBatchExportService batchService = ExcelBatchExportService
@@ -66,6 +77,9 @@ public final class ExcelExportUtil {
         return batchService.appendData(dataSet);
     }
 
+    /**
+     * 执行完成上述方法后,请关闭
+     */
     public static void closeExportBigExcel() {
         ExcelBatchExportService batchService = ExcelBatchExportService.getCurrentExcelBatchExportService();
         if(batchService != null) {
@@ -115,7 +129,7 @@ public final class ExcelExportUtil {
     }
 
     /**
-     * 一个excel 创建多个sheet
+     * 根据Map创建对应的Excel(一个excel 创建多个sheet)
      * 
      * @param list
      *            多个Map key title 对应表格Title key entity 对应表格对应实体 key data

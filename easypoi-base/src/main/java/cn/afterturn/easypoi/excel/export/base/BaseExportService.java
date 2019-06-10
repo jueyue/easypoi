@@ -13,22 +13,6 @@
  */
 package cn.afterturn.easypoi.excel.export.base;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-
-import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import cn.afterturn.easypoi.cache.ImageCache;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
@@ -40,6 +24,16 @@ import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * 提供POI基础操作服务
@@ -67,37 +61,31 @@ public abstract class BaseExportService extends ExportCommonService {
                              short rowHeight, int cellNum) {
         try {
             ExcelExportEntity entity;
-            Row row = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
+            Row               row = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
             if (rowHeight != -1) {
                 row.setHeight(rowHeight);
             }
-            int maxHeight = 1;
+            int maxHeight = 1, listMaxHeight = 1;
             // 合并需要合并的单元格
             int margeCellNum = cellNum;
-            int indexKey = createIndexCell(row, index, excelParams.get(0));
+            int indexKey     = createIndexCell(row, index, excelParams.get(0));
             cellNum += indexKey;
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
                 if (entity.getList() != null) {
-                    Collection<?> list = getListCellValue(entity, t);
-                    int listC = 0;
+                    Collection<?> list  = getListCellValue(entity, t);
+                    int           listIndex = 0, tmpListHeight = 0;
                     if (list != null && list.size() > 0) {
                         int tempCellNum = 0;
                         for (Object obj : list) {
-                            int[] temp = createCells(patriarch, index + maxHeight - 1, obj, entity.getList(), sheet, workbook, rowHeight, cellNum);
+                            int[] temp = createCells(patriarch, index + listIndex, obj, entity.getList(), sheet, workbook, rowHeight, cellNum);
                             tempCellNum = temp[1];
-                            maxHeight += temp[0];
-                            /*createListCells(patriarch, index + listC, cellNum, obj, entity.getList(),
-                                    sheet, workbook, rowHeight);
-                            listC++;*/
+                            tmpListHeight += temp[0];
+                            listIndex++;
                         }
                         cellNum = tempCellNum;
-                        maxHeight--;
+                        listMaxHeight = Math.max(listMaxHeight, tmpListHeight);
                     }
-                    /*  cellNum += entity.getList().size();
-                    if (list != null && list.size() > maxHeight) {
-                        maxHeight = list.size();
-                    }*/
                 } else {
                     Object value = getCellValue(entity, t);
 
@@ -126,6 +114,10 @@ public abstract class BaseExportService extends ExportCommonService {
                     }
                 }
             }
+            maxHeight += listMaxHeight - 1;
+            if(indexKey == 1 && excelParams.get(1).isNeedMerge()) {
+                excelParams.get(0).setNeedMerge(true);
+            }
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
                 if (entity.getList() != null) {
@@ -153,7 +145,7 @@ public abstract class BaseExportService extends ExportCommonService {
      */
     public void createImageCell(Drawing patriarch, ExcelExportEntity entity, Row row, int i,
                                 String imagePath, Object obj) throws Exception {
-        Cell cell = row.createCell(i);
+        Cell   cell  = row.createCell(i);
         byte[] value = null;
         if (entity.getExportImageType() != 1) {
             value = (byte[]) (entity.getMethods() != null
@@ -191,6 +183,32 @@ public abstract class BaseExportService extends ExportCommonService {
 
     }
 
+    /**
+     * 图片类型的Cell
+     */
+    public void createImageCell(Cell cell, double height, int rowspan, int colspan,
+                                String imagePath, byte[] data) throws Exception {
+        if (height > cell.getRow().getHeight()) {
+            cell.getRow().setHeight((short) height);
+        }
+        ClientAnchor anchor;
+        if (type.equals(ExcelType.HSSF)) {
+            anchor = new HSSFClientAnchor(0, 0, 0, 0, (short) cell.getColumnIndex(), cell.getRow().getRowNum(), (short) (cell.getColumnIndex() + colspan),
+                    cell.getRow().getRowNum() + rowspan);
+        } else {
+            anchor = new XSSFClientAnchor(0, 0, 0, 0, (short) cell.getColumnIndex(), cell.getRow().getRowNum(), (short) (cell.getColumnIndex() + colspan),
+                    cell.getRow().getRowNum() + rowspan);
+        }
+        if (StringUtils.isNotEmpty(imagePath)) {
+            data = ImageCache.getImage(imagePath);
+        }
+        if (data != null) {
+            PoiExcelGraphDataUtil.getDrawingPatriarch(cell.getSheet()).createPicture(anchor,
+                    cell.getSheet().getWorkbook().addPicture(data, getImageType(data)));
+        }
+
+    }
+
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
         if (excelExportEntity.getName() != null && "序号".equals(excelExportEntity.getName()) && excelExportEntity.getFormat() != null
                 && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
@@ -209,7 +227,7 @@ public abstract class BaseExportService extends ExportCommonService {
                                 List<ExcelExportEntity> excelParams, Sheet sheet,
                                 Workbook workbook, short rowHeight) throws Exception {
         ExcelExportEntity entity;
-        Row row;
+        Row               row;
         if (sheet.getRow(index) == null) {
             row = sheet.createRow(index);
             if (rowHeight != -1) {
@@ -285,7 +303,7 @@ public abstract class BaseExportService extends ExportCommonService {
             try {
                 cell.setCellValue(Double.parseDouble(text));
             } catch (NumberFormatException e) {
-                cell.setCellType(Cell.CELL_TYPE_STRING);
+                cell.setCellType(CellType.STRING);
                 cell.setCellValue(text);
             }
         }
@@ -304,7 +322,7 @@ public abstract class BaseExportService extends ExportCommonService {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("add statistics data ,size is {}", statistics.size());
             }
-            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+            Row          row  = sheet.createRow(sheet.getLastRowNum() + 1);
             Set<Integer> keys = statistics.keySet();
             createStringCell(row, 0, "合计", styles, null);
             for (Integer key : keys) {

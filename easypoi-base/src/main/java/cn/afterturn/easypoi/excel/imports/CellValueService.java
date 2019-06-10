@@ -38,6 +38,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -70,15 +72,10 @@ public class CellValueService {
         Object result = null;
         if ("class java.util.Date".equals(classFullName) || "class java.sql.Date".equals(classFullName)
                 || ("class java.sql.Time").equals(classFullName)
+                || ("class java.time.Instant").equals(classFullName)
+                || ("class java.time.LocalDate").equals(classFullName)
+                || ("class java.time.LocalDateTime").equals(classFullName)
                 || ("class java.sql.Timestamp").equals(classFullName)) {
-            /*
-            if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-                // 日期格式
-                result = cell.getDateCellValue();
-            } else {
-                cell.setCellType(Cell.CELL_TYPE_STRING);
-                result = getDateData(entity, cell.getStringCellValue());
-            }*/
             //FIX: 单元格yyyyMMdd数字时候使用 cell.getDateCellValue() 解析出的日期错误
             if (CellType.NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
                 result = DateUtil.getJavaDate(cell.getNumericCellValue());
@@ -96,7 +93,13 @@ public class CellValueService {
                     return null;
                 }
             }
-            if (("class java.sql.Date").equals(classFullName)) {
+            if (("class java.time.Instant").equals(classFullName)) {
+                result = ((Date) result).toInstant();
+            } else if (("class java.time.LocalDate").equals(classFullName)) {
+                result = ((Date) result).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            } else if (("class java.time.LocalDateTime").equals(classFullName)) {
+                result = ((Date) result).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            } else if (("class java.sql.Date").equals(classFullName)) {
                 result = new java.sql.Date(((Date) result).getTime());
             } else if (("class java.sql.Time").equals(classFullName)) {
                 result = new Time(((Date) result).getTime());
@@ -197,9 +200,10 @@ public class CellValueService {
      * @param titleString
      * @param dictHandler
      */
-    public Object getValue(IExcelDataHandler<?> dataHandler, Object object, String cell,
+    public Object getValue(IExcelDataHandler<?> dataHandler, Object object, Object cell,
                            Map<String, ExcelImportEntity> excelParams,
                            String titleString, IExcelDictHandler dictHandler) throws Exception {
+
         ExcelImportEntity entity        = excelParams.get(titleString);
         String            classFullName = "class java.lang.Object";
         Class             clazz         = null;
@@ -210,47 +214,18 @@ public class CellValueService {
             classFullName = ts[0].toString();
             clazz = (Class) ts[0];
         }
-        Object result = cell;
+        Object result = null;
+        if(cell instanceof Cell){
+            result = getCellValue(classFullName, (Cell) cell, entity);
+        }else{
+            result = cell;
+        }
         if (entity != null) {
             result = handlerSuffix(entity.getSuffix(), result);
+            result = replaceValue(entity.getReplace(), result);
             result = replaceValue(entity.getReplace(), result);
             if (dictHandler != null && StringUtils.isNoneBlank(entity.getDict())) {
                 result = dictHandler.toValue(entity.getDict(), object, entity.getName(), result);
-            }
-        }
-        result = handlerValue(dataHandler, object, result, titleString);
-        return getValueByType(classFullName, result, entity, clazz);
-    }
-
-    /**
-     * 获取cell的值
-     *
-     * @param object
-     * @param cell
-     * @param excelParams
-     * @param titleString
-     * @param dictHandler
-     */
-    public Object getValue(IExcelDataHandler<?> dataHandler, Object object, Cell cell,
-                           Map<String, ExcelImportEntity> excelParams,
-                           String titleString, IExcelDictHandler dictHandler) throws Exception {
-        ExcelImportEntity entity        = excelParams.get(titleString);
-        String            classFullName = "class java.lang.Object";
-        Class             clazz         = null;
-        if (!(object instanceof Map)) {
-            Method setMethod = entity.getMethods() != null && entity.getMethods().size() > 0
-                    ? entity.getMethods().get(entity.getMethods().size() - 1) : entity.getMethod();
-            Type[] ts = setMethod.getGenericParameterTypes();
-            classFullName = ts[0].toString();
-            clazz = (Class) ts[0];
-        }
-        Object result = getCellValue(classFullName, cell, entity);
-        if (entity != null) {
-            result = handlerSuffix(entity.getSuffix(), result);
-            result = replaceValue(entity.getReplace(), result);
-            result = replaceValue(entity.getReplace(), result);
-            if (dictHandler != null && StringUtils.isNoneBlank(entity.getDict())) {
-                dictHandler.toValue(entity.getDict(), object, entity.getName(), result);
             }
         }
         result = handlerValue(dataHandler, object, result, titleString);

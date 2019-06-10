@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.afterturn.easypoi.excel.entity.TemplateSumEntity;
 import cn.afterturn.easypoi.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -45,7 +46,6 @@ import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
 import cn.afterturn.easypoi.excel.export.base.BaseExportService;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
-import cn.afterturn.easypoi.excel.export.template.TemplateSumHandler.TemplateSumEntity;
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
@@ -320,10 +320,13 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         }
 
         //修改需要处理的统计值
-        hanlderSumCell(sheet);
+        handlerSumCell(sheet);
+
+        //修复因为调用shiftRows而被破坏的合并单元格
+        mergedRegionHelper.mergeOtherCell(sheet);
     }
 
-    private void hanlderSumCell(Sheet sheet) {
+    private void handlerSumCell(Sheet sheet) {
         for (TemplateSumEntity sumEntity : templateSumHandler.getDataList()) {
             Cell cell = sheet.getRow(sumEntity.getRow()).getCell(sumEntity.getCol());
             cell.setCellValue(cell.getStringCellValue()
@@ -463,7 +466,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     PoiMergeCellUtil.addMergedRegion(cell.getSheet(), cell.getRowIndex(),
                             cell.getRowIndex() + img.getRowspan() - 1, cell.getColumnIndex(), cell.getColumnIndex() + img.getColspan() - 1);
                 }
-                createImageCell(cell, img.getHeight(), img.getUrl(), img.getData());
+                createImageCell(cell, img.getHeight(), img.getRowspan(), img.getColspan(), img.getUrl(), img.getData());
             } else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
                 cell.setCellValue(Double.parseDouble(obj.toString()));
                 cell.setCellType(CellType.NUMERIC);
@@ -576,7 +579,12 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 if (obj != null && obj instanceof ImageEntity) {
                     ImageEntity img = (ImageEntity) obj;
                     row.getCell(ci).setCellValue("");
-                    createImageCell(row.getCell(ci), img.getHeight(), img.getUrl(), img.getData());
+                    if (img.getRowspan()>1 || img.getColspan() > 1){
+                        img.setHeight(0);
+                        row.getCell(ci).getSheet().addMergedRegion(new CellRangeAddress(row.getCell(ci).getRowIndex(),
+                                row.getCell(ci).getRowIndex() + img.getRowspan() - 1, row.getCell(ci).getColumnIndex(), row.getCell(ci).getColumnIndex() + img.getColspan() -1));
+                    }
+                    createImageCell(row.getCell(ci), img.getHeight(),img.getRowspan(),img.getColspan(), img.getUrl(), img.getData());
                 } else if (isNumber && StringUtils.isNotEmpty(val)) {
                     row.getCell(ci).setCellValue(Double.parseDouble(val));
                     row.getCell(ci).setCellType(CellType.NUMERIC);
@@ -596,7 +604,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 setMergedRegionStyle(row, ci, params);
                 //合并对应单元格
                 if ((params.getRowspan() != 1 || params.getColspan() != 1)
-                        && !mergedRegionHelper.isMergedRegion(row.getRowNum() + 1, ci)) {
+                        && !mergedRegionHelper.isMergedRegion(row.getRowNum() + 1, ci)
+                        && PoiCellUtil.isMergedRegion(row.getSheet(), row.getRowNum(), ci)) {
                     PoiMergeCellUtil.addMergedRegion(row.getSheet(), row.getRowNum(),
                             row.getRowNum() + params.getRowspan() - 1, ci,
                             ci + params.getColspan() - 1);
