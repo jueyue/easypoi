@@ -15,32 +15,11 @@
  */
 package cn.afterturn.easypoi.excel.export.template;
 
-import static cn.afterturn.easypoi.util.PoiElUtil.*;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import cn.afterturn.easypoi.excel.entity.TemplateSumEntity;
-import cn.afterturn.easypoi.util.*;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cn.afterturn.easypoi.cache.ExcelCache;
 import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import cn.afterturn.easypoi.excel.entity.TemplateSumEntity;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
@@ -49,12 +28,25 @@ import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.excel.html.helper.MergedRegionHelper;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
+import cn.afterturn.easypoi.util.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.*;
+
+import static cn.afterturn.easypoi.excel.ExcelExportUtil.SHEET_NAME;
+import static cn.afterturn.easypoi.util.PoiElUtil.*;
 
 /**
  * Excel 导出根据模板导出
  *
  * @author JueYue
- *  2013-10-17
+ * 2013-10-17
  * @version 1.0
  */
 public final class ExcelExportOfTemplateUtil extends BaseExportService {
@@ -65,7 +57,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     /**
      * 缓存TEMP 的for each创建的cell ,跳过这个cell的模板语法查找,提高效率
      */
-    private Set<String> tempCreateCellSet = new HashSet<String>();
+    private Set<String>          tempCreateCellSet = new HashSet<String>();
     /**
      * 模板参数,全局都用到
      */
@@ -73,7 +65,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     /**
      * 单元格合并信息
      */
-    private MergedRegionHelper mergedRegionHelper;
+    private MergedRegionHelper   mergedRegionHelper;
 
     private TemplateSumHandler templateSumHandler;
 
@@ -89,12 +81,12 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                                 Workbook workbook) throws Exception {
 
         // 获取表头数据
-        Map<String, Integer> titlemap = getTitleMap(sheet);
-        Drawing patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
+        Map<String, Integer> titlemap  = getTitleMap(sheet);
+        Drawing              patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
         // 得到所有字段
-        Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
-        ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
-        String targetId = null;
+        Field[]     fileds   = PoiPublicUtil.getClassFields(pojoClass);
+        ExcelTarget etarget  = pojoClass.getAnnotation(ExcelTarget.class);
+        String      targetId = null;
         if (etarget != null) {
             targetId = etarget.value();
         }
@@ -123,6 +115,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 利用foreach循环输出数据
+     *
      * @param cell
      * @param map
      * @param name
@@ -131,21 +124,21 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     private void addListDataToExcel(Cell cell, Map<String, Object> map,
                                     String name) throws Exception {
         boolean isCreate = !name.contains(FOREACH_NOT_CREATE);
-        boolean isShift = name.contains(FOREACH_AND_SHIFT);
+        boolean isShift  = name.contains(FOREACH_AND_SHIFT);
         name = name.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
                 .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
-        String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
+        String[]      keys  = name.replaceAll("\\s{1,}", " ").trim().split(" ");
         Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
         Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
                 mergedRegionHelper);
         if (datas == null) {
             return;
         }
-        Iterator<?> its = datas.iterator();
-        int rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
+        Iterator<?> its     = datas.iterator();
+        int         rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
         @SuppressWarnings("unchecked")
         List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
-        Row row = null;
+        Row row      = null;
         int rowIndex = cell.getRow().getRowNum() + 1;
         //处理当前行
         if (its.hasNext()) {
@@ -174,14 +167,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 下移数据
+     *
      * @param dataSet
      * @param excelParams
      * @return
      */
     private int getShiftRows(Collection<?> dataSet,
                              List<ExcelExportEntity> excelParams) throws Exception {
-        int size = 0;
-        Iterator<?> its = dataSet.iterator();
+        int         size = 0;
+        Iterator<?> its  = dataSet.iterator();
         while (its.hasNext()) {
             Object t = its.next();
             size += getOneObjectSize(t, excelParams);
@@ -198,7 +192,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      */
     public int getOneObjectSize(Object t, List<ExcelExportEntity> excelParams) throws Exception {
         ExcelExportEntity entity;
-        int maxHeight = 1;
+        int               maxHeight = 1;
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
             entity = excelParams.get(k);
             if (entity.getList() != null) {
@@ -212,7 +206,90 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     }
 
-    public Workbook createExcleByTemplate(TemplateExportParams params, Class<?> pojoClass,
+    public Workbook createExcelCloneByTemplate(TemplateExportParams params,
+                                               Map<Integer, List<Map<String, Object>>> map) {
+        // step 1. 判断模板的地址
+        if (params == null || map == null || StringUtils.isEmpty(params.getTemplateUrl())) {
+            throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
+        }
+        Workbook wb = null;
+        // step 2. 判断模板的Excel类型,解析模板
+        try {
+            this.teplateParams = params;
+            wb = ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),
+                    true);
+            int oldSheetNum = wb.getNumberOfSheets();
+            // 把所有的KEY排个顺序
+            List<Map<String, Object>> mapList;
+            List<Integer>             sheetNumList = new ArrayList<>();
+            sheetNumList.addAll(map.keySet());
+            Collections.sort(sheetNumList);
+
+            //把需要克隆的全部克隆一遍
+            for (Integer sheetNum : sheetNumList) {
+                mapList = map.get(sheetNum);
+                for (int i = mapList.size(); i > 0; i--) {
+                    wb.cloneSheet(sheetNum);
+                }
+            }
+            for (int i = 0; i < oldSheetNum; i++) {
+                wb.removeSheetAt(i);
+            }
+            // 创建表格样式
+            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+                    .getConstructor(Workbook.class).newInstance(wb));
+            // step 3. 解析模板
+            int sheetIndex = 0;
+            for (Integer sheetNum : sheetNumList) {
+                mapList = map.get(sheetNum);
+                for (int i = mapList.size() - 1; i >= 0; i--) {
+                    tempCreateCellSet.clear();
+                    if (mapList.get(i).containsKey(SHEET_NAME)) {
+                        wb.setSheetName(sheetIndex, mapList.get(i).get(SHEET_NAME).toString());
+                    }
+                    parseTemplate(wb.getSheetAt(sheetIndex), mapList.get(i), params.isColForEach());
+                    sheetIndex++;
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+        return wb;
+    }
+
+    public Workbook createExcelByTemplate(TemplateExportParams params,
+                                          Map<Integer, Map<String, Object>> map) {
+        // step 1. 判断模板的地址
+        if (params == null || map == null || StringUtils.isEmpty(params.getTemplateUrl())) {
+            throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
+        }
+        Workbook wb = null;
+        // step 2. 判断模板的Excel类型,解析模板
+        try {
+            this.teplateParams = params;
+            wb = getCloneWorkBook();
+            // 创建表格样式
+            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+                    .getConstructor(Workbook.class).newInstance(wb));
+            // step 3. 解析模板
+            for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets()
+                    : params.getSheetNum().length; i < le; i++) {
+                if (params.getSheetName() != null && params.getSheetName().length > i
+                        && StringUtils.isNotEmpty(params.getSheetName()[i])) {
+                    wb.setSheetName(i, params.getSheetName()[i]);
+                }
+                tempCreateCellSet.clear();
+                parseTemplate(wb.getSheetAt(i), map.get(i), params.isColForEach());
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+        return wb;
+    }
+
+    public Workbook createExcelByTemplate(TemplateExportParams params, Class<?> pojoClass,
                                           Collection<?> dataSet, Map<String, Object> map) {
         // step 1. 判断模板的地址
         if (params == null || map == null || (StringUtils.isEmpty(params.getTemplateUrl()) && params.getTemplateWb() == null)) {
@@ -276,15 +353,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      * @return
      */
     private Map<String, Integer> getTitleMap(Sheet sheet) {
-        Row row = null;
-        Iterator<Cell> cellTitle;
+        Row                  row      = null;
+        Iterator<Cell>       cellTitle;
         Map<String, Integer> titlemap = new HashMap<String, Integer>();
         for (int j = 0; j < teplateParams.getHeadingRows(); j++) {
             row = sheet.getRow(j + teplateParams.getHeadingStartRow());
             cellTitle = row.cellIterator();
             int i = row.getFirstCellNum();
             while (cellTitle.hasNext()) {
-                Cell cell = cellTitle.next();
+                Cell   cell  = cellTitle.next();
                 String value = cell.getStringCellValue();
                 if (!StringUtils.isEmpty(value)) {
                     titlemap.put(value, i);
@@ -304,7 +381,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         if (colForeach) {
             colForeach(sheet, map);
         }
-        Row row = null;
+        Row row   = null;
         int index = 0;
         while (index <= sheet.getLastRowNum()) {
             row = sheet.getRow(index++);
@@ -336,13 +413,14 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 先进行列的循环,因为涉及很多数据
+     *
      * @param sheet
      * @param map
      */
     private void colForeach(Sheet sheet, Map<String, Object> map) throws Exception {
-        Row row = null;
-        Cell cell = null;
-        int index = 0;
+        Row  row   = null;
+        Cell cell  = null;
+        int  index = 0;
         while (index <= sheet.getLastRowNum()) {
             row = sheet.getRow(index++);
             if (row == null) {
@@ -363,6 +441,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 循环列表
+     *
      * @param cell
      * @param map
      * @param name
@@ -372,15 +451,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         boolean isCreate = name.contains(FOREACH_COL_VALUE);
         name = name.replace(FOREACH_COL_VALUE, EMPTY).replace(FOREACH_COL, EMPTY).replace(START_STR,
                 EMPTY);
-        String[] keys = name.replaceAll("\\s{1,}", " ").trim().split(" ");
+        String[]      keys  = name.replaceAll("\\s{1,}", " ").trim().split(" ");
         Collection<?> datas = (Collection<?>) PoiPublicUtil.getParamsValue(keys[0], map);
         Object[] columnsInfo = getAllDataColumns(cell, name.replace(keys[0], EMPTY),
                 mergedRegionHelper);
         if (datas == null) {
             return;
         }
-        Iterator<?> its = datas.iterator();
-        int rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
+        Iterator<?> its     = datas.iterator();
+        int         rowspan = (Integer) columnsInfo[0], colspan = (Integer) columnsInfo[1];
         @SuppressWarnings("unchecked")
         List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
         while (its.hasNext()) {
@@ -400,14 +479,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 先判断删除,省得影响效率
+     *
      * @param sheet
      * @param map
      * @throws Exception
      */
     private void deleteCell(Sheet sheet, Map<String, Object> map) throws Exception {
-        Row row = null;
-        Cell cell = null;
-        int index = 0;
+        Row  row   = null;
+        Cell cell  = null;
+        int  index = 0;
         while (index <= sheet.getLastRowNum()) {
             row = sheet.getRow(index++);
             if (row == null) {
@@ -450,7 +530,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         if (oldString != null && oldString.indexOf(START_STR) != -1
                 && !oldString.contains(FOREACH)) {
             // step 2. 判断是否含有解析函数
-            String params = null;
+            String  params   = null;
             boolean isNumber = false;
             if (isNumber(oldString)) {
                 isNumber = true;
@@ -488,6 +568,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 创建并返回第一个Row
+     *
      * @param sheet
      * @param rowIndex
      * @param isCreate
@@ -538,7 +619,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             int ci = columnIndex;//cell的序号
 
             short high = columns.get(0).getHeight();
-            int n = k;
+            int   n    = k;
             while (n > 0) {
                 if (columns.get(n * colspan).getHeight() == 0) {
                     n--;
@@ -579,12 +660,12 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 if (obj != null && obj instanceof ImageEntity) {
                     ImageEntity img = (ImageEntity) obj;
                     row.getCell(ci).setCellValue("");
-                    if (img.getRowspan()>1 || img.getColspan() > 1){
+                    if (img.getRowspan() > 1 || img.getColspan() > 1) {
                         img.setHeight(0);
                         row.getCell(ci).getSheet().addMergedRegion(new CellRangeAddress(row.getCell(ci).getRowIndex(),
-                                row.getCell(ci).getRowIndex() + img.getRowspan() - 1, row.getCell(ci).getColumnIndex(), row.getCell(ci).getColumnIndex() + img.getColspan() -1));
+                                row.getCell(ci).getRowIndex() + img.getRowspan() - 1, row.getCell(ci).getColumnIndex(), row.getCell(ci).getColumnIndex() + img.getColspan() - 1));
                     }
-                    createImageCell(row.getCell(ci), img.getHeight(),img.getRowspan(),img.getColspan(), img.getUrl(), img.getData());
+                    createImageCell(row.getCell(ci), img.getHeight(), img.getRowspan(), img.getColspan(), img.getUrl(), img.getData());
                 } else if (isNumber && StringUtils.isNotEmpty(val)) {
                     row.getCell(ci).setCellValue(Double.parseDouble(val));
                     row.getCell(ci).setCellType(CellType.NUMERIC);
@@ -623,6 +704,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 设置合并单元格的样式
+     *
      * @param row
      * @param ci
      * @param params
@@ -630,13 +712,13 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     private void setMergedRegionStyle(Row row, int ci, ExcelForEachParams params) {
         //第一行数据
         for (int i = 1; i < params.getColspan(); i++) {
-            if(params.getCellStyle() != null){
+            if (params.getCellStyle() != null) {
                 row.getCell(ci + i).setCellStyle(params.getCellStyle());
             }
         }
         for (int i = 1; i < params.getRowspan(); i++) {
             for (int j = 0; j < params.getColspan(); j++) {
-                if(params.getCellStyle() != null){
+                if (params.getCellStyle() != null) {
                     row.getCell(ci + j).setCellStyle(params.getCellStyle());
                 }
             }
@@ -645,6 +727,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 获取迭代的数据的值
+     *
      * @param cell
      * @param name
      * @param mergedRegionHelper
@@ -660,7 +743,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             int index = cell.getColumnIndex();
             //保存col 的开始列
             int startIndex = cell.getColumnIndex();
-            Row row = cell.getRow();
+            Row row        = cell.getRow();
             while (index < row.getLastCellNum()) {
                 int colSpan = columns.get(columns.size() - 1) != null
                         ? columns.get(columns.size() - 1).getColspan() : 1;
@@ -729,6 +812,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     /**
      * 获取模板参数
+     *
      * @param name
      * @param cell
      * @param mergedRegionHelper
@@ -785,37 +869,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             }
         }
         sortAllParams(excelParams);
-    }
-
-    public Workbook createExcleByTemplate(TemplateExportParams params,
-                                          Map<Integer, Map<String, Object>> map) {
-        // step 1. 判断模板的地址
-        if (params == null || map == null || StringUtils.isEmpty(params.getTemplateUrl())) {
-            throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
-        }
-        Workbook wb = null;
-        // step 2. 判断模板的Excel类型,解析模板
-        try {
-            this.teplateParams = params;
-            wb = getCloneWorkBook();
-            // 创建表格样式
-            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
-                    .getConstructor(Workbook.class).newInstance(wb));
-            // step 3. 解析模板
-            for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets()
-                    : params.getSheetNum().length; i < le; i++) {
-                if (params.getSheetName() != null && params.getSheetName().length > i
-                        && StringUtils.isNotEmpty(params.getSheetName()[i])) {
-                    wb.setSheetName(i, params.getSheetName()[i]);
-                }
-                tempCreateCellSet.clear();
-                parseTemplate(wb.getSheetAt(i), map.get(i), params.isColForEach());
-            }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return null;
-        }
-        return wb;
     }
 
 }

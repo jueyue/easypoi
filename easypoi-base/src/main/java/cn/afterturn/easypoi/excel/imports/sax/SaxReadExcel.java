@@ -59,12 +59,12 @@ public class SaxReadExcel {
     }
 
     private <T> List<T> readExcel(OPCPackage opcPackage, Class<?> pojoClass, ImportParams params,
-                                  ISaxRowRead rowRead, IReadHandler hanlder) {
+                                  ISaxRowRead rowRead, IReadHandler handler) {
         try {
             XSSFReader xssfReader = new XSSFReader(opcPackage);
             SharedStringsTable sst = xssfReader.getSharedStringsTable();
             if (rowRead == null) {
-                rowRead = new SaxRowRead(pojoClass, params, hanlder);
+                rowRead = new SaxRowRead(pojoClass, params, handler);
             }
             XMLReader parser = fetchSheetParser(sst, rowRead);
             Iterator<InputStream> sheets = xssfReader.getSheetsData();
@@ -75,6 +75,9 @@ public class SaxReadExcel {
                 InputSource sheetSource = new InputSource(sheet);
                 parser.parse(sheetSource);
                 sheet.close();
+            }
+            if (handler != null) {
+                handler.doAfterAll();
             }
             return rowRead.getList();
         } catch (Exception e) {
