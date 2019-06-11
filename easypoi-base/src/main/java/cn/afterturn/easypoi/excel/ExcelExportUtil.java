@@ -41,6 +41,9 @@ import cn.afterturn.easypoi.excel.export.template.ExcelExportOfTemplateUtil;
  */
 public final class ExcelExportUtil {
 
+    public static int USE_SXSSF_LIMIT = 100000;
+    public static final String SHEET_NAME = "sheetName";
+
     private ExcelExportUtil() {
     }
 
@@ -105,7 +108,7 @@ public final class ExcelExportUtil {
     private static Workbook getWorkbook(ExcelType type, int size) {
         if (ExcelType.HSSF.equals(type)) {
             return new HSSFWorkbook();
-        } else if (size < 100000) {
+        } else if (size < USE_SXSSF_LIMIT) {
             return new XSSFWorkbook();
         } else {
             return new SXSSFWorkbook();
@@ -162,7 +165,7 @@ public final class ExcelExportUtil {
     @Deprecated
     public static Workbook exportExcel(TemplateExportParams params, Class<?> pojoClass,
                                        Collection<?> dataSet, Map<String, Object> map) {
-        return new ExcelExportOfTemplateUtil().createExcleByTemplate(params, pojoClass, dataSet,
+        return new ExcelExportOfTemplateUtil().createExcelByTemplate(params, pojoClass, dataSet,
             map);
     }
 
@@ -176,7 +179,7 @@ public final class ExcelExportUtil {
      * @return
      */
     public static Workbook exportExcel(TemplateExportParams params, Map<String, Object> map) {
-        return new ExcelExportOfTemplateUtil().createExcleByTemplate(params, null, null, map);
+        return new ExcelExportOfTemplateUtil().createExcelByTemplate(params, null, null, map);
     }
 
     /**
@@ -190,7 +193,21 @@ public final class ExcelExportUtil {
      */
     public static Workbook exportExcel(Map<Integer, Map<String, Object>> map,
                                        TemplateExportParams params) {
-        return new ExcelExportOfTemplateUtil().createExcleByTemplate(params, map);
+        return new ExcelExportOfTemplateUtil().createExcelByTemplate(params, map);
+    }
+
+    /**
+     * 导出文件通过模板解析只有模板,没有集合
+     * 每个sheet对应一个list,按照数量进行导出排序,key是sheet的NUM
+     * @param params
+     *            导出参数类
+     * @param map
+     *            模板集合
+     * @return
+     */
+    public static Workbook exportExcelClone(Map<Integer, List<Map<String, Object>>> map,
+                                       TemplateExportParams params) {
+        return new ExcelExportOfTemplateUtil().createExcelCloneByTemplate(params, map);
     }
 
 }
