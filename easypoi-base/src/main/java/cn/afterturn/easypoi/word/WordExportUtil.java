@@ -61,6 +61,13 @@ public class WordExportUtil {
         new ParseWord07().parseWord(document, map);
     }
 
+    /**
+     * 一个模板生成多页
+     * @param url
+     * @param list
+     * @return
+     * @throws Exception
+     */
     public static XWPFDocument exportWord07(String url, List<Map<String, Object>> list) throws Exception {
         return new ParseWord07().parseWord(url, list);
     }
