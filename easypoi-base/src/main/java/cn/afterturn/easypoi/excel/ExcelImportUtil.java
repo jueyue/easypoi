@@ -130,12 +130,11 @@ public class ExcelImportUtil {
      * @param inputstream
      * @param pojoClass
      * @param params
-     * @param hanlder
+     * @param handler
      */
-    @SuppressWarnings("rawtypes")
     public static void importExcelBySax(InputStream inputstream, Class<?> pojoClass,
-                                        ImportParams params, IReadHandler hanlder) {
-        new SaxReadExcel().readExcel(inputstream, pojoClass, params, hanlder);
+                                        ImportParams params, IReadHandler handler) {
+        new SaxReadExcel().readExcel(inputstream, pojoClass, params, handler);
     }
 
 }
