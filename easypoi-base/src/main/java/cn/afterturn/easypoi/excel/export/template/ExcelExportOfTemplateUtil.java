@@ -219,6 +219,10 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             wb = ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),
                     true);
             int oldSheetNum = wb.getNumberOfSheets();
+            List<String> oldSheetName = new ArrayList<>();
+            for (int i = 0; i < oldSheetNum; i++) {
+                oldSheetName.add(wb.getSheetName(i));
+            }
             // 把所有的KEY排个顺序
             List<Map<String, Object>> mapList;
             List<Integer>             sheetNumList = new ArrayList<>();
@@ -232,8 +236,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     wb.cloneSheet(sheetNum);
                 }
             }
-            for (int i = 0; i < oldSheetNum; i++) {
-                wb.removeSheetAt(i);
+            for (int i = 0; i < oldSheetName.size(); i++) {
+                wb.removeSheetAt(wb.getSheetIndex(oldSheetName.get(i)));
             }
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
