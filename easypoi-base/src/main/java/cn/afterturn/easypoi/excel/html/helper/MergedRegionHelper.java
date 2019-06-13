@@ -1,26 +1,26 @@
 package cn.afterturn.easypoi.excel.html.helper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import cn.afterturn.easypoi.util.PoiCellUtil;
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * 合并单元格帮助类
  *
  * @author JueYue
- *         2015年5月9日 下午2:13:35
+ * 2015年5月9日 下午2:13:35
  */
 public class MergedRegionHelper {
 
     private Map<String, Integer[]> mergedCache = new HashMap<String, Integer[]>();
 
-    private Set<String> notNeedCread = new HashSet<String>();
+    private Set<String> notNeedCache = new HashSet<String>();
 
     public MergedRegionHelper(Sheet sheet) {
         getAllMergedRegion(sheet);
@@ -29,7 +29,7 @@ public class MergedRegionHelper {
     private void getAllMergedRegion(Sheet sheet) {
         int nums = sheet.getNumMergedRegions();
         for (int i = 0; i < nums; i++) {
-            handerMergedString(sheet.getMergedRegion(i).formatAsString());
+            handlerMergedString(sheet.getMergedRegion(i), sheet.getMergedRegion(i).formatAsString());
         }
     }
 
@@ -38,7 +38,7 @@ public class MergedRegionHelper {
      *
      * @param formatAsString
      */
-    private void handerMergedString(String formatAsString) {
+    private void handlerMergedString(CellRangeAddress cellRangeAddress, String formatAsString) {
         String[] strArr = formatAsString.split(":");
         if (strArr.length == 2) {
             int startCol = strArr[0].charAt(0) - 65;
@@ -46,7 +46,7 @@ public class MergedRegionHelper {
                 startCol = (startCol + 1) * 26 + (strArr[0].charAt(1) - 65);
             }
             int startRol = Integer.valueOf(strArr[0].substring(strArr[0].charAt(1) >= 65 ? 2 : 1));
-            int endCol = strArr[1].charAt(0) - 65;
+            int endCol   = strArr[1].charAt(0) - 65;
             if (strArr[1].charAt(1) >= 65) {
                 endCol = (endCol + 1) * 26 + (strArr[1].charAt(1) - 65);
             }
@@ -55,10 +55,10 @@ public class MergedRegionHelper {
                     new Integer[]{endRol - startRol + 1, endCol - startCol + 1});
             for (int i = startRol; i <= endRol; i++) {
                 for (int j = startCol; j <= endCol; j++) {
-                    notNeedCread.add(i + "_" + j);
+                    notNeedCache.add(i + "_" + j);
                 }
             }
-            notNeedCread.remove(startRol + "_" + startCol);
+            notNeedCache.remove(startRol + "_" + startCol);
         }
 
     }
@@ -71,7 +71,7 @@ public class MergedRegionHelper {
      * @return
      */
     public boolean isNeedCreate(int row, int col) {
-        return !notNeedCread.contains(row + "_" + col);
+        return !notNeedCache.contains(row + "_" + col);
     }
 
     /**
@@ -108,16 +108,18 @@ public class MergedRegionHelper {
         for (String key : keys) {
             String[] temp = key.split("_");
             if (Integer.parseInt(temp[0]) >= rowIndex) {
-                Integer[] data = mergedCache.get(key);
-                String newKey = (Integer.parseInt(temp[0]) + size) + "_" + temp[1];
-                if(!mergedCache.containsKey(newKey)){
+                Integer[] data   = mergedCache.get(key);
+                String    newKey = (Integer.parseInt(temp[0]) + size) + "_" + temp[1];
+                if (!mergedCache.containsKey(newKey)) {
                     mergedCache.put(newKey, mergedCache.get(key));
                     try {
                         // 还原合并单元格
-                        PoiMergeCellUtil.addMergedRegion(sheet,
-                                Integer.parseInt(temp[0]) + size - 1, Integer.parseInt(temp[0]) + data[0] + size - 2,
-                                Integer.parseInt(temp[1]), Integer.parseInt(temp[1]) + data[1] - 1
-                        );
+                        if (!PoiCellUtil.isMergedRegion(sheet, Integer.parseInt(temp[0]) + size - 1, Integer.parseInt(temp[1]))) {
+                            PoiMergeCellUtil.addMergedRegion(sheet,
+                                    Integer.parseInt(temp[0]) + size - 1, Integer.parseInt(temp[0]) + data[0] + size - 2,
+                                    Integer.parseInt(temp[1]), Integer.parseInt(temp[1]) + data[1] - 1
+                            );
+                        }
                     } catch (Exception e) {
                     }
                 }
@@ -125,22 +127,4 @@ public class MergedRegionHelper {
         }
     }
 
-
-
-    /**
-     * 把破坏的单元格合并(POI的shiftRows方法会把移动的行的合并单元格拆分)
-     * @return
-     */
-    public void mergeOtherCell(Sheet sheet) {
-        Set<String> tempMergeKeySet = mergedCache.keySet();
-        for(String mergeKey : tempMergeKeySet) {
-            String[] row_col = mergeKey.split("_");
-            if(!PoiCellUtil.isMergedRegion(sheet, Integer.valueOf(row_col[0]) - 1, Integer.valueOf(row_col[1]))) {
-                Integer[] mergeCellValue = mergedCache.get(mergeKey);
-                sheet.addMergedRegion(new CellRangeAddress(Integer.valueOf(row_col[0]) - 1,
-                                Integer.valueOf(row_col[0]) - 1 + mergeCellValue[0] - 1, Integer.valueOf(row_col[1]),
-                                Integer.valueOf(row_col[1]) + mergeCellValue[1] - 1));
-            }
-        }
-    }
 }
