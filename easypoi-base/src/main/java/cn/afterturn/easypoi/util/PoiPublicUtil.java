@@ -371,7 +371,7 @@ public final class PoiPublicUtil {
             } else if (obj != null){
                 currentText = currentText.replace(START_STR + params + END_STR, obj.toString());
             } else {
-                currentText = "";
+                currentText = currentText.replace(START_STR + params + END_STR, "");
             }
         }
         return currentText;
