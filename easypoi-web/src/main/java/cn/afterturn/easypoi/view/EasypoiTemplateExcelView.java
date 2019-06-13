@@ -58,19 +58,6 @@ public class EasypoiTemplateExcelView extends MiniAbstractExcelView {
         if (model.containsKey(NormalExcelConstants.FILE_NAME)) {
             codedFileName = (String) model.get(NormalExcelConstants.FILE_NAME);
         }
-        if (workbook instanceof HSSFWorkbook) {
-            codedFileName += HSSF;
-        } else {
-            codedFileName += XSSF;
-        }
-        if (isIE(request)) {
-            codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
-        } else {
-            codedFileName = new String(codedFileName.getBytes("UTF-8"), "ISO-8859-1");
-        }
-        response.setHeader("content-disposition", "attachment;filename=" + codedFileName);
-        ServletOutputStream out = response.getOutputStream();
-        workbook.write(out);
-        out.flush();
+        out(workbook, codedFileName, request, response);
     }
 }
