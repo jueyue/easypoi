@@ -147,14 +147,12 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     rowspan, colspan, mergedRegionHelper);
             rowIndex += rowspan - 1;
         }
-        //不论后面有没有数据,都应该执行的是插入操作
-        // && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()
+        //修复不论后面有没有数据,都应该执行的是插入操作
         if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()) {
-            cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan,
-                    cell.getRow().getSheet().getLastRowNum(), (datas.size() - 1) * rowspan, true, true);
+            int lastRowNum = cell.getRow().getSheet().getLastRowNum();
+            cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan, lastRowNum, (datas.size() - 1) * rowspan, true, true);
             mergedRegionHelper.shiftRows(cell.getSheet(), cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
             templateSumHandler.shiftRows(cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
-
         }
         while (its.hasNext()) {
             Object t = its.next();
@@ -402,9 +400,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
         //修改需要处理的统计值
         handlerSumCell(sheet);
-
-        //修复因为调用shiftRows而被破坏的合并单元格
-        mergedRegionHelper.mergeOtherCell(sheet);
     }
 
     private void handlerSumCell(Sheet sheet) {
