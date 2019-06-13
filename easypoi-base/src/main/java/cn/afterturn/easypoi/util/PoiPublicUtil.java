@@ -368,7 +368,7 @@ public final class PoiPublicUtil {
             if (obj instanceof ImageEntity || obj instanceof List
                     || obj instanceof ExcelListEntity) {
                 return obj;
-            } else {
+            } else if (obj != null){
                 currentText = currentText.replace(START_STR + params + END_STR, obj.toString());
             }
         }
