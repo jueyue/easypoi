@@ -98,9 +98,13 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         short rowHeight = getRowHeight(excelParams);
         int index = teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(),
                 titleHeight = index;
+        int shiftRows = getShiftRows(dataSet, excelParams);
         //下移数据,模拟插入
         sheet.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(),
-                sheet.getLastRowNum(), getShiftRows(dataSet, excelParams), true, true);
+                sheet.getLastRowNum(), shiftRows, true, true);
+        mergedRegionHelper.shiftRows(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows);
+        templateSumHandler.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows);
+        PoiExcelTempUtil.reset(sheet,teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), sheet.getLastRowNum());
         if (excelParams.size() == 0) {
             return;
         }
@@ -153,6 +157,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan, lastRowNum, (datas.size() - 1) * rowspan, true, true);
             mergedRegionHelper.shiftRows(cell.getSheet(), cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
             templateSumHandler.shiftRows(cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
+            PoiExcelTempUtil.reset(cell.getSheet(),cell.getRowIndex() + rowspan+ (datas.size() - 1) * rowspan, cell.getRow().getSheet().getLastRowNum());
         }
         while (its.hasNext()) {
             Object t = its.next();
