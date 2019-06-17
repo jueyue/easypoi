@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>cn.afterturn</groupId>
 		<artifactId>easypoi</artifactId>
-		<version>4.0.0</version>
+		<version>4.1.0</version>
 	</parent>
 	<artifactId>easypoi-web</artifactId>
 	<dependencies>
@@ -12,14 +12,17 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
