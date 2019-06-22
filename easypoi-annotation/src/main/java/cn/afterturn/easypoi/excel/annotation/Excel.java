@@ -42,12 +42,14 @@ public @interface Excel {
      * 导入的时间格式,以这个是否为空来判断是否需要格式化日期
      */
     public String importFormat() default "";
-
-
     /**
      * 时间格式,相当于同时设置了exportFormat 和 importFormat
      */
     public String format() default "";
+    /**
+     * 时间时区
+     */
+    public String timezone() default "";
     /**
      * 数字格式化,参数是Pattern,使用的对象是DecimalFormat
      */

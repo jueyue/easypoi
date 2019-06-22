@@ -16,6 +16,7 @@
 package cn.afterturn.easypoi.excel.export.styler;
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.Removal;
 
 /**
  * 带有边框的Excel样式
@@ -23,6 +24,10 @@ import org.apache.poi.ss.usermodel.*;
  * @author JueYue
  * 2015年1月9日 下午5:55:29
  */
+@Deprecated
+@Removal(
+        version = "4.2"
+)
 public class ExcelExportStylerBorderImpl extends AbstractExcelExportStyler
         implements IExcelExportStyler {
 

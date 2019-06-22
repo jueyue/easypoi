@@ -105,6 +105,9 @@ public class ExportCommonService {
         }
         if (temp != null) {
             SimpleDateFormat format = new SimpleDateFormat(entity.getFormat());
+            if(StringUtils.isNotEmpty(entity.getTimezone())){
+                format.setTimeZone(TimeZone.getTimeZone(entity.getTimezone()));
+            }
             value = format.format(temp);
         }
         return value;
@@ -262,6 +265,7 @@ public class ExportCommonService {
         excelEntity.setColumnHidden(excel.isColumnHidden());
         excelEntity.setDict(excel.dict());
         excelEntity.setEnumExportField(excel.enumExportField());
+        excelEntity.setTimezone(excel.timezone());
         if (excelGroup != null) {
             excelEntity.setGroupName(PoiPublicUtil.getValueByTargetId(excelGroup.name(), targetId, null));
         } else {
@@ -375,6 +379,7 @@ public class ExportCommonService {
         ExcelExportEntity exportEntity = new ExcelExportEntity();
         //保证是第一排
         exportEntity.setOrderNum(Integer.MIN_VALUE);
+        exportEntity.setNeedMerge(true);
         exportEntity.setName(entity.getIndexName());
         exportEntity.setWidth(10);
         exportEntity.setFormat(PoiBaseConstants.IS_ADD_INDEX);

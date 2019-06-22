@@ -7,6 +7,7 @@ import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
+import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -17,23 +18,24 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import java.lang.reflect.Field;
 import java.util.*;
 
+import static cn.afterturn.easypoi.excel.ExcelExportUtil.USE_SXSSF_LIMIT;
+
 /**
  * 提供批次插入服务
+ *
  * @author JueYue
  * 2016年8月29日
  */
 public class ExcelBatchExportService extends ExcelExportService {
 
-    private static ThreadLocal<ExcelBatchExportService> THREAD_LOCAL = new ThreadLocal<ExcelBatchExportService>();
-
-    private Workbook                                   workbook;
-    private Sheet                                      sheet;
-    private List<ExcelExportEntity>                    excelParams;
-    private ExportParams                               entity;
-    private int                                        titleHeight;
-    private Drawing                                    patriarch;
-    private short                                      rowHeight;
-    private int                                        index;
+    private Workbook                workbook;
+    private Sheet                   sheet;
+    private List<ExcelExportEntity> excelParams;
+    private ExportParams            entity;
+    private int                     titleHeight;
+    private Drawing                 patriarch;
+    private short                   rowHeight;
+    private int                     index;
 
     public void init(ExportParams entity, Class<?> pojoClass) {
         List<ExcelExportEntity> excelParams = createExcelExportEntityList(entity, pojoClass);
@@ -49,7 +51,7 @@ public class ExcelBatchExportService extends ExcelExportService {
         super.type = entity.getType();
         createSheet(workbook, entity, excelParams);
         if (entity.getMaxNum() == 0) {
-            entity.setMaxNum(1000000);
+            entity.setMaxNum(USE_SXSSF_LIMIT);
         }
         insertDataToSheet(workbook, entity, excelParams, null, sheet);
     }
@@ -61,11 +63,11 @@ public class ExcelBatchExportService extends ExcelExportService {
                 excelParams.add(indexExcelEntity(entity));
             }
             // 得到所有字段
-            Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
-            ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
-            String targetId = etarget == null ? null : etarget.value();
+            Field[]     fileds   = PoiPublicUtil.getClassFields(pojoClass);
+            ExcelTarget etarget  = pojoClass.getAnnotation(ExcelTarget.class);
+            String      targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
-                null, null);
+                    null, null);
             sortAllParams(excelParams);
 
             return excelParams;
@@ -78,7 +80,7 @@ public class ExcelBatchExportService extends ExcelExportService {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Excel export start ,List<ExcelExportEntity> is {}", excelParams);
             LOGGER.debug("Excel version is {}",
-                entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
+                    entity.getType().equals(ExcelType.HSSF) ? "03" : "07");
         }
         if (workbook == null || entity == null || excelParams == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
@@ -100,7 +102,7 @@ public class ExcelBatchExportService extends ExcelExportService {
             sheet = workbook.createSheet();
             index = 0;
         }
-        
+
         Iterator<?> its = dataSet.iterator();
         while (its.hasNext()) {
             Object t = its.next();
@@ -127,7 +129,7 @@ public class ExcelBatchExportService extends ExcelExportService {
             i18nHandler = entity.getI18nHandler();
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) entity.getStyle()
-                .getConstructor(Workbook.class).newInstance(workbook));
+                    .getConstructor(Workbook.class).newInstance(workbook));
             patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
@@ -136,10 +138,10 @@ public class ExcelBatchExportService extends ExcelExportService {
             excelParams.addAll(entityList);
             sortAllParams(excelParams);
             this.index = entity.isCreateHeadRows()
-                ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
+                    ? createHeaderAndTitle(entity, sheet, workbook, excelParams) : 0;
             titleHeight = index;
             setCellWith(excelParams, sheet);
-            setColumnHidden(excelParams,sheet);
+            setColumnHidden(excelParams, sheet);
             rowHeight = getRowHeight(excelParams);
             setCurrentIndex(1);
         } catch (Exception e) {
@@ -148,39 +150,25 @@ public class ExcelBatchExportService extends ExcelExportService {
         }
     }
 
-    public static ExcelBatchExportService getExcelBatchExportService(ExportParams entity,
-                                                                     Class<?> pojoClass) {
-        if (THREAD_LOCAL.get() == null) {
-            ExcelBatchExportService batchServer = new ExcelBatchExportService();
-            batchServer.init(entity, pojoClass);
-            THREAD_LOCAL.set(batchServer);
-        }
-        return THREAD_LOCAL.get();
-    }
-
-    public static ExcelBatchExportService getExcelBatchExportService(ExportParams entity,
-                                                                     List<ExcelExportEntity> excelParams) {
-        if (THREAD_LOCAL.get() == null) {
-            ExcelBatchExportService batchServer = new ExcelBatchExportService();
-            batchServer.init(entity, excelParams);
-            THREAD_LOCAL.set(batchServer);
-        }
-        return THREAD_LOCAL.get();
-    }
-
-    public static ExcelBatchExportService getCurrentExcelBatchExportService() {
-        return THREAD_LOCAL.get();
-    }
-
-    public void closeExportBigExcel() {
+    public Workbook closeExportBigExcel() {
         if (entity.getFreezeCol() != 0) {
             sheet.createFreezePane(entity.getFreezeCol(), titleHeight, entity.getFreezeCol(), titleHeight);
         }
         mergeCells(sheet, excelParams, titleHeight);
         // 创建合计信息
         addStatisticsRow(getExcelExportStyler().getStyles(true, null), sheet);
-        THREAD_LOCAL.remove();
+        return workbook;
+    }
 
+    public Workbook exportBigExcel(IExcelExportServer server, Object queryParams) {
+        int page = 1;
+        List<Object> list = server
+                .selectListForExcelExport(queryParams, page++);
+        while (list != null && list.size() > 0) {
+            appendData(list);
+            list = server.selectListForExcelExport(queryParams, page++);
+        }
+        return closeExportBigExcel();
     }
 
 }
