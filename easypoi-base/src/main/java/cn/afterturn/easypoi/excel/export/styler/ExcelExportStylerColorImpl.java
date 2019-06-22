@@ -16,12 +16,17 @@
 package cn.afterturn.easypoi.excel.export.styler;
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.Removal;
 
 /**
  * 带有样式的导出服务
  * @author JueYue
  *  2015年1月9日 下午4:54:15
  */
+@Deprecated
+@Removal(
+        version = "4.2"
+)
 public class ExcelExportStylerColorImpl extends AbstractExcelExportStyler
                                         implements IExcelExportStyler {
 

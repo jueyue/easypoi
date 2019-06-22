@@ -82,7 +82,7 @@ public class SheetHandler extends DefaultHandler {
                 return;
             }
             if (INLINE_STR.equals(cellType)) {
-                type = CellValueType.String;
+                type = CellValueType.InlineStr;
                 return;
             }
             if (FORMULA.equals(cellType)) {
@@ -126,7 +126,6 @@ public class SheetHandler extends DefaultHandler {
                 int idx = Integer.parseInt(lastContents);
                 lastContents = sharedStringsTable.getItemAt(idx).getString();
             } catch (Exception e) {
-
             }
         }
         //t元素也包含字符串  
@@ -146,7 +145,7 @@ public class SheetHandler extends DefaultHandler {
             } else if (CellValueType.Number.equals(type)) {
                 BigDecimal bd = new BigDecimal(value);
                 rowList.add(curCol, new SaxReadCellEntity(CellValueType.Number, bd));
-            } else if (CellValueType.String.equals(type)) {
+            } else if (CellValueType.String.equals(type) || CellValueType.InlineStr.equals(type)) {
                 rowList.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
             }
             curCol++;

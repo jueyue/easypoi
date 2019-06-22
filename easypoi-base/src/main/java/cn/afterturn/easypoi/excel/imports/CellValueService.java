@@ -173,8 +173,12 @@ public class CellValueService {
             try {
                 return format.parse(value);
             } catch (ParseException e) {
-                LOGGER.error("时间格式化失败,格式化:{},值:{}", entity.getFormat(), value);
-                throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
+                try {
+                    return DateUtil.getJavaDate(Double.parseDouble(value));
+                } catch (NumberFormatException ex) {
+                    LOGGER.error("时间格式化失败,格式化:{},值:{}", entity.getFormat(), value);
+                    throw new ExcelImportException(ExcelImportEnum.GET_VALUE_ERROR);
+                }
             }
         }
         return null;

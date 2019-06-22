@@ -21,6 +21,7 @@ import cn.afterturn.easypoi.excel.entity.vo.PoiBaseConstants;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
+import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
@@ -73,7 +74,7 @@ public abstract class BaseExportService extends ExportCommonService {
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
                 if (entity.getList() != null) {
-                    Collection<?> list  = getListCellValue(entity, t);
+                    Collection<?> list      = getListCellValue(entity, t);
                     int           listIndex = 0, tmpListHeight = 0;
                     if (list != null && list.size() > 0) {
                         int tempCellNum = 0;
@@ -93,29 +94,25 @@ public abstract class BaseExportService extends ExportCommonService {
                         createStringCell(row, cellNum++, value == null ? "" : value.toString(),
                                 index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                                 entity);
-                        if (entity.isHyperlink()) {
-                            row.getCell(cellNum - 1)
-                                    .setHyperlink(dataHandler.getHyperlink(
-                                            row.getSheet().getWorkbook().getCreationHelper(), t,
-                                            entity.getName(), value));
-                        }
+
                     } else if (entity.getType() == BaseEntityTypeConstants.DOUBLE_TYPE) {
                         createDoubleCell(row, cellNum++, value == null ? "" : value.toString(),
                                 index % 2 == 0 ? getStyles(false, entity) : getStyles(true, entity),
                                 entity);
-                        if (entity.isHyperlink()) {
-                            row.getCell(cellNum - 1).setHyperlink(dataHandler.getHyperlink(
-                                    row.getSheet().getWorkbook().getCreationHelper(), t,
-                                    entity.getName(), value));
-                        }
                     } else {
                         createImageCell(patriarch, entity, row, cellNum++,
                                 value == null ? "" : value.toString(), t);
                     }
+                    if (entity.isHyperlink()) {
+                        row.getCell(cellNum - 1)
+                                .setHyperlink(dataHandler.getHyperlink(
+                                        row.getSheet().getWorkbook().getCreationHelper(), t,
+                                        entity.getName(), value));
+                    }
                 }
             }
             maxHeight += listMaxHeight - 1;
-            if(indexKey == 1 && excelParams.get(1).isNeedMerge()) {
+            if (indexKey == 1 && excelParams.get(1).isNeedMerge()) {
                 excelParams.get(0).setNeedMerge(true);
             }
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
@@ -210,8 +207,7 @@ public abstract class BaseExportService extends ExportCommonService {
     }
 
     private int createIndexCell(Row row, int index, ExcelExportEntity excelExportEntity) {
-        if (excelExportEntity.getName() != null && "序号".equals(excelExportEntity.getName()) && excelExportEntity.getFormat() != null
-                && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
+        if (excelExportEntity.getFormat() != null && excelExportEntity.getFormat().equals(PoiBaseConstants.IS_ADD_INDEX)) {
             createStringCell(row, 0, currentIndex + "",
                     index % 2 == 0 ? getStyles(false, null) : getStyles(true, null), null);
             currentIndex = currentIndex + 1;
@@ -307,7 +303,7 @@ public abstract class BaseExportService extends ExportCommonService {
                 cell.setCellValue(text);
             }
         }
-        
+
         if (style != null) {
             cell.setCellStyle(style);
         }

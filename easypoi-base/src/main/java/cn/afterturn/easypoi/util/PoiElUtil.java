@@ -40,6 +40,7 @@ public final class PoiElUtil {
     public static final String END_STR            = "}}";
     public static final String WRAP               = "]]";
     public static final String NUMBER_SYMBOL      = "n:";
+    public static final String STYLE_SELF         = "sy:";
     public static final String FORMAT_DATE        = "fd:";
     public static final String FORMAT_NUMBER      = "fn:";
     public static final String SUM                = "sum:";

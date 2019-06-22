@@ -215,7 +215,7 @@ public final class PoiMergeCellUtil {
         try {
             sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
         } catch (Exception e) {
-            LOGGER.error("发生了一次合并单元格错误,{},{},{},{}", new Integer[]{
+            LOGGER.debug("发生了一次合并单元格错误,{},{},{},{}", new Integer[]{
                     firstRow, lastRow, firstCol, lastCol
             });
             // 忽略掉合并的错误,不打印异常

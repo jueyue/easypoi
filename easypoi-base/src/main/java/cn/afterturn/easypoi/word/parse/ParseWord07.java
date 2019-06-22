@@ -47,32 +47,6 @@ public class ParseWord07 {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParseWord07.class);
 
     /**
-     * 添加图片
-     *
-     * @param obj
-     * @param currentRun
-     * @throws Exception
-     * @author JueYue
-     * 2013-11-20
-     */
-    private void addAnImage(ImageEntity obj, XWPFRun currentRun) throws Exception {
-        Object[] isAndType = PoiPublicUtil.getIsAndType(obj);
-        String   picId;
-        try {
-            picId = currentRun.getDocument().addPictureData((byte[]) isAndType[0],
-                    (Integer) isAndType[1]);
-            ((MyXWPFDocument) currentRun.getDocument()).createPicture(currentRun,
-                    picId, currentRun.getDocument()
-                            .getNextPicNameNumber((Integer) isAndType[1]),
-                    obj.getWidth(), obj.getHeight());
-
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-    }
-
-    /**
      * 根据条件改变值
      *
      * @param map
@@ -84,7 +58,7 @@ public class ParseWord07 {
         Object obj = PoiPublicUtil.getRealValue(currentText, map);
         if (obj instanceof ImageEntity) {// 如果是图片就设置为图片
             currentRun.setText("", 0);
-            addAnImage((ImageEntity) obj, currentRun);
+            ExcelMapParse.addAnImage((ImageEntity) obj, currentRun);
         } else {
             currentText = obj.toString();
             PoiPublicUtil.setWordText(currentRun, currentText);

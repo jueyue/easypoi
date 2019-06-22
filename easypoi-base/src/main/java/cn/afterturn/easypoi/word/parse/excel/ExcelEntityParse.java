@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,24 +15,7 @@
  */
 package cn.afterturn.easypoi.word.parse.excel;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.export.base.ExportCommonService;
@@ -42,12 +25,20 @@ import cn.afterturn.easypoi.exception.word.WordExportException;
 import cn.afterturn.easypoi.exception.word.enmus.WordExportEnum;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.word.entity.params.ExcelListEntity;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.poi.xwpf.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * 解析实体类对象 复用注解
  *
  * @author JueYue
- *  2014年8月9日 下午10:30:57
+ * 2014年8月9日 下午10:30:57
  */
 public class ExcelEntityParse extends ExportCommonService {
 
@@ -64,7 +55,7 @@ public class ExcelEntityParse extends ExportCommonService {
                             XWPFTable table, short rowHeight) {
         try {
             ExcelExportEntity entity;
-            XWPFTableRow row = table.insertNewTableRow(index);
+            XWPFTableRow      row = table.insertNewTableRow(index);
             if (rowHeight != -1) {
                 row.setHeight(rowHeight);
             }
@@ -72,8 +63,8 @@ public class ExcelEntityParse extends ExportCommonService {
             for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
                 if (entity.getList() != null) {
-                    Collection<?> list = (Collection<?>) entity.getMethod().invoke(t, new Object[]{});
-                    int listC = 0;
+                    Collection<?> list  = (Collection<?>) entity.getMethod().invoke(t, new Object[]{});
+                    int           listC = 0;
                     for (Object obj : list) {
                         createListCells(index + listC, cellNum, obj, entity.getList(), table, rowHeight);
                         listC++;
@@ -109,17 +100,18 @@ public class ExcelEntityParse extends ExportCommonService {
 
     /**
      * 创建List之后的各个Cells
+     *
      * @param index
      * @param cellNum
-     * @param obj             当前对象
-     * @param excelParams    列参数信息
-     * @param table          当前表格
-     * @param rowHeight     行高
+     * @param obj         当前对象
+     * @param excelParams 列参数信息
+     * @param table       当前表格
+     * @param rowHeight   行高
      * @throws Exception
      */
     public void createListCells(int index, int cellNum, Object obj, List<ExcelExportEntity> excelParams, XWPFTable table, short rowHeight) throws Exception {
         ExcelExportEntity entity;
-        XWPFTableRow row;
+        XWPFTableRow      row;
         if (table.getRow(index) == null) {
             row = table.createRow();
             row.setHeight(rowHeight);
@@ -147,7 +139,7 @@ public class ExcelEntityParse extends ExportCommonService {
             throw new WordExportException(WordExportEnum.EXCEL_NO_HEAD);
         }
         Map<String, Integer> map = new HashMap<String, Integer>();
-        String text;
+        String               text;
         for (int j = 0; j < headRows; j++) {
             List<XWPFTableCell> cells = table.getRow(index - j - 1).getTableCells();
             for (int i = 0; i < cells.size(); i++) {
@@ -175,9 +167,9 @@ public class ExcelEntityParse extends ExportCommonService {
         Map<String, Integer> titlemap = getTitleMap(table, index, entity.getHeadRows());
         try {
             // 得到所有字段
-            Field[] fileds = PoiPublicUtil.getClassFields(entity.getClazz());
-            ExcelTarget etarget = entity.getClazz().getAnnotation(ExcelTarget.class);
-            String targetId = null;
+            Field[]     fileds   = PoiPublicUtil.getClassFields(entity.getClazz());
+            ExcelTarget etarget  = entity.getClazz().getAnnotation(ExcelTarget.class);
+            String      targetId = null;
             if (etarget != null) {
                 targetId = etarget.value();
             }
@@ -186,8 +178,8 @@ public class ExcelEntityParse extends ExportCommonService {
             getAllExcelField(null, targetId, fileds, excelParams, entity.getClazz(), null, null);
             // 根据表头进行筛选排序
             sortAndFilterExportField(excelParams, titlemap);
-            short rowHeight = getRowHeight(excelParams);
-            Iterator<?> its = entity.getList().iterator();
+            short       rowHeight = getRowHeight(excelParams);
+            Iterator<?> its       = entity.getList().iterator();
             while (its.hasNext()) {
                 Object t = its.next();
                 index += createCells(index, t, excelParams, table, rowHeight);
@@ -200,34 +192,38 @@ public class ExcelEntityParse extends ExportCommonService {
     private void setCellValue(XWPFTableRow row, Object value, int cellNum) {
         if (row.getCell(cellNum++) != null) {
             row.getCell(cellNum - 1).setText(value == null ? "" : value.toString());
-            setWordText(row, value);
-        } else {
-            setWordText(row, value);
         }
+        setWordText(row, value);
     }
+
 
     /**
      * 解决word导出表格多出的换行符问题
+     *
      * @param row
      * @param value
      */
     private void setWordText(XWPFTableRow row, Object value) {
-        XWPFTableCell cell = row.createCell();
+        XWPFTableCell       cell       = row.createCell();
         List<XWPFParagraph> paragraphs = cell.getParagraphs();
-        XWPFParagraph paragraph = null;
-        XWPFRun run = null;
-        if(paragraphs != null && paragraphs.size() > 0) {
+        XWPFParagraph       paragraph  = null;
+        XWPFRun             run        = null;
+        if (paragraphs != null && paragraphs.size() > 0) {
             paragraph = paragraphs.get(0);
         } else {
             paragraph = row.createCell().addParagraph();
         }
         List<XWPFRun> runs = paragraph.getRuns();
-        if(runs != null && runs.size() > 0) {
+        if (runs != null && runs.size() > 0) {
             run = runs.get(0);
         } else {
             run = paragraph.createRun();
         }
-        PoiPublicUtil.setWordText(run, value == null ? "" : value.toString());
+        if (value instanceof ImageEntity){
+            ExcelMapParse.addAnImage((ImageEntity) value, run);
+        }else{
+            PoiPublicUtil.setWordText(run, value == null ? "" : value.toString());
+        }
     }
 
     /**

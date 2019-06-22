@@ -32,6 +32,6 @@ public interface BigExcelConstants extends BasePOIConstants {
     /**
      * 查询函数
      */
-    public final static String DATA_INTER    = "dataInterf";
+    public final static String DATA_INTER    = "dataInter";
 
 }
