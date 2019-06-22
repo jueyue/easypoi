@@ -1,13 +1,13 @@
 /**
  * Copyright 2013-2015 JueYue (qrb.jueyue@gmail.com)
- *   
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -15,48 +15,50 @@
  */
 package cn.afterturn.easypoi.excel.imports.sax;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
+import cn.afterturn.easypoi.excel.entity.enmus.CellValueType;
+import cn.afterturn.easypoi.excel.entity.sax.SaxReadCellEntity;
+import cn.afterturn.easypoi.excel.imports.sax.parse.ISaxRowRead;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.xssf.model.SharedStringsTable;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.model.StylesTable;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.google.common.collect.Lists;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import cn.afterturn.easypoi.excel.entity.enmus.CellValueType;
-import cn.afterturn.easypoi.excel.entity.sax.SaxReadCellEntity;
-import cn.afterturn.easypoi.excel.imports.sax.parse.ISaxRowRead;
+import static cn.afterturn.easypoi.excel.entity.sax.SaxConstant.*;
 
 /**
  * 回调接口
+ *
  * @author JueYue
- *  2014年12月29日 下午9:50:09
+ * 2014年12月29日 下午9:50:09
  */
 public class SheetHandler extends DefaultHandler {
 
-    private SharedStringsTable      sst;
-    private String                  lastContents;
+    private SharedStringsTable sharedStringsTable;
+    private StylesTable        stylesTable;
+    private String             lastContents;
 
-    //当前行  
-    private int                     curRow  = 0;
-    //当前列  
-    private int                     curCol  = 0;
+    /** 当前行**/
+    private int curRow = 0;
+    /**当前列 **/
+    private int curCol = 0;
 
-    private CellValueType           type;
+    private CellValueType type;
 
-    private ISaxRowRead             read;
+    private ISaxRowRead read;
 
-    //存储行记录的容器  
-    private List<SaxReadCellEntity> rowlist = Lists.newArrayList();
+    private List<SaxReadCellEntity> rowList = new ArrayList<>();
 
-    public SheetHandler(SharedStringsTable sst, ISaxRowRead rowRead) {
-        this.sst = sst;
+    public SheetHandler(SharedStringsTable sharedStringsTable, StylesTable stylesTable, ISaxRowRead rowRead) {
+        this.sharedStringsTable = sharedStringsTable;
+        this.stylesTable = stylesTable;
         this.read = rowRead;
     }
 
@@ -65,22 +67,50 @@ public class SheetHandler extends DefaultHandler {
                              Attributes attributes) throws SAXException {
         // 置空  
         lastContents = "";
-        // c => 单元格  
-        if ("c".equals(name)) {
-            // 如果下一个元素是 SST 的索引，则将nextIsString标记为true  
-            String cellType = attributes.getValue("t");
-            if ("s".equals(cellType)) {
+        if (COL.equals(name)) {
+            String cellType = attributes.getValue(TYPE);
+            if (STRING.equals(cellType)) {
                 type = CellValueType.String;
                 return;
             }
-            //日期格式  
-            cellType = attributes.getValue("s");
-            if ("1".equals(cellType)) {
-                type = CellValueType.Date;
-            } else if ("2".equals(cellType)) {
-                type = CellValueType.Number;
+            if (BOOLEAN.equals(cellType)) {
+                type = CellValueType.Boolean;
+                return;
             }
-        } else if ("t".equals(name)) {//当元素为t时  
+            if (DATE.equals(cellType)) {
+                type = CellValueType.Date;
+                return;
+            }
+            if (INLINE_STR.equals(cellType)) {
+                type = CellValueType.String;
+                return;
+            }
+            if (FORMULA.equals(cellType)) {
+                type = CellValueType.Formula;
+                return;
+            }
+            if (NUMBER.equals(cellType)) {
+                type = CellValueType.Number;
+                return;
+            }
+            try {
+                short  nfId         = (short) stylesTable.getCellXfAt(Integer.parseInt(attributes.getValue(STYLE))).getNumFmtId();
+                String numberFormat = stylesTable.getNumberFormats().get(nfId).toUpperCase();
+                if (StringUtils.isNotEmpty(numberFormat)) {
+                    if (numberFormat.contains("Y") || numberFormat.contains("M") || numberFormat.contains("D")
+                            || numberFormat.contains("H") || numberFormat.contains("S") || numberFormat.contains("年")
+                            || numberFormat.contains("月") || numberFormat.contains("日") || numberFormat.contains("时")
+                            || numberFormat.contains("分") || numberFormat.contains("秒")) {
+                        type = CellValueType.Date;
+                        return;
+                    }
+                }
+            } catch (NumberFormatException e) {
+
+            }
+            // 没别的了就是数字了
+            type = CellValueType.Number;
+        } else if (T_ELEMENT.equals(name)) {
             type = CellValueType.TElement;
         }
 
@@ -94,7 +124,7 @@ public class SheetHandler extends DefaultHandler {
         if (CellValueType.String.equals(type)) {
             try {
                 int idx = Integer.parseInt(lastContents);
-                lastContents = new XSSFRichTextString(sst.getEntryAt(idx)).toString();
+                lastContents = sharedStringsTable.getItemAt(idx).getString();
             } catch (Exception e) {
 
             }
@@ -102,36 +132,36 @@ public class SheetHandler extends DefaultHandler {
         //t元素也包含字符串  
         if (CellValueType.TElement.equals(type)) {
             String value = lastContents.trim();
-            rowlist.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
+            rowList.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
             curCol++;
             type = CellValueType.None;
             // v => 单元格的值，如果单元格是字符串则v标签的值为该字符串在SST中的索引  
             // 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符  
-        } else if ("v".equals(name)) {
+        } else if (VALUE.equals(name)) {
             String value = lastContents.trim();
             value = "".equals(value) ? " " : value;
             if (CellValueType.Date.equals(type)) {
                 Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
-                rowlist.add(curCol, new SaxReadCellEntity(CellValueType.Date, date));
+                rowList.add(curCol, new SaxReadCellEntity(CellValueType.Date, date));
             } else if (CellValueType.Number.equals(type)) {
                 BigDecimal bd = new BigDecimal(value);
-                rowlist.add(curCol, new SaxReadCellEntity(CellValueType.Number, bd));
+                rowList.add(curCol, new SaxReadCellEntity(CellValueType.Number, bd));
             } else if (CellValueType.String.equals(type)) {
-                rowlist.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
+                rowList.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
             }
             curCol++;
             //如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
-        } else if("c".equals(name) && StringUtils.isEmpty(lastContents)){
-            rowlist.add(curCol,new SaxReadCellEntity(CellValueType.String,""));
+        } else if (COL.equals(name) && StringUtils.isEmpty(lastContents)) {
+            rowList.add(curCol, new SaxReadCellEntity(CellValueType.String, ""));
             curCol++;
-         } else if ("row".equals(name)) {
-            read.parse(curRow, rowlist);
-            rowlist.clear();
+        } else if (ROW.equals(name)) {
+            read.parse(curRow, rowList);
+            rowList.clear();
             curRow++;
             curCol = 0;
         }
 
-                                                          }
+    }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {

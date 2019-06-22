@@ -22,6 +22,6 @@ package cn.afterturn.easypoi.excel.entity.enmus;
  */
 public enum CellValueType {
 
-        String , Number , Boolean , Date , TElement , Null , None;
+        String , Number , Boolean , Date , TElement , Null ,Formula, None;
 
 }

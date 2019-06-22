@@ -178,7 +178,7 @@ public class ExcelImportService extends ImportBaseService {
         Row    row     = null;
         Object object  = null;
         String picId;
-        int    readRow = 0;
+        int    readRow = 1;
         //跳过无效行
         for (int i = 0; i < params.getStartRows(); i++) {
             rows.next();
@@ -214,7 +214,7 @@ public class ExcelImportService extends ImportBaseService {
                 if (row.getLastCellNum()<0) {
                     continue;
                 }
-                if(isMap) {
+                if(isMap && object != null) {
                     ((Map) object).put("excelRowNum", row.getRowNum());
                 }
                 errorMsg = new StringBuilder();
