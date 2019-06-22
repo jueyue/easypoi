@@ -1,5 +1,6 @@
 package cn.afterturn.easypoi.util;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
 import java.util.Date;
@@ -23,10 +24,19 @@ public class PoiExcelTempUtil {
      * @param endRow
      */
     public static void reset(Sheet sheet, int startRow, int endRow) {
+        if (sheet.getWorkbook() instanceof HSSFWorkbook) {
+            return;
+        }
         for (int i = startRow; i <= endRow; i++) {
-            Row row     = sheet.getRow(i);
+            Row row = sheet.getRow(i);
+            if (row == null) {
+                continue;
+            }
             int cellNum = row.getLastCellNum();
             for (int j = 0; j < cellNum; j++) {
+                if (row.getCell(j) == null) {
+                    continue;
+                }
                 Map<String, Object> map = copyCell(row.getCell(j));
                 row.removeCell(row.getCell(j));
                 Cell cell = row.createCell(j);

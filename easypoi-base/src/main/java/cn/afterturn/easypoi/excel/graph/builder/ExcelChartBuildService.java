@@ -3,6 +3,7 @@
  */
 package cn.afterturn.easypoi.excel.graph.builder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +23,6 @@ import org.apache.poi.ss.usermodel.charts.LineChartData;
 import org.apache.poi.ss.usermodel.charts.ScatterChartData;
 import org.apache.poi.ss.usermodel.charts.ValueAxis;
 import org.apache.poi.ss.util.CellRangeAddress;
-
-import com.google.common.collect.Lists;
 
 import cn.afterturn.easypoi.excel.graph.constant.ExcelGraphElementType;
 import cn.afterturn.easypoi.excel.graph.constant.ExcelGraphType;
@@ -97,7 +96,7 @@ public class ExcelChartBuildService
         }
         
         List<ExcelGraphElement> valueList=graph.getValueList();
-        List<ChartDataSource<Number>> chartValueList=Lists.newArrayList();
+        List<ChartDataSource<Number>> chartValueList= new ArrayList<>();
         if(valueList!=null&&valueList.size()>0){
         	for(ExcelGraphElement ele:valueList){
         		ChartDataSource<Number> source=DataSources.fromNumericCellRange(dataSourceSheet, new CellRangeAddress(ele.getStartRowNum(),ele.getEndRowNum(),ele.getStartColNum(),ele.getEndColNum()));

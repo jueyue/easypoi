@@ -3,9 +3,8 @@
  */
 package cn.afterturn.easypoi.excel.graph.entity;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import cn.afterturn.easypoi.excel.graph.constant.ExcelGraphType;
 
@@ -18,10 +17,10 @@ import cn.afterturn.easypoi.excel.graph.constant.ExcelGraphType;
 public class ExcelGraphDefined implements ExcelGraph
 {
 	private ExcelGraphElement category;
-	public List<ExcelGraphElement> valueList=Lists.newArrayList();
-	public List<ExcelTitleCell> titleCell=Lists.newArrayList();
+	public List<ExcelGraphElement> valueList= new ArrayList<>();
+	public List<ExcelTitleCell> titleCell= new ArrayList<>();
 	private Integer graphType=ExcelGraphType.LINE_CHART;
-	public List<String> title=Lists.newArrayList();
+	public List<String> title= new ArrayList<>();
 	
 	@Override
     public ExcelGraphElement getCategory()

@@ -106,8 +106,6 @@ public class CellValueService {
             } else if (("class java.sql.Timestamp").equals(classFullName)) {
                 result = new Timestamp(((Date) result).getTime());
             }
-        } else if (CellType.NUMERIC == cell.getCellType() && DateUtil.isCellDateFormatted(cell)) {
-            result = DateUtil.getJavaDate(cell.getNumericCellValue());
         } else {
             switch (cell.getCellType()) {
                 case STRING:
