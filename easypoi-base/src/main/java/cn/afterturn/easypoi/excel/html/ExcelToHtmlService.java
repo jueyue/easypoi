@@ -13,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Encoder;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -275,8 +274,8 @@ public class ExcelToHtmlService {
         byte[] data = pictureData.getData();
         //直接输出到HTML使用BASE64Encoder
         // 加密
-        BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(data);
+        Base64.Encoder encoder = Base64.getEncoder();
+        return encoder.encodeToString(data);
         /*String fileName = "pic" + Math.round(Math.random() * 100000000000L);
         fileName += "." + PoiPublicUtil.getFileExtendName(data);
         if (!imageCachePath.startsWith("/") && !imageCachePath.contains(":")) {

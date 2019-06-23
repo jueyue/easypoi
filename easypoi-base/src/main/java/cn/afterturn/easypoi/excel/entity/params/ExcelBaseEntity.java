@@ -66,6 +66,10 @@ public class ExcelBaseEntity {
      * 固定的列
      */
     private Integer      fixedIndex;
+    /**
+     * 时区
+     */
+    private String      timezone;
 
     private List<Method> methods;
 
@@ -162,5 +166,11 @@ public class ExcelBaseEntity {
         this.fixedIndex = fixedIndex;
     }
 
+    public String getTimezone() {
+        return timezone;
+    }
 
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
 }

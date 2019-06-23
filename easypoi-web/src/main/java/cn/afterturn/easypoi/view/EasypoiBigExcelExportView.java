@@ -24,8 +24,6 @@ import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,19 +42,9 @@ public class EasypoiBigExcelExportView extends MiniAbstractExcelView {
         String codedFileName = "临时文件";
         Workbook workbook = ExcelExportUtil.exportBigExcel(
                 (ExportParams) model.get(BigExcelConstants.PARAMS),
-                (Class<?>) model.get(BigExcelConstants.CLASS), Collections.EMPTY_LIST);
-        IExcelExportServer server = (IExcelExportServer) model.get(BigExcelConstants.DATA_INTER);
-        int                page   = 1;
-        List<Object> list = server
-                .selectListForExcelExport(model.get(BigExcelConstants.DATA_PARAMS), page++);
-        while (list != null && list.size() > 0) {
-            workbook = ExcelExportUtil.exportBigExcel(
-                    (ExportParams) model.get(BigExcelConstants.PARAMS),
-                    (Class<?>) model.get(BigExcelConstants.CLASS), list);
-            list = server.selectListForExcelExport(model.get(BigExcelConstants.DATA_PARAMS),
-                    page++);
-        }
-        ExcelExportUtil.closeExportBigExcel();
+                (Class<?>) model.get(BigExcelConstants.CLASS),
+                (IExcelExportServer) model.get(BigExcelConstants.DATA_INTER),
+                model.get(BigExcelConstants.DATA_PARAMS));
         if (model.containsKey(BigExcelConstants.FILE_NAME)) {
             codedFileName = (String) model.get(BigExcelConstants.FILE_NAME);
         }

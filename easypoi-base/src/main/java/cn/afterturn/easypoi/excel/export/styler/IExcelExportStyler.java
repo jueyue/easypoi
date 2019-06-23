@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.excel.entity.params.ExcelForEachParams;
+import org.apache.poi.util.Removal;
 
 /**
  * Excel导出样式接口
@@ -42,6 +43,9 @@ public interface IExcelExportStyler {
      * 获取样式方法
      */
     @Deprecated
+    @Removal(
+            version = "4.2"
+    )
     public CellStyle getStyles(boolean parity, ExcelExportEntity entity);
 
     /**

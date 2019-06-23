@@ -13,8 +13,12 @@
  */
 package cn.afterturn.easypoi.word.parse.excel;
 
+import cn.afterturn.easypoi.entity.ImageEntity;
+import cn.afterturn.easypoi.util.PoiPublicUtil;
+import cn.afterturn.easypoi.word.entity.MyXWPFDocument;
 import com.google.common.collect.Maps;
 
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -43,6 +47,32 @@ import static cn.afterturn.easypoi.util.PoiElUtil.eval;
 public final class ExcelMapParse {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelMapParse.class);
+
+    /**
+     * 添加图片
+     *
+     * @param obj
+     * @param currentRun
+     * @throws Exception
+     * @author JueYue
+     * 2013-11-20
+     */
+    public static void addAnImage(ImageEntity obj, XWPFRun currentRun) {
+        try {
+            Object[] isAndType = PoiPublicUtil.getIsAndType(obj);
+            String   picId;
+            picId = currentRun.getDocument().addPictureData((byte[]) isAndType[0],
+                    (Integer) isAndType[1]);
+            ((MyXWPFDocument) currentRun.getDocument()).createPicture(currentRun,
+                    picId, currentRun.getDocument()
+                            .getNextPicNameNumber((Integer) isAndType[1]),
+                    obj.getWidth(), obj.getHeight());
+
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+    }
 
     /**
      * 解析参数行,获取参数列表
@@ -83,8 +113,7 @@ public final class ExcelMapParse {
         //保存这一行的样式是-后面好统一设置
         List<XWPFTableCell> tempCellList = new ArrayList<XWPFTableCell>();
         tempCellList.addAll(table.getRow(index).getTableCells());
-        int templateInde = index;
-        int cellIndex = 0;// 创建完成对象一行好像多了一个cell
+        int cellIndex = 0;
         Map<String, Object> tempMap = Maps.newHashMap();
         LOGGER.debug("start for each data list :{}", list.size());
         for (Object obj : list) {
@@ -103,7 +132,7 @@ public final class ExcelMapParse {
                         currentRow.createCell(), val);
             }
         }
-        table.removeRow(index);// 移除这一行
+        table.removeRow(index);
 
     }
 

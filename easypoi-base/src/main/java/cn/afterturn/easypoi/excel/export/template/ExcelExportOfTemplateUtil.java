@@ -104,7 +104,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 sheet.getLastRowNum(), shiftRows, true, true);
         mergedRegionHelper.shiftRows(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows);
         templateSumHandler.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows);
-        PoiExcelTempUtil.reset(sheet,teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), sheet.getLastRowNum());
+        PoiExcelTempUtil.reset(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), sheet.getLastRowNum());
         if (excelParams.size() == 0) {
             return;
         }
@@ -157,7 +157,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan, lastRowNum, (datas.size() - 1) * rowspan, true, true);
             mergedRegionHelper.shiftRows(cell.getSheet(), cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
             templateSumHandler.shiftRows(cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
-            PoiExcelTempUtil.reset(cell.getSheet(),cell.getRowIndex() + rowspan+ (datas.size() - 1) * rowspan, cell.getRow().getSheet().getLastRowNum());
+            PoiExcelTempUtil.reset(cell.getSheet(), cell.getRowIndex() + rowspan + (datas.size() - 1) * rowspan, cell.getRow().getSheet().getLastRowNum());
         }
         while (its.hasNext()) {
             Object t = its.next();
@@ -193,7 +193,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      * @param excelParams
      * @throws Exception
      */
-    public int getOneObjectSize(Object t, List<ExcelExportEntity> excelParams) throws Exception {
+    private int getOneObjectSize(Object t, List<ExcelExportEntity> excelParams) throws Exception {
         ExcelExportEntity entity;
         int               maxHeight = 1;
         for (int k = 0, paramSize = excelParams.size(); k < paramSize; k++) {
@@ -221,7 +221,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             this.teplateParams = params;
             wb = ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),
                     true);
-            int oldSheetNum = wb.getNumberOfSheets();
+            int          oldSheetNum  = wb.getNumberOfSheets();
             List<String> oldSheetName = new ArrayList<>();
             for (int i = 0; i < oldSheetNum; i++) {
                 oldSheetName.add(wb.getSheetName(i));
@@ -311,9 +311,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             } else {
                 wb = getCloneWorkBook();
             }
-            if (wb instanceof XSSFWorkbook) {
-                super.type = ExcelType.XSSF;
-            }
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
                     .getConstructor(Workbook.class).newInstance(wb));
@@ -382,6 +379,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     private void parseTemplate(Sheet sheet, Map<String, Object> map,
                                boolean colForeach) throws Exception {
+        if (sheet.getWorkbook() instanceof XSSFWorkbook) {
+            super.type = ExcelType.XSSF;
+        }
         deleteCell(sheet, map);
         mergedRegionHelper = new MergedRegionHelper(sheet);
         templateSumHandler = new TemplateSumHandler(sheet);
@@ -410,8 +410,12 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     private void handlerSumCell(Sheet sheet) {
         for (TemplateSumEntity sumEntity : templateSumHandler.getDataList()) {
             Cell cell = sheet.getRow(sumEntity.getRow()).getCell(sumEntity.getCol());
-            cell.setCellValue(cell.getStringCellValue()
-                    .replace("sum:(" + sumEntity.getSumKey() + ")", sumEntity.getValue() + ""));
+            if (cell.getStringCellValue().contains(sumEntity.getSumKey())) {
+                cell.setCellValue(cell.getStringCellValue()
+                        .replace("sum:(" + sumEntity.getSumKey() + ")", sumEntity.getValue() + ""));
+            } else {
+                cell.setCellValue(cell.getStringCellValue() + sumEntity.getValue());
+            }
         }
     }
 
@@ -529,7 +533,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             return;
         }
         String oldString;
-        cell.setCellType(CellType.STRING);
         oldString = cell.getStringCellValue();
         if (oldString != null && oldString.indexOf(START_STR) != -1
                 && !oldString.contains(FOREACH)) {
@@ -538,6 +541,11 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             boolean isNumber = false;
             if (isNumber(oldString)) {
                 isNumber = true;
+                oldString = oldString.replaceFirst(NUMBER_SYMBOL, "");
+            }
+            boolean isStyleBySelf = false;
+            if (isStyleBySelf(oldString)) {
+                isStyleBySelf = true;
                 oldString = oldString.replaceFirst(NUMBER_SYMBOL, "");
             }
             Object obj = PoiPublicUtil.getRealValue(oldString, map);
@@ -553,7 +561,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 createImageCell(cell, img.getHeight(), img.getRowspan(), img.getColspan(), img.getUrl(), img.getData());
             } else if (isNumber && StringUtils.isNotBlank(obj.toString())) {
                 cell.setCellValue(Double.parseDouble(obj.toString()));
-                cell.setCellType(CellType.NUMERIC);
             } else {
                 cell.setCellValue(obj.toString());
             }
@@ -568,6 +575,11 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     private boolean isNumber(String text) {
         return text.startsWith(NUMBER_SYMBOL) || text.contains("{" + NUMBER_SYMBOL)
                 || text.contains(" " + NUMBER_SYMBOL);
+    }
+
+    private boolean isStyleBySelf(String text) {
+        return text.startsWith(STYLE_SELF) || text.contains("{" + STYLE_SELF)
+                || text.contains(" " + STYLE_SELF);
     }
 
     /**
@@ -620,8 +632,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         ExcelForEachParams params;
         row = row.getSheet().getRow(row.getRowNum() - rowspan + 1);
         for (int k = 0; k < rowspan; k++) {
-            int ci = columnIndex;//cell的序号
-
+            int ci = columnIndex;
             short high = columns.get(0).getHeight();
             int   n    = k;
             while (n > 0) {
@@ -672,7 +683,6 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     createImageCell(row.getCell(ci), img.getHeight(), img.getRowspan(), img.getColspan(), img.getUrl(), img.getData());
                 } else if (isNumber && StringUtils.isNotEmpty(val)) {
                     row.getCell(ci).setCellValue(Double.parseDouble(val));
-                    row.getCell(ci).setCellType(CellType.NUMERIC);
                 } else {
                     try {
                         row.getCell(ci).setCellValue(val);
@@ -680,7 +690,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                         LOGGER.error(e.getMessage(), e);
                     }
                 }
-                row.getCell(ci).setCellStyle(params.getCellStyle());    // plq modify at 2017-11-13
+                if(params.getCellStyle() != null){
+                    row.getCell(ci).setCellStyle(params.getCellStyle());
+                }
                 //判断这个属性是不是需要统计
                 if (params.isNeedSum()) {
                     templateSumHandler.addValueOfKey(params.getName(), val);
