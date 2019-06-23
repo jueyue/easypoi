@@ -37,14 +37,14 @@ public final class POICacheManager {
 
     private static IFileLoader fileLoader = new FileLoaderImpl();
 
-    private static ThreadLocal<IFileLoader> LOCAL_FILELOADER = new ThreadLocal<IFileLoader>();
+    private static ThreadLocal<IFileLoader> LOCAL_FILE_LOADER = new ThreadLocal<IFileLoader>();
 
     public static InputStream getFile(String id) {
         try {
             byte[] result;
             //复杂数据,防止操作原数据
-            if (LOCAL_FILELOADER.get() != null) {
-                result = LOCAL_FILELOADER.get().getFile(id);
+            if (LOCAL_FILE_LOADER.get() != null) {
+                result = LOCAL_FILE_LOADER.get().getFile(id);
             }
             result = fileLoader.getFile(id);
             result = Arrays.copyOf(result, result.length);
@@ -65,7 +65,7 @@ public final class POICacheManager {
      */
     public static void setFileLoaderOnce(IFileLoader fileLoader) {
         if (fileLoader != null) {
-            LOCAL_FILELOADER.set(fileLoader);
+            LOCAL_FILE_LOADER.set(fileLoader);
         }
     }
 

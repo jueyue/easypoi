@@ -121,6 +121,9 @@ public abstract class BaseExportService extends ExportCommonService {
                     margeCellNum += entity.getList().size();
                 } else if (entity.isNeedMerge() && maxHeight > 1) {
                     for (int i = index + 1; i < index + maxHeight; i++) {
+                        if(sheet.getRow(i) == null ) {
+                            sheet.createRow(i);
+                        }
                         sheet.getRow(i).createCell(margeCellNum);
                         sheet.getRow(i).getCell(margeCellNum).setCellStyle(getStyles(false, entity));
                     }

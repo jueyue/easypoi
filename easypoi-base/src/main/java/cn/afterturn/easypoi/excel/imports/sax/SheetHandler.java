@@ -105,7 +105,7 @@ public class SheetHandler extends DefaultHandler {
                         return;
                     }
                 }
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
 
             }
             // 没别的了就是数字了
