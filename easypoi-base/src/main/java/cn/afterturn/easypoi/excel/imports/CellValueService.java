@@ -290,13 +290,8 @@ public class CellValueService {
             if (result == null || StringUtils.isBlank(result.toString())) {
                 return null;
             }
-            if ("class java.util.Date".equals(classFullName) && result instanceof Date) {
-                return result;
-            } else if ("class java.util.Date".equals(classFullName) && result instanceof String) {
+            if ("class java.util.Date".equals(classFullName) && result instanceof String) {
                 return DateUtils.parseDate(result.toString(), entity.getFormat());
-            }
-            if ("class java.sql.Date".equals(classFullName) && result instanceof java.sql.Date) {
-                return result;
             }
             if ("class java.lang.Boolean".equals(classFullName) || "boolean".equals(classFullName)) {
                 return Boolean.valueOf(String.valueOf(result));
