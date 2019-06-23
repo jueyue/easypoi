@@ -32,13 +32,12 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
    - [陕西昊景无线网络技术有限公司](http://www.hjwxbd.com)
    - [湖北省楚天云有限公司](http://www.chutianyun.gov.cn)
    - [博彦科技](http://www.beyondsoft.com)
-   - [图灵谷北京科技有限公司] (http://www.turingoal.com)
+   - [图灵谷北京科技有限公司](http://www.turingoal.com)
    - [多贝拉](https://www.duobeila.cn/)
-   - [河南八六三软件股份有限公司] (http://www.863soft.com/cn/)
-   - [网易] (http://www.netease.com)
-   - [港华燃气] (http://www.towngas.com.cn/)
-   - [wueasy 快速开发平台] (https://www.wueasy.com)
-   - [北京易才博普奥管理顾问有限公司] (yun.weifenghr.com)
+   - [河南八六三软件股份有限公司](http://www.863soft.com/cn/)
+   - [网易](http://www.netease.com)
+   - [港华燃气](http://www.towngas.com.cn/)
+   - [北京易才博普奥管理顾问有限公司](https://www.weifenghr.com/)
    
     
 
@@ -95,20 +94,26 @@ SNAPSHOT 版本-很少发布
 https://oss.sonatype.org/content/groups/public/
 ```xml
 		 <dependency>
+                      <groupId>cn.afterturn</groupId>
+                      <artifactId>easypoi-spring-boot-starter</artifactId>
+                      <version>4.1.0</version>
+                  </dependency>
+		 <dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
+		
 ```
 	
 
