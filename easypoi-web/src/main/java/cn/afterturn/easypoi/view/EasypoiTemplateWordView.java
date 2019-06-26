@@ -21,6 +21,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.afterturn.easypoi.util.WebFilenameUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.stereotype.Controller;
 
@@ -50,12 +51,8 @@ public class EasypoiTemplateWordView extends PoiBaseView {
         if (model.containsKey(TemplateWordConstants.FILE_NAME)) {
             codedFileName = (String) model.get(TemplateWordConstants.FILE_NAME) + ".docx";
         }
-        if (isIE(request)) {
-            codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
-        } else {
-            codedFileName = new String(codedFileName.getBytes("UTF-8"), "ISO-8859-1");
-        }
-        response.setHeader("content-disposition", "attachment;filename=" + codedFileName);
+        // 用工具类生成符合RFC 5987标准的文件名header, 去掉UA判断
+        response.setHeader("content-disposition", WebFilenameUtils.disposition(codedFileName));
         XWPFDocument document = WordExportUtil.exportWord07(
             (String) model.get(TemplateWordConstants.URL),
             (Map<String, Object>) model.get(TemplateWordConstants.MAP_DATA));
