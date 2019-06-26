@@ -15,6 +15,12 @@
  */
 package cn.afterturn.easypoi.util;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -52,9 +58,22 @@ public class PoiValidationUtil {
     private static String getValidateErrMsg(Set<ConstraintViolation<Object>> set) {
         StringBuilder builder = new StringBuilder();
         for (ConstraintViolation<Object> constraintViolation : set) {
+            Class cls = constraintViolation.getRootBean().getClass();
+            String fieldName = constraintViolation.getPropertyPath().toString();
+            List<Field> fields = new ArrayList<>(Arrays.asList(cls.getDeclaredFields()));
+            Class superClass = cls.getSuperclass();
+            if (superClass != null) {
+                fields.addAll(Arrays.asList(superClass.getDeclaredFields()));
+            }
+            for (Field field: fields) {
+                if (field.getName().equals(fieldName) && field.isAnnotationPresent(Excel.class)) {
+                    builder.append(field.getAnnotation(Excel.class).name());
+                    break;
+                }
+            }
             builder.append(constraintViolation.getMessage()).append(",");
         }
-        return builder.substring(0, builder.length() - 1).toString();
+        return builder.substring(0, builder.length() - 1);
     }
 
 }

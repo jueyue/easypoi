@@ -186,7 +186,7 @@ public class ImportBaseService {
             if (PoiPublicUtil.isNotUserExcelUserThis(null, field, targetId)) {
                 continue;
             }
-            if (PoiPublicUtil.isJavaClass(field)) {
+            if (PoiPublicUtil.isJavaClass(field) || field.getType().isEnum()) {
                 addEntityToMap(targetId, field, excelEntity, pojoClass, getMethods, temp, null);
             } else {
                 List<Method> newMethods = new ArrayList<Method>();
