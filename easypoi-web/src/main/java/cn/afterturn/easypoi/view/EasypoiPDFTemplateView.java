@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.afterturn.easypoi.util.WebFilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 
@@ -70,12 +71,8 @@ public class EasypoiPDFTemplateView extends PoiBaseView {
         if (StringUtils.isNoneBlank(userFileName)) {
             fileName = userFileName;
         }
-        if (isIE(request)) {
-            fileName = java.net.URLEncoder.encode(fileName, "UTF8");
-        } else {
-            fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
-        }
-        response.setHeader("content-disposition", "attachment;filename=" + fileName + ".pdf");
+        // 用工具类生成符合RFC 5987标准的文件名header, 去掉UA判断
+        response.setHeader("content-disposition", WebFilenameUtils.disposition(fileName + ".pdf"));
         writeToResponse(response, baos);
     }
 

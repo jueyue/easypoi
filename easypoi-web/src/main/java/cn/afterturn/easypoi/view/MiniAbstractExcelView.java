@@ -15,6 +15,7 @@
  */
 package cn.afterturn.easypoi.view;
 
+import cn.afterturn.easypoi.util.WebFilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -46,12 +47,8 @@ public abstract class MiniAbstractExcelView extends PoiBaseView {
         } else {
             codedFileName += XSSF;
         }
-        if (isIE(request)) {
-            codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
-        } else {
-            codedFileName = new String(codedFileName.getBytes("UTF-8"), "ISO-8859-1");
-        }
-        response.setHeader("content-disposition", "attachment;filename=" + codedFileName);
+        // 用工具类生成符合RFC 5987标准的文件名header, 去掉UA判断
+        response.setHeader("content-disposition", WebFilenameUtils.disposition(codedFileName));
         ServletOutputStream out = response.getOutputStream();
         workbook.write(out);
         out.flush();
