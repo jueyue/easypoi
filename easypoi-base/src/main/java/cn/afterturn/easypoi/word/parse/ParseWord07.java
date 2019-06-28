@@ -84,6 +84,7 @@ public class ParseWord07 {
                     .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
             String[] keys = text.replaceAll("\\s{1,}", " ").trim().split(" ");
             Object result=PoiPublicUtil.getParamsValue(keys[0], map);
+            //添加list默认值，避免将{{$fe: list t.sn	t.hoby	t.remark}} 这类标签直接显示出来
             return Objects.nonNull(result)?result:new ArrayList<Map<String,Object>>(0);
         }
         return null;

@@ -455,6 +455,7 @@ public final class PoiPublicUtil {
             }
             currentRun.setText(tempArr[tempArr.length - 1], tempArr.length - 1);
         }else{
+            //对blank字符串做处理，避免显示"{{"
             currentRun.setText("",0);
         }
     }
