@@ -27,10 +27,7 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.afterturn.easypoi.util.PoiElUtil.*;
 
@@ -86,7 +83,8 @@ public class ParseWord07 {
             text = text.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
                     .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
             String[] keys = text.replaceAll("\\s{1,}", " ").trim().split(" ");
-            return PoiPublicUtil.getParamsValue(keys[0], map);
+            Object result=PoiPublicUtil.getParamsValue(keys[0], map);
+            return Objects.nonNull(result)?result:new ArrayList<Map<String,Object>>(0);
         }
         return null;
     }
@@ -171,6 +169,8 @@ public class ParseWord07 {
             parseAllParagraphic(cell.getParagraphs(), map);
         }
     }
+
+
 
     /**
      * 解析这个表格
