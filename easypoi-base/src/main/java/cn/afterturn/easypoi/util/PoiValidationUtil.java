@@ -65,13 +65,17 @@ public class PoiValidationUtil {
             if (superClass != null) {
                 fields.addAll(Arrays.asList(superClass.getDeclaredFields()));
             }
+            String name = null;
             for (Field field: fields) {
                 if (field.getName().equals(fieldName) && field.isAnnotationPresent(Excel.class)) {
-                    builder.append(field.getAnnotation(Excel.class).name());
+                    name = field.getAnnotation(Excel.class).name();
                     break;
                 }
             }
-            builder.append(constraintViolation.getMessage()).append(",");
+            if (name == null) {
+               name = fieldName;
+            }
+            builder.append(name).append(constraintViolation.getMessage()).append(",");
         }
         return builder.substring(0, builder.length() - 1);
     }
