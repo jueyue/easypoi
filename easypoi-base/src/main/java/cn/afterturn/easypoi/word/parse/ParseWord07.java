@@ -120,8 +120,7 @@ public class ParseWord07 {
      * @author JueYue
      * 2013-11-16
      */
-    private void parseThisParagraph(XWPFParagraph paragraph,
-                                    Map<String, Object> map) throws Exception {
+    private void parseThisParagraph(XWPFParagraph paragraph, Map<String, Object> map) throws Exception {
         XWPFRun       run;
         // 拿到的第一个run,用来set值,可以保存格式
         XWPFRun       currentRun  = null;
