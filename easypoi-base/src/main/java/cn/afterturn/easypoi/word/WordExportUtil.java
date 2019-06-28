@@ -56,8 +56,7 @@ public class WordExportUtil {
      * @param map
      *            解析数据源
      */
-    public static void exportWord07(XWPFDocument document,
-                                    Map<String, Object> map) throws Exception {
+    public static void exportWord07(XWPFDocument document, Map<String, Object> map) throws Exception {
         new ParseWord07().parseWord(document, map);
     }
 

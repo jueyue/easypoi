@@ -56,7 +56,8 @@ public class ParseWord07 {
     private void changeValues(XWPFParagraph paragraph, XWPFRun currentRun, String currentText,
                               List<Integer> runIndex, Map<String, Object> map) throws Exception {
         Object obj = PoiPublicUtil.getRealValue(currentText, map);
-        if (obj instanceof ImageEntity) {// 如果是图片就设置为图片
+        // 如果是图片就设置为图片
+        if (obj instanceof ImageEntity) {
             currentRun.setText("", 0);
             ExcelMapParse.addAnImage((ImageEntity) obj, currentRun);
         } else {
@@ -122,11 +123,15 @@ public class ParseWord07 {
     private void parseThisParagraph(XWPFParagraph paragraph,
                                     Map<String, Object> map) throws Exception {
         XWPFRun       run;
-        XWPFRun       currentRun  = null;// 拿到的第一个run,用来set值,可以保存格式
-        String        currentText = "";// 存放当前的text
+        // 拿到的第一个run,用来set值,可以保存格式
+        XWPFRun       currentRun  = null;
+        // 存放当前的text
+        String        currentText = "";
         String        text;
-        Boolean       isfinde     = false;// 判断是不是已经遇到{{
-        List<Integer> runIndex    = new ArrayList<Integer>();// 存储遇到的run,把他们置空
+        // 判断是不是已经遇到{{
+        Boolean       isfinde     = false;
+        // 存储遇到的run,把他们置空
+        List<Integer> runIndex    = new ArrayList<Integer>();
         for (int i = 0; i < paragraph.getRuns().size(); i++) {
             run = paragraph.getRuns().get(i);
             text = run.getText(0);
@@ -146,7 +151,8 @@ public class ParseWord07 {
                     currentText = "";
                     isfinde = false;
                 }
-            } else if (text.indexOf(START_STR) >= 0) {// 判断是不是开始
+                // 判断是不是开始
+            } else if (text.indexOf(START_STR) >= 0) {
                 currentText = text;
                 isfinde = true;
                 currentRun = run;
@@ -187,10 +193,12 @@ public class ParseWord07 {
                 parseThisRow(cells, map);
             } else if (listobj instanceof ExcelListEntity) {
                 new ExcelEntityParse().parseNextRowAndAddRow(table, i, (ExcelListEntity) listobj);
-                i = i + ((ExcelListEntity) listobj).getList().size() - 1;//删除之后要往上挪一行,然后加上跳过新建的行数
+                //删除之后要往上挪一行,然后加上跳过新建的行数
+                i = i + ((ExcelListEntity) listobj).getList().size() - 1;
             } else {
                 ExcelMapParse.parseNextRowAndAddRow(table, i, (List) listobj);
-                i = i + ((List) listobj).size() - 1;//删除之后要往上挪一行,然后加上跳过新建的行数
+                //删除之后要往上挪一行,然后加上跳过新建的行数
+                i = i + ((List) listobj).size() - 1;
             }
         }
     }
