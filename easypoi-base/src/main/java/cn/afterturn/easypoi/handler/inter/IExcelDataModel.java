@@ -10,12 +10,12 @@ public interface IExcelDataModel {
      * 获取行号
      * @return
      */
-    public int getRowNum();
+    public Integer getRowNum();
 
     /**
      *  设置行号
      * @param rowNum
      */
-    public void setRowNum(int rowNum);
+    public void setRowNum(Integer rowNum);
 
 }
