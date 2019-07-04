@@ -11,6 +11,7 @@ EasyPoi Excel和 Word简易工具类
 	QQ群:  1群 364192721(满) 2 群116844390
 	
 	开发者:魔幻之翼 xf.key@163.com
+	优秀团队,承接私活,加微信:13165188222 ,添加备注一众
 Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 [官网](https://opensource.afterturn.cn)

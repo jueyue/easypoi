@@ -23,10 +23,10 @@
     </licenses>
 
     <scm>
-        <connection>scm:git@git.oschina.net:jueyue/easypoi.git</connection>
-        <developerConnection>scm:git@git.oschina.net:jueyue/easypoi.git</developerConnection>
-        <url>git@git.oschina.net:jueyue/easypoi.git</url>
-    </scm>
+    		<connection>scm:git@git.oschina.net:lemur/easypoi.git</connection>
+    		<developerConnection>scm:git@git.oschina.net:lemur/easypoi.git</developerConnection>
+    		<url>git@git.oschina.net:lemur/easypoi.git</url>
+    	</scm>
 
     <developers>
         <developer>
