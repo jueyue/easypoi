@@ -18,7 +18,10 @@ package cn.afterturn.easypoi.util;
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
@@ -98,20 +101,15 @@ public final class PoiFunctionUtil {
      * @return
      */
     public static String formatDate(Object obj, String format) {
-        if (obj == null || obj.toString() == "") {
+        if (obj == null || "".equals(obj.toString())) {
             return "";
         }
-        SimpleDateFormat dateFormat = null;
-        if (DAY_STR.equals(format)) {
-            dateFormat = new SimpleDateFormat(DAY_STR);
-        } else if (TIME_STR.equals(format)) {
-            dateFormat = new SimpleDateFormat(TIME_STR);
-        } else if (TIME__NO_S_STR.equals(format)) {
-            dateFormat = new SimpleDateFormat(TIME__NO_S_STR);
-        } else {
-            dateFormat = new SimpleDateFormat(format);
+        if (obj instanceof Date || obj instanceof Number) {
+            return new SimpleDateFormat(format).format(obj);
+        } else if (obj instanceof TemporalAccessor) {
+            return DateTimeFormatter.ofPattern(format).format((TemporalAccessor) obj);
         }
-        return dateFormat.format(obj);
+        throw new ExcelExportException("暂不支持的时间类型");
     }
 
     /**
