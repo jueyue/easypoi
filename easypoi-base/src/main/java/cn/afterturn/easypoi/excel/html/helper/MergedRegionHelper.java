@@ -29,7 +29,7 @@ public class MergedRegionHelper {
     private void getAllMergedRegion(Sheet sheet) {
         int nums = sheet.getNumMergedRegions();
         for (int i = 0; i < nums; i++) {
-            handlerMergedString(sheet.getMergedRegion(i), sheet.getMergedRegion(i).formatAsString());
+            handlerMergedString(sheet.getMergedRegion(i), sheet.getMergedRegion(i).formatAsString(), i);
         }
     }
 
@@ -38,7 +38,7 @@ public class MergedRegionHelper {
      *
      * @param formatAsString
      */
-    private void handlerMergedString(CellRangeAddress cellRangeAddress, String formatAsString) {
+    private void handlerMergedString(CellRangeAddress cellRangeAddress, String formatAsString, int index) {
         String[] strArr = formatAsString.split(":");
         if (strArr.length == 2) {
             int startCol = strArr[0].charAt(0) - 65;
@@ -102,9 +102,16 @@ public class MergedRegionHelper {
      * @param rowIndex
      * @param size
      */
-    public void shiftRows(Sheet sheet, int rowIndex, int size) {
+    public void shiftRows(Sheet sheet, int rowIndex, int size, int shiftRows) {
         Set<String> keys = new HashSet<String>();
         keys.addAll(mergedCache.keySet());
+        //删除掉原始的缓存KEY
+        for (String key : keys) {
+            String[] temp = key.split("_");
+            if (Integer.parseInt(temp[0]) >= rowIndex + size && Integer.parseInt(temp[0]) <= rowIndex + size + shiftRows) {
+                mergedCache.remove(key);
+            }
+        }
         for (String key : keys) {
             String[] temp = key.split("_");
             if (Integer.parseInt(temp[0]) >= rowIndex) {

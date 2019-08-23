@@ -16,6 +16,7 @@
 package cn.afterturn.easypoi.util;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -151,9 +152,9 @@ public final class PoiFunctionUtil {
         //要求两个对象当中至少一个对象不是字符串才进行数字类型判断
         if (!(first instanceof String) || !(second instanceof String)) {
             try {
-                double f = Double.parseDouble(first.toString());
-                double s = Double.parseDouble(second.toString());
-                return f == s;
+                BigDecimal f = new BigDecimal(first.toString());
+                BigDecimal s = new BigDecimal(second.toString());
+                return f.compareTo(s) == 0;
             } catch (NumberFormatException e) {
                 //可能存在的错误,忽略继续进行
             }

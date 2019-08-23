@@ -102,7 +102,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         //下移数据,模拟插入
         sheet.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(),
                 sheet.getLastRowNum(), shiftRows, true, true);
-        mergedRegionHelper.shiftRows(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows);
+        mergedRegionHelper.shiftRows(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows,
+                sheet.getLastRowNum() - teplateParams.getHeadingRows() - teplateParams.getHeadingStartRow());
         templateSumHandler.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows);
         PoiExcelTempUtil.reset(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), sheet.getLastRowNum());
         if (excelParams.size() == 0) {
@@ -154,8 +155,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         //修复不论后面有没有数据,都应该执行的是插入操作
         if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()) {
             int lastRowNum = cell.getRow().getSheet().getLastRowNum();
+            int shiftRows  = lastRowNum - cell.getRowIndex() - rowspan;
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan, lastRowNum, (datas.size() - 1) * rowspan, true, true);
-            mergedRegionHelper.shiftRows(cell.getSheet(), cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
+            mergedRegionHelper.shiftRows(cell.getSheet(), cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan, shiftRows);
             templateSumHandler.shiftRows(cell.getRowIndex() + rowspan, (datas.size() - 1) * rowspan);
             PoiExcelTempUtil.reset(cell.getSheet(), cell.getRowIndex() + rowspan + (datas.size() - 1) * rowspan, cell.getRow().getSheet().getLastRowNum());
         }
@@ -632,7 +634,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         ExcelForEachParams params;
         row = row.getSheet().getRow(row.getRowNum() - rowspan + 1);
         for (int k = 0; k < rowspan; k++) {
-            int ci = columnIndex;
+            int   ci   = columnIndex;
             short high = columns.get(0).getHeight();
             int   n    = k;
             while (n > 0) {
@@ -690,7 +692,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                         LOGGER.error(e.getMessage(), e);
                     }
                 }
-                if(params.getCellStyle() != null){
+                if (params.getCellStyle() != null) {
                     row.getCell(ci).setCellStyle(params.getCellStyle());
                 }
                 //判断这个属性是不是需要统计

@@ -56,7 +56,8 @@ public class ParseWord07 {
     private void changeValues(XWPFParagraph paragraph, XWPFRun currentRun, String currentText,
                               List<Integer> runIndex, Map<String, Object> map) throws Exception {
         Object obj = PoiPublicUtil.getRealValue(currentText, map);
-        if (obj instanceof ImageEntity) {// 如果是图片就设置为图片
+        // 如果是图片就设置为图片
+        if (obj instanceof ImageEntity) {
             currentRun.setText("", 0);
             ExcelMapParse.addAnImage((ImageEntity) obj, currentRun);
         } else {
