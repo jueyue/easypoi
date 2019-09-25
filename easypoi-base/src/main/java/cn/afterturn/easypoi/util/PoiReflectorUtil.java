@@ -309,7 +309,7 @@ public final class PoiReflectorUtil {
         Method method = setMethods.get(propertyName);
         if (method == null) {
             throw new RuntimeException(
-                    "There is no getter for property named '" + propertyName + "' in '" + type + "'");
+                    "There is no setter for property named '" + propertyName + "' in '" + type + "'");
         }
         return method;
     }
