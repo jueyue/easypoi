@@ -361,12 +361,10 @@ public final class PoiPublicUtil {
                                       Map<String, Object> map) throws Exception {
         String params = "";
         while (currentText.indexOf(START_STR) != -1) {
-            params = currentText.substring(currentText.indexOf(START_STR) + 2,
-                    currentText.indexOf(END_STR));
+            params = currentText.substring(currentText.indexOf(START_STR) + 2, currentText.indexOf(END_STR));
             Object obj = PoiElUtil.eval(params.trim(), map);
             //判断图片或者是集合
-            if (obj instanceof ImageEntity || obj instanceof List
-                    || obj instanceof ExcelListEntity) {
+            if (obj instanceof ImageEntity || obj instanceof List || obj instanceof ExcelListEntity) {
                 return obj;
             } else if (obj != null){
                 currentText = currentText.replace(START_STR + params + END_STR, obj.toString());
@@ -456,6 +454,9 @@ public final class PoiPublicUtil {
                 currentRun.addBreak();
             }
             currentRun.setText(tempArr[tempArr.length - 1], tempArr.length - 1);
+        }else{
+            //对blank字符串做处理，避免显示"{{"
+            currentRun.setText("",0);
         }
     }
 

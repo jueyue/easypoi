@@ -27,10 +27,7 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.afterturn.easypoi.util.PoiElUtil.*;
 
@@ -86,7 +83,9 @@ public class ParseWord07 {
             text = text.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
                     .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
             String[] keys = text.replaceAll("\\s{1,}", " ").trim().split(" ");
-            return PoiPublicUtil.getParamsValue(keys[0], map);
+            Object result=PoiPublicUtil.getParamsValue(keys[0], map);
+            //添加list默认值，避免将{{$fe: list t.sn	t.hoby	t.remark}} 这类标签直接显示出来
+            return Objects.nonNull(result)?result:new ArrayList<Map<String,Object>>(0);
         }
         return null;
     }
@@ -120,14 +119,17 @@ public class ParseWord07 {
      * @author JueYue
      * 2013-11-16
      */
-    private void parseThisParagraph(XWPFParagraph paragraph,
-                                    Map<String, Object> map) throws Exception {
+    private void parseThisParagraph(XWPFParagraph paragraph, Map<String, Object> map) throws Exception {
         XWPFRun       run;
-        XWPFRun       currentRun  = null;// 拿到的第一个run,用来set值,可以保存格式
-        String        currentText = "";// 存放当前的text
+        // 拿到的第一个run,用来set值,可以保存格式
+        XWPFRun       currentRun  = null;
+        // 存放当前的text
+        String        currentText = "";
         String        text;
-        Boolean       isfinde     = false;// 判断是不是已经遇到{{
-        List<Integer> runIndex    = new ArrayList<Integer>();// 存储遇到的run,把他们置空
+        // 判断是不是已经遇到{{
+        Boolean       isfinde     = false;
+        // 存储遇到的run,把他们置空
+        List<Integer> runIndex    = new ArrayList<Integer>();
         for (int i = 0; i < paragraph.getRuns().size(); i++) {
             run = paragraph.getRuns().get(i);
             text = run.getText(0);
@@ -147,7 +149,8 @@ public class ParseWord07 {
                     currentText = "";
                     isfinde = false;
                 }
-            } else if (text.indexOf(START_STR) >= 0) {// 判断是不是开始
+                // 判断是不是开始
+            } else if (text.indexOf(START_STR) >= 0) {
                 currentText = text;
                 isfinde = true;
                 currentRun = run;
@@ -167,6 +170,8 @@ public class ParseWord07 {
             parseAllParagraphic(cell.getParagraphs(), map);
         }
     }
+
+
 
     /**
      * 解析这个表格
@@ -188,10 +193,12 @@ public class ParseWord07 {
                 parseThisRow(cells, map);
             } else if (listobj instanceof ExcelListEntity) {
                 new ExcelEntityParse().parseNextRowAndAddRow(table, i, (ExcelListEntity) listobj);
-                i = i + ((ExcelListEntity) listobj).getList().size() - 1;//删除之后要往上挪一行,然后加上跳过新建的行数
+                //删除之后要往上挪一行,然后加上跳过新建的行数
+                i = i + ((ExcelListEntity) listobj).getList().size() - 1;
             } else {
                 ExcelMapParse.parseNextRowAndAddRow(table, i, (List) listobj);
-                i = i + ((List) listobj).size() - 1;//删除之后要往上挪一行,然后加上跳过新建的行数
+                //删除之后要往上挪一行,然后加上跳过新建的行数
+                i = i + ((List) listobj).size() - 1;
             }
         }
     }

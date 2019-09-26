@@ -161,7 +161,8 @@ public class ExcelEntityParse extends ExportCommonService {
      * @param entity
      */
     public void parseNextRowAndAddRow(XWPFTable table, int index, ExcelListEntity entity) {
-        table.removeRow(index);// 删除这一行
+        // 删除这一行
+        table.removeRow(index);
         checkExcelParams(entity);
         // 获取表头数据
         Map<String, Integer> titlemap = getTitleMap(table, index, entity.getHeadRows());
