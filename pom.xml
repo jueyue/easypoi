@@ -23,10 +23,10 @@
     </licenses>
 
     <scm>
-    		<connection>scm:git@git.oschina.net:lemur/easypoi.git</connection>
-    		<developerConnection>scm:git@git.oschina.net:lemur/easypoi.git</developerConnection>
-    		<url>git@git.oschina.net:lemur/easypoi.git</url>
-    	</scm>
+        <connection>scm:git@git.oschina.net:lemur/easypoi.git</connection>
+        <developerConnection>scm:git@git.oschina.net:lemur/easypoi.git</developerConnection>
+        <url>git@git.oschina.net:lemur/easypoi.git</url>
+    </scm>
 
     <developers>
         <developer>
@@ -99,6 +99,13 @@
                 <optional>true</optional>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>3.1.0</version>
+                <optional>true</optional>
+            </dependency>
+
             <!-- google 工具类 -->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -140,7 +147,17 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
                 <version>${spring.version}</version>
             </dependency>
 

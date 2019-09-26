@@ -39,6 +39,9 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
    - [网易](http://www.netease.com)
    - [港华燃气](http://www.towngas.com.cn/)
    - [北京易才博普奥管理顾问有限公司](https://www.weifenghr.com/)
+   - [中投国信(北京)科技发展有限公司](http://sic-credit.cn/)
+   - [武汉格事化信息技术](https://www.getto1.com/)
+   - [北京辰森世纪科技股份有限公司](http://www.choicesoft.com.cn/)
    
     
 

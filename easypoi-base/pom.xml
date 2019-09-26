@@ -39,6 +39,16 @@
 			<artifactId>poi-scratchpad</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- PDF -->
 		<dependency>
