@@ -74,8 +74,12 @@ public class ExcelExportService extends BaseExportService {
         row.setHeight(title.getHeaderHeight());
         Row listRow = null;
         if (rows >= 2) {
-            listRow = sheet.createRow(index + 1);
-            listRow.setHeight(title.getHeaderHeight());
+            listRow = sheet.getRow(index + 1);
+            if (listRow == null) {
+                listRow = sheet.createRow(index + 1);
+                listRow.setHeight(title.getHeaderHeight());
+
+            }
         }
         int groupCellLength = 0;
         CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
