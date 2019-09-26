@@ -69,7 +69,10 @@ public abstract class BaseExportService extends ExportCommonService {
             int maxHeight = 1, listMaxHeight = 1;
             // 合并需要合并的单元格
             int margeCellNum = cellNum;
-            int indexKey     = createIndexCell(row, index, excelParams.get(0));
+            int indexKey = 0;
+            if (excelParams != null && !excelParams.isEmpty()){
+                indexKey = createIndexCell(row, index, excelParams.get(0));
+            }
             cellNum += indexKey;
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
