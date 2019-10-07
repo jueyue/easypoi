@@ -736,9 +736,32 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 ci = ci + params.getColspan();
             }
             loopCi = Math.max(loopCi, ci);
+            // 需要把需要合并的单元格合并了  --- 不是集合的栏位合并了
+            if (loopSize > 1) {
+                handlerLoopMergedRegion(row, columnIndex, columns, loopSize);
+            }
             row = row.getSheet().getRow(row.getRowNum() + 1);
         }
         return new int[]{loopSize, loopCi};
+    }
+
+    /**
+     * 迭代把不是集合的数据都合并了
+     *
+     * @param row
+     * @param columnIndex
+     * @param columns
+     * @param loopSize
+     */
+    private void handlerLoopMergedRegion(Row row, int columnIndex, List<ExcelForEachParams> columns, int loopSize) {
+        for (int i = 0; i < columns.size(); i++) {
+            if (!columns.get(i).isCollectCell()) {
+                PoiMergeCellUtil.addMergedRegion(row.getSheet(), row.getRowNum(),
+                        row.getRowNum() + loopSize - 1, columnIndex,
+                        columnIndex + columns.get(i).getColspan() - 1);
+            }
+            columnIndex = columnIndex + columns.get(i).getColspan();
+        }
     }
 
     private short getMaxHeight(int k, int colspan, List<ExcelForEachParams> columns) {
@@ -789,12 +812,15 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             int[] loopArr = setForeachRowCellValue(false, tempRow, columnIndex, data, temp, map, rowspan,
                     colspan, mergedRegionHelper);
             nums += loopArr[0];
-            ci = Math.max(ci,loopArr[1]);
+            ci = Math.max(ci, loopArr[1]);
             map.remove("loop_" + columnIndex);
             tempRow = createRow(tempRow.getRowNum() + loopArr[0], row.getSheet(), false, rowspan);
         }
         for (int i = 0; i < temp.size(); i++) {
             temp.get(i).setName(temp.get(i).getTempName().pop());
+            //都是集合
+            temp.get(i).setCollectCell(true);
+
         }
         return new int[]{nums, temp.size(), ci};
     }
@@ -810,11 +836,14 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     private List<ExcelForEachParams> getLoopEachParams(List<ExcelForEachParams> columns, int columnIndex, String collectName) {
         List<ExcelForEachParams> temp = new ArrayList<>();
         for (int i = 0; i < columns.size(); i++) {
+            //先置为不是集合
+            columns.get(i).setCollectCell(false);
             if (columns.get(i) == null || columns.get(i).getName().contains(collectName)) {
                 temp.add(columns.get(i));
                 if (columns.get(i).getTempName() == null) {
                     columns.get(i).setTempName(new Stack<>());
                 }
+                columns.get(i).setCollectCell(true);
                 columns.get(i).getTempName().push(columns.get(i).getName());
                 columns.get(i).setName(columns.get(i).getName().replace(collectName, "loop_" + columnIndex));
             }
