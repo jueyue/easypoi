@@ -1,6 +1,7 @@
 package cn.afterturn.easypoi.excel.entity.params;
 
 import java.io.Serializable;
+import java.util.Stack;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 
@@ -14,31 +15,35 @@ public class ExcelForEachParams implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
+    private static final long          serialVersionUID = 1L;
     /**
      * key
      */
-    private String            name;
+    private              String        name;
+    /**
+     * key
+     */
+    private              Stack<String> tempName;
     /**
      * 模板的cellStyle
      */
-    private CellStyle         cellStyle;
+    private              CellStyle     cellStyle;
     /**
      * 行高
      */
-    private short             height;
+    private              short         height;
     /**
      * 常量值
      */
-    private String            constValue;
+    private              String        constValue;
     /**
      * 列合并
      */
-    private int               colspan          = 1;
+    private              int           colspan          = 1;
     /**
      * 行合并
      */
-    private int               rowspan          = 1;
+    private              int           rowspan          = 1;
     
     private boolean           needSum;         
 
@@ -116,4 +121,11 @@ public class ExcelForEachParams implements Serializable {
         this.needSum = needSum;
     }
 
+    public Stack<String> getTempName() {
+        return tempName;
+    }
+
+    public void setTempName(Stack<String> tempName) {
+        this.tempName = tempName;
+    }
 }

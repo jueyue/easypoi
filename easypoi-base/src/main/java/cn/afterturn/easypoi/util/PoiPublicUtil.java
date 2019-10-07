@@ -44,8 +44,9 @@ import static cn.afterturn.easypoi.util.PoiElUtil.START_STR;
 
 /**
  * EASYPOI 的公共基础类
+ *
  * @author JueYue
- *  2015年4月5日 上午12:59:22
+ * 2015年4月5日 上午12:59:22
  */
 public final class PoiPublicUtil {
 
@@ -143,6 +144,7 @@ public final class PoiPublicUtil {
 
     /**
      * 判断流是否含有BOM
+     *
      * @param in
      * @return
      * @throws IOException
@@ -159,10 +161,8 @@ public final class PoiPublicUtil {
     /**
      * 获取Excel2003图片
      *
-     * @param sheet
-     *            当前sheet对象
-     * @param workbook
-     *            工作簿对象
+     * @param sheet    当前sheet对象
+     * @param workbook 工作簿对象
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
     public static Map<String, PictureData> getSheetPictrues03(HSSFSheet sheet,
@@ -190,10 +190,8 @@ public final class PoiPublicUtil {
     /**
      * 获取Excel2007图片
      *
-     * @param sheet
-     *            当前sheet对象
-     * @param workbook
-     *            工作簿对象
+     * @param sheet    当前sheet对象
+     * @param workbook 工作簿对象
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
     public static Map<String, PictureData> getSheetPictrues07(XSSFSheet sheet,
@@ -311,11 +309,12 @@ public final class PoiPublicUtil {
 
     /**
      * 返回流和图片类型
-     *@author JueYue
-     *   2013-11-20
-     *@param entity
-     *@return (byte[]) isAndType[0],(Integer)isAndType[1]
+     *
+     * @param entity
+     * @return (byte[]) isAndType[0],(Integer)isAndType[1]
      * @throws Exception
+     * @author JueYue
+     * 2013-11-20
      */
     public static Object[] getIsAndType(ImageEntity entity) throws Exception {
         Object[] result = new Object[2];
@@ -353,9 +352,9 @@ public final class PoiPublicUtil {
     /**
      * 解析数据
      *
-     * @author JueYue
-     *  2013-11-16
      * @return
+     * @author JueYue
+     * 2013-11-16
      */
     public static Object getRealValue(String currentText,
                                       Map<String, Object> map) throws Exception {
@@ -366,7 +365,7 @@ public final class PoiPublicUtil {
             //判断图片或者是集合
             if (obj instanceof ImageEntity || obj instanceof List || obj instanceof ExcelListEntity) {
                 return obj;
-            } else if (obj != null){
+            } else if (obj != null) {
                 currentText = currentText.replace(START_STR + params + END_STR, obj.toString());
             } else {
                 currentText = currentText.replace(START_STR + params + END_STR, "");
@@ -399,12 +398,17 @@ public final class PoiPublicUtil {
             object = PoiReflectorUtil.fromCache(object.getClass()).getValue(object,
                     paramsArr[index]);
         }
+
+        if (object instanceof Collection) {
+            return object;
+        }
         return (index == paramsArr.length - 1) ? (object == null ? "" : object)
                 : getValueDoWhile(object, paramsArr, ++index);
     }
 
     /**
      * double to String 防止科学计数法
+     *
      * @param value
      * @return
      */
@@ -419,6 +423,7 @@ public final class PoiPublicUtil {
 
     /**
      * 统一 key的获取规则
+     *
      * @param key
      * @param targetId
      * @return
@@ -443,6 +448,7 @@ public final class PoiPublicUtil {
 
     /**
      * 支持换行操作
+     *
      * @param currentRun
      * @param currentText
      */
@@ -454,9 +460,9 @@ public final class PoiPublicUtil {
                 currentRun.addBreak();
             }
             currentRun.setText(tempArr[tempArr.length - 1], tempArr.length - 1);
-        }else{
+        } else {
             //对blank字符串做处理，避免显示"{{"
-            currentRun.setText("",0);
+            currentRun.setText("", 0);
         }
     }
 
@@ -469,4 +475,14 @@ public final class PoiPublicUtil {
         return count;
     }
 
+    /**
+     * 多个点,截取最后一个
+     *
+     * @param name
+     * @return
+     */
+    public static String getLastFieldName(String name) {
+        String[] paramsArr = name.split("\\.");
+        return paramsArr[paramsArr.length - 1];
+    }
 }

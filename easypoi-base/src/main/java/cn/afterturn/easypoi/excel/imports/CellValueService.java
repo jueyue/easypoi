@@ -70,7 +70,8 @@ public class CellValueService {
             return "";
         }
         Object result = null;
-        if ("class java.util.Date".equals(classFullName) || "class java.sql.Date".equals(classFullName)
+        if ("class java.util.Date".equals(classFullName)
+                || "class java.sql.Date".equals(classFullName)
                 || ("class java.sql.Time").equals(classFullName)
                 || ("class java.time.Instant").equals(classFullName)
                 || ("class java.time.LocalDate").equals(classFullName)
@@ -84,8 +85,7 @@ public class CellValueService {
                 try {
                     val = cell.getStringCellValue();
                 } catch (Exception e) {
-                    cell.setCellType(CellType.STRING);
-                    val = cell.getStringCellValue();
+                    return null;
                 }
 
                 result = getDateData(entity, val);

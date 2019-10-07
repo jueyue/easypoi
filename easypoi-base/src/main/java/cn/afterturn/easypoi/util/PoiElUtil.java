@@ -17,7 +17,7 @@ package cn.afterturn.easypoi.util;
 
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Stack;
@@ -51,6 +51,8 @@ public final class PoiElUtil {
     public static final String LEFT_BRACKET       = "(";
     public static final String RIGHT_BRACKET      = ")";
     public static final String CAL                = "cal:";
+    public static final String DICT_HANDLER       = "dict:";
+    public static final String I18N_HANDLER       = "i18n:";
 
     private PoiElUtil() {
     }
@@ -75,6 +77,27 @@ public final class PoiElUtil {
             }
         }
         return obj;
+    }
+
+
+    /**
+     * 解析字符串, 不支持 le,fd,fn,!if,三目 ,获取是集合的字段前缀
+     *
+     * @param text
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    public static String evalFindName(String text, Map<String, Object> map) throws Exception {
+        String[]      keys = text.split("\\.");
+        StringBuilder sb   = new StringBuilder().append(keys[0]);
+        for (int i = 1; i < keys.length; i++) {
+            sb.append(".").append(keys[i]);
+            if (eval(sb.toString(), map) instanceof Collection) {
+                return sb.toString();
+            }
+        }
+        return null;
     }
 
     /**
@@ -149,7 +172,7 @@ public final class PoiElUtil {
         char[]        operations = new char[]{'+', '-', '*', '/', '(', ')', ' '};
         boolean       beforeMark = true;
         for (int i = 0; i < chars.length; i++) {
-            if ( operations[0] == chars[i] || operations[1] == chars[i] || operations[2] == chars[i] || operations[3] == chars[i] || operations[4] == chars[i] || operations[5] == chars[i]) {
+            if (operations[0] == chars[i] || operations[1] == chars[i] || operations[2] == chars[i] || operations[3] == chars[i] || operations[4] == chars[i] || operations[5] == chars[i]) {
                 if (temp.length() > 0) {
                     sb.append(evalNoParse(temp.toString().trim(), map).toString());
                     temp = new StringBuilder();

@@ -78,14 +78,13 @@ public abstract class BaseExportService extends ExportCommonService {
                 entity = excelParams.get(k);
                 if (entity.getList() != null) {
                     Collection<?> list      = getListCellValue(entity, t);
-                    int           listIndex = 0, tmpListHeight = 0;
+                    int           tmpListHeight = 0;
                     if (list != null && list.size() > 0) {
                         int tempCellNum = 0;
                         for (Object obj : list) {
-                            int[] temp = createCells(patriarch, index + listIndex, obj, entity.getList(), sheet, workbook, rowHeight, cellNum);
+                            int[] temp = createCells(patriarch, index + tmpListHeight, obj, entity.getList(), sheet, workbook, rowHeight, cellNum);
                             tempCellNum = temp[1];
                             tmpListHeight += temp[0];
-                            listIndex++;
                         }
                         cellNum = tempCellNum;
                         listMaxHeight = Math.max(listMaxHeight, tmpListHeight);

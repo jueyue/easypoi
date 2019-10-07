@@ -61,7 +61,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
     /**
      * 模板参数,全局都用到
      */
-    private TemplateExportParams teplateParams;
+    private TemplateExportParams templateParams;
     /**
      * 单元格合并信息
      */
@@ -96,16 +96,16 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         // 根据表头进行筛选排序
         sortAndFilterExportField(excelParams, titlemap);
         short rowHeight = getRowHeight(excelParams);
-        int index = teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(),
+        int index = templateParams.getHeadingRows() + templateParams.getHeadingStartRow(),
                 titleHeight = index;
         int shiftRows = getShiftRows(dataSet, excelParams);
         //下移数据,模拟插入
-        sheet.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(),
+        sheet.shiftRows(templateParams.getHeadingRows() + templateParams.getHeadingStartRow(),
                 sheet.getLastRowNum(), shiftRows, true, true);
-        mergedRegionHelper.shiftRows(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows,
-                sheet.getLastRowNum() - teplateParams.getHeadingRows() - teplateParams.getHeadingStartRow());
-        templateSumHandler.shiftRows(teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), shiftRows);
-        PoiExcelTempUtil.reset(sheet, teplateParams.getHeadingRows() + teplateParams.getHeadingStartRow(), sheet.getLastRowNum());
+        mergedRegionHelper.shiftRows(sheet, templateParams.getHeadingRows() + templateParams.getHeadingStartRow(), shiftRows,
+                sheet.getLastRowNum() - templateParams.getHeadingRows() - templateParams.getHeadingStartRow());
+        templateSumHandler.shiftRows(templateParams.getHeadingRows() + templateParams.getHeadingStartRow(), shiftRows);
+        PoiExcelTempUtil.reset(sheet, templateParams.getHeadingRows() + templateParams.getHeadingStartRow(), sheet.getLastRowNum());
         if (excelParams.size() == 0) {
             return;
         }
@@ -146,11 +146,12 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         Row row      = null;
         int rowIndex = cell.getRow().getRowNum() + 1;
         //处理当前行
+        int loopSize = 0;
         if (its.hasNext()) {
             Object t = its.next();
-            setForEeachRowCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns, map,
-                    rowspan, colspan, mergedRegionHelper);
-            rowIndex += rowspan - 1;
+            loopSize = setForeachRowCellValue(isCreate, cell.getRow(), cell.getColumnIndex(), t, columns, map,
+                    rowspan, colspan, mergedRegionHelper)[0];
+            rowIndex += rowspan - 1 + loopSize - 1;
         }
         //修复不论后面有没有数据,都应该执行的是插入操作
         if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()) {
@@ -164,9 +165,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         while (its.hasNext()) {
             Object t = its.next();
             row = createRow(rowIndex, cell.getSheet(), isCreate, rowspan);
-            setForEeachRowCellValue(isCreate, row, cell.getColumnIndex(), t, columns, map, rowspan,
-                    colspan, mergedRegionHelper);
-            rowIndex += rowspan;
+            loopSize = setForeachRowCellValue(isCreate, row, cell.getColumnIndex(), t, columns, map, rowspan,
+                    colspan, mergedRegionHelper)[0];
+            rowIndex += rowspan + loopSize - 1;
         }
     }
 
@@ -220,8 +221,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         Workbook wb = null;
         // step 2. 判断模板的Excel类型,解析模板
         try {
-            this.teplateParams = params;
-            wb = ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),
+            this.templateParams = params;
+            wb = ExcelCache.getWorkbook(templateParams.getTemplateUrl(), templateParams.getSheetNum(),
                     true);
             int          oldSheetNum  = wb.getNumberOfSheets();
             List<String> oldSheetName = new ArrayList<>();
@@ -245,7 +246,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 wb.removeSheetAt(wb.getSheetIndex(oldSheetName.get(i)));
             }
             // 创建表格样式
-            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+            setExcelExportStyler((IExcelExportStyler) templateParams.getStyle()
                     .getConstructor(Workbook.class).newInstance(wb));
             // step 3. 解析模板
             int sheetIndex = 0;
@@ -276,10 +277,10 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         Workbook wb = null;
         // step 2. 判断模板的Excel类型,解析模板
         try {
-            this.teplateParams = params;
+            this.templateParams = params;
             wb = getCloneWorkBook();
             // 创建表格样式
-            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+            setExcelExportStyler((IExcelExportStyler) templateParams.getStyle()
                     .getConstructor(Workbook.class).newInstance(wb));
             // step 3. 解析模板
             for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets()
@@ -307,14 +308,20 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         Workbook wb = null;
         // step 2. 判断模板的Excel类型,解析模板
         try {
-            this.teplateParams = params;
+            this.templateParams = params;
             if (params.getTemplateWb() != null) {
                 wb = params.getTemplateWb();
             } else {
                 wb = getCloneWorkBook();
             }
+            if (params.getDictHandler() != null) {
+                this.dictHandler = params.getDictHandler();
+            }
+            if (params.getI18nHandler() != null) {
+                this.i18nHandler = params.getI18nHandler();
+            }
             // 创建表格样式
-            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
+            setExcelExportStyler((IExcelExportStyler) templateParams.getStyle()
                     .getConstructor(Workbook.class).newInstance(wb));
             // step 3. 解析模板
             for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets()
@@ -347,8 +354,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
      * @throws Exception
      */
     private Workbook getCloneWorkBook() throws Exception {
-        return ExcelCache.getWorkbook(teplateParams.getTemplateUrl(), teplateParams.getSheetNum(),
-                teplateParams.isScanAllsheet());
+        return ExcelCache.getWorkbook(templateParams.getTemplateUrl(), templateParams.getSheetNum(),
+                templateParams.isScanAllsheet());
 
     }
 
@@ -362,8 +369,8 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         Row                  row      = null;
         Iterator<Cell>       cellTitle;
         Map<String, Integer> titlemap = new HashMap<String, Integer>();
-        for (int j = 0; j < teplateParams.getHeadingRows(); j++) {
-            row = sheet.getRow(j + teplateParams.getHeadingStartRow());
+        for (int j = 0; j < templateParams.getHeadingRows(); j++) {
+            row = sheet.getRow(j + templateParams.getHeadingStartRow());
             cellTitle = row.cellIterator();
             int i = row.getFirstCellNum();
             while (cellTitle.hasNext()) {
@@ -474,7 +481,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         List<ExcelForEachParams> columns = (List<ExcelForEachParams>) columnsInfo[2];
         while (its.hasNext()) {
             Object t = its.next();
-            setForEeachRowCellValue(true, cell.getRow(), cell.getColumnIndex(), t, columns, map,
+            setForeachRowCellValue(true, cell.getRow(), cell.getColumnIndex(), t, columns, map,
                     rowspan, colspan, mergedRegionHelper);
             if (cell.getRow().getCell(cell.getColumnIndex() + colspan) == null) {
                 cell.getRow().createCell(cell.getColumnIndex() + colspan);
@@ -539,18 +546,35 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         if (oldString != null && oldString.indexOf(START_STR) != -1
                 && !oldString.contains(FOREACH)) {
             // step 2. 判断是否含有解析函数
-            String  params   = null;
             boolean isNumber = false;
-            if (isNumber(oldString)) {
+            if (isHasSymbol(oldString, NUMBER_SYMBOL)) {
                 isNumber = true;
                 oldString = oldString.replaceFirst(NUMBER_SYMBOL, "");
             }
             boolean isStyleBySelf = false;
-            if (isStyleBySelf(oldString)) {
+            if (isHasSymbol(oldString, STYLE_SELF)) {
                 isStyleBySelf = true;
-                oldString = oldString.replaceFirst(NUMBER_SYMBOL, "");
+                oldString = oldString.replaceFirst(STYLE_SELF, "");
+            }
+            boolean isDict = false;
+            String  dict   = null;
+            if (isHasSymbol(oldString, DICT_HANDLER)) {
+                isDict = true;
+                dict = oldString.substring(oldString.indexOf(DICT_HANDLER) + 5).split(";")[0];
+                oldString = oldString.replaceFirst(DICT_HANDLER, "");
+            }
+            boolean isI18n = false;
+            if (isHasSymbol(oldString, I18N_HANDLER)) {
+                isI18n = true;
+                oldString = oldString.replaceFirst(I18N_HANDLER, "");
             }
             Object obj = PoiPublicUtil.getRealValue(oldString, map);
+            if (isDict) {
+                obj = dictHandler.toName(dict, null, oldString, obj);
+            }
+            if (isI18n) {
+                obj = i18nHandler.getLocaleName(obj.toString());
+            }
             //如何是数值 类型,就按照数值类型进行设置// 如果是图片就设置为图片
             if (obj instanceof ImageEntity) {
                 ImageEntity img = (ImageEntity) obj;
@@ -574,14 +598,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
 
     }
 
-    private boolean isNumber(String text) {
-        return text.startsWith(NUMBER_SYMBOL) || text.contains("{" + NUMBER_SYMBOL)
-                || text.contains(" " + NUMBER_SYMBOL);
-    }
-
-    private boolean isStyleBySelf(String text) {
-        return text.startsWith(STYLE_SELF) || text.contains("{" + STYLE_SELF)
-                || text.contains(" " + STYLE_SELF);
+    private boolean isHasSymbol(String text, String symbol) {
+        return text.startsWith(symbol) || text.contains("{" + symbol)
+                || text.contains(" " + symbol);
     }
 
     /**
@@ -604,48 +623,34 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
         return sheet.getRow(rowIndex - rows);
     }
 
-    private void setForEeachRowCellValue(boolean isCreate, Row row, int columnIndex, Object t,
+    /**
+     * 循环迭代创建,遍历row
+     *
+     * @param isCreate
+     * @param row
+     * @param columnIndex
+     * @param t
+     * @param columns
+     * @param map
+     * @param rowspan
+     * @param colspan
+     * @param mergedRegionHelper
+     * @return rowSize, cellSize
+     * @throws Exception
+     */
+    private int[] setForeachRowCellValue(boolean isCreate, Row row, int columnIndex, Object t,
                                          List<ExcelForEachParams> columns, Map<String, Object> map,
                                          int rowspan, int colspan,
                                          MergedRegionHelper mergedRegionHelper) throws Exception {
-        //所有的cell创建一遍
-        for (int i = 0; i < rowspan; i++) {
-            int size = columns.size();//判断是不是超出设置了
-            for (int j = columnIndex, max = columnIndex + colspan; j < max; j++) {
-                if (row.getCell(j) == null) {
-                    row.createCell(j);
-                    CellStyle style = row.getRowNum() % 2 == 0
-                            ? getStyles(false,
-                            size <= j - columnIndex ? null : columns.get(j - columnIndex))
-                            : getStyles(true,
-                            size <= j - columnIndex ? null : columns.get(j - columnIndex));
-                    //返回的styler不为空时才使用,否则使用Excel设置的,更加推荐Excel设置的样式
-                    if (style != null) {
-                        row.getCell(j).setCellStyle(style);
-                    }
-                }
-
-            }
-            if (i < rowspan - 1) {
-                row = row.getSheet().getRow(row.getRowNum() + 1);
-            }
-        }
+        createRowCellSetStyle(row, columnIndex, columns, rowspan, colspan);
         //填写数据
         ExcelForEachParams params;
+        int                loopSize = 1;
+        int                loopCi   = 1;
         row = row.getSheet().getRow(row.getRowNum() - rowspan + 1);
         for (int k = 0; k < rowspan; k++) {
-            int   ci   = columnIndex;
-            short high = columns.get(0).getHeight();
-            int   n    = k;
-            while (n > 0) {
-                if (columns.get(n * colspan).getHeight() == 0) {
-                    n--;
-                } else {
-                    high = columns.get(n * colspan).getHeight();
-                    break;
-                }
-            }
-            row.setHeight(high);
+            int ci = columnIndex;
+            row.setHeight(getMaxHeight(k, colspan, columns));
             for (int i = 0; i < colspan && i < columns.size(); i++) {
                 boolean isNumber = false;
                 params = columns.get(colspan * k + i);
@@ -659,22 +664,41 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                     ci = ci + params.getColspan();
                     continue;
                 }
-                String val = null;
+                String val;
                 Object obj = null;
                 //是不是常量
+                String tempStr = params.getName();
                 if (StringUtils.isEmpty(params.getName())) {
                     val = params.getConstValue();
                 } else {
-                    String tempStr = new String(params.getName());
-                    if (isNumber(tempStr)) {
+                    if (isHasSymbol(tempStr, NUMBER_SYMBOL)) {
                         isNumber = true;
                         tempStr = tempStr.replaceFirst(NUMBER_SYMBOL, "");
                     }
-                    map.put(teplateParams.getTempParams(), t);
+                    map.put(templateParams.getTempParams(), t);
+                    boolean isDict = false;
+                    String  dict   = null;
+                    if (isHasSymbol(tempStr, DICT_HANDLER)) {
+                        isDict = true;
+                        dict = tempStr.substring(tempStr.indexOf(DICT_HANDLER) + 5).split(";")[0];
+                        tempStr = tempStr.replaceFirst(DICT_HANDLER, "");
+                        tempStr = tempStr.replaceFirst(dict + ";", "");
+                    }
                     obj = eval(tempStr, map);
+                    if (isDict && !(obj instanceof Collection)) {
+                        obj = dictHandler.toName(dict, t, tempStr, obj);
+                    }
                     val = obj.toString();
                 }
-                if (obj != null && obj instanceof ImageEntity) {
+                if (obj != null && obj instanceof Collection) {
+                    // 需要找到哪一级别是集合 ,方便后面的replace
+                    String collectName = evalFindName(tempStr, map);
+                    int[] loop = setForEachLoopRowCellValue(row, ci, (Collection) obj, columns,
+                            params, map, rowspan, colspan, mergedRegionHelper, collectName);
+                    loopSize = Math.max(loopSize, loop[0]);
+                    i += loop[1] - 1;
+                    ci = loop[2] - params.getColspan();
+                } else if (obj != null && obj instanceof ImageEntity) {
                     ImageEntity img = (ImageEntity) obj;
                     row.getCell(ci).setCellValue("");
                     if (img.getRowspan() > 1 || img.getColspan() > 1) {
@@ -711,9 +735,117 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 }
                 ci = ci + params.getColspan();
             }
+            loopCi = Math.max(loopCi, ci);
             row = row.getSheet().getRow(row.getRowNum() + 1);
         }
+        return new int[]{loopSize, loopCi};
+    }
 
+    private short getMaxHeight(int k, int colspan, List<ExcelForEachParams> columns) {
+        short high = columns.get(0).getHeight();
+        int   n    = k;
+        while (n > 0) {
+            if (columns.get(n * colspan).getHeight() == 0) {
+                n--;
+            } else {
+                high = columns.get(n * colspan).getHeight();
+                break;
+            }
+        }
+        return high;
+    }
+
+    /**
+     * 处理内循环
+     *
+     * @param row
+     * @param columnIndex
+     * @param obj
+     * @param columns
+     * @param params
+     * @param map
+     * @param rowspan
+     * @param colspan
+     * @param mergedRegionHelper
+     * @param collectName
+     * @return [rowNums, columnsNums, ciIndex]
+     * @throws Exception
+     */
+    private int[] setForEachLoopRowCellValue(Row row, int columnIndex, Collection obj, List<ExcelForEachParams> columns,
+                                             ExcelForEachParams params, Map<String, Object> map,
+                                             int rowspan, int colspan,
+                                             MergedRegionHelper mergedRegionHelper, String collectName) throws Exception {
+
+        //多个一起遍历 -去掉第一层 把所有的数据遍历一遍
+        //STEP 1拿到所有的和当前一样项目的字段
+        List<ExcelForEachParams> temp    = getLoopEachParams(columns, columnIndex, collectName);
+        Iterator<?>              its     = obj.iterator();
+        Row                      tempRow = row;
+        int                      nums    = 0;
+        int                      ci      = columnIndex;
+        while (its.hasNext()) {
+            Object data = its.next();
+            map.put("loop_" + columnIndex, data);
+            int[] loopArr = setForeachRowCellValue(false, tempRow, columnIndex, data, temp, map, rowspan,
+                    colspan, mergedRegionHelper);
+            nums += loopArr[0];
+            ci = Math.max(ci,loopArr[1]);
+            map.remove("loop_" + columnIndex);
+            tempRow = createRow(tempRow.getRowNum() + loopArr[0], row.getSheet(), false, rowspan);
+        }
+        for (int i = 0; i < temp.size(); i++) {
+            temp.get(i).setName(temp.get(i).getTempName().pop());
+        }
+        return new int[]{nums, temp.size(), ci};
+    }
+
+    /**
+     * 根据 当前是集合的信息,把后面整个集合的迭代获取出来,并替换掉集合的前缀方便后面取数
+     *
+     * @param columns
+     * @param columnIndex
+     * @param collectName
+     * @return
+     */
+    private List<ExcelForEachParams> getLoopEachParams(List<ExcelForEachParams> columns, int columnIndex, String collectName) {
+        List<ExcelForEachParams> temp = new ArrayList<>();
+        for (int i = 0; i < columns.size(); i++) {
+            if (columns.get(i) == null || columns.get(i).getName().contains(collectName)) {
+                temp.add(columns.get(i));
+                if (columns.get(i).getTempName() == null) {
+                    columns.get(i).setTempName(new Stack<>());
+                }
+                columns.get(i).getTempName().push(columns.get(i).getName());
+                columns.get(i).setName(columns.get(i).getName().replace(collectName, "loop_" + columnIndex));
+            }
+        }
+        return temp;
+    }
+
+    private void createRowCellSetStyle(Row row, int columnIndex, List<ExcelForEachParams> columns,
+                                       int rowspan, int colspan) {
+        //所有的cell创建一遍
+        for (int i = 0; i < rowspan; i++) {
+            int size = columns.size();
+            for (int j = columnIndex, max = columnIndex + colspan; j < max; j++) {
+                if (row.getCell(j) == null) {
+                    row.createCell(j);
+                    CellStyle style = row.getRowNum() % 2 == 0
+                            ? getStyles(false,
+                            size <= j - columnIndex ? null : columns.get(j - columnIndex))
+                            : getStyles(true,
+                            size <= j - columnIndex ? null : columns.get(j - columnIndex));
+                    //返回的styler不为空时才使用,否则使用Excel设置的,更加推荐Excel设置的样式
+                    if (style != null) {
+                        row.getCell(j).setCellStyle(style);
+                    }
+                }
+
+            }
+            if (i < rowspan - 1) {
+                row = row.getSheet().getRow(row.getRowNum() + 1);
+            }
+        }
     }
 
     private CellStyle getStyles(boolean isSingle, ExcelForEachParams excelForEachParams) {
