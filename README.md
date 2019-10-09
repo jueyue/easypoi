@@ -7,8 +7,8 @@ EasyPoi Excel和 Word简易工具类
 语言(熟悉的表达式语法),完成以前复杂的写法
 
 	官网： http://opensource.afterturn.cn/
-	邮箱： qrb.jueyue@foxmail.com
-	QQ群:  1群 364192721(满) 2 群116844390
+	邮箱： xue315998@qq.com
+	QQ群: 1群 364192721(满) 2 群116844390
 	
 	开发者:魔幻之翼 xf.key@163.com
 	优秀团队,承接私活,加微信:13165188222 ,添加备注悟耘

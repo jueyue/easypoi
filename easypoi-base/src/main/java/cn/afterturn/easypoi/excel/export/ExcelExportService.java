@@ -16,11 +16,7 @@
 package cn.afterturn.easypoi.excel.export;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -206,6 +202,12 @@ public class ExcelExportService extends BaseExportService {
         } catch (Exception e) {
             // 重复遍历,出现了重名现象,创建非指定的名称Sheet
             sheet = workbook.createSheet();
+        }
+
+        if (dataSet.getClass().getClass().getName().contains("Unmodifiable") ){
+            List dataTemp = new ArrayList<>();
+            dataTemp.addAll(dataSet);
+            dataSet = dataTemp;
         }
         insertDataToSheet(workbook, entity, entityList, dataSet, sheet);
     }
