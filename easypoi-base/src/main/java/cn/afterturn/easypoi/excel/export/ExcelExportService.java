@@ -15,14 +15,6 @@
  */
 package cn.afterturn.easypoi.excel.export;
 
-import java.lang.reflect.Field;
-import java.util.*;
-
-import cn.afterturn.easypoi.util.PoiMergeCellUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
@@ -32,7 +24,14 @@ import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
+import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Excel导出服务
@@ -65,7 +64,7 @@ public class ExcelExportService extends BaseExportService {
      */
     private int createHeaderRow(ExportParams title, Sheet sheet, Workbook workbook, int index,
                                 List<ExcelExportEntity> excelParams, int cellIndex) {
-        Row row = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
+        Row row  = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
         int rows = getRowNums(excelParams, true);
         row.setHeight(title.getHeaderHeight());
         Row listRow = null;
@@ -77,8 +76,8 @@ public class ExcelExportService extends BaseExportService {
 
             }
         }
-        int groupCellLength = 0;
-        CellStyle titleStyle = getExcelExportStyler().getTitleStyle(title.getColor());
+        int       groupCellLength = 0;
+        CellStyle titleStyle      = getExcelExportStyler().getTitleStyle(title.getColor());
         for (int i = 0, exportFieldTitleSize = excelParams.size(); i < exportFieldTitleSize; i++) {
             ExcelExportEntity entity = excelParams.get(i);
             // 加入换了groupName或者结束就，就把之前的那个换行
@@ -167,9 +166,9 @@ public class ExcelExportService extends BaseExportService {
         try {
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             // 得到所有字段
-            Field[] fileds = PoiPublicUtil.getClassFields(pojoClass);
-            ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
-            String targetId = etarget == null ? null : etarget.value();
+            Field[]     fileds   = PoiPublicUtil.getClassFields(pojoClass);
+            ExcelTarget etarget  = pojoClass.getAnnotation(ExcelTarget.class);
+            String      targetId = etarget == null ? null : etarget.value();
             getAllExcelField(entity.getExclusions(), targetId, fileds, excelParams, pojoClass,
                     null, null);
             //获取所有参数后,后面的逻辑判断就一致了
@@ -203,8 +202,10 @@ public class ExcelExportService extends BaseExportService {
             // 重复遍历,出现了重名现象,创建非指定的名称Sheet
             sheet = workbook.createSheet();
         }
-
-        if (dataSet.getClass().getClass().getName().contains("Unmodifiable") ){
+        if (entity.isReadonly()) {
+            sheet.protectSheet(UUID.randomUUID().toString());
+        }
+        if (dataSet.getClass().getClass().getName().contains("Unmodifiable")) {
             List dataTemp = new ArrayList<>();
             dataTemp.addAll(dataSet);
             dataSet = dataTemp;
@@ -225,7 +226,7 @@ public class ExcelExportService extends BaseExportService {
             // 创建表格样式
             setExcelExportStyler((IExcelExportStyler) entity.getStyle()
                     .getConstructor(Workbook.class).newInstance(workbook));
-            Drawing patriarch = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
+            Drawing                 patriarch   = PoiExcelGraphDataUtil.getDrawingPatriarch(sheet);
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             if (entity.isAddIndex()) {
                 excelParams.add(indexExcelEntity(entity));
@@ -239,7 +240,7 @@ public class ExcelExportService extends BaseExportService {
             setColumnHidden(excelParams, sheet);
             short rowHeight = entity.getHeight() != 0 ? entity.getHeight() : getRowHeight(excelParams);
             setCurrentIndex(1);
-            Iterator<?> its = dataSet.iterator();
+            Iterator<?>  its      = dataSet.iterator();
             List<Object> tempList = new ArrayList<Object>();
             while (its.hasNext()) {
                 Object t = its.next();

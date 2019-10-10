@@ -15,10 +15,9 @@
  */
 package cn.afterturn.easypoi.excel.entity;
 
-import org.apache.poi.hssf.util.HSSFColor;
-
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.export.styler.ExcelExportStylerDefaultImpl;
+import org.apache.poi.hssf.util.HSSFColor;
 
 /**
  * Excel 导出参数
@@ -46,49 +45,49 @@ public class ExportParams extends ExcelBaseParams {
     /**
      * 表格名称
      */
-    private short secondTitleHeight = 8;
+    private short     secondTitleHeight = 8;
     /**
      * sheetName
      */
-    private String sheetName;
+    private String    sheetName;
     /**
      * 过滤的属性
      */
-    private String[] exclusions;
+    private String[]  exclusions;
     /**
      * 是否添加需要需要
      */
-    private boolean addIndex;
+    private boolean   addIndex;
     /**
      * 是否添加需要需要
      */
-    private String indexName = "序号";
+    private String    indexName         = "序号";
     /**
      * 冰冻列
      */
-    private int freezeCol;
+    private int       freezeCol;
     /**
      * 表头颜色 &  标题颜色
      */
-    private short color = HSSFColor.HSSFColorPredefined.WHITE.getIndex();
+    private short     color             = HSSFColor.HSSFColorPredefined.WHITE.getIndex();
     /**
      * 第二行标题颜色
      * 属性说明行的颜色 例如:HSSFColor.SKY_BLUE.index 默认
      */
-    private short headerColor = HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex();
+    private short     headerColor       = HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex();
     /**
      * Excel 导出版本
      */
-    private ExcelType type = ExcelType.HSSF;
+    private ExcelType type              = ExcelType.HSSF;
     /**
      * Excel 导出style
      */
-    private Class<?> style = ExcelExportStylerDefaultImpl.class;
+    private Class<?>  style             = ExcelExportStylerDefaultImpl.class;
 
     /**
      * 表头高度
      */
-    private double headerHeight = 9D;
+    private double  headerHeight     = 9D;
     /**
      * 是否创建表头
      */
@@ -96,26 +95,31 @@ public class ExportParams extends ExcelBaseParams {
     /**
      * 是否动态获取数据
      */
-    private boolean isDynamicData = false;
+    private boolean isDynamicData    = false;
     /**
      * 是否追加图形
      */
-    private boolean isAppendGraph = true;
+    private boolean isAppendGraph    = true;
     /**
      * 是否固定表头
      */
-    private boolean isFixedTitle= true;
+    private boolean isFixedTitle     = true;
     /**
      * 单sheet最大值
      * 03版本默认6W行,07默认100W
      */
-    private int maxNum = 0;
+    private int     maxNum           = 0;
 
     /**
      * 导出时在excel中每个列的高度 单位为字符，一个汉字=2个字符
      * 全局设置,优先使用
      */
     private short height = 0;
+
+    /**
+     * 只读
+     */
+    private boolean readonly = false;
 
     public ExportParams() {
 
@@ -296,5 +300,13 @@ public class ExportParams extends ExcelBaseParams {
 
     public void setFixedTitle(boolean fixedTitle) {
         isFixedTitle = fixedTitle;
+    }
+
+    public boolean isReadonly() {
+        return readonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
     }
 }

@@ -258,6 +258,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                         wb.setSheetName(sheetIndex, mapList.get(i).get(SHEET_NAME).toString());
                     }
                     parseTemplate(wb.getSheetAt(sheetIndex), mapList.get(i), params.isColForEach());
+                    if (params.isReadonly()) {
+                        wb.getSheetAt(i).protectSheet(UUID.randomUUID().toString());
+                    }
                     sheetIndex++;
                 }
             }
@@ -291,6 +294,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 }
                 tempCreateCellSet.clear();
                 parseTemplate(wb.getSheetAt(i), map.get(i), params.isColForEach());
+                if (params.isReadonly()) {
+                    wb.getSheetAt(i).protectSheet(UUID.randomUUID().toString());
+                }
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -332,6 +338,9 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
                 }
                 tempCreateCellSet.clear();
                 parseTemplate(wb.getSheetAt(i), map, params.isColForEach());
+                if (params.isReadonly()) {
+                    wb.getSheetAt(i).protectSheet(UUID.randomUUID().toString());
+                }
             }
             if (dataSet != null) {
                 // step 4. 正常的数据填充

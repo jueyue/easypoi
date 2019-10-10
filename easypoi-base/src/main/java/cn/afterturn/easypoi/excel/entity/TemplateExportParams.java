@@ -74,7 +74,11 @@ public class TemplateExportParams extends ExcelBaseParams {
      */
     private String    tempParams      = "t";
     
-    private boolean  colForEach      = false;
+    private boolean   colForEach      = false;
+    /**
+     * 只读
+     */
+    private boolean   readonly        = false;
 
     /**
      * 默认构造器
@@ -218,5 +222,13 @@ public class TemplateExportParams extends ExcelBaseParams {
 
     public Workbook getTemplateWb() {
         return templateWb;
+    }
+
+    public boolean isReadonly() {
+        return readonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
     }
 }
