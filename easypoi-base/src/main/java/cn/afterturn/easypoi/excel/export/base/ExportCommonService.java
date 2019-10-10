@@ -26,6 +26,7 @@ import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
 import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
 import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
+import cn.afterturn.easypoi.util.PoiElUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -197,8 +198,13 @@ public class ExportCommonService {
         if (obj instanceof Map) {
             value = ((Map<?, ?>) obj).get(entity.getKey());
         } else {
-            value = entity.getMethods() != null ? getFieldBySomeMethod(entity.getMethods(), obj)
-                    : entity.getMethod().invoke(obj, new Object[]{});
+            // 考虑直接用对象导出只能每次获取值的办法
+            if(entity.getMethods() == null && entity.getMethod() == null){
+                value = PoiPublicUtil.getParamsValue(entity.getKey().toString(),obj);
+            } else {
+                value = entity.getMethods() != null ? getFieldBySomeMethod(entity.getMethods(), obj)
+                        : entity.getMethod().invoke(obj, new Object[]{});
+            }
         }
         if (StringUtils.isNotEmpty(entity.getFormat())) {
             value = dateFormatValue(value, entity);
