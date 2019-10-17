@@ -55,8 +55,6 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 [测试项目](http://git.oschina.net/lemur/easypoi-test): http://git.oschina.net/lemur/easypoi-test
 
-**!!! 3.0 版本开始全新包名和GROUPID cn.afterturn**
-
 ---------------------------
 EasyPoi的主要特点
 --------------------------
@@ -100,22 +98,22 @@ https://oss.sonatype.org/content/groups/public/
 		 <dependency>
                       <groupId>cn.afterturn</groupId>
                       <artifactId>easypoi-spring-boot-starter</artifactId>
-                      <version>4.1.0</version>
+                      <version>4.1.1</version>
                   </dependency>
 		 <dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>4.1.0</version>
+			<version>4.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>4.1.0</version>
+			<version>4.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>4.1.0</version>
+			<version>4.1.1</version>
 		</dependency>
 		
 ```
