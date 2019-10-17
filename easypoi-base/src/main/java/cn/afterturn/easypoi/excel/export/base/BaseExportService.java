@@ -21,7 +21,6 @@ import cn.afterturn.easypoi.excel.entity.vo.PoiBaseConstants;
 import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
-import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
@@ -69,15 +68,16 @@ public abstract class BaseExportService extends ExportCommonService {
             int maxHeight = 1, listMaxHeight = 1;
             // 合并需要合并的单元格
             int margeCellNum = cellNum;
-            int indexKey = 0;
-            if (excelParams != null && !excelParams.isEmpty()){
+            int indexKey     = 0;
+            if (excelParams != null && !excelParams.isEmpty()) {
                 indexKey = createIndexCell(row, index, excelParams.get(0));
             }
             cellNum += indexKey;
             for (int k = indexKey, paramSize = excelParams.size(); k < paramSize; k++) {
                 entity = excelParams.get(k);
+                //不论数据是否为空都应该把该列的数据跳过去
                 if (entity.getList() != null) {
-                    Collection<?> list      = getListCellValue(entity, t);
+                    Collection<?> list          = getListCellValue(entity, t);
                     int           tmpListHeight = 0;
                     if (list != null && list.size() > 0) {
                         int tempCellNum = 0;
@@ -88,6 +88,8 @@ public abstract class BaseExportService extends ExportCommonService {
                         }
                         cellNum = tempCellNum;
                         listMaxHeight = Math.max(listMaxHeight, tmpListHeight);
+                    } else {
+                        cellNum = cellNum + getListCellSize(entity.getList());
                     }
                 } else {
                     Object value = getCellValue(entity, t);
@@ -123,7 +125,7 @@ public abstract class BaseExportService extends ExportCommonService {
                     margeCellNum += entity.getList().size();
                 } else if (entity.isNeedMerge() && maxHeight > 1) {
                     for (int i = index + 1; i < index + maxHeight; i++) {
-                        if(sheet.getRow(i) == null ) {
+                        if (sheet.getRow(i) == null) {
                             sheet.createRow(i);
                         }
                         sheet.getRow(i).createCell(margeCellNum);
@@ -140,6 +142,24 @@ public abstract class BaseExportService extends ExportCommonService {
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
         }
 
+    }
+
+    /**
+     * 获取集合的宽度
+     *
+     * @param list
+     * @return
+     */
+    protected int getListCellSize(List<ExcelExportEntity> list) {
+        int cellSize = 0;
+        for (ExcelExportEntity ee : list) {
+            if (ee.getList() != null) {
+                cellSize += getListCellSize(ee.getList());
+            } else {
+                cellSize++;
+            }
+        }
+        return cellSize;
     }
 
     /**

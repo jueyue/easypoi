@@ -99,7 +99,11 @@ public class CellValueService {
                 result = ((Date) result).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             } else if (("class java.time.LocalDateTime").equals(classFullName)) {
                 result = ((Date) result).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            } else if (("class java.sql.Date").equals(classFullName)) {
+            } else if (("class java.time.OffsetDateTime").equals(classFullName)) {
+                result = ((Date) result).toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime();
+            }  else if (("class java.time.ZonedDateTime").equals(classFullName)) {
+                result = ((Date) result).toInstant().atZone(ZoneId.systemDefault());
+            }  else if (("class java.sql.Date").equals(classFullName)) {
                 result = new java.sql.Date(((Date) result).getTime());
             } else if (("class java.sql.Time").equals(classFullName)) {
                 result = new Time(((Date) result).getTime());

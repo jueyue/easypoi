@@ -15,6 +15,8 @@
  */
 package cn.afterturn.easypoi.excel.entity.params;
 
+import lombok.Data;
+
 import java.util.Map;
 
 /**
@@ -24,6 +26,7 @@ import java.util.Map;
  *  2013-9-26
  * @version 1.0
  */
+@Data
 public class ExcelCollectionParams {
 
     /**
@@ -43,35 +46,4 @@ public class ExcelCollectionParams {
      */
     private Map<String, ExcelImportEntity> excelParams;
 
-    public Map<String, ExcelImportEntity> getExcelParams() {
-        return excelParams;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Class<?> getType() {
-        return type;
-    }
-
-    public void setExcelParams(Map<String, ExcelImportEntity> excelParams) {
-        this.excelParams = excelParams;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setType(Class<?> type) {
-        this.type = type;
-    }
-
-    public String getExcelName() {
-        return excelName;
-    }
-
-    public void setExcelName(String excelName) {
-        this.excelName = excelName;
-    }
 }

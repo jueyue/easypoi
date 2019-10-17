@@ -16,6 +16,7 @@
 package cn.afterturn.easypoi.excel.entity;
 
 import cn.afterturn.easypoi.excel.export.styler.ExcelExportStylerDefaultImpl;
+import lombok.Data;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.InputStream;
@@ -27,6 +28,7 @@ import java.io.InputStream;
  *  2013-10-17
  * @version 1.0
  */
+@Data
 public class TemplateExportParams extends ExcelBaseParams {
 
     /**
@@ -128,107 +130,4 @@ public class TemplateExportParams extends ExcelBaseParams {
         }
     }
 
-    public int getHeadingRows() {
-        return headingRows;
-    }
-
-    public int getHeadingStartRow() {
-        return headingStartRow;
-    }
-
-    public String[] getSheetName() {
-        return sheetName;
-    }
-
-    public Integer[] getSheetNum() {
-        return sheetNum;
-    }
-
-    public String getTemplateUrl() {
-        return templateUrl;
-    }
-
-    public void setHeadingRows(int headingRows) {
-        this.headingRows = headingRows;
-    }
-
-    public void setHeadingStartRow(int headingStartRow) {
-        this.headingStartRow = headingStartRow;
-    }
-
-    public void setSheetName(String[] sheetName) {
-        this.sheetName = sheetName;
-    }
-
-    public void setSheetName(String sheetName) {
-        this.sheetName = new String[] { sheetName };
-    }
-
-    public void setSheetNum(Integer[] sheetNum) {
-        this.sheetNum = sheetNum;
-    }
-
-    public void setSheetNum(Integer sheetNum) {
-        this.sheetNum = new Integer[] { sheetNum };
-    }
-
-    public void setTemplateUrl(String templateUrl) {
-        this.templateUrl = templateUrl;
-    }
-
-    public Class<?> getStyle() {
-        return style;
-    }
-
-    public void setStyle(Class<?> style) {
-        this.style = style;
-    }
-
-    public int getDataSheetNum() {
-        return dataSheetNum;
-    }
-
-    public void setDataSheetNum(int dataSheetNum) {
-        this.dataSheetNum = dataSheetNum;
-    }
-
-    public boolean isScanAllsheet() {
-        return scanAllsheet;
-    }
-
-    public void setScanAllsheet(boolean scanAllsheet) {
-        this.scanAllsheet = scanAllsheet;
-    }
-
-    public String getTempParams() {
-        return tempParams;
-    }
-
-    public void setTempParams(String tempParams) {
-        this.tempParams = tempParams;
-    }
-
-	public boolean isColForEach() {
-		return colForEach;
-	}
-
-	public void setColForEach(boolean colForEach) {
-		this.colForEach = colForEach;
-	}
-
-    public void setTemplateWb(Workbook templateWb) {
-        this.templateWb = templateWb;
-    }
-
-    public Workbook getTemplateWb() {
-        return templateWb;
-    }
-
-    public boolean isReadonly() {
-        return readonly;
-    }
-
-    public void setReadonly(boolean readonly) {
-        this.readonly = readonly;
-    }
 }

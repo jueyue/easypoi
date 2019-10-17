@@ -1,5 +1,6 @@
 package cn.afterturn.easypoi.excel.entity;
 
+import lombok.Data;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
@@ -7,6 +8,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author JueYue
  *  2015年8月7日 下午1:45:46
  */
+@Data
 public class ExcelToHtmlParams {
     /**
      * Excel
@@ -67,54 +69,6 @@ public class ExcelToHtmlParams {
         this.completeHTML = completeHTML;
         this.sheetNum = sheetNum;
         this.path = path;
-    }
-
-    public Workbook getWb() {
-        return wb;
-    }
-
-    public void setWb(Workbook wb) {
-        this.wb = wb;
-    }
-
-    public boolean isCompleteHTML() {
-        return completeHTML;
-    }
-
-    public void setCompleteHTML(boolean completeHTML) {
-        this.completeHTML = completeHTML;
-    }
-
-    public int getSheetNum() {
-        return sheetNum;
-    }
-
-    public void setSheetNum(int sheetNum) {
-        this.sheetNum = sheetNum;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public boolean isShowRowNum() {
-        return showRowNum;
-    }
-
-    public void setShowRowNum(boolean showRowNum) {
-        this.showRowNum = showRowNum;
-    }
-
-    public boolean isShowColumnHead() {
-        return showColumnHead;
-    }
-
-    public void setShowColumnHead(boolean showColumnHead) {
-        this.showColumnHead = showColumnHead;
     }
 
     @Override

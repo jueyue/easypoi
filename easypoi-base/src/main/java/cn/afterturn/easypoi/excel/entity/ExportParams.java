@@ -17,6 +17,7 @@ package cn.afterturn.easypoi.excel.entity;
 
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.export.styler.ExcelExportStylerDefaultImpl;
+import lombok.Data;
 import org.apache.poi.hssf.util.HSSFColor;
 
 /**
@@ -25,6 +26,7 @@ import org.apache.poi.hssf.util.HSSFColor;
  * @author JueYue
  * @version 1.0 2013年8月24日
  */
+@Data
 public class ExportParams extends ExcelBaseParams {
 
     /**
@@ -142,171 +144,4 @@ public class ExportParams extends ExcelBaseParams {
         this.sheetName = sheetName;
     }
 
-    public short getColor() {
-        return color;
-    }
-
-    public String[] getExclusions() {
-        return exclusions;
-    }
-
-    public short getHeaderColor() {
-        return headerColor;
-    }
-
-    public String getSecondTitle() {
-        return secondTitle;
-    }
-
-    public short getSecondTitleHeight() {
-        return (short) (secondTitleHeight * 50);
-    }
-
-    public String getSheetName() {
-        return sheetName;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public short getTitleHeight() {
-        return (short) (titleHeight * 50);
-    }
-
-    public boolean isAddIndex() {
-        return addIndex;
-    }
-
-    public void setAddIndex(boolean addIndex) {
-        this.addIndex = addIndex;
-    }
-
-    public void setColor(short color) {
-        this.color = color;
-    }
-
-    public void setExclusions(String[] exclusions) {
-        this.exclusions = exclusions;
-    }
-
-    public void setHeaderColor(short headerColor) {
-        this.headerColor = headerColor;
-    }
-
-    public void setSecondTitle(String secondTitle) {
-        this.secondTitle = secondTitle;
-    }
-
-    public void setSecondTitleHeight(short secondTitleHeight) {
-        this.secondTitleHeight = secondTitleHeight;
-    }
-
-    public void setSheetName(String sheetName) {
-        this.sheetName = sheetName;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setTitleHeight(short titleHeight) {
-        this.titleHeight = titleHeight;
-    }
-
-    public ExcelType getType() {
-        return type;
-    }
-
-    public void setType(ExcelType type) {
-        this.type = type;
-    }
-
-    public String getIndexName() {
-        return indexName;
-    }
-
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
-    }
-
-    public Class<?> getStyle() {
-        return style;
-    }
-
-    public void setStyle(Class<?> style) {
-        this.style = style;
-    }
-
-    public int getFreezeCol() {
-        return freezeCol;
-    }
-
-    public void setFreezeCol(int freezeCol) {
-        this.freezeCol = freezeCol;
-    }
-
-    public boolean isCreateHeadRows() {
-        return isCreateHeadRows;
-    }
-
-    public void setCreateHeadRows(boolean isCreateHeadRows) {
-        this.isCreateHeadRows = isCreateHeadRows;
-    }
-
-    public boolean isDynamicData() {
-        return isDynamicData;
-    }
-
-    public void setDynamicData(boolean isDynamicData) {
-        this.isDynamicData = isDynamicData;
-    }
-
-    public boolean isAppendGraph() {
-        return isAppendGraph;
-    }
-
-    public void setAppendGraph(boolean isAppendGraph) {
-        this.isAppendGraph = isAppendGraph;
-    }
-
-    public int getMaxNum() {
-        return maxNum;
-    }
-
-    public void setMaxNum(int maxNum) {
-        this.maxNum = maxNum;
-    }
-
-    public short getHeight() {
-        return height == -1 ? -1 : (short) (height * 50);
-    }
-
-    public void setHeight(short height) {
-        this.height = height;
-    }
-
-    public short getHeaderHeight() {
-        return (short) (titleHeight * 50);
-    }
-
-    public void setHeaderHeight(double headerHeight) {
-        this.headerHeight = headerHeight;
-    }
-
-    public boolean isFixedTitle() {
-        return isFixedTitle;
-    }
-
-    public void setFixedTitle(boolean fixedTitle) {
-        isFixedTitle = fixedTitle;
-    }
-
-    public boolean isReadonly() {
-        return readonly;
-    }
-
-    public void setReadonly(boolean readonly) {
-        this.readonly = readonly;
-    }
 }

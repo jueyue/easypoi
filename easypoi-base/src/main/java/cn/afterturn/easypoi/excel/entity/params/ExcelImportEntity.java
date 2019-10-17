@@ -15,6 +15,8 @@
  */
 package cn.afterturn.easypoi.excel.entity.params;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -22,6 +24,7 @@ import java.util.List;
  * @author JueYue
  * @version 1.0 2013年8月24日
  */
+@Data
 public class ExcelImportEntity extends ExcelBaseEntity {
 
     public final static String IMG_SAVE_PATH = "/excel/upload/img";
@@ -57,67 +60,4 @@ public class ExcelImportEntity extends ExcelBaseEntity {
 
     private List<ExcelImportEntity> list;
 
-    public String getClassType() {
-        return classType;
-    }
-
-    public String getCollectionName() {
-        return collectionName;
-    }
-
-    public List<ExcelImportEntity> getList() {
-        return list;
-    }
-
-    public int getSaveType() {
-        return saveType;
-    }
-
-    public String getSaveUrl() {
-        return saveUrl;
-    }
-
-    public void setClassType(String classType) {
-        this.classType = classType;
-    }
-
-    public void setCollectionName(String collectionName) {
-        this.collectionName = collectionName;
-    }
-
-    public void setList(List<ExcelImportEntity> list) {
-        this.list = list;
-    }
-
-    public void setSaveType(int saveType) {
-        this.saveType = saveType;
-    }
-
-    public void setSaveUrl(String saveUrl) {
-        this.saveUrl = saveUrl;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
-
-    public boolean isImportField() {
-        return importField;
-    }
-
-    public void setImportField(boolean importField) {
-        this.importField = importField;
-    }
-
-    public String getEnumImportMethod() {
-        return enumImportMethod;
-    }
-
-    public void setEnumImportMethod(String enumImportMethod) {
-        this.enumImportMethod = enumImportMethod;
-    }
 }

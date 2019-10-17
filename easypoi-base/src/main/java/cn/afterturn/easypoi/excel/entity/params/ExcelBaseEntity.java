@@ -19,12 +19,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import cn.afterturn.easypoi.excel.entity.vo.BaseEntityTypeConstants;
+import lombok.Data;
 
 /**
  * Excel 导入导出基础对象类
  * @author JueYue
  *  2014年6月20日 下午2:26:09
  */
+@Data
 public class ExcelBaseEntity {
     /**
      * 对应name
@@ -73,104 +75,4 @@ public class ExcelBaseEntity {
 
     private List<Method> methods;
 
-    public String getDatabaseFormat() {
-        return databaseFormat;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public List<Method> getMethods() {
-        return methods;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String[] getReplace() {
-        return replace;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setDatabaseFormat(String databaseFormat) {
-        this.databaseFormat = databaseFormat;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public void setMethod(Method method) {
-        this.method = method;
-    }
-
-    public void setMethods(List<Method> methods) {
-        this.methods = methods;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setReplace(String[] replace) {
-        this.replace = replace;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public boolean isHyperlink() {
-        return hyperlink;
-    }
-
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public void setHyperlink(boolean hyperlink) {
-        this.hyperlink = hyperlink;
-    }
-
-    public int getFixedIndex() {
-        return fixedIndex;
-    }
-
-    public void setFixedIndex(int fixedIndex) {
-        this.fixedIndex = fixedIndex;
-    }
-
-    public String getDict() {
-        return dict;
-    }
-
-    public void setDict(String dict) {
-        this.dict = dict;
-    }
-
-    public void setFixedIndex(Integer fixedIndex) {
-        this.fixedIndex = fixedIndex;
-    }
-
-    public String getTimezone() {
-        return timezone;
-    }
-
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
 }

@@ -1,10 +1,13 @@
 package cn.afterturn.easypoi.excel.entity;
 
+import lombok.Data;
+
 /**
  * 统计对象
  *
  * @author JueYue
  */
+@Data
 public class TemplateSumEntity {
 
     /**
@@ -27,46 +30,5 @@ public class TemplateSumEntity {
      * 最后值
      */
     private double value;
-
-    public String getCellValue() {
-        return cellValue;
-    }
-
-    public void setCellValue(String cellValue) {
-        this.cellValue = cellValue;
-    }
-
-    public String getSumKey() {
-        return sumKey;
-    }
-
-    public void setSumKey(String sumKey) {
-        this.sumKey = sumKey;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
 
 }

@@ -45,12 +45,17 @@ public class SheetHandler extends DefaultHandler {
     private StylesTable        stylesTable;
     private String             lastContents;
 
-    /** 当前行**/
+    /**
+     * 当前行
+     **/
     private int curRow = 0;
-    /**当前列 **/
+    /**
+     * 当前列
+     **/
     private int curCol = 0;
 
     private CellValueType type;
+    private String        currentLocation, prevLocation;
 
     private ISaxRowRead read;
 
@@ -69,6 +74,8 @@ public class SheetHandler extends DefaultHandler {
         lastContents = "";
         if (COL.equals(name)) {
             String cellType = attributes.getValue(TYPE);
+            prevLocation = currentLocation;
+            currentLocation = attributes.getValue(ROW_COL);
             if (STRING.equals(cellType)) {
                 type = CellValueType.String;
                 return;
@@ -128,7 +135,10 @@ public class SheetHandler extends DefaultHandler {
             } catch (Exception e) {
             }
         }
-        //t元素也包含字符串  
+        if (VALUE.equals(name) && StringUtils.isNotEmpty(prevLocation)) {
+            addNullCell(prevLocation, currentLocation);
+        }
+        //t元素也包含字符串
         if (CellValueType.TElement.equals(type)) {
             String value = lastContents.trim();
             rowList.add(curCol, new SaxReadCellEntity(CellValueType.String, value));
@@ -160,6 +170,50 @@ public class SheetHandler extends DefaultHandler {
             curCol = 0;
         }
 
+    }
+
+    private void addNullCell(String prevLocation, String currentLocation) {
+        // 拆分行和列
+        String[] prev    = getRowCell(prevLocation);
+        String[] current = getRowCell(currentLocation);
+        if (prev[1].equalsIgnoreCase(current[1])) {
+            int prevCell    = getCellNum(prev[0]) + 1;
+            int currentCell = getCellNum(current[0]);
+            for (int i = prevCell; i < currentCell; i++) {
+                rowList.add(curCol, new SaxReadCellEntity(CellValueType.String, ""));
+                curCol++;
+            }
+        }
+    }
+
+    private int getCellNum(String cell) {
+        if (StringUtils.isEmpty(cell)) {
+            return 0;
+        }
+        char[] chars = cell.toUpperCase().toCharArray();
+        int    n     = 0;
+        for (int i = cell.length() - 1, j = 1; i >= 0; i--, j *= 26) {
+            char c = (chars[i]);
+            if (c < 'A' || c > 'Z') {
+                return 0;
+            }
+            n += ((int) c - 64) * j;
+        }
+        return n;
+    }
+
+    private String[] getRowCell(String prevLocation) {
+        StringBuilder row   = new StringBuilder();
+        StringBuilder cell  = new StringBuilder();
+        char[]        chars = prevLocation.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] >= '0' && chars[i] <= '9') {
+                cell.append(chars[i]);
+            } else {
+                row.append(chars[i]);
+            }
+        }
+        return new String[]{row.toString(), cell.toString()};
     }
 
     @Override

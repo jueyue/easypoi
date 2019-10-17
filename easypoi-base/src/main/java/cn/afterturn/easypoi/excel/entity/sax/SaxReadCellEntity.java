@@ -16,12 +16,14 @@
 package cn.afterturn.easypoi.excel.entity.sax;
 
 import cn.afterturn.easypoi.excel.entity.enmus.CellValueType;
+import lombok.Data;
 
 /**
  * Cell 对象
  * @author JueYue
  *  2014年12月29日 下午10:12:57
  */
+@Data
 public class SaxReadCellEntity {
     /**
      * 值类型
@@ -34,22 +36,6 @@ public class SaxReadCellEntity {
 
     public SaxReadCellEntity(CellValueType cellType, Object value) {
         this.cellType = cellType;
-        this.value = value;
-    }
-
-    public CellValueType getCellType() {
-        return cellType;
-    }
-
-    public void setCellType(CellValueType cellType) {
-        this.cellType = cellType;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
         this.value = value;
     }
 

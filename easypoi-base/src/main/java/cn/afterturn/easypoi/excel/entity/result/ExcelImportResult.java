@@ -18,6 +18,7 @@ package cn.afterturn.easypoi.excel.entity.result;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Data;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
@@ -26,6 +27,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author JueYue
  *  2014年6月29日 下午5:12:10
  */
+@Data
 public class ExcelImportResult<T> {
 
     /**
@@ -63,51 +65,4 @@ public class ExcelImportResult<T> {
         this.workbook = workbook;
     }
 
-    public List<T> getList() {
-        return list;
-    }
-
-    public Workbook getWorkbook() {
-        return workbook;
-    }
-
-    public boolean isVerfiyFail() {
-        return verfiyFail;
-    }
-
-    public void setList(List<T> list) {
-        this.list = list;
-    }
-
-    public void setVerfiyFail(boolean verfiyFail) {
-        this.verfiyFail = verfiyFail;
-    }
-
-    public void setWorkbook(Workbook workbook) {
-        this.workbook = workbook;
-    }
-
-    public Map<String, Object> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<String, Object> map) {
-        this.map = map;
-    }
-
-    public Workbook getFailWorkbook() {
-        return failWorkbook;
-    }
-
-    public void setFailWorkbook(Workbook failWorkbook) {
-        this.failWorkbook = failWorkbook;
-    }
-
-    public List<T> getFailList() {
-        return failList;
-    }
-
-    public void setFailList(List<T> failList) {
-        this.failList = failList;
-    }
 }

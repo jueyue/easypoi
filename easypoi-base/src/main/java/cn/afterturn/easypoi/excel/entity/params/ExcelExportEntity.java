@@ -15,6 +15,8 @@
  */
 package cn.afterturn.easypoi.excel.entity.params;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -23,6 +25,7 @@ import java.util.List;
  * @author JueYue
  * @version 1.0 2013年8月24日
  */
+@Data
 public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<ExcelExportEntity> {
 
 
@@ -101,126 +104,6 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
     private String                  enumExportField;
 
     private List<ExcelExportEntity> list;
-
-    public int getExportImageType() {
-        return exportImageType;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public Object getKey() {
-        return key;
-    }
-
-    public List<ExcelExportEntity> getList() {
-        return list;
-    }
-
-    public int[] getMergeRely() {
-        return mergeRely == null ? new int[0] : mergeRely;
-    }
-
-    public int getOrderNum() {
-        return orderNum;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public boolean isMergeVertical() {
-        return mergeVertical;
-    }
-
-    public boolean isNeedMerge() {
-        return needMerge;
-    }
-
-    public boolean isWrap() {
-        return isWrap;
-    }
-
-    public void setExportImageType(int exportImageType) {
-        this.exportImageType = exportImageType;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
-    public void setKey(Object key) {
-        this.key = key;
-    }
-
-    public void setList(List<ExcelExportEntity> list) {
-        this.list = list;
-    }
-
-    public void setMergeRely(int[] mergeRely) {
-        this.mergeRely = mergeRely;
-    }
-
-    public void setMergeVertical(boolean mergeVertical) {
-        this.mergeVertical = mergeVertical;
-    }
-
-    public void setNeedMerge(boolean needMerge) {
-        this.needMerge = needMerge;
-    }
-
-    public void setOrderNum(int orderNum) {
-        this.orderNum = orderNum;
-    }
-
-    public void setWidth(double width) {
-        this.width = width;
-    }
-
-    public void setWrap(boolean isWrap) {
-        this.isWrap = isWrap;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
-
-    public boolean isStatistics() {
-        return isStatistics;
-    }
-
-    public void setStatistics(boolean isStatistics) {
-        this.isStatistics = isStatistics;
-    }
-
-    public String getNumFormat() {
-        return numFormat;
-    }
-
-    public void setNumFormat(String numFormat) {
-        this.numFormat = numFormat;
-    }
-
-    public String getEnumExportField() {
-        return enumExportField;
-    }
-
-    public void setEnumExportField(String enumExportField) {
-        this.enumExportField = enumExportField;
-    }
-
-    public boolean isColumnHidden() {
-        return isColumnHidden;
-    }
-
-    public void setColumnHidden(boolean columnHidden) {
-        isColumnHidden = columnHidden;
-    }
 
     @Override
     public int compareTo(ExcelExportEntity prev) {

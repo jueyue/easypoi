@@ -16,6 +16,7 @@
 package cn.afterturn.easypoi.excel.entity;
 
 import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
+import lombok.Data;
 
 /**
  * 导入参数设置
@@ -24,7 +25,7 @@ import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
  *  2013-9-24
  * @version 1.0
  */
-@SuppressWarnings("rawtypes")
+@Data
 public class ImportParams extends ExcelBaseParams {
 
     public static final String SAVE_URL = "/excel/upload/excelUpload";
@@ -110,156 +111,4 @@ public class ImportParams extends ExcelBaseParams {
      * 最小截取大小
      */
     private Integer             critical = 1000;
-
-    public int getHeadRows() {
-        return headRows;
-    }
-
-    public String getSaveUrl() {
-        return saveUrl;
-    }
-
-    public int getSheetNum() {
-        return sheetNum;
-    }
-
-    public int getStartRows() {
-        return startRows;
-    }
-
-    public int getTitleRows() {
-        return titleRows;
-    }
-
-    public IExcelVerifyHandler getVerifyHandler() {
-        return verifyHandler;
-    }
-
-    public boolean isNeedSave() {
-        return needSave;
-    }
-
-    public void setHeadRows(int headRows) {
-        this.headRows = headRows;
-    }
-
-    public void setKeyIndex(Integer keyIndex) {
-        this.keyIndex = keyIndex;
-    }
-
-    public void setNeedSave(boolean needSave) {
-        this.needSave = needSave;
-    }
-
-    public void setSaveUrl(String saveUrl) {
-        this.saveUrl = saveUrl;
-    }
-
-    public void setSheetNum(int sheetNum) {
-        this.sheetNum = sheetNum;
-    }
-
-    public void setStartRows(int startRows) {
-        this.startRows = startRows;
-    }
-
-    public void setTitleRows(int titleRows) {
-        this.titleRows = titleRows;
-    }
-
-    public void setVerifyHandler(IExcelVerifyHandler verifyHandler) {
-        this.verifyHandler = verifyHandler;
-    }
-
-    public int getLastOfInvalidRow() {
-        return lastOfInvalidRow;
-    }
-
-    public void setLastOfInvalidRow(int lastOfInvalidRow) {
-        this.lastOfInvalidRow = lastOfInvalidRow;
-    }
-
-    public int getStartSheetIndex() {
-        return startSheetIndex;
-    }
-
-    public void setStartSheetIndex(int startSheetIndex) {
-        this.startSheetIndex = startSheetIndex;
-    }
-
-    public boolean isNeedVerify() {
-        return needVerify;
-    }
-
-    public void setNeedVerify(boolean needVerify) {
-        this.needVerify = needVerify;
-    }
-
-    public String[] getImportFields() {
-        return importFields;
-    }
-
-    public void setImportFields(String[] importFields) {
-        this.importFields = importFields;
-    }
-
-    public int getReadRows() {
-        return readRows;
-    }
-
-    public void setReadRows(int readRows) {
-        this.readRows = readRows;
-    }
-
-    public Integer getKeyIndex() {
-        return keyIndex;
-    }
-
-    public String getKeyMark() {
-        return keyMark;
-    }
-
-    public void setKeyMark(String keyMark) {
-        this.keyMark = keyMark;
-    }
-
-    public boolean isReadSingleCell() {
-        return readSingleCell;
-    }
-
-    public void setReadSingleCell(boolean readSingleCell) {
-        this.readSingleCell = readSingleCell;
-    }
-
-    public Class[] getVerifyGroup() {
-        return verifyGroup;
-    }
-
-    public void setVerifyGroup(Class[] verifyGroup) {
-        this.verifyGroup = verifyGroup;
-    }
-
-    public boolean isNeedCheckOrder() {
-        return needCheckOrder;
-    }
-
-    public void setNeedCheckOrder(boolean needCheckOrder) {
-        this.needCheckOrder = needCheckOrder;
-    }
-
-    public boolean isConcurrentTask() {
-        return concurrentTask;
-    }
-
-    public void setConcurrentTask(boolean concurrentTask) {
-        this.concurrentTask = concurrentTask;
-    }
-
-    public Integer getCritical() {
-        return critical;
-    }
-
-    public void setCritical(Integer critical) {
-        this.critical = critical;
-    }
 }

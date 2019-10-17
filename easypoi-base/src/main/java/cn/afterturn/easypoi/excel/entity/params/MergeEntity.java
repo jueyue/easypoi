@@ -15,6 +15,8 @@
  */
 package cn.afterturn.easypoi.excel.entity.params;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -22,6 +24,7 @@ import java.util.List;
  *
  * Created by jue on 14-6-11.
  */
+@Data
 public class MergeEntity {
     /**
      * 合并开始行
@@ -50,35 +53,4 @@ public class MergeEntity {
         this.startRow = startRow;
     }
 
-    public int getEndRow() {
-        return endRow;
-    }
-
-    public List<String> getRelyList() {
-        return relyList;
-    }
-
-    public int getStartRow() {
-        return startRow;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setEndRow(int endRow) {
-        this.endRow = endRow;
-    }
-
-    public void setRelyList(List<String> relyList) {
-        this.relyList = relyList;
-    }
-
-    public void setStartRow(int startRow) {
-        this.startRow = startRow;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 }

@@ -10,6 +10,10 @@ public interface SaxConstant {
      */
     public static String ROW = "row";
     /**
+     * cell 的位置
+     */
+    public static String ROW_COL = "r";
+    /**
      * cell 表达式
      */
     public static String COL = "c";

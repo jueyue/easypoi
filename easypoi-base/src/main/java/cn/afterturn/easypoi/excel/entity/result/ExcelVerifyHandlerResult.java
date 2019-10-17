@@ -15,12 +15,15 @@
  */
 package cn.afterturn.easypoi.excel.entity.result;
 
+import lombok.Data;
+
 /**
  * Excel导入处理返回结果
  * 
  * @author JueYue
  *  2014年6月23日 下午11:03:29
  */
+@Data
 public class ExcelVerifyHandlerResult {
     /**
      * 是否正确
@@ -42,22 +45,6 @@ public class ExcelVerifyHandlerResult {
     public ExcelVerifyHandlerResult(boolean success, String msg) {
         this.success = success;
         this.msg = msg;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
     }
 
 }

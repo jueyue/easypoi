@@ -26,7 +26,6 @@ import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
 import cn.afterturn.easypoi.handler.inter.IExcelDictHandler;
 import cn.afterturn.easypoi.handler.inter.IExcelI18nHandler;
-import cn.afterturn.easypoi.util.PoiElUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.util.PoiReflectorUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -40,10 +39,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
 
 /**
@@ -68,7 +64,7 @@ public class ExportCommonService {
     private ExcelExportEntity createExcelExportEntity(Field field, String targetId,
                                                       Class<?> pojoClass,
                                                       List<Method> getMethods, ExcelEntity excelGroup) throws Exception {
-        Excel excel = field.getAnnotation(Excel.class);
+        Excel             excel       = field.getAnnotation(Excel.class);
         ExcelExportEntity excelEntity = new ExcelExportEntity();
         excelEntity.setType(excel.type());
         getExcelField(targetId, field, excelEntity, excel, pojoClass, excelGroup);
@@ -89,15 +85,21 @@ public class ExportCommonService {
         } else if (value instanceof Date) {
             temp = (Date) value;
         } else if (value instanceof Instant) {
-            Instant instant = (Instant)value;
+            Instant instant = (Instant) value;
             temp = Date.from(instant);
-        }  else if (value instanceof LocalDate) {
-            LocalDate localDate = (LocalDate)value;
+        } else if (value instanceof LocalDate) {
+            LocalDate localDate = (LocalDate) value;
             temp = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        } else if(value instanceof LocalDateTime){
-            LocalDateTime localDateTime = (LocalDateTime)value;
+        } else if (value instanceof LocalDateTime) {
+            LocalDateTime localDateTime = (LocalDateTime) value;
             temp = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        } else if(value instanceof java.sql.Date) {
+        } else if (value instanceof ZonedDateTime) {
+            ZonedDateTime zonedDateTime = (ZonedDateTime) value;
+            temp = Date.from(zonedDateTime.toInstant());
+        } else if (value instanceof OffsetDateTime) {
+            OffsetDateTime offsetDateTime = (OffsetDateTime) value;
+            temp = Date.from(offsetDateTime.toInstant());
+        } else if (value instanceof java.sql.Date) {
             temp = new Date(((java.sql.Date) value).getTime());
         } else if (value instanceof java.sql.Time) {
             temp = new Date(((java.sql.Time) value).getTime());
@@ -106,7 +108,7 @@ public class ExportCommonService {
         }
         if (temp != null) {
             SimpleDateFormat format = new SimpleDateFormat(entity.getFormat());
-            if(StringUtils.isNotEmpty(entity.getTimezone())){
+            if (StringUtils.isNotEmpty(entity.getTimezone())) {
                 format.setTimeZone(TimeZone.getTimeZone(entity.getTimezone()));
             }
             value = format.format(temp);
@@ -123,7 +125,7 @@ public class ExportCommonService {
             LOGGER.error("data want num format ,but is not num, value is:" + value);
             return null;
         }
-        Double d = Double.parseDouble(value.toString());
+        Double        d  = Double.parseDouble(value.toString());
         DecimalFormat df = new DecimalFormat(entity.getNumFormat());
         return df.format(d);
     }
@@ -136,7 +138,7 @@ public class ExportCommonService {
     public void getAllExcelField(String[] exclusions, String targetId, Field[] fields,
                                  List<ExcelExportEntity> excelParams, Class<?> pojoClass,
                                  List<Method> getMethods, ExcelEntity excelGroup) throws Exception {
-        List<String> exclusionsList = exclusions != null ? Arrays.asList(exclusions) : null;
+        List<String>      exclusionsList = exclusions != null ? Arrays.asList(exclusions) : null;
         ExcelExportEntity excelEntity;
         // 遍历整个filed
         for (int i = 0; i < fields.length; i++) {
@@ -147,16 +149,16 @@ public class ExportCommonService {
             }
             // 首先判断Excel 可能一下特殊数据用户回自定义处理
             if (field.getAnnotation(Excel.class) != null) {
-                Excel excel = field.getAnnotation(Excel.class);
-                String name = PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null);
+                Excel  excel = field.getAnnotation(Excel.class);
+                String name  = PoiPublicUtil.getValueByTargetId(excel.name(), targetId, null);
                 if (StringUtils.isNotBlank(name)) {
                     excelParams.add(createExcelExportEntity(field, targetId, pojoClass, getMethods, excelGroup));
                 }
             } else if (PoiPublicUtil.isCollection(field.getType())) {
-                ExcelCollection excel = field.getAnnotation(ExcelCollection.class);
-                ParameterizedType pt = (ParameterizedType) field.getGenericType();
-                Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
-                List<ExcelExportEntity> list = new ArrayList<ExcelExportEntity>();
+                ExcelCollection         excel = field.getAnnotation(ExcelCollection.class);
+                ParameterizedType       pt    = (ParameterizedType) field.getGenericType();
+                Class<?>                clz   = (Class<?>) pt.getActualTypeArguments()[0];
+                List<ExcelExportEntity> list  = new ArrayList<ExcelExportEntity>();
                 getAllExcelField(exclusions,
                         StringUtils.isNotEmpty(excel.id()) ? excel.id() : targetId,
                         PoiPublicUtil.getClassFields(clz), list, clz, null, null);
@@ -199,8 +201,8 @@ public class ExportCommonService {
             value = ((Map<?, ?>) obj).get(entity.getKey());
         } else {
             // 考虑直接用对象导出只能每次获取值的办法
-            if(entity.getMethods() == null && entity.getMethod() == null){
-                value = PoiPublicUtil.getParamsValue(entity.getKey().toString(),obj);
+            if (entity.getMethods() == null && entity.getMethod() == null) {
+                value = PoiPublicUtil.getParamsValue(entity.getKey().toString(), obj);
             } else {
                 value = entity.getMethods() != null ? getFieldBySomeMethod(entity.getMethods(), obj)
                         : entity.getMethod().invoke(obj, new Object[]{});
@@ -353,8 +355,8 @@ public class ExportCommonService {
                 Map.Entry<String, List<ExcelExportEntity>> entry = (Map.Entry) it.next();
                 Collections.sort(entry.getValue());
                 // 插入到excelParams当中
-                boolean isInsert = false;
-                String groupName = "START";
+                boolean isInsert  = false;
+                String  groupName = "START";
                 for (int i = 0; i < excelParams.size(); i++) {
                     // 跳过groupName 的元素,防止破会内部结构
                     if (excelParams.get(i).getOrderNum() > entry.getValue().get(0).getOrderNum()
@@ -410,11 +412,11 @@ public class ExportCommonService {
     /**
      * 判断表头是只有一行还是多行
      */
-    public int getRowNums(List<ExcelExportEntity> excelParams,boolean isDeep) {
+    public int getRowNums(List<ExcelExportEntity> excelParams, boolean isDeep) {
         for (int i = 0; i < excelParams.size(); i++) {
             if (excelParams.get(i).getList() != null
                     && StringUtils.isNotBlank(excelParams.get(i).getName())) {
-                return isDeep? 1 + getRowNums(excelParams.get(i).getList() , isDeep) : 2;
+                return isDeep ? 1 + getRowNums(excelParams.get(i).getList(), isDeep) : 2;
             }
             if (StringUtils.isNotEmpty(excelParams.get(i).getGroupName())) {
                 return 2;

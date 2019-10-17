@@ -1,5 +1,6 @@
 package cn.afterturn.easypoi.excel.entity.params;
 
+import lombok.Data;
 import org.apache.poi.ss.usermodel.CellStyle;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Stack;
  * @author JueYue
  * 2015年4月29日 下午9:22:48
  */
+@Data
 public class ExcelForEachParams implements Serializable {
 
     /**
@@ -70,75 +72,4 @@ public class ExcelForEachParams implements Serializable {
     }
 
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public CellStyle getCellStyle() {
-        return cellStyle;
-    }
-
-    public void setCellStyle(CellStyle cellStyle) {
-        this.cellStyle = cellStyle;
-    }
-
-    public short getHeight() {
-        return height;
-    }
-
-    public void setHeight(short height) {
-        this.height = height;
-    }
-
-    public String getConstValue() {
-        return constValue;
-    }
-
-    public void setConstValue(String constValue) {
-        this.constValue = constValue;
-    }
-
-    public int getColspan() {
-        return colspan;
-    }
-
-    public void setColspan(int colspan) {
-        this.colspan = colspan;
-    }
-
-    public int getRowspan() {
-        return rowspan;
-    }
-
-    public void setRowspan(int rowspan) {
-        this.rowspan = rowspan;
-    }
-
-    public boolean isNeedSum() {
-        return needSum;
-    }
-
-    public void setNeedSum(boolean needSum) {
-        this.needSum = needSum;
-    }
-
-    public Stack<String> getTempName() {
-        return tempName;
-    }
-
-    public void setTempName(Stack<String> tempName) {
-        this.tempName = tempName;
-    }
-
-    public boolean isCollectCell() {
-        return collectCell;
-    }
-
-    public void setCollectCell(boolean collectCell) {
-        this.collectCell = collectCell;
-    }
 }
