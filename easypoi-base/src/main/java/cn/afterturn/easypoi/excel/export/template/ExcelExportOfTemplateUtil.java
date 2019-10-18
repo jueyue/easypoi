@@ -154,7 +154,7 @@ public final class ExcelExportOfTemplateUtil extends BaseExportService {
             rowIndex += rowspan - 1 + loopSize - 1;
         }
         //修复不论后面有没有数据,都应该执行的是插入操作
-        if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan < cell.getRow().getSheet().getLastRowNum()) {
+        if (isShift && datas.size() * rowspan > 1 && cell.getRowIndex() + rowspan <= cell.getRow().getSheet().getLastRowNum()) {
             int lastRowNum = cell.getRow().getSheet().getLastRowNum();
             int shiftRows  = lastRowNum - cell.getRowIndex() - rowspan;
             cell.getRow().getSheet().shiftRows(cell.getRowIndex() + rowspan, lastRowNum, (datas.size() - 1) * rowspan, true, true);

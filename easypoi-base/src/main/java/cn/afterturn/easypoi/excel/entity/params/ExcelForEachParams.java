@@ -52,7 +52,7 @@ public class ExcelForEachParams implements Serializable {
      */
     private              boolean       collectCell;
 
-    private boolean needSum;
+    private              boolean       needSum;
 
     public ExcelForEachParams() {
 

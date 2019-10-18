@@ -99,7 +99,7 @@ public class TemplateSumHandler {
      */
     public void shiftRows(int rowIndex, int size) {
         for (TemplateSumEntity entity : getDataList()) {
-            if (entity.getRow() > rowIndex) {
+            if (entity.getRow() >= rowIndex) {
                 entity.setRow(entity.getRow() + size);
             }
         }
