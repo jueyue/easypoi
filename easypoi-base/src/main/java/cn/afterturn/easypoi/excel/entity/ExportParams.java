@@ -144,4 +144,21 @@ public class ExportParams extends ExcelBaseParams {
         this.sheetName = sheetName;
     }
 
+    public short getSecondTitleHeight() {
+        return (short) (secondTitleHeight * 50);
+    }
+
+    public short getTitleHeight() {
+        return (short) (titleHeight * 50);
+    }
+
+    public short getHeight() {
+        return height == -1 ? -1 : (short) (height * 50);
+    }
+
+
+    public short getHeaderHeight() {
+        return (short) (titleHeight * 50);
+    }
+
 }

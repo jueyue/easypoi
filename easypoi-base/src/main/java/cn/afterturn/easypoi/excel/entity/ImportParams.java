@@ -70,6 +70,10 @@ public class ImportParams extends ExcelBaseParams {
      */
     private boolean             needVerify = false;
     /**
+     * 返回文件是否分割,默认是分割
+     */
+    private boolean             verifyFileSplit = true;
+    /**
      * 校验处理接口
      */
     private IExcelVerifyHandler verifyHandler;

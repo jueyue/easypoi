@@ -42,7 +42,7 @@ public class ExcelImportResult<T> {
     /**
      * 是否存在校验失败
      */
-    private boolean  verfiyFail;
+    private boolean  verifyFail;
 
     /**
      * 数据源
@@ -59,9 +59,9 @@ public class ExcelImportResult<T> {
 
     }
 
-    public ExcelImportResult(List<T> list, boolean verfiyFail, Workbook workbook) {
+    public ExcelImportResult(List<T> list, boolean verifyFail, Workbook workbook) {
         this.list = list;
-        this.verfiyFail = verfiyFail;
+        this.verifyFail = verifyFail;
         this.workbook = workbook;
     }
 

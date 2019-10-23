@@ -478,10 +478,14 @@ public class ExcelImportService extends ImportBaseService {
                 InputStream successIs = new ByteArrayInputStream(baos.toByteArray());
                 try {
                     Workbook successBook = WorkbookFactory.create(successIs);
-                    importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
-                    importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
+                    if (params.isVerifyFileSplit()){
+                        importResult.setWorkbook(removeSuperfluousRows(successBook, failRow, params));
+                        importResult.setFailWorkbook(removeSuperfluousRows(book, successRow, params));
+                    } else {
+                        importResult.setWorkbook(successBook);
+                    }
                     importResult.setFailList(failCollection);
-                    importResult.setVerfiyFail(verifyFail);
+                    importResult.setVerifyFail(verifyFail);
                 } finally {
                     successIs.close();
                 }

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>cn.afterturn</groupId>
 		<artifactId>easypoi</artifactId>
-		<version>4.1.1</version>
+		<version>4.1.2</version>
 	</parent>
 	<artifactId>easypoi-annotation</artifactId>
 	<description>基础注解类,解耦合</description>

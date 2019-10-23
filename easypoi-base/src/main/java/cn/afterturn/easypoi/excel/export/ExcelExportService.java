@@ -66,13 +66,13 @@ public class ExcelExportService extends BaseExportService {
                                 List<ExcelExportEntity> excelParams, int cellIndex) {
         Row row  = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
         int rows = getRowNums(excelParams, true);
-        row.setHeight((short)title.getHeaderHeight());
+        row.setHeight(title.getHeaderHeight());
         Row listRow = null;
         if (rows >= 2) {
             listRow = sheet.getRow(index + 1);
             if (listRow == null) {
                 listRow = sheet.createRow(index + 1);
-                listRow.setHeight((short)(short)title.getHeaderHeight());
+                listRow.setHeight(title.getHeaderHeight());
 
             }
         }
