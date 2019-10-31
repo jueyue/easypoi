@@ -9,6 +9,7 @@ import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,30 +27,33 @@ public class CsvExportService extends BaseExportService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvExportService.class);
 
+    private CsvExportParams         params;
+    private List<ExcelExportEntity> excelParams;
+    private Writer                  writer;
+
     /**
      * 导出Csv类文件
      *
      * @param outputStream 输出流
      * @param params       输出参数
      * @param pojoClass    输出类
-     * @param dataSet      集合
      */
-    public void createCsv(OutputStream outputStream, CsvExportParams params, Class<?> pojoClass, Collection<?> dataSet) {
+    public CsvExportService(OutputStream outputStream, CsvExportParams params, Class<?> pojoClass) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("CSV export start ,class is {}", pojoClass);
         }
-        if (params == null || pojoClass == null || dataSet == null) {
+        if (params == null || pojoClass == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
         try {
             List<ExcelExportEntity> excelParams = new ArrayList<ExcelExportEntity>();
             // 得到所有字段
-            Field[] fields = PoiPublicUtil.getClassFields(pojoClass);
-            ExcelTarget etarget = pojoClass.getAnnotation(ExcelTarget.class);
-            String targetId = etarget == null ? null : etarget.value();
+            Field[]     fields   = PoiPublicUtil.getClassFields(pojoClass);
+            ExcelTarget etarget  = pojoClass.getAnnotation(ExcelTarget.class);
+            String      targetId = etarget == null ? null : etarget.value();
             getAllExcelField(params.getExclusions(), targetId, fields, excelParams, pojoClass,
                     null, null);
-            createCsvOfList(outputStream, params, excelParams, dataSet);
+            createCsvOfList(outputStream, params, excelParams);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
@@ -60,13 +64,23 @@ public class CsvExportService extends BaseExportService {
      * @param outputStream 输出流
      * @param params       输出参数
      * @param excelParams  列参数
-     * @param dataSet      集合参数
      */
-    public void createCsvOfList(OutputStream outputStream, CsvExportParams params, List<ExcelExportEntity> excelParams, Collection<?> dataSet) {
+    public CsvExportService(OutputStream outputStream, CsvExportParams params, List<ExcelExportEntity> excelParams) {
+        createCsvOfList(outputStream, params, excelParams);
+    }
+
+    /**
+     * @param outputStream 输出流
+     * @param params       输出参数
+     * @param excelParams  列参数
+     */
+    private CsvExportService createCsvOfList(OutputStream outputStream, CsvExportParams params, List<ExcelExportEntity> excelParams) {
         try {
 
             Writer writer = new BufferedWriter(new OutputStreamWriter(outputStream, params.getEncoding()));
-
+            this.params = params;
+            this.excelParams = excelParams;
+            this.writer = writer;
             dataHandler = params.getDataHandler();
             if (dataHandler != null && dataHandler.getNeedHandlerFields() != null) {
                 needHandlerList = Arrays.asList(dataHandler.getNeedHandlerFields());
@@ -77,9 +91,32 @@ public class CsvExportService extends BaseExportService {
             if (params.isCreateHeadRows()) {
                 writer.write(createHeaderRow(params, excelParams));
             }
+            return this;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
+        }
+    }
+
+    /**
+     * 导出Csv类文件
+     *
+     * @param dataSet 集合
+     */
+    public CsvExportService write(Collection<?> dataSet) {
+        try {
+            return writerData(dataSet);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
+        }
+    }
+
+    private CsvExportService writerData(Collection<?> dataSet) {
+        try {
             Iterator<?> iterator = dataSet.iterator();
-            String line = null;
-            int i = 0;
+            String      line     = null;
+            int         i        = 0;
             while (iterator.hasNext()) {
                 Object obj = iterator.next();
                 line = createRow(excelParams, params, obj);
@@ -90,7 +127,7 @@ public class CsvExportService extends BaseExportService {
                 i++;
             }
             writer.flush();
-            writer.close();
+            return this;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
@@ -150,5 +187,9 @@ public class CsvExportService extends BaseExportService {
 
     private String getLineMark() {
         return "\n";
+    }
+
+    public void close() {
+        IOUtils.closeQuietly(this.writer);
     }
 }
