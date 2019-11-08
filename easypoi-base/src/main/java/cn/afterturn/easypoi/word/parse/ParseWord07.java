@@ -212,7 +212,7 @@ public class ParseWord07 {
      * 2013-11-16
      */
     public XWPFDocument parseWord(String url, Map<String, Object> map) throws Exception {
-        MyXWPFDocument doc = WordCache.getXWPFDocumen(url);
+        MyXWPFDocument doc = WordCache.getXWPFDocument(url);
         parseWordSetValue(doc, map);
         return doc;
     }
@@ -230,12 +230,12 @@ public class ParseWord07 {
         } else if (list.size() == 0) {
             return null;
         } else {
-            MyXWPFDocument doc = WordCache.getXWPFDocumen(url);
+            MyXWPFDocument doc = WordCache.getXWPFDocument(url);
             parseWordSetValue(doc, list.get(0));
             //插入分页
             doc.createParagraph().setPageBreak(true);
             for (int i = 1; i < list.size(); i++) {
-                MyXWPFDocument tempDoc = WordCache.getXWPFDocumen(url);
+                MyXWPFDocument tempDoc = WordCache.getXWPFDocument(url);
                 parseWordSetValue(tempDoc, list.get(i));
                 tempDoc.createParagraph().setPageBreak(true);
                 doc.getDocument().addNewBody().set(tempDoc.getDocument().getBody());

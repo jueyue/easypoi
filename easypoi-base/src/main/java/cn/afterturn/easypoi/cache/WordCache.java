@@ -33,7 +33,7 @@ public class WordCache {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WordCache.class);
 
-    public static MyXWPFDocument getXWPFDocumen(String url) {
+    public static MyXWPFDocument getXWPFDocument(String url) {
         InputStream is = null;
         try {
             is = POICacheManager.getFile(url);
