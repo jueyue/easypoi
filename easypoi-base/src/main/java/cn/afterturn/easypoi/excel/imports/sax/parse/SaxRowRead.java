@@ -46,10 +46,6 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private static final Logger               LOGGER   = LoggerFactory
             .getLogger(SaxRowRead.class);
     /**
-     * 需要返回的数据
-     **/
-    private              List                 list;
-    /**
      * 导出的对象
      **/
     private              Class<?>             pojoClass;
@@ -77,7 +73,6 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     private IReadHandler handler;
 
     public SaxRowRead(Class<?> pojoClass, ImportParams params, IReadHandler handler) {
-        list = Lists.newArrayList();
         this.params = params;
         this.pojoClass = pojoClass;
         cellValueServer = new CellValueService();
@@ -102,25 +97,20 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
     }
 
     @Override
-    public <T> List<T> getList() {
-        return list;
-    }
-
-    @Override
-    public void parse(int index, List<SaxReadCellEntity> datas) {
+    public void parse(int index, List<SaxReadCellEntity> cellList) {
         try {
-            if (datas == null || datas.size() == 0) {
+            if (cellList == null || cellList.size() == 0) {
                 return;
             }
-            //标题行跳过
+            //skip title
             if (index < params.getTitleRows()) {
                 return;
             }
-            //表头行
+            //skip head
             if (index < params.getTitleRows() + params.getHeadRows()) {
-                addHeadData(datas);
+                addHeadData(cellList);
             } else {
-                addListData(datas);
+                addListData(cellList);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -160,9 +150,6 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
             }
             for (ExcelCollectionParams param : excelCollection) {
                 addListContinue(object, param, datas, titlemap, targetId, params);
-            }
-            if (handler == null) {
-                list.add(object);
             }
         }
 

@@ -48,18 +48,18 @@ public class SaxReadExcel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SaxReadExcel.class);
 
-    public <T> List<T> readExcel(InputStream inputstream, Class<?> pojoClass, ImportParams params,
-                                 IReadHandler hanlder) {
+    public void readExcel(InputStream inputstream, Class<?> pojoClass, ImportParams params,
+                                 IReadHandler handler) {
         try {
             OPCPackage opcPackage = OPCPackage.open(inputstream);
-            return readExcel(opcPackage, pojoClass, params, null, hanlder);
+            readExcel(opcPackage, pojoClass, params, null, handler);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ExcelImportException(e.getMessage());
         }
     }
 
-    private <T> List<T> readExcel(OPCPackage opcPackage, Class<?> pojoClass, ImportParams params,
+    private void readExcel(OPCPackage opcPackage, Class<?> pojoClass, ImportParams params,
                                   ISaxRowRead rowRead, IReadHandler handler) {
         try {
             XSSFReader         xssfReader         = new XSSFReader(opcPackage);
@@ -81,12 +81,10 @@ public class SaxReadExcel {
                     sheet.close();
                 }
                 sheetIndex++;
-
             }
             if (handler != null) {
                 handler.doAfterAll();
             }
-            return rowRead.getList();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ExcelImportException("SAX导入数据失败");

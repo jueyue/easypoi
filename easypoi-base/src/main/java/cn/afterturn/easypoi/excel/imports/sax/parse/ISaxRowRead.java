@@ -19,19 +19,17 @@ import java.util.List;
 
 import cn.afterturn.easypoi.excel.entity.sax.SaxReadCellEntity;
 
+/**
+ * @author jueyue
+ * @since 3.1
+ * @date 2017-11-9 13:04:06
+ */
 public interface ISaxRowRead {
-    /**
-     * 获取返回数据
-     * @param <T>
-     * @return
-     */
-    public <T> List<T> getList();
-
     /**
      * 解析数据
      * @param index
-     * @param datas
+     * @param cellList
      */
-    public void parse(int index, List<SaxReadCellEntity> datas);
+    void parse(int index, List<SaxReadCellEntity> cellList);
 
 }

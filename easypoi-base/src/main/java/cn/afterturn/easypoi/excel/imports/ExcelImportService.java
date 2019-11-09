@@ -558,7 +558,8 @@ public class ExcelImportService extends ImportBaseService {
                                       List<ExcelCollectionParams> excelCollection) {
 
         if (params.getImportFields() != null) {
-            if (params.isNeedCheckOrder()) { // 同时校验列顺序
+            // 同时校验列顺序
+            if (params.isNeedCheckOrder()) {
 
                 if (params.getImportFields().length != titlemap.size()) {
                     LOGGER.error("excel列顺序不一致");
