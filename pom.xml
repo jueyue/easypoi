@@ -12,8 +12,8 @@
         <module>easypoi-annotation</module>
     </modules>
 
-    <url>http://www.afterturn.cn</url>
-    <description>office 工具类 基于 poi</description>
+    <url>http://opensource.afterturn.cn/</url>
+    <description>office utils base poi</description>
 
     <licenses>
         <license>
@@ -23,15 +23,15 @@
     </licenses>
 
     <scm>
-        <connection>scm:git@git.oschina.net:lemur/easypoi.git</connection>
-        <developerConnection>scm:git@git.oschina.net:lemur/easypoi.git</developerConnection>
-        <url>git@git.oschina.net:lemur/easypoi.git</url>
+        <connection>https://github.com/jueyue/easypoi.git</connection>
+        <developerConnection>https://github.com/jueyue/easypoi.git</developerConnection>
+        <url>https://github.com/jueyue/easypoi.git</url>
     </scm>
 
     <developers>
         <developer>
             <name>JueYue</name>
-            <email>qrb.jueyue@foxmail.com</email>
+            <email>quranbo@foxmail.com</email>
         </developer>
         <developer>
             <name>魔幻之翼</name>
@@ -41,7 +41,7 @@
 
     <organization>
         <name>Lumer</name>
-        <url>http://www.afterturn.cn</url>
+        <url>http://opensource.afterturn.cn/</url>
     </organization>
 
     <properties>

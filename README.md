@@ -1,5 +1,5 @@
 
-EasyPoi Excel和 Word简易工具类
+EasyPoi office utils
 ===========================
 
  easypoi功能如同名字easy,主打的功能就是容易,让一个没见接触过poi的人员
@@ -12,7 +12,7 @@ EasyPoi Excel和 Word简易工具类
 	
 	开发者:魔幻之翼 xf.key@163.com
 	优秀团队,承接私活,加微信:13165188222 ,添加备注悟耘
-Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
+Spring Boot 支持    https://github.com/jueyue/easypoi-spring-boot-starter
 
 [官网](https://opensource.afterturn.cn)
 
