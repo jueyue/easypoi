@@ -134,22 +134,22 @@ https://oss.sonatype.org/content/groups/public/
 		 <dependency>
               <groupId>cn.afterturn</groupId>
               <artifactId>easypoi-spring-boot-starter</artifactId>
-              <version>4.1.2</version>
+              <version>4.1.3</version>
          </dependency>
 		 <dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-base</artifactId>
-			<version>4.1.2</version>
+			<version>4.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-web</artifactId>
-			<version>4.1.2</version>
+			<version>4.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
 			<artifactId>easypoi-annotation</artifactId>
-			<version>4.1.2</version>
+			<version>4.1.3</version>
 		</dependency>
 		
 ```
