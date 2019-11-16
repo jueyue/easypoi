@@ -1,35 +1,35 @@
 
-EasyPoi office utils
+EasyPoi - Easy utility classes of Excel and Word
 ===========================
 
- easypoi功能如同名字easy,主打的功能就是容易,让一个没见接触过poi的人员
-就可以方便的写出Excel导出,Excel模板导出,Excel导入,Word模板导出,通过简单的注解和模板
-语言(熟悉的表达式语法),完成以前复杂的写法
+ Easypoi, as is clear from the name, it's easy for a developer who never even used poi to
+export/import Excel, export Excel Template and Word Template, and export PDF. We encapsulate Apache poi in the upper layers. 
+With simple annotations and templates Language (familiar expression syntax) to accomplish previously complex coding.
 
-	官网： http://opensource.afterturn.cn/
-	邮箱： xue315998@qq.com
-	QQ群: 1群 364192721(满) 2 群116844390
-	
-	开发者:魔幻之翼 xf.key@163.com
-	优秀团队,承接私活,加微信:13165188222 ,添加备注悟耘
-Spring Boot 支持    https://github.com/jueyue/easypoi-spring-boot-starter
+	Website：https://opensource.afterturn.cn/
+	Email： qrb.jueyue@foxmail.com
+	Developer:Jueyue qrb.jueyue@foxmail.com
+	Excellent Team, undertake project development
+Support Spring Boot    https://gitee.com/lemur/easypoi-spring-boot-starter
 
-[官网](https://opensource.afterturn.cn)
+[Official website](https://opensource.afterturn.cn)
+
+[中文介绍](https://gitee.com/lemur/easypoi/blob/master/README-cn.md)
 
 
-**开发指南**
+**The Dev Guide**
 
 **[https://opensource.afterturn.cn/doc/easypoi.html](http://opensource.afterturn.cn/doc/easypoi.html)**
 
-下一步计划
- - 国际化,翻译文档以及注释
- - pdf全部改为模板导出方式
- - word模板和excel功能同步
+Next steps
+ - Internationalization, translate documents and code-commenting
+ - Change all PDF export to Template export
+ - Synchronise Word tmplate function with the Excel
 
-[用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
+[User feedback](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
 
-按登记顺序展示,如果你正在使用EasyPoi欢迎在 https://gitee.com/lemur/easypoi/issues/IFDX7 登记。仅作为开源参考，不作其它用途
+Display in order of registration. If you are using Easypoi, please register on https://gitee.com/lemur/easypoi/issues/IFDX7 which is only as a reference for the open source, no other purposes.
 
    - [一众科技](http://studio.afterturn.cn/)
    - [博丰(深圳)跨境电商服务有限公司 ](http://www.bfeservice.com/)
@@ -48,87 +48,113 @@ Spring Boot 支持    https://github.com/jueyue/easypoi-spring-boot-starter
    
     
 
-版本介绍
+Version introduction
 
 [history.md](https://gitee.com/lemur/easypoi/blob/master/history.md)
 
-基础示例
+Basic demo
 
 [basedemo.md](https://gitee.com/lemur/easypoi/blob/master/basedemo.md)
 
-[测试项目](http://git.oschina.net/lemur/easypoi-test): http://git.oschina.net/lemur/easypoi-test
+[Demo project](http://git.oschina.net/lemur/easypoi-test): http://git.oschina.net/lemur/easypoi-test
 
 ---------------------------
-EasyPoi的主要特点
+Advantages of EasyPoi
 --------------------------
-	1.设计精巧,使用简单
-	2.接口丰富,扩展简单
-	3.默认值多,write less do more
-	4.AbstractView 支持,web导出可以简单明了
+	1.Exquisite Design, easy to use
+	2.Various Interfaces, easy to extend
+	3.Coding less do more
+	4.Support Spring MVC, easy for WEB export
 
 ---------------------------
-什么场景该用哪个方法
+Main Features
+--------------------------
+
+For Excel, self-adapt xls and xlsx format. For Word, only docx.
+
+1.Excel Import
+   - Annotation Import
+   - Map Import
+   - Big data Import, sax mode
+   - Save file
+   - File validation
+   - Field validation
+
+2.Excel Export
+   - Annotation Export
+   - Template Export
+   - HTML Export
+
+3.Excel convert to HTML
+
+4.Word Export
+
+5.PDF Export
+
+---------------------------
+which methods for which scenarios
 ---------------------------
 
-    - 导出
-	    1.正规excel导出 (格式简单,数据量可以,5W以内吧)
-	        注解方式:  ExcelExportUtil.exportExcel(ExportParams entity, Class<?> pojoClass,Collection<?> dataSet) 
-	    2.不定多少列,但是格式依然简单数据库不大
-	        自定义方式: ExcelExportUtil.exportExcel(ExportParams entity, List<ExcelExportEntity> entityList,Collection<?> dataSet)
-	    3.数据量大超过5W,还在100W以内
-	        注解方式 ExcelExportUtil.exportBigExcel(ExportParams entity, Class<?> pojoClass,IExcelExportServer server, Object queryParams)
-	        自定义方式: ExcelExportUtil.exportBigExcel(ExportParams entity, List<ExcelExportEntity> excelParams,IExcelExportServer server, Object queryParams)
-	    4.样式复杂,数据量尽量别大
-	        模板导出 ExcelExportUtil.exportExcel(TemplateExportParams params, Map<String, Object> map)
-	    5.一次导出多个风格不一致的sheet
-	        模板导出 ExcelExportUtil.exportExcel(Map<Integer, Map<String, Object>> map,TemplateExportParams params) 
-	    6.一个模板但是要导出非常多份
-	        模板导出 ExcelExportUtil.exportExcelClone(Map<Integer, List<Map<String, Object>>> map,TemplateExportParams params)
-	    7.模板无法满足你的自定义,试试html
-	        自己构造html,然后我给你转成excel  ExcelXorHtmlUtil.htmlToExcel(String html, ExcelType type)
-	    8.数据量过百万级了.放弃excel吧,csv导出
-	        注解方式: CsvExportUtil.exportCsv(CsvExportParams params, Class<?> pojoClass, OutputStream outputStream)
-	        自定义方式: CsvExportUtil.exportCsv(CsvExportParams params, List<ExcelExportEntity> entityList, OutputStream outputStream)
-        9.word导出
-            模板导出: WordExportUtil.exportWord07(String url, Map<String, Object> map)
-        10.PDF导出
-            模板导出: TODO 
-    - 导入 
-        如果想提高性能 ImportParams 的concurrentTask 可以帮助并发导入,仅单行,最小1000
-        excel有单个的那种特殊读取,readSingleCell 参数可以支持
-        1. 不需要检验,数据量不大(5W以内)
-            注解或者MAP: ExcelImportUtil.importExcel(File file, Class<?> pojoClass, ImportParams params)
-        2. 需要导入,数据量不大
-            注解或者MAP: ExcelImportUtil.importExcelMore(InputStream inputstream, Class<?> pojoClass, ImportParams params)
-        3. 数据量大了,或者你有特别多的导入操作,内存比较少,仅支持单行
-           SAX方式  ExcelImportUtil.importExcelBySax(InputStream inputstream, Class<?> pojoClass, ImportParams params, IReadHandler handler)
-        4. 数据量超过EXCEL限制,CSV读取
-            小数据量: CsvImportUtil.importCsv(InputStream inputstream, Class<?> pojoClass,CsvImportParams params)
-            大数据量: CsvImportUtil.importCsv(InputStream inputstream, Class<?> pojoClass,CsvImportParams params, IReadHandler readHandler)
+    - Export
+	    1. Normal excel export (simple format, moderate amount of data, within 50,000)
+	        annotation way:  ExcelExportUtil.exportExcel(ExportParams entity, Class<?> pojoClass,Collection<?> dataSet) 
+	    2. uncertain columns, but also with simple format and small amount of data
+	        customize way: ExcelExportUtil.exportExcel(ExportParams entity, List<ExcelExportEntity> entityList,Collection<?> dataSet)
+	    3. big data(greater than 50,000, less than one million) 
+	        annotation way ExcelExportUtil.exportBigExcel(ExportParams entity, Class<?> pojoClass,IExcelExportServer server, Object queryParams)
+	        customize way: ExcelExportUtil.exportBigExcel(ExportParams entity, List<ExcelExportEntity> excelParams,IExcelExportServer server, Object queryParams)
+	    4. complex style, the amount of data not too large
+	        Template: ExcelExportUtil.exportExcel(TemplateExportParams params, Map<String, Object> map)
+	    5. Export multiple sheets with different styles at one time
+	        Template ExcelExportUtil.exportExcel(Map<Integer, Map<String, Object>> map,TemplateExportParams params) 
+	    6. One template but many copies to export
+	        Template ExcelExportUtil.exportExcelClone(Map<Integer, List<Map<String, Object>>> map,TemplateExportParams params)
+	    7. If Template can't satisfy your customization, try HTML
+	        Build your own html, and then convert it to excel:  ExcelXorHtmlUtil.htmlToExcel(String html, ExcelType type)
+	    8. Big data(Over millions), please use CSV
+	        annotation way: CsvExportUtil.exportCsv(CsvExportParams params, Class<?> pojoClass, OutputStream outputStream)
+	        customize way: CsvExportUtil.exportCsv(CsvExportParams params, List<ExcelExportEntity> entityList, OutputStream outputStream)
+        9. Word Export
+            Template: WordExportUtil.exportWord07(String url, Map<String, Object> map)
+        10. PDF Export
+            Template: TODO 
+    - Import
+        If you want to improve the performance, the concurrentTask of ImportParams will help with concurrent imports;Only support single line, minimum 1000. 
+		For some special reading for single cell, you can use the  readSingleCell parameter
+        1. no need verification, moderate amount of data, within 50,000
+            annotation or map: ExcelImportUtil.importExcel(File file, Class<?> pojoClass, ImportParams params)
+        2. the amount of data not too large
+            annotation or map: ExcelImportUtil.importExcelMore(InputStream inputstream, Class<?> pojoClass, ImportParams params)
+        3. For big data or with lots of importing operations; Less memory, only support single line
+           SAX: ExcelImportUtil.importExcelBySax(InputStream inputstream, Class<?> pojoClass, ImportParams params, IReadHandler handler)
+        4. Big data(Over millions), please use CSV
+            small data: CsvImportUtil.importCsv(InputStream inputstream, Class<?> pojoClass,CsvImportParams params)
+            big data: CsvImportUtil.importCsv(InputStream inputstream, Class<?> pojoClass,CsvImportParams params, IReadHandler readHandler)
         
 	        
 	
 ---------------------------
-关于Excel导出XLS和XLSX区别
+The difference between XLS and XLSX for Excel Export
 ---------------------------
 
-	1.导出时间XLS比XLSX快2-3倍
-	2.导出大小XLS是XLSX的2-3倍或者更多
-	3.导出需要综合网速和本地速度做考虑^~^
+	1. For export time, XLS is 2-3 times faster than xlsx.
+	2. For export size, XLS is 2-3 or more times than xlsx.
+	3. Export need to consider both network speed and local speed.
 	
 ---------------------------
-几个工程的说明
+Packages Guide
 ---------------------------
-	1.easypoi 父包--作用大家都懂得
-	2.easypoi-annotation 基础注解包,作用与实体对象上,拆分后方便maven多工程的依赖管理
-	3.easypoi-base 导入导出的工具包,可以完成Excel导出,导入,Word的导出,Excel的导出功能
-	4.easypoi-web  耦合了spring-mvc 基于AbstractView,极大的简化spring-mvc下的导出功能
-	5.sax 导入使用xercesImpl这个包(这个包可能造成奇怪的问题哈),word导出使用poi-scratchpad,都作为可选包了
+	1.easypoi -- Parent package
+	2.easypoi-annotation -- Basic annotation package, action on entity objects, 
+                            it's convenient for Maven multi-project management after splitting
+	3.easypoi-base -- Import and export package, realize Excel Import/Export, Word Export
+	4.easypoi-web  -- Based on AbstractView, Coupled with spring MVC, greatly simplifies the export function 
+	5.sax -- Optional, Export uses xercesImpl, Word Export uses poi-scratchpad
+
+	If you don't use spring MVC, only easypoi-base is enough.
 --------------------------
 maven 
 --------------------------
-maven库应该都可以了
-SNAPSHOT 版本-很少发布
 https://oss.sonatype.org/content/groups/public/
 ```xml
 		 <dependency>
@@ -156,11 +182,11 @@ https://oss.sonatype.org/content/groups/public/
 	
 
 --------------------------
-pom说明
+pom
 --------------------------
-word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303的校验也是可选的,PDF的jar也是可选的
+
 ```xml
-			<!-- sax 读取时候用到的 -->
+			<!-- sax: optional, using for import -->
 			<dependency>
 				<groupId>xerces</groupId>
 				<artifactId>xercesImpl</artifactId>
@@ -174,7 +200,7 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 				<optional>true</optional>
 			</dependency>
 			
-			<!-- Word 需要使用 -->
+			<!-- Word: optional, using for export  -->
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>ooxml-schemas</artifactId>
@@ -182,7 +208,7 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
                 <optional>true</optional>
             </dependency>
 			
-			<!-- 校验,下面两个实现 -->
+			<!-- Verification: optional -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
@@ -196,7 +222,7 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 				<version>1.1.0</version>
 			</dependency>
 			
-			<!-- PDF -->
+			<!-- PDF: optional, using for export-->
 			<dependency>
 				<groupId>com.itextpdf</groupId>
 				<artifactId>itextpdf</artifactId>
@@ -212,9 +238,9 @@ word和sax读取的时候才使用,就不是必须的了,请手动引用,JSR303�
 			</dependency>
 ```
 -----------------
-Test 测试覆盖率
+Current test coverage 
 ----------------
-|包|类|方法|行|
+|Package|Class|Method|Line|
 |----|----|----|----|
 cn|100% (0/0)|100% (0/0)|100% (0/0)
 cn.afterturn|100% (0/0)|100% (0/0)|100% (0/0)

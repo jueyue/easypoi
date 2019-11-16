@@ -15,7 +15,7 @@ EasyPoi Excel和 Word简易工具类
 Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
 
 [官网](https://opensource.afterturn.cn)
-
+[英文介绍](https://github.com/jueyue/easypoi/blob/master/README.md)
 
 **开发指南**
 
