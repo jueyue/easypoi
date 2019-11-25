@@ -8,6 +8,7 @@ import cn.afterturn.easypoi.excel.export.styler.IExcelExportStyler;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
 import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
+import cn.afterturn.easypoi.handler.inter.IWriter;
 import cn.afterturn.easypoi.util.PoiExcelGraphDataUtil;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -26,7 +27,7 @@ import static cn.afterturn.easypoi.excel.ExcelExportUtil.USE_SXSSF_LIMIT;
  * @author JueYue
  * 2016年8月29日
  */
-public class ExcelBatchExportService extends ExcelExportService {
+public class ExcelBatchExportService extends ExcelExportService implements IWriter<Workbook> {
 
     private Workbook                workbook;
     private Sheet                   sheet;
@@ -97,25 +98,6 @@ public class ExcelBatchExportService extends ExcelExportService {
         }
     }
 
-    public Workbook appendData(Collection<?> dataSet) {
-        if (sheet.getLastRowNum() + dataSet.size() > entity.getMaxNum()) {
-            sheet = workbook.createSheet();
-            index = 0;
-        }
-
-        Iterator<?> its = dataSet.iterator();
-        while (its.hasNext()) {
-            Object t = its.next();
-            try {
-                index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight, 0)[0];
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
-                throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
-            }
-        }
-        return workbook;
-    }
-
     @Override
     protected void insertDataToSheet(Workbook workbook, ExportParams entity,
                                      List<ExcelExportEntity> entityList, Collection<?> dataSet,
@@ -150,7 +132,43 @@ public class ExcelBatchExportService extends ExcelExportService {
         }
     }
 
-    public Workbook closeExportBigExcel() {
+    public Workbook exportBigExcel(IExcelExportServer server, Object queryParams) {
+        int page = 1;
+        List<Object> list = server
+                .selectListForExcelExport(queryParams, page++);
+        while (list != null && list.size() > 0) {
+            writer(list);
+            list = server.selectListForExcelExport(queryParams, page++);
+        }
+        return close();
+    }
+
+    @Override
+    public Workbook get() {
+        return this.workbook;
+    }
+
+    @Override
+    public IWriter<Workbook> writer(Collection data) {
+        if (sheet.getLastRowNum() + data.size() > entity.getMaxNum()) {
+            sheet = workbook.createSheet();
+            index = 0;
+        }
+        Iterator<?> its = data.iterator();
+        while (its.hasNext()) {
+            Object t = its.next();
+            try {
+                index += createCells(patriarch, index, t, excelParams, sheet, workbook, rowHeight, 0)[0];
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+                throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public Workbook close() {
         if (entity.getFreezeCol() != 0) {
             sheet.createFreezePane(entity.getFreezeCol(), titleHeight, entity.getFreezeCol(), titleHeight);
         }
@@ -159,16 +177,4 @@ public class ExcelBatchExportService extends ExcelExportService {
         addStatisticsRow(getExcelExportStyler().getStyles(true, null), sheet);
         return workbook;
     }
-
-    public Workbook exportBigExcel(IExcelExportServer server, Object queryParams) {
-        int page = 1;
-        List<Object> list = server
-                .selectListForExcelExport(queryParams, page++);
-        while (list != null && list.size() > 0) {
-            appendData(list);
-            list = server.selectListForExcelExport(queryParams, page++);
-        }
-        return closeExportBigExcel();
-    }
-
 }

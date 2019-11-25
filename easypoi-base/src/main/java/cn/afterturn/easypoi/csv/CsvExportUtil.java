@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.csv.entity.CsvExportParams;
 import cn.afterturn.easypoi.csv.export.CsvExportService;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
+import cn.afterturn.easypoi.handler.inter.IWriter;
 
 import java.io.OutputStream;
 import java.util.Collection;
@@ -16,7 +17,8 @@ import java.util.List;
  */
 public final class CsvExportUtil {
 
-    private CsvExportService cs;
+    private CsvExportUtil() {
+    }
 
 
     /**
@@ -28,10 +30,9 @@ public final class CsvExportUtil {
      * @param outputStream
      */
     public static void exportCsv(CsvExportParams params, Class<?> pojoClass, Collection<?> dataSet, OutputStream outputStream) {
-        CsvExportUtil ce = new CsvExportUtil();
-        ce.cs = new CsvExportService(outputStream, params, pojoClass);
-        ce.write(dataSet);
-        ce.close();
+        IWriter writer = new CsvExportService(outputStream, params, pojoClass);
+        writer.writer(dataSet);
+        writer.close();
     }
 
     /**
@@ -44,25 +45,23 @@ public final class CsvExportUtil {
      * @param outputStream
      */
     public static void exportCsv(CsvExportParams params, Class<?> pojoClass, IExcelExportServer server, Object queryParams, OutputStream outputStream) {
-        CsvExportUtil ce = new CsvExportUtil();
-        ce.cs = new CsvExportService(outputStream, params, pojoClass);
-        int        page = 1;
+        IWriter    writer = new CsvExportService(outputStream, params, pojoClass);
+        int        page   = 1;
         Collection dataSet;
         while ((dataSet = server.selectListForExcelExport(queryParams, page)) != null && dataSet.size() > 0) {
             page++;
-            ce.write(dataSet);
+            writer.writer(dataSet);
         }
-        ce.close();
+        writer.close();
     }
 
     /**
      * @param params    表格标题属性
      * @param pojoClass Excel对象Class
      */
-    public static CsvExportUtil exportCsv(CsvExportParams params, Class<?> pojoClass, OutputStream outputStream) {
+    public static IWriter<Void> exportCsv(CsvExportParams params, Class<?> pojoClass, OutputStream outputStream) {
         CsvExportUtil ce = new CsvExportUtil();
-        ce.cs = new CsvExportService(outputStream, params, pojoClass);
-        return ce;
+        return new CsvExportService(outputStream, params, pojoClass);
     }
 
     /**
@@ -71,18 +70,8 @@ public final class CsvExportUtil {
      * @param params     表格标题属性
      * @param entityList Map对象列表
      */
-    public static CsvExportUtil exportCsv(CsvExportParams params, List<ExcelExportEntity> entityList, OutputStream outputStream) {
-        CsvExportUtil ce = new CsvExportUtil();
-        ce.cs = new CsvExportService(outputStream, params, entityList);
-        return ce;
+    public static IWriter<Void> exportCsv(CsvExportParams params, List<ExcelExportEntity> entityList, OutputStream outputStream) {
+        return new CsvExportService(outputStream, params, entityList);
     }
 
-    public CsvExportUtil write(Collection<?> dataSet) {
-        this.cs.write(dataSet);
-        return this;
-    }
-
-    public void close() {
-        this.cs.close();
-    }
 }

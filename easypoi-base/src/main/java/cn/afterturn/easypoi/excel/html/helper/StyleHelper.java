@@ -184,7 +184,7 @@ public class StyleHelper {
          * Outputs the appropriate CSS style for the given cell style.
          *
          * @param style The cell style.
-         * @param out   The place to write the output.
+         * @param out   The place to writer the output.
          */
         void colorStyles(CellStyle style, Formatter out);
 

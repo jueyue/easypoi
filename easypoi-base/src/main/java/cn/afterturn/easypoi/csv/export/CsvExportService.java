@@ -7,6 +7,7 @@ import cn.afterturn.easypoi.excel.entity.vo.BaseEntityTypeConstants;
 import cn.afterturn.easypoi.excel.export.base.BaseExportService;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.exception.excel.enums.ExcelExportEnum;
+import cn.afterturn.easypoi.handler.inter.IWriter;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.util.IOUtils;
@@ -23,7 +24,7 @@ import java.util.*;
 /**
  * @author by jueyue on 18-11-14.
  */
-public class CsvExportService extends BaseExportService {
+public class CsvExportService extends BaseExportService implements IWriter<Void> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvExportService.class);
 
@@ -99,42 +100,6 @@ public class CsvExportService extends BaseExportService {
     }
 
     /**
-     * 导出Csv类文件
-     *
-     * @param dataSet 集合
-     */
-    public CsvExportService write(Collection<?> dataSet) {
-        try {
-            return writerData(dataSet);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
-        }
-    }
-
-    private CsvExportService writerData(Collection<?> dataSet) {
-        try {
-            Iterator<?> iterator = dataSet.iterator();
-            String      line     = null;
-            int         i        = 0;
-            while (iterator.hasNext()) {
-                Object obj = iterator.next();
-                line = createRow(excelParams, params, obj);
-                writer.write(line);
-                if (i % 10000 == 0) {
-                    writer.flush();
-                }
-                i++;
-            }
-            writer.flush();
-            return this;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
-        }
-    }
-
-    /**
      * 创建行
      *
      * @param excelParams
@@ -189,7 +154,33 @@ public class CsvExportService extends BaseExportService {
         return "\n";
     }
 
-    public void close() {
+
+    @Override
+    public IWriter writer(Collection data) {
+        try {
+            Iterator<?> iterator = data.iterator();
+            String      line     = null;
+            int         i        = 0;
+            while (iterator.hasNext()) {
+                Object obj = iterator.next();
+                line = createRow(excelParams, params, obj);
+                writer.write(line);
+                if (i % 10000 == 0) {
+                    writer.flush();
+                }
+                i++;
+            }
+            writer.flush();
+            return this;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
+        }
+    }
+
+    @Override
+    public Void close() {
         IOUtils.closeQuietly(this.writer);
+        return null;
     }
 }

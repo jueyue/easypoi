@@ -82,10 +82,10 @@ public class ParseWord07 {
         if (text != null && text.contains(FOREACH) && text.startsWith(START_STR)) {
             text = text.replace(FOREACH_NOT_CREATE, EMPTY).replace(FOREACH_AND_SHIFT, EMPTY)
                     .replace(FOREACH, EMPTY).replace(START_STR, EMPTY);
-            String[] keys = text.replaceAll("\\s{1,}", " ").trim().split(" ");
-            Object result=PoiPublicUtil.getParamsValue(keys[0], map);
+            String[] keys   = text.replaceAll("\\s{1,}", " ").trim().split(" ");
+            Object   result = PoiPublicUtil.getParamsValue(keys[0], map);
             //添加list默认值，避免将{{$fe: list t.sn	t.hoby	t.remark}} 这类标签直接显示出来
-            return Objects.nonNull(result)?result:new ArrayList<Map<String,Object>>(0);
+            return Objects.nonNull(result) ? result : new ArrayList<Map<String, Object>>(0);
         }
         return null;
     }
@@ -120,16 +120,16 @@ public class ParseWord07 {
      * 2013-11-16
      */
     private void parseThisParagraph(XWPFParagraph paragraph, Map<String, Object> map) throws Exception {
-        XWPFRun       run;
+        XWPFRun run;
         // 拿到的第一个run,用来set值,可以保存格式
-        XWPFRun       currentRun  = null;
+        XWPFRun currentRun = null;
         // 存放当前的text
-        String        currentText = "";
-        String        text;
+        String currentText = "";
+        String text;
         // 判断是不是已经遇到{{
-        Boolean       isfinde     = false;
+        Boolean isfinde = false;
         // 存储遇到的run,把他们置空
-        List<Integer> runIndex    = new ArrayList<Integer>();
+        List<Integer> runIndex = new ArrayList<Integer>();
         for (int i = 0; i < paragraph.getRuns().size(); i++) {
             run = paragraph.getRuns().get(i);
             text = run.getText(0);
@@ -170,7 +170,6 @@ public class ParseWord07 {
             parseAllParagraphic(cell.getParagraphs(), map);
         }
     }
-
 
 
     /**
@@ -225,10 +224,10 @@ public class ParseWord07 {
      * @return
      */
     public XWPFDocument parseWord(String url, List<Map<String, Object>> list) throws Exception {
-        if (list.size() == 1) {
-            return parseWord(url, list.get(0));
-        } else if (list.size() == 0) {
+        if (list == null || list.size() == 0) {
             return null;
+        } else if (list.size() == 1) {
+            return parseWord(url, list.get(0));
         } else {
             MyXWPFDocument doc = WordCache.getXWPFDocument(url);
             parseWordSetValue(doc, list.get(0));

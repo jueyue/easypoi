@@ -23,6 +23,7 @@ import cn.afterturn.easypoi.excel.export.ExcelBatchExportService;
 import cn.afterturn.easypoi.excel.export.ExcelExportService;
 import cn.afterturn.easypoi.excel.export.template.ExcelExportOfTemplateUtil;
 import cn.afterturn.easypoi.handler.inter.IExcelExportServer;
+import cn.afterturn.easypoi.handler.inter.IWriter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -45,6 +46,31 @@ public final class ExcelExportUtil {
     public static final String SHEET_NAME      = "sheetName";
 
     private ExcelExportUtil() {
+    }
+
+    /**
+     * 大数据量导出
+     *
+     * @param entity    表格标题属性
+     * @param pojoClass Excel对象Class
+     */
+    public static IWriter<Workbook> exportBigExcel(ExportParams entity, Class<?> pojoClass) {
+        ExcelBatchExportService batchServer = new ExcelBatchExportService();
+        batchServer.init(entity, pojoClass);
+        return batchServer;
+    }
+
+    /**
+     * 大数据量导出
+     *
+     * @param entity
+     * @param excelParams
+     * @return
+     */
+    public static IWriter<Workbook> exportBigExcel(ExportParams entity, List<ExcelExportEntity> excelParams) {
+        ExcelBatchExportService batchServer = new ExcelBatchExportService();
+        batchServer.init(entity, excelParams);
+        return batchServer;
     }
 
     /**
