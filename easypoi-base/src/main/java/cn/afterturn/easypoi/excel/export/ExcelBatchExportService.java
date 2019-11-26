@@ -137,7 +137,7 @@ public class ExcelBatchExportService extends ExcelExportService implements IWrit
         List<Object> list = server
                 .selectListForExcelExport(queryParams, page++);
         while (list != null && list.size() > 0) {
-            writer(list);
+            write(list);
             list = server.selectListForExcelExport(queryParams, page++);
         }
         return close();
@@ -149,7 +149,7 @@ public class ExcelBatchExportService extends ExcelExportService implements IWrit
     }
 
     @Override
-    public IWriter<Workbook> writer(Collection data) {
+    public IWriter<Workbook> write(Collection data) {
         if (sheet.getLastRowNum() + data.size() > entity.getMaxNum()) {
             sheet = workbook.createSheet();
             index = 0;

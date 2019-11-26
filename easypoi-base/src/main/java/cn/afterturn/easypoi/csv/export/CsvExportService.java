@@ -156,7 +156,7 @@ public class CsvExportService extends BaseExportService implements IWriter<Void>
 
 
     @Override
-    public IWriter writer(Collection data) {
+    public IWriter write(Collection data) {
         try {
             Iterator<?> iterator = data.iterator();
             String      line     = null;

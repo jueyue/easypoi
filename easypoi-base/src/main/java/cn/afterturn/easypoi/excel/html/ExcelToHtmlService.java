@@ -289,7 +289,7 @@ public class ExcelToHtmlService {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(savefile);
-            fos.writer(data);
+            fos.write(data);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {

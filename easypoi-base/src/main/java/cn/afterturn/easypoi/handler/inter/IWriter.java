@@ -23,7 +23,7 @@ public interface IWriter<T> {
      * @param data
      * @return
      */
-    public IWriter<T> writer(Collection data);
+    public IWriter<T> write(Collection data);
 
     /**
      * 关闭流,完成业务

@@ -26,6 +26,10 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
  - pdf全部改为模板导出方式
  - word模板和excel功能同步
 
+[企业版技术支持]
+
+由Tidelift(https://tidelift.com/)提供统一服务
+
 [用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
 

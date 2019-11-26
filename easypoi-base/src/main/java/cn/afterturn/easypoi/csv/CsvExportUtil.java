@@ -31,7 +31,7 @@ public final class CsvExportUtil {
      */
     public static void exportCsv(CsvExportParams params, Class<?> pojoClass, Collection<?> dataSet, OutputStream outputStream) {
         IWriter writer = new CsvExportService(outputStream, params, pojoClass);
-        writer.writer(dataSet);
+        writer.write(dataSet);
         writer.close();
     }
 
@@ -50,7 +50,7 @@ public final class CsvExportUtil {
         Collection dataSet;
         while ((dataSet = server.selectListForExcelExport(queryParams, page)) != null && dataSet.size() > 0) {
             page++;
-            writer.writer(dataSet);
+            writer.write(dataSet);
         }
         writer.close();
     }
