@@ -26,9 +26,9 @@ Spring Boot 支持    https://gitee.com/lemur/easypoi-spring-boot-starter
  - pdf全部改为模板导出方式
  - word模板和excel功能同步
 
-[企业版技术支持]
+## cn.afterturn：企业专用easypoi
 
-由Tidelift(https://tidelift.com/)提供统一服务
+cn.afterturn：easypoi与Tidelift合作，为您用于构建应用程序的开源依赖项提供商业支持和维护。节省时间，降低风险并改善代码运行状况，同时向维护人员支付所使用的确切依赖项。[了解更多。]（https://tidelift.com/subscription/pkg/maven-cn-afterturn-easypoi?utm_source=maven-cn-afterturn-easypoi&utm_medium=referral&utm_campaign=readme）
 
 [用户征集](https://gitee.com/lemur/easypoi/issues/IFDX7)
 
