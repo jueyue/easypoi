@@ -26,7 +26,7 @@ Next steps
  - Change all PDF export to Template export
  - Synchronise Word tmplate function with the Excel
 
-[User feedback](https://gitee.com/lemur/easypoi/issues/IFDX7)
+[User feedback](https://github.com/jueyue/easypoi/issues/2)
 
 ## cn.afterturn:easypoi for enterprise
 
@@ -36,20 +36,16 @@ The maintainers of cn.afterturn:easypoi and thousands of other packages are work
 
 Display in order of registration. If you are using Easypoi, please register on https://gitee.com/lemur/easypoi/issues/IFDX7 which is only as a reference for the open source, no other purposes.
 
-   - [一众科技](http://studio.afterturn.cn/)
-   - [博丰(深圳)跨境电商服务有限公司 ](http://www.bfeservice.com/)
-   - [陕西昊景无线网络技术有限公司](http://www.hjwxbd.com)
-   - [湖北省楚天云有限公司](http://www.chutianyun.gov.cn)
-   - [博彦科技](http://www.beyondsoft.com)
-   - [图灵谷北京科技有限公司](http://www.turingoal.com)
-   - [多贝拉](https://www.duobeila.cn/)
-   - [河南八六三软件股份有限公司](http://www.863soft.com/cn/)
-   - [网易](http://www.netease.com)
-   - [港华燃气](http://www.towngas.com.cn/)
-   - [北京易才博普奥管理顾问有限公司](https://www.weifenghr.com/)
-   - [中投国信(北京)科技发展有限公司](http://sic-credit.cn/)
-   - [武汉格事化信息技术](https://www.getto1.com/)
-   - [北京辰森世纪科技股份有限公司](http://www.choicesoft.com.cn/)
+   - [beyondsoft](http://www.beyondsoft.com)
+   - [turingoal](http://www.turingoal.com)
+   - [863soft](http://www.863soft.com/cn/)
+   - [163](http://www.163.com)
+   - [towngas](http://www.towngas.com.cn/)
+   - [weifenghr](https://www.weifenghr.com/)
+   - [ic-credit](http://sic-credit.cn/)
+   - [getto1](https://www.getto1.com/)
+   - [choicesoft](http://www.choicesoft.com.cn/)
+   - [timeyaa](https://www.timeyaa.com/)
    
     
 

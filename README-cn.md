@@ -35,20 +35,16 @@ cn.afterturn：easypoi与Tidelift合作，为您用于构建应用程序的开�
 
 按登记顺序展示,如果你正在使用EasyPoi欢迎在 https://gitee.com/lemur/easypoi/issues/IFDX7 登记。仅作为开源参考，不作其它用途
 
-   - [一众科技](http://studio.afterturn.cn/)
-   - [博丰(深圳)跨境电商服务有限公司 ](http://www.bfeservice.com/)
-   - [陕西昊景无线网络技术有限公司](http://www.hjwxbd.com)
-   - [湖北省楚天云有限公司](http://www.chutianyun.gov.cn)
    - [博彦科技](http://www.beyondsoft.com)
    - [图灵谷北京科技有限公司](http://www.turingoal.com)
-   - [多贝拉](https://www.duobeila.cn/)
    - [河南八六三软件股份有限公司](http://www.863soft.com/cn/)
-   - [网易](http://www.netease.com)
+   - [网易](http://www.163.com)
    - [港华燃气](http://www.towngas.com.cn/)
    - [北京易才博普奥管理顾问有限公司](https://www.weifenghr.com/)
    - [中投国信(北京)科技发展有限公司](http://sic-credit.cn/)
    - [武汉格事化信息技术](https://www.getto1.com/)
    - [北京辰森世纪科技股份有限公司](http://www.choicesoft.com.cn/)
+   - [深圳市太美亚电子科技有限公司](https://www.timeyaa.com/)
    
     
 
