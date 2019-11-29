@@ -40,7 +40,7 @@
     </developers>
 
     <organization>
-        <name>Lumer</name>
+        <name>Lemur</name>
         <url>http://opensource.afterturn.cn/</url>
     </organization>
 
@@ -78,7 +78,7 @@
                 </exclusions>
                 <version>${poi.version}</version>
             </dependency>
-            <!-- sax 读取时候用到的 -->
+            <!-- sax -->
             <dependency>
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
@@ -91,7 +91,7 @@
                 <version>${poi.version}</version>
                 <optional>true</optional>
             </dependency>
-            <!-- Word 使用-->
+            <!-- Word-->
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml-schemas</artifactId>
@@ -106,7 +106,7 @@
                 <optional>true</optional>
             </dependency>
 
-            <!-- google 工具类 -->
+            <!-- google-->
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
@@ -119,7 +119,6 @@
                 <version>${commons-lang.version}</version>
             </dependency>
 
-            <!--日志 -->
             <!-- slf4j -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -190,14 +189,13 @@
                 <version>1.1.0.Final</version>
             </dependency>
 
-            <!-- 读取Excel -->
+            <!-- Excel -->
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>1.8.3</version>
             </dependency>
 
-            <!-- 表达式处理 -->
             <dependency>
                 <groupId>ognl</groupId>
                 <artifactId>ognl</artifactId>
@@ -211,7 +209,7 @@
                 <scope>provided</scope>
             </dependency>
 
-            <!-- 模块版本 -->
+            <!-- model -->
             <dependency>
                 <groupId>cn.afterturn</groupId>
                 <artifactId>easypoi-base</artifactId>

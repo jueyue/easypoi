@@ -27,13 +27,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- Sax 读入的时候使用 -->
+		<!-- read excel by sax used -->
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<!-- Word 时候用到 -->
+		<!-- read word by sax used -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
@@ -62,14 +62,14 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- 处理Excel -->
+		<!-- Excel -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<optional>true</optional>
 		</dependency>
 
-		<!-- google 工具类 -->
+		<!-- util -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -85,7 +85,6 @@
             <artifactId>ognl</artifactId>
         </dependency>
 
-		<!--日志 -->
 		<!-- slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
