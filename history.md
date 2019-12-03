@@ -1,33 +1,33 @@
 
 --------------------------
-版本修改
+Change Log
 --------------------------
- - 4.1.1 模板嵌套支持版
-    - 支持模板嵌套
-    - 改为lombok
-    - 变种导出支持对象识别
-    - 修复Unmodifiable 不可以改集合复制下异常问题
-    - 修复多个集合,集合为空排序异常问题
-    - 针对"{{" 和 list获取为null的情况处理
-    - 加入了sheet只读参数
-    - spring 版本升级了5.1.7
-    - 继续增加了jdk8时间格式问题
- - 4.1.0 4.0认真升级版 最低jdk8
-    - 模板表达式支持加减乘除
-    - 数据读取支持fork/join模式,并发去读
-    - 日期格式解析增加java8的LocalDate和LocalDateTime类型
-    - 大数据导出函数改了,也修改了很多dict,样式等不支持的问题
-    - work07 加入了根据模板和list列表生成N页类似的文件
-    - 支持了sheet复制,可以clone一个模板输出N个sheet
-    - 修复4.0poi xssf下移不显示问题
-    - sax认真修复版本
-    - 清理个大量issue,和各种推荐功能
-    - 合并如下:
-        - 合并的单元格，进行#fe 遍历时出现下标越界
-        - sax最后一行读取不到
-        - 字符串截取考虑不全面bug
-        - 解决word导出表格多出的换行符问题
-        - !30 支持非String格式单元格合并
+ - 4.1.1  Support template nesting 
+    - Support template nesting
+    - Support lombok
+    - Variant export supports object recognition 
+    - Fix Unmodifiable related exception
+    - Fix sort exception when there is an empty collection in multiple collections
+    - Handle cases where "{{" and list get null
+    - Add read-only parameter for sheet
+    - Upgrade spring version to 5.1.7
+    - Continue to add jdk8 time formats support
+ - 4.1.0 Data reading supports fork/join mode
+    - Java8 or above is required
+	- Support +,-,×,÷ for template expression
+    - Data reading supports fork/join mode and reads concurrently
+    - Date format parsing adds LocalDate and LocalDateTime types of java8
+    - Changed export methods of Big data
+    - word2007(docx) adds the ability to generate N similar pages based on templates and list
+    - Support sheet replication, you can clone a template to output N sheets
+    - Fix issues:
+        - For 4.0 POI XSSF, it is not display when moving down
+		- For merged cell, index is out of bounds during #fe traversal
+        - The last line of SAX cannot be read
+        - substring issue
+        - Solving the problem of extra line breaks in the exported table of word
+        - !30 Support non-string format cell merging
+		- Many dictionaries and styles unsupported issues
 
  - 3.3.0 多层导出支持版本
     - 支持N层导出了

@@ -549,110 +549,111 @@ Firstly, define an export object, **_ to save space, ignore getter、setter_**
     @Excel(name = "name", height = 20, width = 30)
     private String        name;
     /**
-     * sex
+     * gender
      */
-    @Excel(name = "sex", replace = { "male_1", "female_2" })
-    private int           sex;
+    @Excel(name = "gender", replace = { "male_1", "female_2" })
+    private int           gender;
 
     @Excel(name = "birthday", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd", width = 20)
     private Date          birthday;
 
     @Excel(name = "registerDate", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
-    private Date registrationDate;
+    private Date registerDate;
     
  }
 ```
-这里设置我们的4列分别是学生姓名,学生性别,出生日期,进校日期
-其中学生姓名定义了我们的列的行高,学生性别因为我们基本上都是存在数据库都是数字所以我们转换下,两个日期我们都是进行了格式化输出了,这样我们就完成了业务对我们Excel的样式需求,后面只有把这个学生列表输出就可以了
-生成Excel代码如下
+The four columns are student name, student gender, date of birth and date of register.
+For student name, we define row height and width of the column;
+For the gender, we make a conversion because the type stored in the database is number;
+For two dates, we format the output;
+Then, we have completed the requirement of the Excel, just output the sudent list.
+Generate excel code is as follows:
 ```java
 
- Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("计算机一班学生","学生"),
+ Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("Computer class one","Student"),
             StudentEntity .class, list);
 ```
-这样我们就得到的一个java中的Excel,然后把这个输出就得到我们的Excel了https://static.oschina.net/uploads/space/2017/0622/212811_uh7e_1157922.png
+In this way, we get an excel in Java, and then we get final excel by outputting it.
 
 ![](https://static.oschina.net/uploads/space/2017/0622/212811_uh7e_1157922.png)
 
-###2.3.2 集合定义
+###2.3.2 Collection
 
+Luffy quickly completed the teacher's task, only spent a cup of coffee time.
+But after a while, he was called by the teacher again who arranged another task for him: report the courses and the students who choose the courses and also the corresponding teachers of the courses.
+The task is the embodiment of one-to-many. Luffy quickly thought of Easypoi, where there is one-to-many export. Then he defined the entities:
+one course corresponds to one teacher
+one course corresponds to many students
+Following is the course entity:
 
-路飞很快的完成了老师的任务,花了也就是喝杯茶的时间,就交差了,但过了一会就又被老师叫去了,让他给出一个某个班级选择选择某些课的学生以及对应的老师
-路飞又很快的想到了Easypoi,其中有一对多的导出,这不正是一对多的体现吗,然后他继续定义实体:
-一个课程对应一个老师
-一个课程对应N个学生
-课程的实体
 ```java
  @ExcelTarget("courseEntity")
  public class CourseEntity implements java.io.Serializable {
-    /** 主键 */
+    /** primary key */
     private String        id;
-    /** 课程名称 */
-    @Excel(name = "课程名称", orderNum = "1", width = 25)
+    /** course name */
+    @Excel(name = "course name", orderNum = "1", width = 25)
     private String        name;
-    /** 老师主键 */
-    @ExcelEntity(id = "absent")
-    private TeacherEntity mathTeacher;
+    /** teacher entity */
+    @ExcelEntity(id = "substitute")
+    private TeacherEntity substituteTeacher;
 
-    @ExcelCollection(name = "学生", orderNum = "4")
+    @ExcelCollection(name = "student", orderNum = "4")
     private List<StudentEntity> students;
  }
 ```
-教师的实体
+teacher entity
 ```java
 @ExcelTarget("teacherEntity")
 public class TeacherEntity implements java.io.Serializable {
     private String id;
     /** name */
-    @Excel(name = "主讲老师_major,代课老师_absent", orderNum = "1", isImportField = "true_major,true_absent")
+    @Excel(name = "MajorTeacher_major, SubstituteTeacher_substitute", orderNum = "1", isImportField = "true_major,true_substitute")
     private String name;
 ```
-这里在课程这个实体里面就完成了一堆多的导出,达到了我们基础需求,同时使用了orderNum对我们的列进行了排序,满足老师的需求,导出代码如下
+Here, one-to-many export is completed for the course entity which meet the teacher's requirment. Meanwhile, ordernum is used to sort the columns. The export code is as follows:
 ```java
  Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试", "测试"),
             CourseEntity.class, list);
 ```
-这样我们就完成了老师的需求,效果如图2.3.2-1
-但是课程名和代课老师没有合并,不太美观
-
-路飞又果断给课程名称和代课老师加了needMerge = true的属性,就可以完成单元格的合并
+Effect Picture 2.3.2-1
+But the course name and substitute teacher are not merged, which is not beautiful.
+Luffy has decisively added the needmerge attribute to the course name and substitute teacher, and then the cell can be merged.
 ```java
-   /** 课程名称 */
-    @Excel(name = "课程名称", orderNum = "1", width = 25,needMerge = true)
+   /** course name */
+    @Excel(name = "course name", orderNum = "1", width = 25,needMerge = true)
     private String        name;
 
    //--------------------------------
    /** name */
-    @Excel(name = "主讲老师_major,代课老师_absent", orderNum = "1",needMerge = true, isImportField = "true_major,true_absent")
+    @Excel(name = "MajorTeacher_major, SubstituteTeacher_substitute", orderNum = "1",needMerge = true, isImportField = "true_major,true_substitute")
 
 ```
-效果如图2.3.2-2
-到这里,路飞就完美的完成了老师的任务,快乐的去交差了
+Effect Picture2.3.2-2
+With this, luffy has completed the teacher's task perfectly.
 
 
 ![图2.3.2-1](https://static.oschina.net/uploads/space/2017/0622/221100_MD8y_1157922.png)
 
 ![图2.3.2-2](https://static.oschina.net/uploads/space/2017/0622/222202_217m_1157922.png)
 
-###2.3.3 图片的导出
+###2.3.3 Image Export
 
-
-  在日常运作中不可避免的会遇到图片的导入导出,这里提供了两种类型的图片导出方式
+  Easypoi provides two kinds of image export methods.
 ```java
-@Excel(name = "公司LOGO", type = 2 ,width = 40 , height = 20,imageType = 1)
+@Excel(name = "company logo", type = 2, width = 40, height = 20, imageType = 1)
     private String companyLogo;
 ```
-1. 表示type =2 该字段类型为图片,imageType=1 (默认可以不填),表示从file读取,字段类型是个字符串类型
-可以用相对路径也可以用绝对路径,绝对路径优先依次获取
+1. type=2 indicates that the field type is imge; imageType=1 (default value, you can leave it blank), indicates that read from file, the filed type is string, support both relative path and absolute path, absolute path is high priority.
 ```java
-@Excel(name = "公司LOGO", type = 2 ,width = 40 , height = 20,imageType = 1)
+@Excel(name = "company logo", type = 2 ,width = 40, height = 20, imageType = 2)
     private byte[] companyLogo;
 ```
-2.表示type =2 该字段类型为图片,imageType=2 ,表示从数据库或者已经读取完毕,字段类型是个字节数组
-直接使用
-同时,image 类型的cell最好设置好宽和高,**会百分百缩放到cell那么大,不是原尺寸,这里注意下**
+2. imageType=2, indicates that read from database or already have completed reading, the filed type is byte array.
 
-效果如下
+
+Width and height is recommended for imge cell, **will scale 100% to the cell size, not the original size**
+
 ```java
 List<CompanyHasImgModel> list;
 
@@ -680,19 +681,17 @@ List<CompanyHasImgModel> list;
         fos.close();
     }
 ```
-运行效果
-
-
-
+Effect Picture
 
 ![2.3.3 -1](https://static.oschina.net/uploads/space/2017/0825/144432_tkYG_1157922.png)
 
-###2.3.4 Excel导入介绍
+###2.3.4 Excel Import
 
 
-   有导出就有导入,基于注解的导入导出,配置配置上是一样的,只是方式反过来而已,比如类型的替换 导出的时候是1替换成男,2替换成女,导入的时候则反过来,男变成1 ,女变成2,时间也是类似
-导出的时候date被格式化成 2017-8-25 ,导入的时候2017-8-25被格式成date类型
+   The configuration of annotation-based import is the same as export, but the way is reversed. 
+   For example, when the replacement type(male_1) is exported, 1 is replaced by male, 2 is replaced by female, and when imported, it is reversed: male becomes 1, the female becomes 2. It's similar for the date type. When exported, date is formatted as "2017-8-25" when imported, "2017-8-25" is formated as date type.
 下面说下导入的基本代码,注解啥的都是上面讲过了,这里就不累赘了
+Following is the basic code of import; the usage of annotation is same with export, will not repeat here.
 ```java
   @Test
     public void test2() {
@@ -708,55 +707,57 @@ List<CompanyHasImgModel> list;
         System.out.println(ReflectionToStringBuilder.toString(list.get(0)));
     }
 ```
-基本是写法也很简单,ImportParams 参数介绍下
+For ImportParams parameter
 
 
-Property           | Type     | Default Value           | Function Description
+Property           | Type     | Default Value           | Description
 -----------------|---------------------|----------------------|----------------------------------------------------------------------------------------------------
 titleRows        | int                 | 0                    | number of title rows
 headRows         | int                 | 1                    | number of heading rows
-startRows        | int                 | 0                    | 字段真正值和列标题之间的距离 默认0
-keyIndex         | int                 | 0                    | 主键设置,如何这个cell没有值,就跳过 或者认为这个是list的下面的值,这一列必须有值,不然认为这列为无效数据
-startSheetIndex  | int                 | 0                    | 开始读取的sheet位置,默认为0
-sheetNum         | int                 | 1                    | 上传表格需要读取的sheet 数量,默认为1
-needSave         | boolean             | false                | 是否需要保存上传的Excel
-needVerfiy       | boolean             | false                | 是否需要校验上传的Excel
-saveUrl          | String              | "upload/excelUpload" | 保存上传的Excel目录,默认是 如 TestEntity这个类保存路径就是upload/excelUpload/Test/yyyyMMddHHmss_ 保存名称上传时间_五位随机数
-verifyHanlder    | IExcelVerifyHandler | null                 | 校验处理接口,自定义校验
-lastOfInvalidRow | int                 | 0                    | 最后的无效行数,不读的行数
-readRows         | int                 | 0                    | 手动控制读取的行数
-importFields     | String[]            | null                 | 导入时校验数据模板,是不是正确的Excel
-keyMark          | String              | ":"                  | Key-Value 读取标记,以这个为Key,后面一个Cell 为Value,多个改为ArrayList
-readSingleCell   | boolean             | false                | 按照Key-Value 规则读取全局扫描Excel,但是跳过List读取范围提升性能,仅仅支持titleRows + headRows + startRows 以及 lastOfInvalidRow
-dataHanlder      | IExcelDataHandler   | null                 | 数据处理接口,以此为主,replace,format都在这后面
+startRows        | int                 | 0                    | the distance between the true value of the field and the column title
+keyIndex         | int                 | 0                    | set up the primary key.If the cell has no value, skip it; or assume that this is the value in the list, this column must have a value, otherwise it is considered as invalid data
+startSheetIndex  | int                 | 0                    | sheet position to start reading
+sheetNum         | int                 | 1                    | the number of sheets to be read
+needSave         | boolean             | false                | whether to save the uploaded excel
+needVerfiy       | boolean             | false                | whether to verify the uploaded excel
+saveUrl          | String              | "upload/excelUpload/" | the directory to save the uploaded Excel, for example, the saved directory for TestEntity is upload/excelUpload/Test/yyyyMMddHHmss_12345 nameTime_five random number
+verifyHanlder    | IExcelVerifyHandler | null                 | custom interface for hadling verification
+lastOfInvalidRow | int                 | 0                    | invalid rows in the last, unread rows 
+readRows         | int                 | 0                    | manually control the read rows number
+importFields     | String[]            | null                 | validate template of the data on import to determine if Excel is correct
+keyMark          | String              | ":"                  | Key-Value tag, this is as Key, the next Cell as Value; and if multiple, change to ArrayList
+readSingleCell   | boolean             | false                | scan Excel globally according to the key-value rule, but skip List reading to improve performance; only support titleRows + headRows + startRows and lastOfInvalidRow
+dataHanlder      | IExcelDataHandler   | null                 | the data processing interface, this's the main one, replace and format is all behind this.
 
-###2.3.5 Excel导入小功能
+###2.3.5 Small feature of Excel Import
 
 
-1. 读取指定的sheet
-   比如要读取上传得第二个sheet 那么需要把startSheetIndex = 1 就可以了
+1. Read the specified sheet
+   For example, to read the second sheet, just set startsheetindex=1
 
-2. 读取几个sheet 
-   比如读取前2个sheet,那么 sheetNum=2 就可以了
+2. How many sheets to read
+   If read the first two sheets, then set sheetNum=2
 
-3. 读取第二个到第五个sheet
-   设置 startSheetIndex = 1 然后sheetNum = 4
+3. Read the second to fifth sheet 
+   Set startSheetIndex=1 and sheetNum=4
 
-4. 读取全部的sheet
-  sheetNum  设置大点就可以了
-5. 保存Excel
-  设置 needVerfiy = true,默认保存的路径为upload/excelUpload/Test/yyyyMMddHHmss_***** 保存名称上传时间_五位随机数
-  如果自定义路径 修改下saveUrl 就可以了,同时saveUrl也是图片上传时候的保存的路径
+4. Read all sheets
+   Set a bigger number for sheetNum
+5. Save Excel
+   Set needVerfiy=true,the default directory is upload/excelUpload/Test/yyyyMMddHHmss_34587 NameTime_Five random number
+   For custom directory, just modify saveUrl, which is also the saved path of the uploaded image.
 
-6. 判断一个Excel是不是合法的Excel 
+6. Determine whether an excel is legal or not 
    importFields 设置下值,就是表示表头必须至少包含的字段,如果缺一个就是不合法的excel,不导入
+   The values set for importFields, show the fields that must be included in the header.
+   If one of the fields is missing, it is illegal to import.
 
-###2.3.6 图片的导入
+###2.3.6 Image Import
 
+The configuration is the same with Image Export, but need set the saved path(saveUrl).
+1. saveUrl, default is "upload/excelUpload", and can be modified manually
 
-有图片的导出就有图片的导入,导入的配置和导出是一样的,但是需要设置保存路径
-1.设置保存路径saveUrl 默认为"upload/excelUpload"
-可以手动修改 ImportParams 修改下就可以了
+   Example:
 ```java
  @Test
     public void test() {
@@ -776,7 +777,7 @@ dataHanlder      | IExcelDataHandler   | null                 | 数据处理接�
     }
 }
 ```
-导入日志
+The import logs
 ```java
 16:35:43.081 [main] DEBUG c.a.e.e.imports.ExcelImportServer - Excel import start ,class is class cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel
 16:35:43.323 [main] DEBUG c.a.e.e.imports.ExcelImportServer -  start to read excel by is ,startTime is 1503650143323
@@ -794,13 +795,12 @@ cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@482cd91f[companyName=一
 
 ![2.3.5-1](https://static.oschina.net/uploads/space/2017/0825/163643_LlQg_1157922.png)
 
-###2.3.7 Excel多Sheet导出
+###2.3.7 Multiple Sheets Export
 
-
-目前单Sheet和单Class的方式比较多，对于多Sheet的方式还是一片空白，这里做一下说明：
-
-导出基本采用ExportParams 这个对象，进行参数配置；
-我们需要进行多Sheet导出，那么就需要定义一个基础配置对象
+At present, there are many export ways of single Sheet and single Class, but the way of multiple sheets is still blank. 
+Here is an explanation:
+Basically, ExportParams is used for parameter configuration.
+We need to define a basic configuration object for the the multiple Sheet export.
 ```java
 public class ExportView {
 	
@@ -870,17 +870,17 @@ public class ExportView {
 	
 }
 ```
-对象主要有三个属性：
-// 该注解配置的导出属性
+ExportView mainly has three attributes:
+// 该注解配置的导出属性 used to configure the export 
 1. ExportParams exportParams
 // 对应注解 class 实例对象的数据集合
 2. List<?> dataList
 // 对应注解的 class
 3. Class<?> cls
 
-这里没有用泛型，因为多Sheet导出时，会引用到不同的注解对象；
+Generics are not used here, because when multiple sheets are exported, different annotation objects will be referenced;
 
-定义基础配置的集合
+Define a collection of basic configurations 
 ```java
 public class ExportMoreView {
 	private List<ExportView> moreViewList=Lists.newArrayList();
@@ -895,13 +895,13 @@ public class ExportMoreView {
 }
 ```
 
-最后在实现调用的方法中，对整个集合进行配置和解析
+Finally, configure and parse the entire collection in the implement method
 
 ```java
 List<Map<String, Object>> exportParamList=Lists.newArrayList();
-	//该行主要用于获取业务数据，请根据具体的情况进行修改和调整	
+	// This line is mainly used to obtain business data. Please modify and adjust it according to the specific situation	
 ExportMoreView moreView=this.getBaseTransferService().mergeExportView(templateTypeCode);
-         //迭代导出对象，将对应的配置信息写入到实际的配置中
+        // Iterate over the export object to write the corresponding configuration to the actual
 		for(ExportView view:moreView.getMoreViewList()){
 			Map<String, Object> valueMap=Maps.newHashMap();
 			valueMap.put(NormalExcelConstants.PARAMS,view.getExportParams());
@@ -909,21 +909,21 @@ ExportMoreView moreView=this.getBaseTransferService().mergeExportView(templateTy
 			valueMap.put(NormalExcelConstants.CLASS,view.getCls());
 			exportParamList.add(valueMap);
 		}
-      //实现导出配置
+        // Implement export configuration 
 		modelMap.put(NormalExcelConstants.FILE_NAME,new DateTime().toString("yyyyMMddHHmmss"));
-     //将转换完成的配置接入到导出中
+        // Put the transformed configuration into the export
 		modelMap.put(NormalExcelConstants.MAP_LIST,exportParamList);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
 
 
 ```
 
-如果不是采用的MVC的方式，请将转换的配置采用以下的方式实现：
+If not in the MVC way, please configure the transformation in the following way:
 
 
 
 
-![参见ExcelExportUtil](https://static.oschina.net/uploads/space/2017/1128/111045_9s7X_2343396.png)
+![Reference ExcelExportUtil](https://static.oschina.net/uploads/space/2017/1128/111045_9s7X_2343396.png)
 
 
 
