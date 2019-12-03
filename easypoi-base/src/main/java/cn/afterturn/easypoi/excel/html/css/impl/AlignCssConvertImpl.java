@@ -33,11 +33,11 @@ public class AlignCssConvertImpl implements ICssConvertToExcel, ICssConvertToHtm
         // vertical align
         if (HtmlCssConstant.TOP.equals(style.getVetical())) {
             cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
-        } else if (HtmlCssConstant.CENTER.equals(style.getAlign())) {
+        } else if (HtmlCssConstant.CENTER.equals(style.getVetical())) {
             cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        } else if (HtmlCssConstant.BOTTOM.equals(style.getAlign())) {
+        } else if (HtmlCssConstant.BOTTOM.equals(style.getVetical())) {
             cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
-        } else if (HtmlCssConstant.JUSTIFY.equals(style.getAlign())) {
+        } else if (HtmlCssConstant.JUSTIFY.equals(style.getVetical())) {
             cellStyle.setVerticalAlignment(VerticalAlignment.JUSTIFY);
         }
     }
