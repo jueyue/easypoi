@@ -2,7 +2,11 @@
 --------------------------
 Change Log
 --------------------------
- - 4.1.1  Support template nesting 
+ - 4.1.3 Change CSV export mode to write  
+ - 4.1.2 Fix shift last line issue 
+    - Fix shift last line issue
+    - Fix template header exception
+ - 4.1.1 Support template nesting 
     - Support template nesting
     - Support lombok
     - Variant export supports object recognition 
