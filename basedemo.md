@@ -613,7 +613,7 @@ public class TeacherEntity implements java.io.Serializable {
 ```
 Here, one-to-many export is completed for the course entity which meet the teacher's requirment. Meanwhile, ordernum is used to sort the columns. The export code is as follows:
 ```java
- Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试", "测试"),
+ Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("Title", "secondTitle", "sheetName"),
             CourseEntity.class, list);
 ```
 Effect Picture 2.3.2-1
@@ -690,7 +690,7 @@ Effect Picture
 
    The configuration of annotation-based import is the same as export, but the way is reversed. 
    For example, when the replacement type(male_1) is exported, 1 is replaced by male, 2 is replaced by female, and when imported, it is reversed: male becomes 1, the female becomes 2. It's similar for the date type. When exported, date is formatted as "2017-8-25" when imported, "2017-8-25" is formated as date type.
-下面说下导入的基本代码,注解啥的都是上面讲过了,这里就不累赘了
+
 Following is the basic code of import; the usage of annotation is same with export, will not repeat here.
 ```java
   @Test
@@ -941,7 +941,7 @@ If not in the MVC way, please configure the transformation in the following way:
     @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
     private Date registrationDate;
 ```
-路飞飞快的用到上面的学到的知识搞定了,这这时有一个老师把路飞叫去,说想要导出一个不要出生日期的Excel,感觉用户需求很无奈,路飞又造两个一个bean,把这个注解去掉了,来导出
+路飞飞快的用到上面的学到的知识搞定了,这这时有一个老师把路飞叫去,说想要导出一个不要出生日期的Excel,感觉用户需求很无奈,路飞又造了一个bean,把这个注解去掉了,来导出
 ```java
     @Excel(name = "学生姓名", height = 20, width = 30, isImportField = "true_st")
     private String        name;
