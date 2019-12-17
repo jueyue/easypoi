@@ -613,7 +613,7 @@ public class TeacherEntity implements java.io.Serializable {
 ```
 Here, one-to-many export is completed for the course entity which meet the teacher's requirment. Meanwhile, ordernum is used to sort the columns. The export code is as follows:
 ```java
- Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("Title", "secondTitle", "sheetName"),
+ Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试", "测试"),
             CourseEntity.class, list);
 ```
 Effect Picture 2.3.2-1
@@ -660,10 +660,9 @@ List<CompanyHasImgModel> list;
     @Before
     public void initData() {
         list = new ArrayList<CompanyHasImgModel>();
-        list.add(new CompanyHasImgModel("百度", "imgs/company/baidu.png", "北京市海淀区西北旺东路10号院百度科技园1号楼"));
-        list.add(new CompanyHasImgModel("阿里巴巴", "imgs/company/ali.png", "北京市海淀区西北旺东路10号院百度科技园1号楼"));
-        list.add(new CompanyHasImgModel("Lemur", "imgs/company/lemur.png", "亚马逊热带雨林"));
-        list.add(new CompanyHasImgModel("一众", "imgs/company/one.png", "山东济宁俺家"));
+        list.add(new CompanyHasImgModel("Alibaba", "imgs/company/alibaba.png", "Zhejiang, China"));
+        list.add(new CompanyHasImgModel("Tencent", "http://www.tencent.com/img/index/tencent_logo.png", "Shenzhen, China"));
+        list.add(new CompanyHasImgModel("Baidu", "https://www.baidu.com/img/bd_logo1.png", "Beijing, China"));
 
 
     }
@@ -748,7 +747,7 @@ dataHanlder      | IExcelDataHandler   | null                 | the data process
    For custom directory, just modify saveUrl, which is also the saved path of the uploaded image.
 
 6. Determine whether an excel is legal or not 
-   importFields 设置下值,就是表示表头必须至少包含的字段,如果缺一个就是不合法的excel,不导入
+
    The values set for importFields, show the fields that must be included in the header.
    If one of the fields is missing, it is illegal to import.
 
@@ -779,14 +778,13 @@ The configuration is the same with Image Export, but need set the saved path(sav
 ```
 The import logs
 ```java
-16:35:43.081 [main] DEBUG c.a.e.e.imports.ExcelImportServer - Excel import start ,class is class cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel
+16:35:43.081 [main] DEBUG c.a.e.e.imports.ExcelImportServer - Excel import start, class is class cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel
 16:35:43.323 [main] DEBUG c.a.e.e.imports.ExcelImportServer -  start to read excel by is ,startTime is 1503650143323
 16:35:43.344 [main] DEBUG c.a.e.e.imports.ExcelImportServer -  end to read excel by is ,endTime is 1503650143344
 16:35:43.429 [main] DEBUG c.a.e.e.imports.ExcelImportServer -  end to read excel list by pos ,endTime is 1503650143429
-cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@1b083826[companyName=百度,companyLogo=upload/CompanyHasImgModel/pic88273295062.PNG,companyAddr=北京市海淀区西北旺东路10号院百度科技园1号楼]
-cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@105fece7[companyName=阿里巴巴,companyLogo=upload/CompanyHasImgModel/pic22507938183.PNG,companyAddr=北京市海淀区西北旺东路10号院百度科技园1号楼]
-cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@3ec300f1[companyName=Lemur,companyLogo=upload/CompanyHasImgModel/pic86390457892.PNG,companyAddr=亚马逊热带雨林]
-cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@482cd91f[companyName=一众,companyLogo=upload/CompanyHasImgModel/pic69566571093.PNG,companyAddr=山东济宁俺家]
+cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@1b083826[companyName=Alibaba,companyLogo=imgs/company/alibaba.png,companyAddr=Zhejiang, China]
+cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@105fece7[companyName=Tencent,companyLogo=imgs/company/tencent_logo.png,companyAddr=Shenzhen, China]
+cn.afterturn.easypoi.test.entity.img.CompanyHasImgModel@3ec300f1[companyName=Baidu,companyLogo=imgs/company/baidu_logo.png,companyAddr=Beijing, China]
 ```
 
 
@@ -871,11 +869,11 @@ public class ExportView {
 }
 ```
 ExportView mainly has three attributes:
-// 该注解配置的导出属性 used to configure the export 
+// Used to configure the export 
 1. ExportParams exportParams
-// 对应注解 class 实例对象的数据集合
+// Corresponding to the datalist of Object Instance
 2. List<?> dataList
-// 对应注解的 class
+// Corresponding to the class
 3. Class<?> cls
 
 Generics are not used here, because when multiple sheets are exported, different annotation objects will be referenced;
@@ -930,33 +928,31 @@ If not in the MVC way, please configure the transformation in the following way:
 ##2.4 Annotation variant - freer export
 
 
-这天老师又把路飞喊道的办公室,要求路飞导出班级学生的整体信息
+One day, the teacher asked luffy to export the overall information of the class.
 ```java
-    @Excel(name = "学生姓名", height = 20, width = 30, isImportField = "true_st")
+    @Excel(name = "name", height = 20, width = 30, isImportField = "true_st")
     private String        name;
-    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生", isImportField = "true_st")
+    @Excel(name = "gender", replace = { "male_1", "female_2" }, isImportField = "true_st")
     private int           sex;
-    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd", isImportField = "true_st", width = 20)
+    @Excel(name = "birthday", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd", isImportField = "true_st", width = 20)
     private Date          birthday;
-    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
+    @Excel(name = "registerday", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
     private Date registrationDate;
 ```
-路飞飞快的用到上面的学到的知识搞定了,这这时有一个老师把路飞叫去,说想要导出一个不要出生日期的Excel,感觉用户需求很无奈,路飞又造了一个bean,把这个注解去掉了,来导出
+Luffy quickly done by usine the above knowledge. Then, again, the teacher asked Luffy to export the information except birthday. (Feel helpless for the teacher's requirement). Luffy created another bean.
 ```java
-    @Excel(name = "学生姓名", height = 20, width = 30, isImportField = "true_st")
+    @Excel(name = "name", height = 20, width = 30, isImportField = "true_st")
     private String        name;
-    @Excel(name = "学生性别", replace = { "男_1", "女_2" }, suffix = "生", isImportField = "true_st")
+    @Excel(name = "gender", replace = { "male_1", "female_2" }, isImportField = "true_st")
     private int           sex;
-    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
+    @Excel(name = "registerday", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
     private Date registrationDate;
 ```
-虽然解决了老师的需求,但这个并不是一个完美的解决方案,下面介绍一个更自由的解决方案
+Although solves the teacher's needs, it is not a perfect solution. Here is a freer solution.
 
+For annotation export, the model and annotation must be prepared. Each exported excel is fixed, and the exported columns cannot be controlled dynamically. Although the case can be processed by ID, the freedom is far from enough. Here is a variant support(List<ExcelExportEntity>), which basically supports all functions of annotation
 
-注解的导出,规定我们必须把model写好,并且注解写好,每次导出的Excel都是固定的,无法动态控制导出的列,虽然可以通过id来处理一个案例,但是自由度远远不够,这里介绍个变种支持,基本支持注解所有的功能
-
-基于List<ExcelExportEntity> 的导出,ExcelExportEntity是注解经过处理翻译成的实体类,两者几乎是一对的,所以如果我们要动态自定义导出列,我们只要动态拼装ExcelExportEntity就可以了
-下面我们看下这个类
+For Export based on List<ExcelExportEntity>, ExcelExportEntity is an entity translated by annotation processing, and which is almost the same with annotation, so if we want to dynamically customize the export column, we just need to dynamically assemble ExcelExportEntity. Following is the entity: 
 ```java
 /**
      * If it is Map Export, this is the key of the Map
@@ -983,23 +979,23 @@ If not in the MVC way, please configure the transformation in the following way:
     private boolean                 isWrap;
 
     /**
-     * 是否需要合并
+     * whether to merge
      */
     private boolean                 needMerge;
     /**
-     * 单元格纵向合并
+     * mergeVertical
      */
     private boolean                 mergeVertical;
     /**
-     * 合并依赖
+     * merge dependecy
      */
     private int[]                   mergeRely;
     /**
-     * 后缀
+     * suffix
      */
     private String                  suffix;
     /**
-     * 统计
+     * Statistics
      */
     private boolean                 isStatistics;
 
@@ -1007,27 +1003,28 @@ If not in the MVC way, please configure the transformation in the following way:
 
     private List<ExcelExportEntity> list;
 ```
-基本上是和注解对应的, **List<ExcelExportEntity> list 这个是对应的一对多的导出,相当于集合,其他基本上都是和注解保持一致**
-下面给出正常的demo
+Almost one-to-one correspondence with annotation, **List<ExcelExportEntity> list this is a corresponding one to many export, which is equivalent to a collection. Other exports are basically consistent with the annotation**
+
+Follolwing is the demo:
 ```java
 public void test() {
         try {
             List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
-//构造对象等同于@Excel
-            ExcelExportEntity excelentity = new ExcelExportEntity("姓名", "name");
+            //Construction entity is equate to @Excel
+            ExcelExportEntity excelentity = new ExcelExportEntity("name", "name");
             excelentity.setNeedMerge(true);
             entity.add(excelentity);
-            entity.add(new ExcelExportEntity("性别", "sex"));
+            entity.add(new ExcelExportEntity("gender", "sex"));
             excelentity = new ExcelExportEntity(null, "students");
             List<ExcelExportEntity> temp = new ArrayList<ExcelExportEntity>();
-            temp.add(new ExcelExportEntity("姓名", "name"));
-            temp.add(new ExcelExportEntity("性别", "sex"));
-//构造List等同于@ExcelCollection 
+            temp.add(new ExcelExportEntity("name", "name"));
+            temp.add(new ExcelExportEntity("gender", "sex"));
+            //List is equate to @ExcelCollection 
             excelentity.setList(temp);
             entity.add(excelentity);
             List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-//把我们构造好的bean对象放到params就可以了
-            Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("测试", "测试"), entity,
+            //Just put our constructed bean into params 
+            Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("test", "test"), entity,
                 list);
             FileOutputStream fos = new FileOutputStream("D:/excel/ExcelExportForMap.tt.xls");
             workbook.write(fos);
@@ -1040,19 +1037,18 @@ public void test() {
     }
 ```
 
-路飞想到了这个方案,并且用上面做了测试可以完美解决所以他把之前的代码改为了(**代码有删减,基本上都是和注解对应的**)
+Luffy changed the previous code to following:(**The core code, which are basically corresponding to annotation**)
 ```java
 List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
-beanList .add(new ExcelExportEntity(new ExcelExportEntity("学生姓名", "name"));
-beanList .add(new ExcelExportEntity("学生性别", "sex"));
-beanList .add(new ExcelExportEntity("进校日期", "registrationDate"));
+beanList .add(new ExcelExportEntity(new ExcelExportEntity("name", "name"));
+beanList .add(new ExcelExportEntity("gender", "sex"));
+beanList .add(new ExcelExportEntity("registerday", "registrationDate"));
 if(needBirthday()){
-  beanList .add(new ExcelExportEntity("出生日期", "birthday"));
+  beanList .add(new ExcelExportEntity("birthday", "birthday"));
 }
-  Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("测试", "测试"), beanList ,
-                list);
+  Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("test", "test"), beanList, list);
 ```
-用同一套代买完美了支持了老师的需求,心满意足的回宿舍了^^
+Finally, Luffy used the same code to perfectly meet the different needs of the teacher.
 
 
 
