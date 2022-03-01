@@ -218,5 +218,12 @@ public class SaxRowRead extends ImportBaseService implements ISaxRowRead {
                 titlemap.put(i, String.valueOf(datas.get(i).getValue()));
             }
         }
+        Set<String> keys = excelParams.keySet();
+        for (String key : keys) {
+            if (key.startsWith("FIXED_")) {
+                String[] arr = key.split("_");
+                titlemap.put(Integer.parseInt(arr[1]), key);
+            }
+        }
     }
 }
