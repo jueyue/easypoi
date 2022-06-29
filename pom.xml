@@ -46,7 +46,7 @@
 
     <properties>
         <sub.version>4.1.3</sub.version>
-        <poi.version>4.1.0</poi.version>
+        <poi.version>4.1.1</poi.version>
         <xerces.version>2.9.1</xerces.version>
         <guava.version>16.0.1</guava.version>
         <commons-lang.version>3.2.1</commons-lang.version>
